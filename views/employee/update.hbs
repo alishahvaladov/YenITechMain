@@ -1,0 +1,34 @@
+<div class="add-employee">
+    {{#if employee}}
+        <form action="/employee/update/{{employee.id}}" method="post">
+            <h1>Add Employee</h1>
+            <div class="form-container">
+                <div class="form-left">
+                    First Name <input type="text" name="first_name" value="{{employee.first_name}}">
+                    Last Name <input type="text" name="last_name" value="{{employee.last_name}}">
+                    Father Name <input type="text" name="father_name" value="{{employee.father_name}}">
+                    Date Of Birth <input type="date" name="dob" value="{{employee.dob}}">
+                    Address 1 <input type="text" name="q_address" value="{{employee.q_address}}">
+                    Address 2 <input type="text" name="y_address" value="{{employee.y_address}}">
+                    SSN <input type="text" name="SSN" value="{{employee.SSN}}">
+                    FIN <input type="text" name="FIN" value="{{employee.FIN}}">
+                    Sex <input type="text" name="sex" value="{{employee.sex}}">
+                </div>
+                <div class="form-right">
+                    Phone Number <input type="text" name="phone_number" value="{{employee.phone_number}}">
+                    Home Number <input type="text" name="home_number" value="{{employee.home_number}}">
+                    Shift Start Time <input type="time" name="shift_start_t" value="{{employee.shift_start_t}}">
+                    Shift End Time <input type="time" name="shift_end_t" min="09:00" value="{{employee.shift_end_t}}">
+                    Job Start Date <input type="date" name="j_start_date" value="{{employee.j_start_date}}">
+                    Day Off Days Total <input type="text" name="dayoff_days_total" value="{{employee.dayoff_days_total}}">
+                    Department <input type="text" name="department" value="{{employee.department}}">
+                    Position <input type="text" name="position_id" value="{{employee.position_id}}">
+                    Project <input type="text" name="project_id" value="{{employee.project_id}}">
+                </div>
+            </div>
+            <button type="submit">Add</button>
+
+            {{> messages}}
+        </form>
+    {{/if}}
+</div>

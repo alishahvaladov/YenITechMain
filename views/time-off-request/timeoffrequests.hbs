@@ -1,0 +1,49 @@
+<div class="department-table">
+    {{> messages }}
+    <table class="table table-striped">
+        <div class="container">
+            <thead>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Employer</th>
+            <th>Time Off Type</th>
+            <th>Priority</th>
+            <th>Time Off Start Date</th>
+            <th>Time Off End Date</th>
+            <th>Time Off Job Start Date</th>
+            <th>Status</th>
+            <th>
+                Actions
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            </thead>
+            <tbody>
+            {{#if timeoffrequests}}
+                {{#each timeoffrequests}}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{dataValues.emp_id}}</td>
+                        <td>{{dataValues.timeoff_type}}</td>
+                        <td>{{dataValues.priority}}</td>
+                        <td>{{dataValues.timeoff_start_date}}</td>
+                        <td>{{dataValues.timeoff_end_date}}</td>
+                        <td>{{dataValues.timeoff_job_start_date}}</td>
+                        <td>{{dataValues.status}}</td>
+                        <td>
+                            <a class="btn btn-outline-secondary btn-sm" href="/timeoffrequests/request/{{dataValues.id}}"><i class="bi bi-pencil-square"></i></a>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {{/each}}
+            {{/if}}
+            </tbody>
+        </div>
+    </table>
+</div>

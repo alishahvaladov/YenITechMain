@@ -1,0 +1,57 @@
+<div class="department-table">
+    {{> messages }}
+    <table class="table table-striped">
+        <div class="container">
+            <thead>
+            <th></th>
+            <th>Adı</th>
+            <th>Soyadı</th>
+            <th>Ata Adı</th>
+            <th>Cinsi</th>
+            <th>Doğum tarixi</th>
+            <th>Telefon Nömrəsi</th>
+            <th>Departament</th>
+            <th>Vəzifəsi</th>
+            <th>Proyekt</th>
+            <th>Status</th>
+            <th>
+                <a class="btn btn-outline-success btn-sm" href="/employee/add-employee">Əlavə <i class="bi bi-plus-circle"></i></a>
+            </th>
+            <th></th>
+            </thead>
+            <tbody>
+            {{#if employee}}
+                {{#each employee}}
+                    <tr>
+                        <td></td>
+                        <td>{{dataValues.first_name}}</td>
+                        <td>{{dataValues.last_name}}</td>
+                        <td>{{dataValues.father_name}}</td>
+                        {{#compare_if dataValues.sex 0}}
+                            <td>Kişi</td>
+                        {{/compare_if}}
+                        {{#compare_if dataValues.sex 1}}
+                            <td>Qadın</td>
+                        {{/compare_if}}
+                        <td>{{dataValues.dob}}</td>
+                        <td>{{dataValues.phone_number}}</td>
+                        <td>{{dataValues.department}}</td>
+                        <td>{{dataValues.position_id}}</td>
+                        <td>{{dataValues.project_id}}</td>
+                        {{#if dataValues.j_end_date}}
+                            <td><span class="text-danger">İşdən ayrılıb</span></td>
+                        {{else}}
+                            <td><span class="text-success">Hal-hazırda əməkdaşımızdır</span></td>
+                        {{/if}}
+                        <td>
+                            <a class="btn btn-outline-danger btn-sm" href="/employee/delete/{{dataValues.id}}"><i class="bi bi-x-circle"></i></a>
+                            <a class="btn btn-outline-secondary btn-sm" href="/employee/update/{{dataValues.id}}"><i class="bi bi-pencil-square"></i></a>
+                        </td>
+                        <td></td>
+                    </tr>
+                {{/each}}
+            {{/if}}
+            </tbody>
+        </div>
+    </table>
+</div>

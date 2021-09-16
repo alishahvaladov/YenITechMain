@@ -1,0 +1,24 @@
+{
+  "hr": {
+    "Əməkdaşlar": "/employee",
+    "Əl izi tutmayanlar": "/nofprint",
+    "Cərimələr": "/fines",
+    "Əl izləri": "/fprints"
+  },
+  "sAdmin": {
+    "Əməkdaşlar": "/employee",
+    "Əl izi tutmayanlar": "/nofprint",
+    "Cərimələr": "/fines",
+    "Əl izləri": "/fprints",
+    "Departamentlər": "/department",
+    "Proyektlər": "/projects",
+    "Vəzifələr": "/position",
+    "İstifadəçilər": "/user"
+  },
+  "admin" : {
+    "Departamentlər": "/department",
+    "Proyektlər": "/projects",
+    "Vəzifələr": "/position",
+    "İstifadəçilər": "/user"
+  }
+}

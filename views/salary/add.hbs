@@ -1,0 +1,21 @@
+<div class="add-salary">
+    <form action="/salaries/add-salary" method="post">
+        {{#if employee}}
+            Employee: {{employee.dataValues.first_name}} {{employee.dataValues.last_name}} {{employee.dataValues.father_name}}
+            <br>
+            <input type="hidden" name="emp_id" value="{{employee.dataValues.id}}">
+            <br>
+            Unofficial Net<input type="number" name="unofficial_net">
+            <br>
+            Unofficial Pay<input type="number" name="unofficial_pay">
+            <br>
+            Gross <input type="number" name="gross">
+            <br>
+
+            <button class="btn btn-outline-success">Update</button>
+        {{else}}
+            <span class="text-danger">Employee not found please try again</span>
+        {{/if}}
+        {{> messages}}
+    </form>
+</div>

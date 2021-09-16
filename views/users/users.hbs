@@ -1,0 +1,40 @@
+<div class="department-table">
+    {{> messages }}
+    <table class="table table-striped">
+        <div class="container">
+            <thead>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Employer</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>
+                <a class="btn btn-outline-success btn-sm" href="/register">Əlavə <i class="bi bi-plus-circle"></i></a>
+            </th>
+            <th></th>
+            <th></th>
+            </thead>
+            <tbody>
+            {{#if users}}
+                {{#each users}}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{dataValues.emp_id}}</td>
+                        <td>{{dataValues.username}}</td>
+                        <td>{{dataValues.role}}</td>
+                        <td>
+                            <a class="btn btn-outline-danger btn-sm" href="/delete/{{dataValues.id}}"><i class="bi bi-x-circle"></i></a>
+                            <a class="btn btn-outline-secondary btn-sm" href="/users/update/{{dataValues.id}}"><i class="bi bi-pencil-square"></i></a>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {{/each}}
+            {{/if}}
+            </tbody>
+        </div>
+    </table>
+</div>

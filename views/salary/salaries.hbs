@@ -1,0 +1,36 @@
+<div class="salaries">
+    {{> messages }}
+    <table class="table table-striped">
+        <div class="container">
+            <thead>
+            <th></th>
+            <th>Employee</th>
+            <th>Unofficial Net</th>
+            <th>Unofficial Pay</th>
+            <th>Gross</th>
+            <th>Unpaid Day Off</th>
+            <th>Cost Total</th>
+            <th></th>
+            </thead>
+            <tbody>
+            {{#if salary}}
+                {{#each salary}}
+                    <tr>
+                        <td></td>
+                        <td>{{dataValues.emp_id}}</td>
+                        <td>{{dataValues.unofficial_net}}</td>
+                        <td>{{dataValues.unofficial_pay}}</td>
+                        <td>{{dataValues.gross}}</td>
+                        <td>{{dataValues.unpaid_day_off}}</td>
+                        <td>{{dataValues.net}}</td>
+                        <td>
+                            <a class="btn btn-outline-secondary btn-sm" href="/salary/update/{{dataValues.id}}"><i class="bi bi-pencil-square"></i></a>
+                        </td>
+                        <td></td>
+                    </tr>
+                {{/each}}
+            {{/if}}
+            </tbody>
+        </div>
+    </table>
+</div>

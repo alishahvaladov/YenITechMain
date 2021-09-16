@@ -1,0 +1,13 @@
+<div class="time-off">
+    <form action="/timeoffrequests/requests" method="post">
+        Time Off Type <input type="number" name="timeoff_type">
+        Time Off Description <input type="text" name="timeoff_description">
+        Priority <input type="number" name="priority">
+        Time Off Start Date <input type="date" name="timeoff_start_date">
+        Time Off End Date <input type="date" name="timeoff_end_date">
+        Time Off Job Start Date <input type="date" name="timeoff_job_start_date">
+        <button type="submit">Add</button>
+
+        {{> messages}}
+    </form>
+</div>

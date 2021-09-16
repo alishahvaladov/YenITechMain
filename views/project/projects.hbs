@@ -1,0 +1,48 @@
+<div class="department-table">
+    {{> messages }}
+    <table class="table table-striped">
+        <div class="container">
+            <thead>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Project Name</th>
+            <th>Address</th>
+            <th>Project Manager</th>
+            <th>Parent ID</th>
+            <th>
+                <a class="btn btn-outline-success btn-sm" href="/projects/add-project">Əlavə <i class="bi bi-plus-circle"></i></a>
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            </thead>
+            <tbody>
+            {{#if projects}}
+                {{#each projects}}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{dataValues.name}}</td>
+                        <td>{{dataValues.address}}</td>
+                        <td>{{dataValues.project_manager_id}}</td>
+                        {{#if dataValues.parent_id}}
+                            <td>{{dataValues.parent_id}}</td>
+                        {{else}}
+                            <td><span class="text-danger">No Parent</span></td>
+                        {{/if}}
+                        <td>
+                            <a class="btn btn-outline-danger btn-sm" href="/projects/delete/{{dataValues.id}}"><i class="bi bi-x-circle"></i></a>
+                            <a class="btn btn-outline-secondary btn-sm" href="/projects/update/{{dataValues.id}}"><i class="bi bi-pencil-square"></i></a>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {{/each}}
+            {{/if}}
+            </tbody>
+        </div>
+    </table>
+</div>

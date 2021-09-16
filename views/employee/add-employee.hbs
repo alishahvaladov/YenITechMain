@@ -1,0 +1,35 @@
+<div class="add-employee">
+    <form action="/employee/add-employee" method="post">
+        <h1>Add Employee</h1>
+        <div class="form-container">
+            <div class="form-left">
+                First Name <input type="text" name="first_name">
+                Last Name <input type="text" name="last_name">
+                Father Name <input type="text" name="father_name">
+                Sex <select name="sex" id="">
+                        <option value="0">Kişi</option>
+                        <option value="1">Qadın</option>
+                    </select>
+                Date Of Birth <input type="date" name="dob">
+                Address 1 <input type="text" name="q_address">
+                Address 2 <input type="text" name="y_address">
+                SSN <input type="text" name="SSN">
+                FIN <input type="text" name="FIN">
+            </div>
+            <div class="form-right">
+                Phone Number <input type="text" name="phone_number">
+                Home Number <input type="text" name="home_number">
+                Shift Start Time <input type="time" name="shift_start_t">
+                Shift End Time <input type="time" name="shift_end_t" min="09:00">
+                Job Start Date <input type="date" name="j_start_date">
+                Day Off Days Total <input type="text" name="dayoff_days_total">
+                Department <input type="text" name="department">
+                Position <input type="text" name="position_id">
+                Project <input type="text" name="project_id">
+            </div>
+        </div>
+        <button type="submit">Add</button>
+
+        {{> messages}}
+    </form>
+</div>

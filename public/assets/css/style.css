@@ -1,0 +1,50 @@
+body {
+    height: 100vh;
+}
+.logo {
+    color: #fff;
+}
+.navbar a {
+    color: #fff;
+    float: right;
+}
+
+.login {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.login-container {
+    width: 300px;
+}
+.form-container {
+    display: flex;
+}
+.form-container div {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    justify-content: flex-start;
+    margin-left: 20px;
+}
+.add-employee form input,
+.add-employee form button {
+    width: 200px;
+}
+
+.time-off form {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.time-off form input,
+.time-off form button {
+    width: 200px;
+}
+
+/*table th a,*/
+/*table td a {*/
+/*    font-size: 20px !important;*/
+/*}*/

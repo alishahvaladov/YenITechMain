@@ -1,0 +1,36 @@
+<div class="department-table">
+    {{> messages }}
+    <table class="table table-striped">
+        <div class="container">
+            <thead>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Employee</th>
+            <th>Salary for this month</th>
+            <th>
+                <a class="btn btn-outline-success btn-sm" href="/department/add-department">Əlavə <i class="bi bi-plus-circle"></i></a>
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            </thead>
+            <tbody>
+            {{#if calculation}}
+                {{#each calculation}}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{this.name}}</td>
+                        <td>{{this.net}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {{/each}}
+            {{/if}}
+            </tbody>
+        </div>
+    </table>
+</div>

@@ -1,0 +1,18 @@
+<div class="time-off">
+    {{#if toff}}
+        Time Off Type: <span>{{toff.dataValues.timeoff_type}}</span>
+        <br>
+        Time Off Description: <span>{{toff.dataValues.timeoff_description}}</span>
+        <br>
+        Priority: <span>{{toff.dataValues.priority}}</span>
+        <br>
+        Time Off Start Date: <span>{{toff.dataValues.timeoff_start_date}}</span>
+        <br>
+        Time Off End Date: <span>{{toff.dataValues.timeoff_end_date}}</span>
+        <br>
+        Time Off Job Start Date: <span>{{toff.dataValues.timeoff_job_start_date}}</span>
+        <br>
+        Status: <span>{{toff.dataValues.status}}</span>
+        {{> messages}}
+    {{/if}}
+</div>

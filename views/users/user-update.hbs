@@ -1,0 +1,10 @@
+    {{#if user}}
+    <form class="mt-2" action="/users/update/{{user.id}}" method="post">
+        Emp<input type="number" name="emp_id" value="{{user.emp_id}}">
+        User<input type="text" name="username" value="{{user.username}}">
+        Role<input type="number" name="role" value="{{user.role}}">
+        <button type="submit">Update</button>
+        {{> messages}}
+
+    </form>
+    {{/if}}

@@ -1,0 +1,14 @@
+<div class="add-project">
+    {{#if project}}
+        <form action="/projects/update/{{project.id}}" method="post">
+            Project Name <input type="text" name="name" value="{{project.name}}">
+            Project Address <input type="text" name="address" value="{{project.address}}">
+            Project Manager <input type="number" name="project_manager_id" value="{{project.project_manager_id}}">
+            Parent ID <input type="number" name="parent_id" value="{{project.parent_id}}">
+
+            <button type="submit">Add Project</button>
+            {{> messages}}
+        </form>
+    {{/if}}
+
+</div>

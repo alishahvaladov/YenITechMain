@@ -1,0 +1,11 @@
+<div class="add-position">
+    {{#if position}}
+        <form action="/positions/update/{{position.id}}" method="post">
+            Position Name <input type="text" name="name" value="{{position.name}}">
+
+            <button type="submit">Add Position</button>
+
+            {{> messages }}
+        </form>
+    {{/if}}
+</div>

@@ -1,0 +1,17 @@
+<div class="nofprint">
+    <form action="" method="post">
+        Employee
+        <select name="emp_id" id="">
+            {{#if employees}}
+                {{#each employees}}
+                    <option value="{{dataValues.id}}">{{dataValues.first_name}} {{dataValues.last_name}} {{dataValues.father_name}}</option>
+                {{/each}}
+            {{/if}}
+        </select>
+        Enter Sign Time <input type="time" name="enter_sign_time">
+
+        <button type="submit">Add NoFPrint</button>
+
+        {{> messages }}
+    </form>
+</div>
