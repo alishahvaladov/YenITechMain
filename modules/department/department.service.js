@@ -5,8 +5,6 @@ module.exports = {
         Department.create({
             name: data.name,
             user_id: parseInt(data.user_id),
-            project_id: data.project_id,
-            department_manager_id: data.department_manager_id
         }).then((results) => {
             console.log(results);
             cb();
@@ -30,7 +28,7 @@ module.exports = {
     },
     getDepartments: (cb) => {
         Department.findAll({
-            attributes: ['id', 'name', 'project_id', 'department_manager_id']
+            attributes: ['id', 'name']
         }).then((dept) => {
             cb(null, dept);
         }).catch((err) => {
@@ -39,9 +37,7 @@ module.exports = {
     },
     updateDepartment: (id, data, cb) => {
         Department.update({
-            name: data.name,
-            project_id: data.project_id,
-            department_manager_id: data.department_manager_id
+            name: data.name
         }, {
             where: {
                 id: id
@@ -57,7 +53,7 @@ module.exports = {
             where: {
                 id: id
             },
-            attributes: ['id', 'name', 'project_id', 'department_manager_id']
+            attributes: ['id', 'name']
         }).then((result) => {
             cb(null, result);
         }).catch((err) => {

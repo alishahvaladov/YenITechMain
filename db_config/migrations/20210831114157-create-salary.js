@@ -28,18 +28,6 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      dsmf: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      h_insurance: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      unemployment: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
       unpaid_day_off: {
         type: Sequelize.INTEGER,
         allowNull: false

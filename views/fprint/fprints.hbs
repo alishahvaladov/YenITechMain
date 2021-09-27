@@ -1,0 +1,51 @@
+<div class="department-table">
+    {{> messages }}
+    <table class="table table-striped">
+        <div class="container">
+            <thead>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Employee</th>
+            <th>Enter Sign Time</th>
+            <th>Status</th>
+            <th>
+                <a class="btn btn-outline-success btn-sm" href="/nofprint/add-nofprint"><i class="bi bi-plus-circle"></i></a>
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            </thead>
+            <tbody>
+            {{#if result}}
+                {{#each result}}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{dataValuesemp_id}}</td>
+                        <td>{{dataValues.f_enter}}</td>
+                        {{#if dataValues.f_leave}}
+                            <td class="text-success">{{dataValues.f_leave}}</td>
+                        {{else}}
+                            <td class="text-danger">Not Left</td>
+                        {{/if}}
+                        <td>
+                            {{#if dataValues.f_leave}}
+                                <span class="text-success"><i class="bi bi-check-lg"></i></span>
+                            {{else}}
+                                <div class="btn-group">
+                                    <a class="btn btn-outline-warning btn-sm" href="/nofprint/update/{{dataValues.id}}"><i class="bi bi-check-lg"></i></a>
+                                </div>
+                            {{/if}}
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {{/each}}
+            {{/if}}
+            </tbody>
+        </div>
+    </table>
+</div>

@@ -1,0 +1,46 @@
+
+<div class="department-table">
+    {{> messages }}
+    <a class="btn btn-primary" href="/fprints">Barmaq izi tutanlar</a>
+    <a class="btn btn-primary" href="/nofprint">Barmaq izi tutmayanlar</a>
+    <table class="table table-striped">
+        <div class="container">
+            <thead>
+            <th>Employee Name</th>
+            <th>Enter</th>
+            <th>Leave</th>
+            <th>
+                <a class="btn btn-outline-success btn-sm" href="/positions/add-position">Əlavə <i class="bi bi-plus-circle"></i></a>
+            </th>
+            </thead>
+            <tbody>
+            {{#if fResult}}
+                {{#each fResult}}
+                    <tr>
+                        <td>{{this.emp_id}}</td>
+                        <td>{{this.f_enter}}</td>
+                        <td>{{this.f_leave}}</td>
+                        <td>
+                            <a class="btn btn-outline-danger btn-sm" href="/positions/delete/{{this.id}}"><i class="bi bi-x-circle"></i></a>
+                            <a class="btn btn-outline-secondary btn-sm" href="/positions/update/{{this.id}}"><i class="bi bi-pencil-square"></i></a>
+                        </td>
+                    </tr>
+                {{/each}}
+            {{/if}}
+            {{#if nFResult}}
+                {{#each nFResult}}
+                    <tr>
+                        <td>{{this.emp_id}}</td>
+                        <td>{{this.f_enter}}</td>
+                        <td>{{this.f_leave}}</td>
+                        <td>
+                            <a class="btn btn-outline-danger btn-sm" href="/positions/delete/{{this.id}}"><i class="bi bi-x-circle"></i></a>
+                            <a class="btn btn-outline-secondary btn-sm" href="/positions/update/{{this.id}}"><i class="bi bi-pencil-square"></i></a>
+                        </td>
+                    </tr>
+                {{/each}}
+            {{/if}}
+            </tbody>
+        </div>
+    </table>
+</div>

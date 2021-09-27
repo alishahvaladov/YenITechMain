@@ -15,10 +15,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'emp_id',
         sourceKey: 'id'
       });
-      Employee.hasMany(models.DepartmentManager, {
-        foreignKey: 'emp_id',
-        sourceKey: 'id'
-      })
     }
   };
   Employee.init({
@@ -97,6 +93,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     department: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    working_days: {
       type: DataTypes.INTEGER,
       allowNull: false
     },

@@ -22,7 +22,6 @@ module.exports = {
         Department.findOne({
             where: {
                 name: data.name,
-                project_id: data.project_id
             }
         }).then((department) => {
             if(department) {
@@ -58,7 +57,7 @@ module.exports = {
                     return res.redirect("/department");
                 });
             }
-            req.flash("error_msg", "This department doesn't exist")
+            req.flash("error_msg", "This department doesn't exist");
             return res.redirect("/department");
         }).catch((err) => {
             if(err) {

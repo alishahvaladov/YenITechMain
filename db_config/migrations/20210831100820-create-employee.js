@@ -80,6 +80,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      working_days: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       position_id: {
         type: Sequelize.INTEGER,
         allowNull: false

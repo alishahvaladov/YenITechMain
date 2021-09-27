@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     project_manager_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     parent_id: {
       type: DataTypes.INTEGER,

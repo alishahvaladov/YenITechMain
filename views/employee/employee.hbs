@@ -7,47 +7,47 @@
             <th>Adı</th>
             <th>Soyadı</th>
             <th>Ata Adı</th>
-            <th>Cinsi</th>
-            <th>Doğum tarixi</th>
             <th>Telefon Nömrəsi</th>
             <th>Departament</th>
             <th>Vəzifəsi</th>
             <th>Proyekt</th>
             <th>Status</th>
             <th>
-                <a class="btn btn-outline-success btn-sm" href="/employee/add-employee">Əlavə <i class="bi bi-plus-circle"></i></a>
+                <a class="btn btn-outline-success btn-sm w-100" href="/employee/add-employee">Əlavə <i class="bi bi-person-plus"></i></a>
             </th>
-            <th></th>
             </thead>
             <tbody>
             {{#if employee}}
                 {{#each employee}}
                     <tr>
                         <td></td>
-                        <td>{{dataValues.first_name}}</td>
-                        <td>{{dataValues.last_name}}</td>
-                        <td>{{dataValues.father_name}}</td>
-                        {{#compare_if dataValues.sex 0}}
-                            <td>Kişi</td>
-                        {{/compare_if}}
-                        {{#compare_if dataValues.sex 1}}
-                            <td>Qadın</td>
-                        {{/compare_if}}
-                        <td>{{dataValues.dob}}</td>
-                        <td>{{dataValues.phone_number}}</td>
-                        <td>{{dataValues.department}}</td>
-                        <td>{{dataValues.position_id}}</td>
-                        <td>{{dataValues.project_id}}</td>
-                        {{#if dataValues.j_end_date}}
+                        <td>{{this.first_name}}</td>
+                        <td>{{this.last_name}}</td>
+                        <td>{{this.father_name}}</td>
+                        <td>{{this.phone_number}}</td>
+                        <td>{{this.depName}}</td>
+                        <td>{{this.psName}}</td>
+                        <td>{{this.pjName}}</td>
+                        {{#if this.j_end_date}}
                             <td><span class="text-danger">İşdən ayrılıb</span></td>
                         {{else}}
-                            <td><span class="text-success">Hal-hazırda əməkdaşımızdır</span></td>
+                            <td><span class="text-success">Işləyir</span></td>
                         {{/if}}
-                        <td>
-                            <a class="btn btn-outline-danger btn-sm" href="/employee/delete/{{dataValues.id}}"><i class="bi bi-x-circle"></i></a>
-                            <a class="btn btn-outline-secondary btn-sm" href="/employee/update/{{dataValues.id}}"><i class="bi bi-pencil-square"></i></a>
+                        <td class="d-flex justify-content-between last-td" style="position: relative">
+                            <a class="btn btn-outline-danger btn-sm" href="/employee/delete/{{this.id}}"><i class="bi bi-person-x"></i></a>
+                            <button class="btn btn-outline-danger btn-sm empRmBtn"><i class="bi bi-dash-circle"></i></button>
+                            <a class="btn btn-outline-secondary btn-sm" href="/employee/update/{{this.id}}"><i class="bi bi-pencil-square"></i></a>
+                            <div class="modal-remove">
+                                <div class="modal-container">
+                                    <form action="/employee/remove" method="post">
+                                        <label for="">Chose Date</label>
+                                        <input type="hidden" name="id" value="{{this.id}}">
+                                        <input type="date" name="j_end_date">
+                                        <button class="btn btn-outline-secondary mt-2 float-end w-100" type="submit">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
                         </td>
-                        <td></td>
                     </tr>
                 {{/each}}
             {{/if}}

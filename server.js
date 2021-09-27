@@ -9,6 +9,7 @@ const path = require("path");
 const multer = require("multer");
 const cors = require("cors");
 const MySQLStore = require('express-mysql-session')(session);
+const { hr } = require("./modules/auth/auth");
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use(passport.session());
 // Static Files
 app.use('/assets', express.static(path.join(__dirname, './public/assets')));
 app.use('/uploads', express.static(path.join(__dirname, './public/uploads')));
+app.use('/salary-xlsx', express.static(path.join(__dirname, './salaries_xlsx')));
 
 // Initialize Passport
 
@@ -109,6 +111,9 @@ const position = require("./modules/position/position.router");
 const nofprint = require("./modules/nofprint/nofprint.router");
 const salary = require("./modules/salary/salary.router");
 const calculate = require("./modules/salary-calculation/router");
+const salary_xlsx = require("./modules/upload_salary/router");
+const selectFPrint = require("./modules/all-f-print/router");
+const fprints = require("./modules/fprints/router");
 
 // Routers
 app.use("/", userRouter);
@@ -120,6 +125,9 @@ app.use("/positions", position);
 app.use("/nofprint", nofprint);
 app.use("/salaries", salary);
 app.use("/calculation", calculate);
+app.use("/test", salary_xlsx);
+app.get("/select-fprint", selectFPrint);
+app.get("/fprints", fprints);
 
 app.get("/not-found", (req, res) => {
     res.render("404");

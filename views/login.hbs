@@ -1,16 +1,27 @@
 <div class="login">
-    <div class="login-container">
-        {{> messages}}
-        <form action="/login" method="post">
-            <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Username</label>
-                <input type="text" class="form-control" name="username" id="exampleInputEmail1" aria-describedby="emailHelp">
+    <div class="container">
+        <div class="logos">
+            <div class="logo-1 yenitech">
+                <img src="/assets/img/a.png" alt="">
             </div>
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" id="exampleInputPassword1">
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+        </div>
+        <div class="login-form">
+            <form action="" method="post">
+                <div class="form-container">
+                    <input type="text" placeholder="Username" name="username">
+                    <input type="password" placeholder="Password" name="password">
+                    <div class="remember-forgot">
+                        <div class="checkbox">
+                            <input type="checkbox" id="remember-me" name="remember">
+                            <label for="remember-me">Remember Me</label>
+                        </div>
+                        <a href="">Forgot Your Password?</a>
+                    </div>
+                    {{>messages}}
+                    <div class="sign-button">
+                        <button type="submit" id="signIn">Sign In</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-</div>

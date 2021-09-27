@@ -1,4 +1,4 @@
-const { addEmployee, deleteEmployee, getEmployees, updateEmployee, getEmployee } = require("./employee.service");
+const { addEmployee, deleteEmployee, getEmployees, updateEmployee, getEmployee, updateJEnd, renderAddEmployeeForDept, renderAddEmployeeForPj, renderAddEmployeeForPos } = require("./employee.service");
 const { Employee } = require("../../db_config/models");
 const {Op} = require("sequelize");
 let errors = [];
@@ -228,31 +228,30 @@ module.exports = {
             return res.redirect('/employee');
         });
     },
-    getEmployees: (req, res) => {
-        getEmployees((err, result) => {
-           if(err) {
-               console.log(err);
-               req.flash("error_msg", "An unknown error occurred please contact System Admin")
-               res.redirect("/employee");
-           }
-           let dob;
-           for (let i = 0; i < result.length; i++) {
-               dob = result[i].dataValues.dob.split("-").reverse().join('.');
-               result[i].dataValues.dob = dob;
-           }
-           console.log(result);
-           if(req.user.role === 5 ) {
-               res.render("employee/employee", {
-                   employee: result,
-                   hr: true
-               });
-           } else if (req.user.role === 1) {
-               res.render("employee/employee", {
-                   employee: result,
-                   super_admin: true
-               });
-           }
-        });
+    getEmployees: async (req, res) => {
+        try {
+            const result = await getEmployees();
+            let dob;
+            for (let i = 0; i < result.length; i++) {
+                dob = result[i].dob.split("-").reverse().join('.');
+                result[i].dob = dob;
+            }
+            if(req.user.role === 5 ) {
+                res.render("employee/employee", {
+                    employee: result,
+                    hr: true
+                });
+            } else if (req.user.role === 1) {
+                res.render("employee/employee", {
+                    employee: result,
+                    super_admin: true
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            req.flash("error_msg", "An unknown error occurred please contact System Admin")
+            res.redirect("/employee");
+        }
     },
     updateEmployee: (req, res) => {
         errors = [];
@@ -445,26 +444,76 @@ module.exports = {
             }
         });
     },
-    getEmployee: (req, res) => {
+    getEmployee: async (req, res) => {
         const id = req.params.id;
+        const deptResult = await renderAddEmployeeForDept();
+        const pjResult = await renderAddEmployeeForPj();
+        const psResult = await renderAddEmployeeForPos();
         getEmployee(id, (err, result) => {
             if (err) {
                 console.log(err);
                 req.flash("error_msg", "An unknown error has been occurred");
                 return res.redirect("/employees");
             }
-            console.log(result);
             if(req.user.role === 5) {
                 return res.render("employee/update", {
                     hr: true,
-                    employee: result.dataValues
+                    employee: result.dataValues,
+                    deptResult,
+                    pjResult,
+                    psResult
                 });
             } else if (req.user.role === 1) {
+                console.log(deptResult);
                 return res.render("employee/update", {
                     super_admin: true,
-                    employee: result.dataValues
+                    employee: result.dataValues,
+                    deptResult,
+                    pjResult,
+                    psResult
                 });
             }
-        })
+        });
+    },
+    updateJEnd: (req, res) => {
+        const data = req.body;
+        const id = req.body.id;
+
+        updateJEnd(id, data, (err, result) => {
+           if (err) {
+               console.log(err);
+               req.flash("error_msg", "An error has been occurred please contact System Admin");
+               return res.redirect("/employee");
+           }
+           console.log(result);
+           req.flash("An employee has been updated");
+           return res.redirect("/employee");
+        });
+    },
+    renderAddEmployee: async (req, res) => {
+        try {
+            const deptResult = await renderAddEmployeeForDept();
+            const psResult =  await renderAddEmployeeForPos();
+            const pjResult = await renderAddEmployeeForPj();
+            if(req.user.role === 5) {
+                return res.render("employee/add-employee", {
+                    hr: true,
+                    deptResult,
+                    psResult,
+                    pjResult
+                });
+            } else if (req.user.role === 1) {
+                return res.render("employee/add-employee", {
+                    super_admin: true,
+                    deptResult,
+                    psResult,
+                    pjResult
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            req.flash("error_msg", "An unkown error has been occurred please contact System Admin");
+            return res.redirect("/employee/add-employee");
+        }
     }
 }

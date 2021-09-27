@@ -9,12 +9,15 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       emp_id: {
+        type: Sequelize.INTEGER
+      },
+      project_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'Employees',
-          key: 'id',
-          as: 'emp_id'
-        }
+        allowNull: false
+      },
+      department_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

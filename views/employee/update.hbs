@@ -1,34 +1,141 @@
-<div class="add-employee">
-    {{#if employee}}
-        <form action="/employee/update/{{employee.id}}" method="post">
-            <h1>Add Employee</h1>
-            <div class="form-container">
-                <div class="form-left">
-                    First Name <input type="text" name="first_name" value="{{employee.first_name}}">
-                    Last Name <input type="text" name="last_name" value="{{employee.last_name}}">
-                    Father Name <input type="text" name="father_name" value="{{employee.father_name}}">
-                    Date Of Birth <input type="date" name="dob" value="{{employee.dob}}">
-                    Address 1 <input type="text" name="q_address" value="{{employee.q_address}}">
-                    Address 2 <input type="text" name="y_address" value="{{employee.y_address}}">
-                    SSN <input type="text" name="SSN" value="{{employee.SSN}}">
-                    FIN <input type="text" name="FIN" value="{{employee.FIN}}">
-                    Sex <input type="text" name="sex" value="{{employee.sex}}">
+<div class="time-off-form mb-5">
+    <h1 class="text-center">Əməkdaş Düzəliş Formu</h1>
+    <form action="" method="get">
+        {{#if employee}}
+            <div class="time-off-select-container d-flex justify-content-between mt-5">
+                <div class="toff-select-cont-left d-flex flex-column">
+                    <div class="time-off-type">
+                        <label for="empName">İşçinin Adı: </label>
+                        <input type="text" name="first_name" id="empName" value="{{employee.first_name}}">
+                    </div>
+                    <div class="time-off-description">
+                        <label for="empSurname">Soyadı: </label>
+                        <input type="text" name="last_name" id="empSurname" value="{{employee.last_name}}">
+                    </div>
+                    <div class="time-off-priority">
+                        <label for="father_name">Ata adı: </label>
+                        <input type="text" name="father_name" id="father_name" value="{{employee.father_name}}">
+                    </div>
+                    <div class="toff-start-date">
+                        <label for="empMidName">2nci Adı: </label>
+                        <input type="text" name="middle_name" id="empMidName" value="{{employee.middle_name}}">
+                    </div>
+                    <div class="sex">
+                        <label for="sex">Cinsiyəti Seçin</label>
+                        <select name="sex" id="sex">
+                            {{#compare_if employee.sex 0}}
+                                <option value="0" selected>Kişi</option>
+                                <option value="1">Qadın</option>
+                            {{/compare_if}}
+                            {{#compare_if employee.sex 1}}
+                                <option value="0">Kişi</option>
+                                <option value="1" selected>Qadın</option>
+                            {{/compare_if}}
+                        </select>
+                    </div>
+                    <div class="toff-end-date">
+                        <label for="dob">Doğum Tarixi: </label>
+                        <input type="date" id="dob" value="{{employee.dob}}">
+                    </div>
+                    <div class="w-start-date">
+                        <label for="ssn">SSN: </label>
+                        <input type="number" name="SSN" id="ssn" value="{{employee.SSN}}">
+                    </div>
+                    <div class="possible-toff-days d-flex align-items-center">
+                        <label for="fin">FİN: </label>
+                        <input type="text" name="FIN" id="fin" value="{{employee.FIN}}">
+                    </div>
+                    <div class="toff-application-document">
+                        <label for="q_adress">Qeydiyatda olduğu ünvan: </label>
+                        <input type="text" id="q_address" value="{{employee.q_address}}">
+                    </div>
+                    <div class="toff-maker">
+                        <label for="y_adress">Yaşadığı ünvan:</label>
+                        <input type="text" id="y_address" value="{{employee.y_address}}">
+                    </div>
                 </div>
-                <div class="form-right">
-                    Phone Number <input type="text" name="phone_number" value="{{employee.phone_number}}">
-                    Home Number <input type="text" name="home_number" value="{{employee.home_number}}">
-                    Shift Start Time <input type="time" name="shift_start_t" value="{{employee.shift_start_t}}">
-                    Shift End Time <input type="time" name="shift_end_t" min="09:00" value="{{employee.shift_end_t}}">
-                    Job Start Date <input type="date" name="j_start_date" value="{{employee.j_start_date}}">
-                    Day Off Days Total <input type="text" name="dayoff_days_total" value="{{employee.dayoff_days_total}}">
-                    Department <input type="text" name="department" value="{{employee.department}}">
-                    Position <input type="text" name="position_id" value="{{employee.position_id}}">
-                    Project <input type="text" name="project_id" value="{{employee.project_id}}">
+                <div class="emp-select-cont-right d-flex flex-column">
+                    <div class="toff-branch">
+                        <label for="phone_number">Telefon Nömrəsi: </label>
+                        <input type="number" name="phone_number" id="phone_number" value="{{employee.phone_number}}">
+                    </div>
+                    <div class="toff-department">
+                        <label for="home_number">Ev telefonu:</label>
+                        <input type="number" name="home_number" id="home_number" value="{{employee.home_number}}">
+                    </div>
+                    <div class="toff-emp-position">
+                        <label for="shift_start_time">İşə gəlmə vaxtı: </label>
+                        <input type="time" name="shift_start_t" id="shift_start_time" value="{{employee.shift_start_t}}">
+                    </div>
+                    <div class="toff-emp-comment">
+                        <label for="shift_end_time">İşdən çıxma vaxtı: </label>
+                        <input type="time" name="shift_end_t" id="shift_end_time" value="{{employee.shift_end_t}}">
+                    </div>
+                    <div class="toff-emp-comment">
+                        <label for="job_start_date">İşə başlama tarixi: </label>
+                        <input type="date" name="j_start_date" id="job_start_date" value="{{employee.j_start_time}}">
+                    </div>
+                    <div class="toff-emp-comment">
+                        <label for="dayoff_days_total">Məzuniyyət günlərinin sayı:</label>
+                        <input type="number" name="dayoff_days_total" id="dayoff_days_total" value="{{employee.dayoff_days_total}}">
+                    </div>
+
+                    <div class="toff-emp-comment">
+                        <label for="working_days">İş günlərinin sayı:</label>
+                        <input type="number" name="working_days" id="working_days" value="{{employee.working_days}}">
+                    </div>
+                    <div class="toff-emp-comment">
+                        <label for="department_id">Departament:</label>
+                        <select name="department_id" id="department_id" >
+                            {{#if deptResult}}
+                                {{#each deptResult}}
+                                    {{#compare_if employee.department this.id}}
+                                        <option value="{{this.id}}" selected>{{this.name}}</option>
+                                    {{/compare_if}}
+                                    <option value="{{this.id}}">{{this.name}}</option>
+                                {{/each}}
+                            {{/if}}
+                        </select>
+                    </div>
+                    <div class="toff-emp-comment">
+                        <label for="department_id">Vəzifəsi:</label>
+                        <select name="department_id" id="department_id">
+                            {{#if psResult}}
+                                {{#each psResult}}
+                                    {{#compare_if employee.position_id this.id}}
+                                        <option value="{{this.id}}" selected>{{this.name}}</option>
+                                    {{/compare_if}}
+                                    <option value="{{this.id}}">{{this.name}}</option>
+                                {{/each}}
+                            {{/if}}
+                        </select>
+                    </div>
+                    {{#if pjResult}}
+                        {{#each pjResult}}
+                            {{#compare_if employee.project_id this.id}}
+                                sfsfsf
+                            {{/compare_if}}
+                        {{/each}}
+                    {{/if}}
+                    <div class="toff-emp-comment">
+                        <label for="project_id">Proyekt:</label>
+                        <select name="project_id" id="project_id">
+                            {{#if pjResult}}
+                                {{#each pjResult}}
+                                    <option value="{{this.id}}">{{this.name}}</option>
+                                    {{#compare_if employee.project_id this.id}}
+                                        <option value="{{this.id}}" selected>{{this.name}}</option>
+                                    {{/compare_if}}
+                                {{/each}}
+                            {{/if}}
+                        </select>
+                    </div>
                 </div>
             </div>
-            <button type="submit">Add</button>
-
-            {{> messages}}
-        </form>
-    {{/if}}
+            <div class="toff-submit-btn mt-4 mb-5">
+        {{/if}}
+            <button type="submit" id="toffBtn">Apply</button>
+        </div>
+        {{>messages}}
+    </form>
 </div>

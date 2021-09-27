@@ -9,5 +9,12 @@
     "7": "audit",
     "8": "management",
     "9": "user"
+  },
+  "tax": {
+    "dsmf": 10,
+    "h_insurance": 1,
+    "unemployment": 0.5,
+    "dsmf_lt_200": 3,
+    "dsmf_limit": 200
   }
 }

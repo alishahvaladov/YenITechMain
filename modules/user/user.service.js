@@ -7,9 +7,12 @@ module.exports = {
             emp_id: data.emp_id,
             username: data.username,
             password: data.password,
+            email: data.email,
             role: data.role,
             createdAt: Date.now(),
             updatedAt: Date.now()
+        }, {
+            logging: false
         }).then(() => {
             return cb();
         }).catch((err) => {
@@ -25,7 +28,8 @@ module.exports = {
                 role: {
                     [Op.ne]: 1
                 }
-            }
+            },
+            logging: false
         }).then((user) => {
             console.log("User: " + user);
             cb(null, user);
@@ -39,7 +43,8 @@ module.exports = {
                 role: {
                     [Op.ne]: 1
                 }
-            }
+            },
+            logging: false
         }).then((result) => {
             cb(null, result);
         }).catch((err) => {
@@ -53,7 +58,8 @@ module.exports = {
                 role: {
                     [Op.ne]: 1
                 }
-            }
+            },
+            logging: false
         }).then((result) => {
             cb(null, result);
         }).catch((err) => {
@@ -64,6 +70,7 @@ module.exports = {
         User.update({
             emp_id: data.emp_id,
             username: data.username,
+            email: data.email,
             role: data.role
         }, {
             where: {
@@ -71,7 +78,8 @@ module.exports = {
                 role: {
                     [Op.ne]: 1
                 }
-            }
+            },
+            logging:false
         }).then((result) => {
             if(result) {
                 console.log(result);

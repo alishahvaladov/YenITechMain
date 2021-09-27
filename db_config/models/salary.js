@@ -34,18 +34,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    dsmf: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    h_insurance: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    unemployment: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
     unpaid_day_off: {
       type: DataTypes.INTEGER,
       allowNull: false

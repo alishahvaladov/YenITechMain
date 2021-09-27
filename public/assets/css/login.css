@@ -1,0 +1,100 @@
+.bg {
+    position: absolute;
+    /*background-image: url("../img/a.jpg");*/
+    background-color: var(--web-right-bg-color);
+    filter: blur(5px);
+    height: 100vh;
+    width: 100vw;
+    z-index: -1;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.logos {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.logo-1 img {
+    width: 70%;
+}
+.logo-1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+}
+form input[type="text"],
+form input[type="password"]{
+    width: 100%;
+    padding: 5px;
+    margin: 10px 0;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--web-right-bg-color);
+    box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.2),
+    2px 2px 6px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 10px rgba(0, 0, 0, .15),
+    inset 2px 2px 6px rgba(0, 0, 0, .15);
+    outline: none;
+}
+
+
+
+.remember-forgot {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+form,
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.form-container {
+    width: 350px;
+}
+.login {
+    height: 70vh;
+    display: flex;
+    align-items: center;
+}
+.sign-button,
+#signIn{
+    width: 100%;
+}
+#signIn {
+    margin-top: 20px;
+    background-color: var(--web-right-bg-color);
+    border: 1px solid var(--web-right-bg-color);
+    color: var(--web-text-color);
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: -1px -1px 3px rgba(255, 255, 255, 0.1),
+    2px 2px 6px rgba(0, 0, 0, 0.3);
+    outline: none;
+}
+#signIn:hover {
+    color: var(--web-text-color);
+    box-shadow: -1px -1px 3px rgba(255, 255, 255, 1),
+    2px 2px 6px rgba(0, 0, 0, 0.3),
+    inset -2px -2px 10px rgba(255, 255, 255, 1),
+    inset 2px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+#signIn:focus {
+    box-shadow: inset -1px -1px 3px rgba(0, 0, 0, 0.3),
+    inset 2px 2px 6px rgba(255, 255, 255, 1);
+}
+label,
+input::placeholder {
+    color: var(--web-text-color);
+}
+
+form h1 {
+    color: #fff;
+}

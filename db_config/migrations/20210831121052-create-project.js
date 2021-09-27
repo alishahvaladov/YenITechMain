@@ -22,7 +22,7 @@ module.exports = {
       },
       project_manager_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       parent_id: {
         type: Sequelize.INTEGER,

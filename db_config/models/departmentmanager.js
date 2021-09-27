@@ -11,29 +11,24 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      DepartmentManager.belongsTo(models.Employee, {
-        as: 'd_emp',
-        foreignKey: 'emp_id',
-        targetKey: 'id'
-      })
     }
   };
   DepartmentManager.init({
     emp_id: {
       type: DataTypes.INTEGER,
-      references: {
-        model: 'Employees',
-        key: 'id',
-        as: 'emp_id'
-      }
+      allowNull: false
     },
-    createdAt: {
-      allowNull: false,
-      type: DataTypes.DATE
+    project_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    department_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
   }, {
     sequelize,
-    modelName: 'DepartmentManager'
+    modelName: 'DepartmentManager',
   });
   return DepartmentManager;
 };

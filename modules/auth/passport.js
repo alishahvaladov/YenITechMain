@@ -9,7 +9,8 @@ module.exports = function (passport) {
               User.findOne({
                   where: {
                       username: username
-                  }
+                  },
+                  logging: false
               }).then((user) => {
                   console.log(user);
                   if(!user) {
@@ -40,7 +41,8 @@ module.exports = function (passport) {
        User.findOne({
            where: {
                id: id
-           }
+           },
+           logging: false
        }).then((user) => {
            done(null, user.get());
        })
