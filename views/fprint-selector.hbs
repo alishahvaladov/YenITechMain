@@ -10,17 +10,17 @@
             <th>Enter</th>
             <th>Leave</th>
             <th>
-                <a class="btn btn-outline-success btn-sm" href="/positions/add-position">Əlavə <i class="bi bi-plus-circle"></i></a>
+                Tənzimləmələr
             </th>
             </thead>
             <tbody>
             {{#if fResult}}
                 {{#each fResult}}
                     <tr>
-                        <td>{{this.emp_id}}</td>
+                        <td>{{this.first_name}} {{this.last_name}} {{this.father_name}}</td>
                         <td>{{this.f_enter}}</td>
                         <td>{{this.f_leave}}</td>
-                        <td>
+                        <td class="d-flex justify-content-center btn-group">
                             <a class="btn btn-outline-danger btn-sm" href="/positions/delete/{{this.id}}"><i class="bi bi-x-circle"></i></a>
                             <a class="btn btn-outline-secondary btn-sm" href="/positions/update/{{this.id}}"><i class="bi bi-pencil-square"></i></a>
                         </td>
@@ -30,7 +30,7 @@
             {{#if nFResult}}
                 {{#each nFResult}}
                     <tr>
-                        <td>{{this.emp_id}}</td>
+                        <td>{{this.first_name}} {{this.last_name}} {{this.father_name}}</td>
                         <td>{{this.f_enter}}</td>
                         <td>{{this.f_leave}}</td>
                         <td>

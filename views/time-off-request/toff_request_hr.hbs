@@ -24,11 +24,11 @@
                     <div class="time-off-priority">
                         <label for="toff-priority">Prioritet: </label>
                         <select name="time-off-priority" id="toff-priority">
-                            <option value="0">Az</option>
-                            <option value="0">Bir az</option>
-                            <option value="0">Normal</option>
-                            <option value="0">Çox</option>
-                            <option value="0">Lap çox</option>
+                            <option value="1">Az</option>
+                            <option value="2">Bir az</option>
+                            <option value="3">Normal</option>
+                            <option value="4">Çox</option>
+                            <option value="5">Lap çox</option>
                         </select>
                     </div>
                     <div class="toff-start-date">
@@ -52,26 +52,26 @@
                     </div>
                 </div>
                 <div class="toff-select-cont-right d-flex flex-column">
-                    <div class="toff-application-document">
-                        <label>Ərizəni Yükləyin: </label>
-                        <label class="text-center" id="chooseAppFile" for="toff-application-doc">Fayl Seçin</label>
-                        <input class="d-none" type="file" id="toff-application-doc">
-                    </div>
-                    <div class="toff-maker">
+                     <div class="toff-maker">
                         <label for="toff-maker">Təşəbbüsçü:</label>
-                        <input type="text" name="toff-maker" value="Əli Şahvələdov Məzahir oğlu" id="toff-maker" disabled>
+                        <select name="emp_id" id="toff-maker">
+                            <option value="0" hidden>Əməkdaş Seçin</option>
+                            {{#each result}}
+                                <option value="{{this.id}}">{{this.first_name}} {{this.last_name}} {{this.father_name}}</option>
+                            {{/each}}
+                        </select>
                     </div>
                     <div class="toff-branch">
                         <label for="toff-branch">Filial: </label>
-                        <input type="text" name="toff-branch" id="toff-branch" value="YHŞQ" disabled>
+                        <input type="text" name="toff-branch" id="toff-branch" disabled>
                     </div>
                     <div class="toff-department">
                         <label for="toff-department">Departament</label>
-                        <input type="text" name="toff-department" id="toff-department" value="Daxili Audit" disabled>
+                        <input type="text" name="toff-department" id="toff-department" disabled>
                     </div>
                     <div class="toff-emp-position">
                         <label for="toff-emp-position">Vəzifə: </label>
-                        <input type="text" name="toff-emp-position" id="toff-emp-position" value="IT Auditor" disabled>
+                        <input type="text" name="toff-emp-position" id="toff-emp-position" disabled>
                     </div>
                     <div class="toff-emp-comment">
                         <label for="toff-emp-comment">Şərh: </label>
@@ -85,3 +85,6 @@
         </form>
     </div>
 </div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/time-off-api.js"></script>

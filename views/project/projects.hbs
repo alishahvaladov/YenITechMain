@@ -9,9 +9,8 @@
             <th>Project Name</th>
             <th>Address</th>
             <th>Project Manager</th>
-            <th>Parent ID</th>
             <th>
-                <a class="btn btn-outline-success btn-sm" href="/projects/add-project">Əlavə <i class="bi bi-plus-circle"></i></a>
+                <a class="btn btn-outline-success btn-sm w-100" href="/projects/add-project">Əlavə <i class="bi bi-plus-circle"></i></a>
             </th>
             <th></th>
             <th></th>
@@ -27,14 +26,10 @@
                         <td>{{dataValues.name}}</td>
                         <td>{{dataValues.address}}</td>
                         <td>{{dataValues.project_manager_id}}</td>
-                        {{#if dataValues.parent_id}}
-                            <td>{{dataValues.parent_id}}</td>
-                        {{else}}
-                            <td><span class="text-danger">No Parent</span></td>
-                        {{/if}}
-                        <td>
+                        <td class="d-flex justify-content-between">
                             <a class="btn btn-outline-danger btn-sm" href="/projects/delete/{{dataValues.id}}"><i class="bi bi-x-circle"></i></a>
                             <a class="btn btn-outline-secondary btn-sm" href="/projects/update/{{dataValues.id}}"><i class="bi bi-pencil-square"></i></a>
+                            <a class="btn btn-outline-primary btn-sm" href="/projects/project/{{dataValues.id}}"><i class="bi bi-diagram-3"></i></a>
                         </td>
                         <td></td>
                         <td></td>

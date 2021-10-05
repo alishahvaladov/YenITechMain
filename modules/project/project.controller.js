@@ -1,4 +1,4 @@
-const { addProject, getProjects, getProject, updateProject, deleteProject } = require("./project.service");
+const { addProject, getProjects, getProject, updateProject, deleteProject, getChildren } = require("./project.service");
 const { Project } = require("../../db_config/models");
 const {response} = require("express");
 const {Op} = require("sequelize");
@@ -129,5 +129,23 @@ module.exports = {
             req.flash("success_msg", "This project has been deleted");
             return res.redirect("/projects");
         })
+    },
+    getChildren: async (req, res) => {
+        try {
+            let id = req.params.id;
+            let result = await getChildren(id);
+            if (req.user.role === 1) {
+                res.render("project/children", {
+                    super_admin: true,
+                    projects: result
+                });
+            } else if (req.user.role === 5) {
+                res.render("project/children", {
+                    hr: true,
+                    projects: result
+                });
+            }
+        }  catch (err) {
+        }
     }
 }

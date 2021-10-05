@@ -1,10 +1,16 @@
 const { getFPrints } = require("./service");
+const readXlsxFile = require("read-excel-file/node");
+const path = require("path");
 let errors = [];
 
 module.exports = {
     getFPrints: async (req, res) => {
         const result = await getFPrints();
         console.log(result);
+        for (let i = 0; i < result.length; i++) {
+            let createdAt = result[i].createdAt.toLocaleDateString();
+            result[i].createdAt = createdAt;
+        }
         try {
             if(req.user.role === 1) {
                 res.render("fprint/fprints", {
@@ -31,5 +37,17 @@ module.exports = {
                 });
             }
         }
-    }
+    },
+    addFPrintToDB: (req, res) => {
+        // const file = req.file;
+        // console.log(file);
+        // let pathFile = path.join(__dirname, '../../public/uploads/fprints/') + file;
+        // readXlsxFile(pathFile).then((rows) => {
+        //     console.log(rows);
+        // });
+        // return res.redirect("/fprints");
+        const data = req.file;
+        console.log(data);
+        return res.redirect("/fprints");
+    },
 }

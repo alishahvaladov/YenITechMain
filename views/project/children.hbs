@@ -1,0 +1,19 @@
+<div class="department-table">
+    {{> messages }}
+    <table class="table table-striped">
+        <div class="container">
+            <thead>
+            <th>Project Name</th>
+            </thead>
+            <tbody>
+            {{#if projects}}
+                {{#each projects}}
+                    <tr>
+                        <td>{{this.name}}</td>
+                    </tr>
+                {{/each}}
+            {{/if}}
+            </tbody>
+        </div>
+    </table>
+</div>

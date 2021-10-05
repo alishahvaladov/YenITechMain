@@ -1,6 +1,7 @@
+{{> messages }}
 <div class="time-off-form mb-5">
     <h1 class="text-center">Əməkdaş Qeydiyyat Formu</h1>
-    <form action="" method="get">
+    <form action="" method="post">
         <div class="time-off-select-container d-flex justify-content-between mt-5">
             <div class="toff-select-cont-left d-flex flex-column">
                 <div class="time-off-type">
@@ -28,7 +29,7 @@
                 </div>
                 <div class="toff-end-date">
                     <label for="dob">Doğum Tarixi: </label>
-                    <input type="date" id="dob">
+                    <input type="date" id="dob" name="dob">
                 </div>
                 <div class="w-start-date">
                     <label for="ssn">SSN: </label>
@@ -40,17 +41,30 @@
                 </div>
                 <div class="toff-application-document">
                     <label for="q_adress">Qeydiyatda olduğu ünvan: </label>
-                    <input type="text" id="q_address">
+                    <input type="text" id="q_address" name="q_address">
                 </div>
                 <div class="toff-maker">
                     <label for="y_adress">Yaşadığı ünvan:</label>
-                    <input type="text" id="y_address">
+                    <input type="text" id="y_address" name="y_address">
                 </div>
             </div>
             <div class="emp-select-cont-right d-flex flex-column">
                 <div class="toff-branch">
                     <label for="phone_number">Telefon Nömrəsi: </label>
-                    <input type="number" name="phone_number" id="phone_number">
+                    <div class="">
+                        <select style="width: 135px;" name="prefix" id="prefix">
+                            <option value="0" hidden>Prefix Seçin</option>
+                            <option value="050">050</option>
+                            <option value="051">051</option>
+                            <option value="055">055</option>
+                            <option value="099">099</option>
+                            <option value="070">070</option>
+                            <option value="077">077</option>
+                            <option value="060">060</option>
+                            <option value="010">010</option>
+                        </select>
+                        <input style="width: 150px;" type="number" name="phone_number" id="phone_number">
+                    </div>
                 </div>
                 <div class="toff-department">
                     <label for="home_number">Ev telefonu:</label>
@@ -75,11 +89,24 @@
 
                 <div class="toff-emp-comment">
                     <label for="working_days">İş günlərinin sayı:</label>
-                    <input type="number" name="working_days" id="working_days">
+                    <div>
+                        <input style="width: fit-content; height: fit-content" type="checkbox" name="full_day" id="full_day" checked>
+                        <input style="color: var(--web-text-color); box-shadow: -1px -1px 3px rgb(255 255 255), 2px 2px 6px rgb(0 0 0 / 30%), inset -2px -2px 10px rgb(255 255 255), inset 2px 2px 10px rgb(0 0 0 / 30%) !important;" type="number" name="working_days" id="working_days" disabled>
+                    </div>
+                </div>
+                <div class="toff-emp-comment">
+                    <label for="project_id">Proyekt:</label>
+                    <select class="select-width" name="project_id" id="project_id">
+                        {{#if pjResult}}
+                            {{#each pjResult}}
+                                <option value="{{this.id}}">{{this.name}}</option>
+                            {{/each}}
+                        {{/if}}
+                    </select>
                 </div>
                 <div class="toff-emp-comment">
                     <label for="department_id">Departament:</label>
-                    <select name="department_id" id="department_id">
+                    <select class="select-width" name="department" id="department_id">
                         {{#if deptResult}}
                             {{#each deptResult}}
                                 <option value="{{this.id}}">{{this.name}}</option>
@@ -88,21 +115,10 @@
                     </select>
                 </div>
                 <div class="toff-emp-comment">
-                    <label for="department_id">Vəzifəsi:</label>
-                    <select name="department_id" id="department_id">
+                    <label for="position_id">Vəzifəsi:</label>
+                    <select class="select-width" name="position_id" id="position_id">
                         {{#if psResult}}
                             {{#each psResult}}
-                                <option value="{{this.id}}">{{this.name}}</option>
-                            {{/each}}
-                        {{/if}}
-                    </select>
-                </div>
-
-                <div class="toff-emp-comment">
-                    <label for="project_id">Proyekt:</label>
-                    <select name="project_id" id="project_id">
-                        {{#if pjResult}}
-                            {{#each pjResult}}
                                 <option value="{{this.id}}">{{this.name}}</option>
                             {{/each}}
                         {{/if}}
@@ -113,6 +129,8 @@
         <div class="toff-submit-btn mt-4 mb-5">
             <button type="submit" id="toffBtn">Apply</button>
         </div>
-        {{>messages}}
     </form>
 </div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/add-employee.js"></script>

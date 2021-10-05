@@ -6,7 +6,6 @@ const session = require("express-session");
 const { sequelize } = require("./db_config/models");
 require("dotenv").config();
 const path = require("path");
-const multer = require("multer");
 const cors = require("cors");
 const MySQLStore = require('express-mysql-session')(session);
 const { hr } = require("./modules/auth/auth");
@@ -66,24 +65,6 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 
-var storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, "./public/uploads");
-    },
-    filename: function (req, file, cb) {
-        let ext = "."+ file.originalname.split(".").slice(-1);
-        cb(null, "profile-image" + "-" + Date.now() + ext);
-    }
-});
-
-var upload = multer({
-    storage
-});
-
-app.use(upload.single("profile-photo"));
-
-
-
 
 app.use(cors());
 app.options('*', cors());
@@ -111,9 +92,11 @@ const position = require("./modules/position/position.router");
 const nofprint = require("./modules/nofprint/nofprint.router");
 const salary = require("./modules/salary/salary.router");
 const calculate = require("./modules/salary-calculation/router");
-const salary_xlsx = require("./modules/upload_salary/router");
 const selectFPrint = require("./modules/all-f-print/router");
 const fprints = require("./modules/fprints/router");
+const empAPI = require("./api/employee/employee-api");
+const timeOffAPI = require("./api/time-off/api");
+const fPrintAPI = require("./api/fprints/api");
 
 // Routers
 app.use("/", userRouter);
@@ -125,13 +108,14 @@ app.use("/positions", position);
 app.use("/nofprint", nofprint);
 app.use("/salaries", salary);
 app.use("/calculation", calculate);
-app.use("/test", salary_xlsx);
-app.get("/select-fprint", selectFPrint);
-app.get("/fprints", fprints);
-
+app.use("/select-fprint", selectFPrint);
+app.use("/fprints", fprints);
+app.use("/api", empAPI);
+app.use("/api/time-off", timeOffAPI)
+app.use("/api/fprints", fPrintAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
-})
+});
 
 const port = process.env.PORT || 3000;
 

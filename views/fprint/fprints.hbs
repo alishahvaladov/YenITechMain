@@ -3,44 +3,39 @@
     <table class="table table-striped">
         <div class="container">
             <thead>
-            <th></th>
-            <th></th>
-            <th></th>
             <th>Employee</th>
-            <th>Enter Sign Time</th>
-            <th>Status</th>
+            <th>Project</th>
+            <th>Department</th>
+            <th>Position</th>
+            <th>Enter</th>
+            <th>Leave</th>
+            <th>Date</th>
             <th>
-                <a class="btn btn-outline-success btn-sm" href="/nofprint/add-nofprint"><i class="bi bi-plus-circle"></i></a>
+                <button id="fpUploadBtn" class="btn btn-outline-success btn-sm" type="button">Upload</button>
             </th>
-            <th></th>
-            <th></th>
+            </thead>
+            
+            <thead>
+            <th><input type="text" name="qEmployee" id="qEmployee"></th>
+            <th><input type="text" name="qProject" id="qProject"></th>
+            <th><input type="text" name="qDepartment" id="qDepartment"></th>
+            <th><input type="text" name="qPosition" id="qPosition"></th>
+            <th><input type="text" name="qEnter" id="qEnter"></th>
+            <th><input type="text" name="qLeave" id="qLeave"></th>
+            <th><input type="text" name="qDate" id="qDate"></th>
             <th></th>
             </thead>
             <tbody>
             {{#if result}}
                 {{#each result}}
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>{{dataValuesemp_id}}</td>
-                        <td>{{dataValues.f_enter}}</td>
-                        {{#if dataValues.f_leave}}
-                            <td class="text-success">{{dataValues.f_leave}}</td>
-                        {{else}}
-                            <td class="text-danger">Not Left</td>
-                        {{/if}}
-                        <td>
-                            {{#if dataValues.f_leave}}
-                                <span class="text-success"><i class="bi bi-check-lg"></i></span>
-                            {{else}}
-                                <div class="btn-group">
-                                    <a class="btn btn-outline-warning btn-sm" href="/nofprint/update/{{dataValues.id}}"><i class="bi bi-check-lg"></i></a>
-                                </div>
-                            {{/if}}
-                        </td>
-                        <td></td>
-                        <td></td>
+                        <td>{{this.first_name}} {{this.last_name}} {{this.father_name}}</td>
+                        <td>{{this.projName}}</td>
+                        <td>{{this.deptName}}</td>
+                        <td>{{this.posName}}</td>
+                        <td>{{this.f_enter}}</td>
+                        <td class="text-success">{{this.f_leave}}</td>
+                        <td>{{this.createdAt}}</td>
                         <td></td>
                     </tr>
                 {{/each}}
@@ -49,3 +44,20 @@
         </div>
     </table>
 </div>
+<div class="fprint-modal position-fixed w-100">
+    <div class="fprint-modal-container w-100 h-100 d-flex justify-content-center align-items-center">
+        <form action="" method="post">
+            <div class="fprint-background d-flex flex-column p-5">
+                <label for="upload" class="btn btn-outline-dark btn-sm mb-3">Fayl Seç</label>
+                <input class="d-none" type="file" id="upload" name="file">
+                <div class="buttons">
+                    <span id="fpCancelBtn" class="btn btn-outline-danger btn-sm" type="button">Ləğv et</span>
+                    <button class="btn btn-outline-primary btn-sm" type="submit">Təsdiqlə</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/f-print-api.js"></script>

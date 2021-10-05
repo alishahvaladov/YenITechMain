@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>YenITech</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/font.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/assets/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="icon" href="/assets/img/logo.png">
+</head>
+<body>
+<div class="dashboard">
+    <div class="dashboard-left">
+        <div class="left-container">
+            <div class="logo">
+                <a href="/dashboard"><img src="/assets/img/logo.png" alt=""></a>
+            </div>
+            {{#if super_admin}}
+                <nav style="height: 70%">
+                    <ul class="lists">
+                        <li class="list-items">
+                            <a href="/dashboard"><i class="bi bi-house-door"></i> <span class="nav-items">Home</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/employee"><i class="bi bi-person"></i></i> <span class="nav-items">Əməkdaşlar</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/select-fprint"><i class="fas fa-fingerprint"></i> <span class="nav-items">Barmaq İzləri</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/fines"><i class="bi bi-emoji-dizzy"></i><span class="nav-items">Approve Page</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/projects"><i class="bi bi-building"></i><span class="nav-items">Proyektlər</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/positions"><i class="fas fa-bullseye"></i><span class="nav-items">Proyektlər</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/users"><i class="fas fa-users"></i><span class="nav-items">Proyektlər</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/timeoffrequests"><i class="fas fa-suitcase"></i><span class="nav-items">Proyektlər</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/salaries"><i class="bi bi-cash-stack"></i><span class="nav-items">Proyektlər</span></a>
+                        </li>
+                    </ul>
+                </nav>
+            {{/if}}
+            {{#if hr}}
+                <nav style="height: 70%">
+                    <ul class="lists">
+                        <li class="list-items">
+                            <a href="/dashboard"><i class="bi bi-house-door"></i> <span class="nav-items">Home</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/employee"><i class="bi bi-person"></i></i> <span class="nav-items">Əməkdaşlar</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/select-fprint"><i class="fas fa-fingerprint"></i> <span class="nav-items">Barmaq İzləri</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/fines"><i class="bi bi-emoji-dizzy"></i><span class="nav-items">Approve Page</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/projects"><i class="bi bi-building"></i><span class="nav-items">Proyektlər</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/positions"><i class="fas fa-bullseye"></i><span class="nav-items">Proyektlər</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/users"><i class="fas fa-users"></i><span class="nav-items">Proyektlər</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/timeoffrequests"><i class="fas fa-suitcase"></i><span class="nav-items">Proyektlər</span></a>
+                        </li>
+                        <li class="list-items">
+                            <a href="/salaries"><i class="bi bi-cash-stack"></i><span class="nav-items">Proyektlər</span></a>
+                        </li>
+                    </ul>
+                </nav>
+            {{/if}}
+        </div>
+    </div>
+    <div class="dashboard-right">
+        <div class="dashboard-navigation">
+            <div class="search">
+                <span class="search-icon"><i class="fas fa-search"></i></span>
+                <input type="text" name="q" placeholder="Search">
+            </div>
+            <div class="date">
+                <span class="date-icon"><i class="far fa-calendar-alt"></i></span>
+                <span class="date-with-text">Tarix: </span>
+                <span id="date" class="date-with-dt"></span>
+            </div>
+            <div class="time">
+                <span class="date-icon"><i class="far fa-clock"></i></span>
+                <span class="date-with-text">Saat: </span>
+                <span id="time" class="date-with-dt"></span>
+            </div>
+            <div class="notification-profile">
+                <div class="notification">
+                    <div class="notification-bell">
+                            <span class="bellBtn">
+                                <i class="far fa-bell"></i>
+                            </span>
+                    </div>
+                </div>
+                <div class="profile-container">
+                    <div class="profile">
+                        <!--                        <span class="userBtn"><i class="far fa-user"></i></span>-->
+                        <img src="/assets/img/john.jpg" alt="">
+                    </div>
+                    <span class="profile-dropdown-icon">
+                        <i class="fas fa-caret-down"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="dropdown-for-profile">
+            <div class="profile-dropdown">
+                <div class="profile-dropdown-item"><a class="profile-dropdown-item-link" href="#">Profil <i class="bi bi-person-circle profile-dropdown-item-link"></i></a> </div>
+                <div class="dropdown-divider-profile"></div>
+                <div class="profile-dropdown-item"><a class="profile-dropdown-item-link" href="/logout">Çıxış <i class="bi bi-arrow-right-square profile-dropdown-item-link"></i></a> </div>
+            </div>
+        </div>
+        <div class="dashboard-body">
+            <div class="dashboard-container">
+                {{{body}}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/all.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="/assets/js/custom.js"></script>
+<script src="/assets/js/add-employee.js"></script>
+</body>
+</html>

@@ -354,6 +354,15 @@ span {
     margin-left: 10px;
     border: none;
 }
+#toff-maker {
+    width: 275px !important;
+}
+/*.time-off-form select {*/
+/*    width: 250px !important;*/
+/*}*/
+.select-width {
+    width: 300px !important;
+}
 .time-off-form textarea {
     padding: 0 10px;
     outline: none;
@@ -370,7 +379,7 @@ span {
 }
 .time-off-form input,.time-off-form select,.time-off-form textarea {
     box-shadow: -1px -1px 3px rgba(255, 255, 255, 0.1),
-    2px 2px 6px rgba(0, 0, 0, 0.3) !important;
+    2px 2px 6px rgba(0, 0, 0, 0.3) ;
     outline: none;
 }
 .time-off-form input:hover,.time-off-form select:hover,.time-off-form textarea:hover {
@@ -403,7 +412,16 @@ span {
     border-bottom: none;
     padding: 10px 5px;
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
 .toff-select-cont-right,
 .emp-select-cont-right {
     width: 40%;
@@ -421,6 +439,18 @@ span {
     align-items: center;
     border-bottom: none;
     padding: 10px 5px;
+}
+
+.fprint-modal {
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100vh;
+    display: none;
+    z-index: 111111;
+    top: 0;
+    left: 0;
+}
+.fprint-background {
+    background-color: #fff;
 }
 
 #toffBtn {

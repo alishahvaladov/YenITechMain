@@ -1,4 +1,5 @@
-const { Project } = require("../../db_config/models");
+const { Project, sequelize } = require("../../db_config/models");
+const {QueryTypes} = require("sequelize");
 
 module.exports = {
     addProject: (data, cb) => {
@@ -16,8 +17,11 @@ module.exports = {
     },
     getProjects: (cb) => {
         Project.findAll({
-            attributes: ['id', 'name', 'address', 'project_manager_id', 'parent_id'],
-            order: [['createdAt', 'DESC']]
+            attributes: ['id', 'name', 'address', 'project_manager_id'],
+            order: [['createdAt', 'DESC']],
+            where: {
+                parent_id: null
+            }
         }).then((results) => {
             console.log(results);
             cb(null, results);
@@ -61,6 +65,13 @@ module.exports = {
             cb(null, result);
         }).catch((err) => {
            cb(err);
+        });
+    },
+    getChildren: async (id) => {
+        return await sequelize.query("SELECT * FROM Projects where parent_id = :id", {
+            type: QueryTypes.SELECT,
+            replacements: {id: id},
+            logging: false
         });
     }
 }

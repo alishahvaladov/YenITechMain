@@ -4,6 +4,7 @@ let errors = [];
 
 module.exports = {
     getAllFPrints: async (req, res) => {
+        errors = [];
         try {
             let fResult = await getFPrints();
             let nFResult = await getNoFPrints();

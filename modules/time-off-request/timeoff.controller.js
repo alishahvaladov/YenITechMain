@@ -1,4 +1,4 @@
-const { addTimeOff, getTimeOffs, getTimeOff } = require("./timeoff.service");
+const { addTimeOff, getTimeOffs, getTimeOff, addTimeOffNonUser, getTimeOffNonUser } = require("./timeoff.service");
 const { TimeOffRequest } = require("../../db_config/models");
 let errors = [];
 
@@ -61,5 +61,50 @@ module.exports = {
                 });
             }
         });
+    },
+    addTimeOffNonUser: (req, res) => {
+        const data = req.body;
+        addTimeOffNonUser(data, (err, result) => {
+            if(err) {
+                console.log(err);
+                req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
+                return res.redirect("/timeoffrequests/add-toff-non-user");
+            }
+            console.log(result);
+            req.flash("success_msg", "Time off request has been added");
+            return res.redirect("/timeoffrequests");
+        })
+    },
+    getTimeOffNonUser: async (req, res) => {
+        errors = [];
+        try {
+            const result = await getTimeOffNonUser();
+
+            if(req.user.role === 1) {
+                return res.render("time-off-request/toff_request_hr", {
+                    result,
+                    super_admin: true
+                });
+            } else if (req.user.role === 5) {
+                return res.render("time-off-request/toff_request_hr", {
+                    result,
+                    hr: true
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            errors.push({msg: "An unknown error has been occurred please contact System Admin"});
+            if(req.user.role === 1) {
+                return res.render("time-off-request/toff_request_hr", {
+                    errors,
+                    super_admin: true
+                });
+            } else if (req.user.role === 5) {
+                return res.render("time-off-request/toff_request_hr", {
+                    errors,
+                    hr: true
+                });
+            }
+        }
     }
 }
