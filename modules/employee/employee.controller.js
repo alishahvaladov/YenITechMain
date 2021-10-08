@@ -379,12 +379,14 @@ module.exports = {
             if(req.user.role === 5 ) {
                 res.render("employee/employee", {
                     employee: result,
-                    hr: true
+                    hr: true,
+                    hr_emp: true
                 });
             } else if (req.user.role === 1) {
                 res.render("employee/employee", {
                     employee: result,
                     super_admin: true,
+                    super_admin_emp: true
                 });
             }
         } catch (err) {

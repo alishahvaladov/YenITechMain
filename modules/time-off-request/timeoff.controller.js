@@ -26,7 +26,7 @@ module.exports = {
             } else {
                 console.log(result)
                 if (req.user.role === 5) {
-                    return res.render("time-off-requests/timeoffrequests", {
+                    return res.render("time-off-request/timeoffrequests", {
                         timeoffrequests: result,
                         hr: true
                     });

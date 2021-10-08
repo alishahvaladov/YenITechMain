@@ -1,3 +1,6 @@
+<div class="div text-center">
+    {{>messages}}
+</div>
 <div class="login">
     <div class="container">
         <div class="logos">
@@ -11,13 +14,8 @@
                     <input type="text" placeholder="Username" name="username">
                     <input type="password" placeholder="Password" name="password">
                     <div class="remember-forgot">
-                        <div class="checkbox">
-                            <input type="checkbox" id="remember-me" name="remember">
-                            <label for="remember-me">Remember Me</label>
-                        </div>
                         <a href="">Forgot Your Password?</a>
                     </div>
-                    {{>messages}}
                     <div class="sign-button">
                         <button type="submit" id="signIn">Sign In</button>
                     </div>
@@ -25,3 +23,4 @@
             </form>
         </div>
     </div>
+</div>

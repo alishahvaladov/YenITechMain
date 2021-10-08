@@ -6,7 +6,6 @@ let errors = [];
 module.exports = {
     getFPrints: async (req, res) => {
         const result = await getFPrints();
-        console.log(result);
         for (let i = 0; i < result.length; i++) {
             let createdAt = result[i].createdAt.toLocaleDateString();
             result[i].createdAt = createdAt;
@@ -39,15 +38,11 @@ module.exports = {
         }
     },
     addFPrintToDB: (req, res) => {
-        // const file = req.file;
-        // console.log(file);
-        // let pathFile = path.join(__dirname, '../../public/uploads/fprints/') + file;
-        // readXlsxFile(pathFile).then((rows) => {
-        //     console.log(rows);
-        // });
-        // return res.redirect("/fprints");
-        const data = req.file;
-        console.log(data);
+        const file = req.file.path;
+        console.log(file);
+        readXlsxFile(file).then((rows) => {
+            console.log(rows);
+        });
         return res.redirect("/fprints");
     },
 }

@@ -3,12 +3,10 @@ const express = require("express");
 const exphbs = require("express-handlebars");
 const flash = require("connect-flash");
 const session = require("express-session");
-const { sequelize } = require("./db_config/models");
 require("dotenv").config();
 const path = require("path");
 const cors = require("cors");
 const MySQLStore = require('express-mysql-session')(session);
-const { hr } = require("./modules/auth/auth");
 
 const app = express();
 

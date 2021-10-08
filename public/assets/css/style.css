@@ -217,6 +217,7 @@ span {
     top: 0;
     right: 0;
     background-color: var(--web-design-color);
+    z-index: 1111;
 }
 .profile-dropdown-item {
     display: flex;
@@ -282,6 +283,7 @@ span {
     box-shadow: -1px -1px 3px rgba(255, 255, 255, .1), 2px 2px 6px rgba(0, 0, 0, .8);
     z-index: 1;
 }
+
 .emp-regstr-bg {
     position: absolute;
     top: 60%;
@@ -298,21 +300,28 @@ span {
     box-shadow: 5px 5px 10px #fff;
     z-index: -1;
 }
+table {
+    position: relative;
+}
 .modal-remove {
-    position: absolute;
+    position: fixed;
     display: none;
-    bottom: -120px;
+    justify-content: center;
+    align-items: center;
     padding: 10px;
-    left: 0px;
-    height: content-box;
+    right: 0;
+    top: 0;
+    height: 100vh;
     width: 100%;
-    background-color: #fff;
+    background-color: rgba(0, 0, 0, .7);
     box-shadow: 2px 2px 5px #000;
     border-radius: 5px;
     z-index: 1111;
 }
-.modal-container input {
-    width: 100%;
+.modal-container {
+    background-color: #fff;
+    width: 50%;
+    height: fit-content;
 }
 .show-modal {
     display: inherit !important;
@@ -453,7 +462,8 @@ input[type=number] {
     background-color: #fff;
 }
 
-#toffBtn {
+#toffNextBtn,
+#toffApplyBtn {
     background-color: var(--web-right-bg-color);
     font-size: 20px;
     font-weight: 400;
@@ -467,17 +477,21 @@ input[type=number] {
     float: right;
 }
 
-#toffBtn:hover {
+#toffNextBtn:hover,
+#toffApplyBtn:hover {
     color: var(--web-text-color);
     box-shadow: -1px -1px 3px rgba(255, 255, 255, 1),
     2px 2px 6px rgba(0, 0, 0, 0.3),
     inset -2px -2px 10px rgba(255, 255, 255, 1),
     inset 2px 2px 10px rgba(0, 0, 0, 0.3);
 }
-#toffBtn:active {
+#toffNextBtn:active,
+#toffApplyBtn:active {
     box-shadow: inset -1px -1px 3px rgba(0, 0, 0, 0.3),
     inset 2px 2px 6px rgba(255, 255, 255, 1);
 }
+
+
 #chooseAppFile {
     width: 275px;
     background-color: var(--web-right-bg-color);

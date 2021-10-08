@@ -46,11 +46,19 @@ getTime();
 let dateElem = document.querySelector("#date");
 dateElem.innerHTML = `${day} ${month}`;
 let empRemoveBtn = $(".empRmBtn");
+let empCancelBtn = $(".empModalCancelBtn");
+
+empCancelBtn.each(function () {
+   $(this).on("click", () => {
+      console.log($(this).parent().parent().parent().parent());
+      $(this).parent().parent().parent().parent().removeClass("show-modal");
+   });
+});
 
 empRemoveBtn.each(function (index) {
    $(this).on("click", () => {
       console.log($(this).parent().children('div.modal-remove'));
-      $(this).parent().children('div.modal-remove').toggleClass("show-modal");
+      $(this).parent().children('div.modal-remove').addClass("show-modal");
    });
 });
 
