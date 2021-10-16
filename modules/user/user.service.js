@@ -1,7 +1,13 @@
-const { User } = require("../../db_config/models");
-const {Op} = require("sequelize");
+const { User, sequelize} = require("../../db_config/models");
+const {Op, QueryTypes} = require("sequelize");
 
 module.exports = {
+    renderRegister: async (req, res) => {
+        return await sequelize.query("SELECT emp.id, emp.first_name, emp.last_name, emp.father_name, usr.* FROM Employees as emp LEFT JOIN Users as usr ON emp.id = usr.emp_id WHERE usr.emp_id IS NULL", {
+            type: QueryTypes.SELECT,
+            logging: false
+        });
+    },
     registerUser: (data, cb) => {
         User.create({
             emp_id: data.emp_id,

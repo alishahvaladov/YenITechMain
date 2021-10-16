@@ -81,7 +81,7 @@
                                                 <input type="text" disabled value="{{this.pjName}}">
                                             </div>
                                         </div>
-                                        <form class="d-flex flex-column justify-content-between" action="/employee/remove" method="post">
+                                        <form class="d-flex flex-column justify-content-between" action="/employee/remove/{{this.id}}" method="post" enctype="multipart/form-data">
                                             <input type="hidden" name="id" value="{{this.id}}">
                                             <div class="select-emp-rm-time d-flex justify-content-between">
                                                 <label for="">İşdən ayrılma vaxtı</label>
@@ -89,18 +89,18 @@
                                             </div>
                                             <div class="select-emp-rm-form-1 d-flex justify-content-between">
                                                 <label for="">Ərizə Skan</label>
-                                                <label class="btn btn-dark btn-sm" for="application-form-1">Faylı Yükləyin</label>
-                                                <input class="d-none" type="file" name="" id="application-form-1">
+                                                <label class="btn btn-outline-dark btn-sm" for="application-form-1">Faylı Yükləyin</label>
+                                                <input class="d-none" type="file" name="application-form" id="application-form-1">
                                             </div>
                                             <div class="select-emp-rm-form-2 d-flex justify-content-between">
                                                 <label for="">Əmr Skan</label>
-                                                <label class="btn btn-dark btn-sm" for="application-form-2">Faylı Yükləyin</label>
-                                                <input class="d-none" type="file" name="" id="application-form-2">
+                                                <label class="btn btn-outline-dark btn-sm" for="application-form-2">Faylı Yükləyin</label>
+                                                <input class="d-none" type="file" name="injunction" id="application-form-2">
                                             </div>
                                             <div class="select-emp-rm-work-book d-flex justify-content-between">
                                                 <label for="">Əmək Kitabçası Skan</label>
-                                                <label class="btn btn-dark btn-sm" for="application-work-book">Faylı Yükləyin</label>
-                                                <input class="d-none" type="file" name="" id="application-work-book">
+                                                <label class="btn btn-outline-dark btn-sm" for="application-work-book">Faylı Yükləyin</label>
+                                                <input class="d-none" type="file" name="work-book" id="application-work-book">
                                             </div>
                                             <div class="emp-rm-buttons d-flex justify-content-between">
                                                 <span class="btn btn-outline-danger btn-sm empModalCancelBtn">Ləğv Et</span>
@@ -167,7 +167,7 @@
                                                 <input type="text" disabled value="{{this.pjName}}">
                                             </div>
                                         </div>
-                                        <form class="d-flex flex-column justify-content-between" action="/employee/remove" method="post">
+                                        <form class="d-flex flex-column justify-content-between" action="/employee/remove/{{this.id}}" method="post" enctype="multipart/form-data">
                                             <input type="hidden" name="id" value="{{this.id}}">
                                             <div class="select-emp-rm-time d-flex justify-content-between">
                                                 <label for="">İşdən ayrılma vaxtı</label>
@@ -175,18 +175,18 @@
                                             </div>
                                             <div class="select-emp-rm-form-1 d-flex justify-content-between">
                                                 <label for="">Ərizə Skan</label>
-                                                <label class="btn btn-dark btn-sm" for="application-form-1">Faylı Yükləyin</label>
-                                                <input class="d-none" type="file" name="" id="application-form-1">
+                                                <label class="btn btn-outline-dark btn-sm" for="application-form-1">Faylı Yükləyin</label>
+                                                <input class="d-none" type="file" name="application-form" id="application-form-1">
                                             </div>
                                             <div class="select-emp-rm-form-2 d-flex justify-content-between">
                                                 <label for="">Əmr Skan</label>
-                                                <label class="btn btn-dark btn-sm" for="application-form-2">Faylı Yükləyin</label>
-                                                <input class="d-none" type="file" name="" id="application-form-2">
+                                                <label class="btn btn-outline-dark btn-sm" for="application-form-2">Faylı Yükləyin</label>
+                                                <input class="d-none" type="file" name="injunction" id="application-form-2">
                                             </div>
                                             <div class="select-emp-rm-work-book d-flex justify-content-between">
                                                 <label for="">Əmək Kitabçası Skan</label>
-                                                <label class="btn btn-dark btn-sm" for="application-work-book">Faylı Yükləyin</label>
-                                                <input class="d-none" type="file" name="" id="application-work-book">
+                                                <label class="btn btn-outline-dark btn-sm" for="application-work-book">Faylı Yükləyin</label>
+                                                <input class="d-none" type="file" name="work-book" id="application-work-book">
                                             </div>
                                             <div class="emp-rm-buttons d-flex justify-content-between">
                                                 <span class="btn btn-outline-danger btn-sm empModalCancelBtn">Ləğv Et</span>

@@ -1,14 +1,14 @@
 {
   "roles" : {
-    "1" : "super_admin",
-    "2" : "admin",
-    "3": "financier",
-    "4": "hr",
-    "5": "hr_assistance",
-    "6": "audit_director",
-    "7": "audit",
-    "8": "management",
-    "9": "user"
+    "1" : "Super Admin",
+    "2" : "Admin",
+    "3": "Financier",
+    "4": "HR",
+    "5": "HR Assistance",
+    "6": "Audit Director",
+    "7": "Audit",
+    "8": "Management",
+    "9": "User"
   },
   "tax": {
     "dsmf": 10,

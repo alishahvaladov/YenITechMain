@@ -1,6 +1,8 @@
-const { addEmployee, deleteEmployee, getEmployees, updateEmployee, getEmployee, updateJEnd, renderAddEmployeeForDept, renderAddEmployeeForPj, renderAddEmployeeForPos } = require("./employee.service");
+const { addEmployee, deleteEmployee, getEmployees, updateEmployee, getEmployee, updateJEnd, renderAddEmployeeForDept, renderAddEmployeeForPj, renderAddEmployeeForPos, getEmployeeRemoveModule, addFileNames } = require("./employee.service");
 const { Employee } = require("../../db_config/models");
 const {Op} = require("sequelize");
+const path = require("path");
+const fs = require("fs");
 const date = new Date();
 const year = date.getFullYear();
 const month = date.getMonth();
@@ -619,7 +621,7 @@ module.exports = {
     },
     updateJEnd: (req, res) => {
         const data = req.body;
-        const id = req.body.id;
+        const id = req.params.id;
 
         updateJEnd(id, data, (err, result) => {
            if (err) {
@@ -657,5 +659,53 @@ module.exports = {
             req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
             return res.redirect("/employee/add-employee");
         }
+    },
+    checkUploadPath: async (req, res, next) => {
+        let empPath = "";
+        const id = req.params.id;
+        try {
+            const result = await getEmployeeRemoveModule(id);
+            empPath = path.join(__dirname, "../../public/employees/resignations/" + result[0].id.toString() + "-" + result[0].first_name.toLocaleLowerCase() + "-" + result[0].last_name.toLocaleLowerCase() + "-" + result[0].father_name.toLocaleLowerCase());
+        } catch (err) {
+            console.log(err);
+            req.flash("error_msg", "This employee couldn't find please try again or contact System Admin");
+            return res.redirect("/employee");
+        }
+        fs.access(empPath, fs.constants.F_OK, err => {
+           if (err) {
+               // req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
+               // return res.redirect("/employee");
+               fs.mkdir(empPath, { recursive: true }, (err) => {
+                  if (err) {
+                      console.log(err);
+                      req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
+                      return res.redirect("/employee");
+                  }
+               });
+           } else {
+                next();
+           }
+        });
+    },
+    uploadFilePathToDB: (req, res, next) => {
+        let data = {};
+        if(!req.files) {
+            console.log("No files received");
+            req.flash("error_ms", "There is an error loading files");
+            return res.redirect("/employee");
+        }
+        let files = JSON.stringify(req.files);
+        console.log(files);
+        data.files = files;
+        data.user_id = req.user.id;
+        data.emp_id = req.params.id;
+        addFileNames(data, (err, result) => {
+            if(err) {
+                console.log(err);
+                req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
+                return res.redirect("/employee");
+            }
+            next();
+        });
     }
 }

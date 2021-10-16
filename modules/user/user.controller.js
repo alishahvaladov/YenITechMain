@@ -1,9 +1,45 @@
-const { registerUser, deleteUser, getUsers, getUser, updateUser} = require("./user.service");
-const { User } = require("../../db_config/models");
+const { registerUser, deleteUser, getUsers, getUser, updateUser, renderRegister} = require("./user.service");
+const { User, sequelize } = require("../../db_config/models");
 const passport = require("passport");
+const {QueryTypes} = require("sequelize");
+const jsonConfig = require("../../config/config.json");
 let errors = [];
 
 module.exports = {
+    renderRegister: async (req, res) => {
+        errors = [];
+        const roles = jsonConfig.roles;
+        try {
+            const result = await renderRegister();
+            if (req.user.role === 5) {
+                res.render('users/register', {
+                    hr: true,
+                    result,
+                    roles
+                });
+            } else if (req.user.role === 1) {
+                res.render('users/register', {
+                    super_admin: true,
+                    result,
+                    roles
+                })
+            }
+        } catch (err) {
+            console.log(err);
+            errors.push({msg: "Unknown error has been occurred please contact System Admin"});
+            if (req.user.role === 5) {
+                res.render('users/register', {
+                    hr: true,
+                    errors
+                });
+            } else if (req.user.role === 1) {
+                res.render('users/register', {
+                    super_admin: true,
+                    errors
+                })
+            }
+        }
+    },
     register: (req, res) => {
         errors = [];
         const data = req.body;

@@ -67,9 +67,13 @@ const fpModal = document.querySelector(".fprint-modal");
 const fpCancelBtn = document.querySelector("#fpCancelBtn");
 
 
-fpUploadBtn.addEventListener("click", () => {
-   fpModal.style.display = "inherit";
-});
-fpCancelBtn.addEventListener("click", () => {
-   fpModal.style.display = "none";
-});
+if(fpUploadBtn) {
+   fpUploadBtn.addEventListener("click", () => {
+      fpModal.style.display = "inherit";
+   });
+   fpCancelBtn.addEventListener("click", () => {
+      fpModal.style.display = "none";
+   });
+}
+
+

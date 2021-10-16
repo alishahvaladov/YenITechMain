@@ -144,6 +144,13 @@ span {
 .search-icon {
     font-size: 18px;
 }
+.emp-data div {
+    margin: 10px 0;
+}
+
+.emp-data div h4 {
+    font-size: 18px;
+}
 .search input {
     margin-left: 10px;
     border: none;

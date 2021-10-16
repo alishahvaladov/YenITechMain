@@ -1,4 +1,4 @@
-const { Employee } = require("../../db_config/models");
+const { Employee, EmployeeFileDirectory } = require("../../db_config/models");
 const {Op, QueryTypes} = require("sequelize");
 const {sequelize} = require("../../db_config/models/index");
 const date = new Date();
@@ -93,7 +93,7 @@ module.exports = {
             cb(err);
         })
     },
-    getEmployee: (id, cb) => {
+    getEmployee: async (id, cb) => {
         Employee.findOne({
             where: {
                 id: id
@@ -133,6 +133,27 @@ module.exports = {
         return await sequelize.query("SELECT * FROM Projects", {
             type: QueryTypes.SELECT,
             logging: false
+        });
+    },
+    getEmployeeRemoveModule: (id) => {
+        return sequelize.query("SELECT * FROM Employees WHERE id = :id AND deletedAt IS NULL", {
+            type: QueryTypes.SELECT,
+            logging: false,
+            replacements: {id: id}
+        });
+    },
+    addFileNames: (data, cb) => {
+        EmployeeFileDirectory.create({
+                emp_id: data.emp_id,
+                insert_user: data.user_id,
+                uploaded_files: data.files
+            }, {
+                logging: false
+            }
+        ).then((files) => {
+            cb(null, files);
+        }).catch((err) => {
+            cb(err);
         });
     }
 }
