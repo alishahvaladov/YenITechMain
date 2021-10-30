@@ -331,7 +331,7 @@ table {
     height: fit-content;
 }
 .show-modal {
-    display: inherit !important;
+    display: flex !important;
 }
 .time-off-form p {
     font-size: 20px;

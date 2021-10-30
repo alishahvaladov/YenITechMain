@@ -7,7 +7,7 @@ module.exports = {
                                         LEFT JOIN Projects as proj ON emp.project_id = proj.id
                                         LEFT JOIN Departments as dept ON emp.department = dept.id
                                         LEFT JOIN Positions as pos ON emp.position_id = pos.id
-                                        WHERE fp.f_enter IS NOT NULL AND fp.f_leave IS NOT NULL AND emp.deletedAt IS NULL`;
+                                        WHERE fp.f_print_time IS NOT NULL AND emp.deletedAt IS NULL`;
 
         let replacements = {};
 
@@ -42,19 +42,23 @@ module.exports = {
             query += " AND pos.name like :posName"
             replacements.posName = "%" + data.qPosition + "%";
         }
-        if(data.qEnter !== '') {
-            query += " AND fp.f_enter like :fEnter"
-            replacements.fEnter = "%" + data.qEnter + "%";
+        if(data.qTime !== '') {
+            query += " AND fp.f_print_time like :fTime"
+            replacements.fTime = "%" + data.qTime + "%";
         }
-        if(data.qLeave !== '') {
-            query += " AND fp.f_leave like :fLeave"
-            replacements.fLeave = "%" + data.qLeave + "%";
+        if(data.qDay !== '' && data.qDay !== '00' && data.qDay !== 'gun') {
+            query += " AND DAY(fp.createdAt) = :fDay"
+            replacements.fDay = data.qDay;
+            console.log(typeof data.qDay)
         }
-        if(data.qDate !== '') {
-            query += " AND fp.createdAt like :fDate"
-            replacements.fDate = "%" + data.qDate + "%";
+        if (data.qMonth !== '' && data.qMonth !== "00" && data.qMonth !== 'ay') {
+            query += " AND MONTH(fp.createdAt) = :fMonth"
+            replacements.fMonth = data.qMonth;
         }
-
+        if (data.qYear !== '' && data.qYear !== "00" && data.qYear !== "il") {
+            query += " AND YEAR(fp.createdAt) = :fYear"
+            replacements.fYear = data.qYear;
+        }
         console.log(query);
         console.log(replacements);
 

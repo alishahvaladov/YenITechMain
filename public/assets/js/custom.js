@@ -45,22 +45,7 @@ setInterval(getTime, 1000);
 getTime();
 let dateElem = document.querySelector("#date");
 dateElem.innerHTML = `${day} ${month}`;
-let empRemoveBtn = $(".empRmBtn");
-let empCancelBtn = $(".empModalCancelBtn");
 
-empCancelBtn.each(function () {
-   $(this).on("click", () => {
-      console.log($(this).parent().parent().parent().parent());
-      $(this).parent().parent().parent().parent().removeClass("show-modal");
-   });
-});
-
-empRemoveBtn.each(function (index) {
-   $(this).on("click", () => {
-      console.log($(this).parent().children('div.modal-remove'));
-      $(this).parent().children('div.modal-remove').addClass("show-modal");
-   });
-});
 
 const fpUploadBtn = document.querySelector("#fpUploadBtn");
 const fpModal = document.querySelector(".fprint-modal");

@@ -1,4 +1,4 @@
-const { getDepartment, getPosition } = require("./service");
+const { getDepartment, getPosition, getEmployee } = require("./service");
 
 module.exports = {
     getDepartment: async (req, res) => {
@@ -19,5 +19,18 @@ module.exports = {
         res.send({
             result: result
         });
+    },
+    getEmployee: async (req, res) => {
+        const id = req.body.emp_id;
+        try {
+            let result = await getEmployee(id);
+            res.send({
+                result: result
+            });
+        } catch (err) {
+            console.log(err);
+            req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
+            return res.redirect("/employee");
+        }
     }
 }

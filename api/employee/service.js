@@ -17,5 +17,17 @@ module.exports = {
             }
         })
     },
-
+    getEmployee: async (id) => {
+        return await sequelize.query(`SELECT dept.name as deptName, proj.name as projName, pos.name as posName, emp.first_name, emp.last_name, emp.father_name, emp.phone_number FROM Employees as emp 
+                                      LEFT JOIN Departments as dept ON emp.department = dept.id 
+                                      LEFT JOIN Projects as proj ON emp.project_id = proj.id
+                                      LEFT JOIN Positions as pos ON emp.position_id = pos.id
+                                      WHERE emp.id = :id`, {
+           type: QueryTypes.SELECT,
+           logging: false,
+           replacements: {
+               id: id
+           }
+        });
+    }
 }

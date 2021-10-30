@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class FPrint extends Model {
+  class LogixDB extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,23 +12,27 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-  }
-  FPrint.init({
-    user_id: {
-      allowNull: false,
-      type: DataTypes.INTEGER
-    },
+  };
+  LogixDB.init({
     emp_id: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    f_print_time: {
-      type: DataTypes.TIME,
+    name: {
+      type: DataTypes.STRING,
       allowNull: false
-    }
+    },
+    tabel_no: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    project_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
   }, {
     sequelize,
-    modelName: 'FPrint',
+    modelName: 'LogixDB',
   });
-  return FPrint;
+  return LogixDB;
 };

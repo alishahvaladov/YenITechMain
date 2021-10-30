@@ -3,13 +3,10 @@ const path = require("path");
 const projName = "YH";
 
 const excelFilter = (req, file, cb) => {
-    if (
-        file.mimetype.includes("excel") ||
-        file.mimetype.includes("spreadsheetml")
-    ) {
+    if ( path.extname(file.originalname) === ".xlsx") {
         cb(null, true);
     } else {
-        cb("Please upload only excel file.", false);
+        cb("Please upload only xlsx file.", false);
     }
 };
 

@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class FPrint extends Model {
+  class UnapprovedFPrints extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,23 +12,22 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-  }
-  FPrint.init({
-    user_id: {
-      allowNull: false,
-      type: DataTypes.INTEGER
-    },
-    emp_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+  };
+  UnapprovedFPrints.init({
+    name: {
+      type: DataTypes.STRING
     },
     f_print_time: {
       type: DataTypes.TIME,
       allowNull: false
-    }
+    },
+    tabel_no: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
   }, {
     sequelize,
-    modelName: 'FPrint',
+    modelName: 'UnapprovedFPrints',
   });
-  return FPrint;
+  return UnapprovedFPrints;
 };
