@@ -3,8 +3,8 @@
     "1" : "Super Admin",
     "2" : "Admin",
     "3": "Financier",
-    "4": "HR",
-    "5": "HR Assistance",
+    "4": "HR Assistance",
+    "5": "HR",
     "6": "Audit Director",
     "7": "Audit",
     "8": "Management",
@@ -16,5 +16,10 @@
     "unemployment": 0.5,
     "dsmf_lt_200": 3,
     "dsmf_limit": 200
+  },
+  "day_offs": {
+    "1": "Öz hesabına məzuniyyət",
+    "2": "Əmək məzuniyyəti",
+    "3": "Sağlamlıq Məzuniyyəti"
   }
 }

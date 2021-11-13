@@ -1,4 +1,4 @@
-const { searchFPrint } = require("./service");
+const { searchFPrint, renderFPrints, getFPrintsByPage } = require("./service");
 
 module.exports = {
     searchFPrint: async (req, res) => {
@@ -8,5 +8,35 @@ module.exports = {
         res.send({
             result
         });
+    },
+    renderFPrints: async (req, res) => {
+        try {
+            let fPrints = await renderFPrints();
+            res.send({
+                fPrints
+            })
+        } catch (err) {
+            console.log(err);
+            res.send({
+                err: "An unknown error has been occurred",
+                status: res.status
+            });
+        }
+    },
+    getFPrintsByPage: async (req, res) => {
+        const data = req.body;
+        try {
+            let fPrints = await getFPrintsByPage(data);
+            res.send({
+                fPrints
+            });
+
+        } catch (err) {
+            console.log(err);
+            res.send({
+                err: "An unknown error has been occurred",
+                status: res.status
+            });
+        }
     }
 }

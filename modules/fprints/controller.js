@@ -1,42 +1,17 @@
 const { getFPrints, findEmpFromLogix, addLogixDataToDB, addUnknownEmpsToDB } = require("./service");
 const readXlsxFile = require("read-excel-file/node");
 const path = require("path");
-let errors = [];
 
 module.exports = {
     getFPrints: async (req, res) => {
-        errors = [];
-        const result = await getFPrints();
-        for (let i = 0; i < result.length; i++) {
-            let cTime = result[i].createdAt;
-            cTime = new Date(cTime).toLocaleDateString();
-            result[i].createdA1t = cTime;
-        }
-        try {
-            if(req.user.role === 1) {
-                res.render("fprint/fprints", {
-                    super_admin: true,
-                    result
-                });
-            } else if (req.user.role === 5) {
-                res.render("fprint/fprints", {
-                    hr: true,
-                    result
-                });
-            }
-        } catch (err) {
-            errors.push({msg: "No Record For Today"});
-            if(req.user.role === 1) {
-                res.render("fprint/fprints", {
-                    super_admin: true,
-                    errors
-                });
-            } else if (req.user.role === 5) {
-                res.render("fprint/fprints", {
-                    hr: true,
-                    errors
-                });
-            }
+        if(req.user.role === 1) {
+            res.render("fprint/fprints", {
+                super_admin: true
+            });
+        } else if (req.user.role === 5) {
+            res.render("fprint/fprints", {
+                hr: true
+            });
         }
     },
     addFPrintToDB: async (req, res) => {
@@ -91,7 +66,7 @@ module.exports = {
                 }
             });
             req.flash("success_msg", "Finger print information have been uploaded successfully");
-            return res.redirect("/fprints");
+            return await res.redirect("/fprints");
         } catch (err) {
             console.log(err);
             req.flash("error_msg", "An unknown error has been occurred please contact System Admin");

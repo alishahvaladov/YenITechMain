@@ -336,6 +336,12 @@ table {
 .time-off-form p {
     font-size: 20px;
 }
+.toff-partitions {
+    display: none;
+}
+.toff-active {
+    display: inherit!important;
+}
 .routing span {
     font-size: 20px;
     width: 90%;
@@ -470,6 +476,19 @@ input[type=number] {
 }
 
 #toffNextBtn,
+#toffPrevBtn {
+    background-color: var(--web-right-bg-color);
+    font-size: 20px;
+    font-weight: 400;
+    border: 1px solid var(--web-right-bg-color);
+    color: var(--web-text-color);
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: -1px -1px 3px rgba(255, 255, 255, 0.1),
+    2px 2px 6px rgba(0, 0, 0, 0.3);
+    outline: none;
+}
+
 #toffApplyBtn {
     background-color: var(--web-right-bg-color);
     font-size: 20px;
@@ -485,7 +504,8 @@ input[type=number] {
 }
 
 #toffNextBtn:hover,
-#toffApplyBtn:hover {
+#toffApplyBtn:hover,
+#toffPrevBtn:hover {
     color: var(--web-text-color);
     box-shadow: -1px -1px 3px rgba(255, 255, 255, 1),
     2px 2px 6px rgba(0, 0, 0, 0.3),
@@ -493,7 +513,8 @@ input[type=number] {
     inset 2px 2px 10px rgba(0, 0, 0, 0.3);
 }
 #toffNextBtn:active,
-#toffApplyBtn:active {
+#toffApplyBtn:active,
+#toffPrevBtn:active {
     box-shadow: inset -1px -1px 3px rgba(0, 0, 0, 0.3),
     inset 2px 2px 6px rgba(255, 255, 255, 1);
 }

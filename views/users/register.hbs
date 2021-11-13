@@ -9,7 +9,7 @@
 <!--</form>-->
 
 {{> messages}}
-<form>
+<form action="/register" method="post">
     <div class="form-row row">
         <div class="form-group col-md-6">
             <label for="empSelect">Employee</label>
@@ -18,7 +18,7 @@
                 <option value="0" hidden>Choose Name</option>
                 {{#if result}}
                     {{#each result}}
-                        <option value="{{this.id}}">{{this.first_name}} {{this.last_name}} {{this.father_name}}</option>
+                        <option value="{{this.empID}}">{{this.empName}} {{this.empLName}} {{this.empFName}}</option>
                     {{/each}}
                 {{/if}}
             </select>

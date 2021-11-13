@@ -11,7 +11,8 @@ const fileFilter = (req, file, cb) => {
     ) {
         cb(null, true);
     } else {
-        cb("Please upload only word or pdf file.", false);
+        req.fileValidationError = true;
+        cb(null, false, new Error("Please upload only word or pdf file."));
     }
 };
 

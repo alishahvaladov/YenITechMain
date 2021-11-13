@@ -1,5 +1,6 @@
 const { addTimeOff, getTimeOffs, getTimeOff, addTimeOffNonUser, getTimeOffNonUser } = require("./timeoff.service");
 const { TimeOffRequest } = require("../../db_config/models");
+const config = require("../../config/config.json");
 let errors = [];
 
 module.exports = {
@@ -79,16 +80,18 @@ module.exports = {
         errors = [];
         try {
             const result = await getTimeOffNonUser();
-
+            let tOffTypes = config.day_offs;
             if(req.user.role === 1) {
                 return res.render("time-off-request/toff_request_hr", {
                     result,
-                    super_admin: true
+                    super_admin: true,
+                    tOffTypes
                 });
             } else if (req.user.role === 5) {
                 return res.render("time-off-request/toff_request_hr", {
                     result,
-                    hr: true
+                    hr: true,
+                    tOffTypes
                 });
             }
         } catch (err) {

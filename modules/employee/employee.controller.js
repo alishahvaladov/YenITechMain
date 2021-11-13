@@ -3,6 +3,7 @@ const { Employee } = require("../../db_config/models");
 const {Op} = require("sequelize");
 const path = require("path");
 const fs = require("fs");
+const {home} = require("nodemon/lib/utils");
 const date = new Date();
 const year = date.getFullYear();
 const month = date.getMonth();
@@ -38,9 +39,8 @@ module.exports = {
         const FIN = data.FIN;
         const prefix = data.prefix;
         const phoneNumber = data.phone_number;
-        const homeNumber = data.home_number;
-        const shiftStart = data.shift_start_t;
-        const shiftEnd = data.shift_end_t;
+        let homeNumber = data.home_number;
+        const shiftType = data.shift_type;
         const q_address = data.q_address.split('');
         let y_address;
         if(data.y_address === '') {
@@ -49,6 +49,8 @@ module.exports = {
             y_address = data.y_address;
         }
         const dayOffDays = data.dayoff_days_total;
+        const wDays = data.working_days;
+        const fDay = data.full_day;
         if(data.j_start_date === '') {
             j_start_date = false;
         } else {
@@ -60,7 +62,6 @@ module.exports = {
         const date = new Date();
         const sex = data.sex;
 
-        console.log(data);
         // console.log(typeof fName + ' ' + lName + ' ' + fatherName);
 
         if(fName) {
@@ -211,29 +212,6 @@ module.exports = {
             }
         }
 
-        if (shiftStart && shiftEnd) {
-            let sShiftStart = shiftStart.split(":");
-            if(isNaN(parseInt(sShiftStart[0])) === true || isNaN(parseInt(sShiftStart[1])) === true) {
-                console.log("Please enter valid time for Shift Start");
-                req.flash("error_msg", "Please enter valid time for Shift Start");
-                return res.redirect("/employee/add-employee");
-            }
-            let sShiftEnd = shiftEnd.split(":");
-            if(isNaN(parseInt(sShiftEnd[0])) === true || isNaN(parseInt(sShiftEnd[1])) === true) {
-                console.log("Please enter valid time for Shift End");
-                req.flash("error_msg", "Please enter valid time for Shift End");
-                return res.redirect("/employee/add-employee");
-            }
-
-            let sSHour = sShiftStart[0];
-            let sEHour = sShiftEnd[0];
-
-            if(parseInt(sEHour) - parseInt(sSHour) < 4) {
-                console.log("User: " + req.user.id + "Difference is: " + (parseInt(sEHour) - parseInt(sSHour)));
-                req.flash("error_msg", "The minimum work hour is 4 please check and try again");
-                return res.redirect("/employee/add-employee");
-            }
-        }
 
         if(prefix === '050' || prefix === '051' || prefix === '055' || prefix === '099' || prefix === '070' || prefix === '077' || prefix === '060' || prefix === '010') {
             console.log("Prefix validated");
@@ -262,23 +240,43 @@ module.exports = {
 
         data.phone_number = prefix.toString() + phoneNumber.toString();
 
-        const seperatedH = homeNumber.replace(" ", "").split("");
+        let seperatedH;
 
-        if(homeNumber.length !== 7) {
+        if (homeNumber !== '' && homeNumber !== null) {
+            seperatedH = homeNumber.replace(" ", "").split("");
+        }
+
+        if (homeNumber === '' || homeNumber === null) {
+            homeNumber = null;
+        } else if(homeNumber.length !== 7) {
             console.log("Home number should be 7 characters!");
             req.flash("error_msg", "Home number should be 7 characters!");
             return res.redirect("/employee/add-employee");
-        }
-
-        for (let i = 0; i < seperatedH.length; i++) {
-            if(isNaN(parseInt(seperatedH[i]))) {
-                console.log("Home number should be only numbers!");
-                req.flash("error_msg", "Home number should be only numbers!");
-                return res.redirect("/employee/add-employee");
-                break;
+            for (let i = 0; i < seperatedH.length; i++) {
+                if(isNaN(parseInt(seperatedH[i]))) {
+                    console.log("Home number should be only numbers!");
+                    req.flash("error_msg", "Home number should be only numbers!");
+                    return res.redirect("/employee/add-employee");
+                    break;
+                }
             }
         }
 
+        if(parseInt(shiftType) === 1 || parseInt(shiftType) === 2 || parseInt(shiftType) === 3) {
+            if(parseInt(shiftType) === 1) {
+                data.shift_start_t = '10:00';
+                data.shift_end_t = '19:00';
+            } else if (parseInt(shiftType) === 2) {
+                data.shift_start_t = '10:00';
+                data.shift_end_t = '14:00';
+            } else if (parseInt(shiftType) === 3) {
+                data.shift_start_t = '14:00';
+                data.shift_end_t = '19:00';
+            }
+        } else {
+            req.flash("Wrong shift type selected please try again");
+            return res.redirect("/employee/add-employee");
+        }
         if(j_start_date) {
             console.log(j_start_date);
             if(parseInt(j_start_date[0]) <= year && parseInt(j_start_date[1]) < month) {
@@ -303,6 +301,16 @@ module.exports = {
             return res.redirect("/employee/add-employee");
         }
 
+        if(fDay === 'on') {
+            data.working_days = 77;
+        } else if (parseInt(wDays) > 26) {
+            req.flash("Working days cannot be greater than maximum working day limit");
+            return res.redirect("/employee/add-employee");
+        } else if(isNaN(parseInt(wDays))) {
+            req.flash("Please enter valid working days");
+            res.redirect("/employee/add-employee");
+        }
+
         if(isNaN(parseInt(department))) {
             console.log("Please enter valid department");
             req.flash("error_msg", "Please enter valid department");
@@ -321,6 +329,7 @@ module.exports = {
             return res.redirect("/employee/add-employee");
         }
 
+
         Employee.findOne({
             where: {
                 SSN: data.SSN
@@ -332,6 +341,7 @@ module.exports = {
                 return res.redirect("/employee/add-employee");
             }
         });
+
         Employee.findOne({
             where: {
                 FIN: data.FIN
@@ -342,9 +352,9 @@ module.exports = {
                 req.flash("error_msg", "This FIN already exists please check again");
                 return res.redirect("/employee/add-employee");
             }
+            console.log(data);
             console.log(errors);
             if (errors.length === 0) {
-                console.log("Errors: " + errors);
                 addEmployee(data, (err, results) => {
                     if(err) {
                         console.log("Error" + err.message);
@@ -407,8 +417,6 @@ module.exports = {
         const SSN = data.SSN;
         const phoneNumber = data.phone_number;
         const homeNumber = data.home_number;
-        const shiftStart = data.shift_start_t;
-        const shiftEnd = data.shift_end_t;
         const dayOffDays = data.dayoff_days_total;
         const department = data.department;
         const position = data.position_id;
@@ -446,21 +454,6 @@ module.exports = {
             }
         }
 
-        if(shiftStart) {
-            let sShiftStart = shiftStart.split(":");
-            if(isNaN(parseInt(sShiftStart[0])) === true || isNaN(parseInt(sShiftStart[1])) === true) {
-                console.log("Please enter valid time for Shift Start");
-                errors.push("Please enter valid time for Shift Start");
-            }
-        }
-
-        if(shiftEnd) {
-            let sShiftEnd = shiftEnd.split(":");
-            if(isNaN(parseInt(sShiftEnd[0])) === true || isNaN(parseInt(sShiftEnd[1])) === true) {
-                console.log("Please enter valid time for Shift End");
-                errors.push("Please enter valid time for Shift End");
-            }
-        }
 
         if(sex !== 0 || sex !== 1) {
             console.log("Gender has changed manually from html codes: " + sex + req.user.id);
@@ -671,7 +664,7 @@ module.exports = {
             req.flash("error_msg", "This employee couldn't find please try again or contact System Admin");
             return res.redirect("/employee");
         }
-        fs.access(empPath, fs.constants.F_OK, err => {
+        await fs.access(empPath, fs.constants.F_OK, err => {
            if (err) {
                // req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
                // return res.redirect("/employee");
@@ -682,12 +675,15 @@ module.exports = {
                       return res.redirect("/employee");
                   }
                });
-           } else {
-                next();
            }
+           next();
         });
     },
-    uploadFilePathToDB: (req, res, next) => {
+    uploadFilePathToDB: async (req, res, next) => {
+        if(req.fileValidationError) {
+            req.flash("error_msg", "Please choose correct file");
+            return res.redirect("/employee")
+        }
         let data = {};
         if(!req.files) {
             console.log("No files received");
@@ -699,7 +695,7 @@ module.exports = {
         data.files = files;
         data.user_id = req.user.id;
         data.emp_id = req.params.id;
-        addFileNames(data, (err, result) => {
+        await addFileNames(data, (err, result) => {
             if(err) {
                 console.log(err);
                 req.flash("error_msg", "An unknown error has been occurred please contact System Admin");

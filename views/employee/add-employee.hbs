@@ -2,137 +2,193 @@
 <div class="time-off-form mb-5">
     <h1 class="text-center">Əməkdaş Qeydiyyat Formu</h1>
     <form action="" method="post">
-        <div class="time-off-select-container d-flex justify-content-between mt-5">
-            <div class="toff-select-cont-left d-flex flex-column">
-                <div class="time-off-type">
-                    <label for="empName">İşçinin Adı: </label>
-                    <input type="text" name="first_name" id="empName">
+        <div class="toff-partitions toff-active">
+            <div class="time-off-select-container d-flex justify-content-between mt-5">
+                <div class="toff-select-cont-left d-flex flex-column">
+                    <div class="time-off-type">
+                        <label for="empName">İşçinin Adı: </label>
+                        <input type="text" name="first_name" id="empName">
+                    </div>
+                    <div class="time-off-description">
+                        <label for="empSurname">Soyadı: </label>
+                        <input type="text" name="last_name" id="empSurname">
+                    </div>
+                    <div class="time-off-priority">
+                        <label for="father_name">Ata adı: </label>
+                        <input type="text" name="father_name" id="father_name">
+                    </div>
+                    <div class="toff-start-date">
+                        <label for="empMidName">2nci Adı: </label>
+                        <input type="text" name="middle_name" id="empMidName">
+                    </div>
+                    <div class="sex">
+                        <label for="sex">Cinsiyəti Seçin</label>
+                        <select name="sex" id="sex">
+                            <option value="0">Kişi</option>
+                            <option value="1">Qadın</option>
+                        </select>
+                    </div>
+                    <div class="toff-end-date">
+                        <label for="dob">Doğum Tarixi: </label>
+                        <input type="date" id="dob" name="dob">
+                    </div>
+                    <div class="w-start-date">
+                        <label for="ssn">SSN: </label>
+                        <input type="number" name="SSN" id="ssn">
+                    </div>
+                    <div class="possible-toff-days d-flex align-items-center">
+                        <label for="fin">FİN: </label>
+                        <input type="text" name="FIN" id="fin">
+                    </div>
+                    <div class="toff-application-document">
+                        <label for="q_address">Qeydiyatda olduğu ünvan: </label>
+                        <input type="text" id="q_address" name="q_address">
+                    </div>
+                    <div class="toff-maker">
+                        <label for="y_address">Yaşadığı ünvan:</label>
+                        <input type="text" id="y_address" name="y_address">
+                    </div>
                 </div>
-                <div class="time-off-description">
-                    <label for="empSurname">Soyadı: </label>
-                    <input type="text" name="last_name" id="empSurname">
-                </div>
-                <div class="time-off-priority">
-                    <label for="father_name">Ata adı: </label>
-                    <input type="text" name="father_name" id="father_name">
-                </div>
-                <div class="toff-start-date">
-                    <label for="empMidName">2nci Adı: </label>
-                    <input type="text" name="middle_name" id="empMidName">
-                </div>
-                <div class="sex">
-                    <label for="sex">Cinsiyəti Seçin</label>
-                    <select name="sex" id="sex">
-                        <option value="0">Kişi</option>
-                        <option value="1">Qadın</option>
-                    </select>
-                </div>
-                <div class="toff-end-date">
-                    <label for="dob">Doğum Tarixi: </label>
-                    <input type="date" id="dob" name="dob">
-                </div>
-                <div class="w-start-date">
-                    <label for="ssn">SSN: </label>
-                    <input type="number" name="SSN" id="ssn">
-                </div>
-                <div class="possible-toff-days d-flex align-items-center">
-                    <label for="fin">FİN: </label>
-                    <input type="text" name="FIN" id="fin">
-                </div>
-                <div class="toff-application-document">
-                    <label for="q_address">Qeydiyatda olduğu ünvan: </label>
-                    <input type="text" id="q_address" name="q_address">
-                </div>
-                <div class="toff-maker">
-                    <label for="y_address">Yaşadığı ünvan:</label>
-                    <input type="text" id="y_address" name="y_address">
+                <div class="emp-select-cont-right d-flex flex-column">
+                    <div class="toff-branch">
+                        <label for="phone_number">Telefon Nömrəsi: </label>
+                        <div class="">
+                            <select style="width: 135px;" name="prefix" id="prefix">
+                                <option value="0" hidden>Prefix Seçin</option>
+                                <option value="050">050</option>
+                                <option value="051">051</option>
+                                <option value="055">055</option>
+                                <option value="099">099</option>
+                                <option value="070">070</option>
+                                <option value="077">077</option>
+                                <option value="060">060</option>
+                                <option value="010">010</option>
+                            </select>
+                            <input style="width: 150px;" type="number" name="phone_number" id="phone_number">
+                        </div>
+                    </div>
+                    <div class="toff-department">
+                        <label for="home_number">Ev telefonu:</label>
+                        <input type="number" name="home_number" id="home_number">
+                    </div>
+                    <div class="toff-emp-position">
+                        <label for="shift_type">Ştat: </label>
+                        <select name="shift_type" id="shift_type">
+                            <option value="default" hidden>Ştat qrafiki</option>
+                            <option value="1">Tam Ştat</option>
+                            <option value="2">Yarımştat (Günün 1-ci yarısı)</option>
+                            <option value="3">Yarımştat (Günün 2-ci yarısı)</option>
+                        </select>
+                    </div>
+                    <div class="toff-emp-comment">
+                        <label for="job_start_date">İşə başlama tarixi: </label>
+                        <input type="date" name="j_start_date" id="job_start_date">
+                    </div>
+                    <div class="toff-emp-comment">
+                        <label for="dayoff_days_total">Məzuniyyət günlərinin sayı:</label>
+                        <input type="number" name="dayoff_days_total" id="dayoff_days_total">
+                    </div>
+
+                    <div class="toff-emp-comment">
+                        <label for="working_days">İş günlərinin sayı:</label>
+                        <div>
+                            <input style="width: fit-content; height: fit-content" type="checkbox" name="full_day" id="full_day" checked>
+                            <input style="color: var(--web-text-color); box-shadow: -1px -1px 3px rgb(255 255 255), 2px 2px 6px rgb(0 0 0 / 30%), inset -2px -2px 10px rgb(255 255 255), inset 2px 2px 10px rgb(0 0 0 / 30%) !important;" type="number" name="working_days" id="working_days" disabled>
+                        </div>
+                    </div>
+                    <div class="toff-emp-comment">
+                        <label for="project_id">Proyekt:</label>
+                        <select class="select-width" name="project_id" id="project_id">
+                            {{#if pjResult}}
+                                {{#each pjResult}}
+                                    <option value="{{this.id}}">{{this.name}}</option>
+                                {{/each}}
+                            {{/if}}
+                        </select>
+                    </div>
+                    <div class="toff-emp-comment">
+                        <label for="department_id">Departament:</label>
+                        <select class="select-width" name="department" id="department_id">
+                            {{#if deptResult}}
+                                {{#each deptResult}}
+                                    <option value="{{this.id}}">{{this.name}}</option>
+                                {{/each}}
+                            {{/if}}
+                        </select>
+                    </div>
+                    <div class="toff-emp-comment">
+                        <label for="position_id">Vəzifəsi:</label>
+                        <select class="select-width" name="position_id" id="position_id">
+                            {{#if psResult}}
+                                {{#each psResult}}
+                                    <option value="{{this.id}}">{{this.name}}</option>
+                                {{/each}}
+                            {{/if}}
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="emp-select-cont-right d-flex flex-column">
-                <div class="toff-branch">
-                    <label for="phone_number">Telefon Nömrəsi: </label>
-                    <div class="">
-                        <select style="width: 135px;" name="prefix" id="prefix">
-                            <option value="0" hidden>Prefix Seçin</option>
-                            <option value="050">050</option>
-                            <option value="051">051</option>
-                            <option value="055">055</option>
-                            <option value="099">099</option>
-                            <option value="070">070</option>
-                            <option value="077">077</option>
-                            <option value="060">060</option>
-                            <option value="010">010</option>
-                        </select>
-                        <input style="width: 150px;" type="number" name="phone_number" id="phone_number">
+<!--            <div class="toff-submit-btn mt-4 mb-5">-->
+<!--                <span class="btn" id="toffNextBtn">Növbəti</span>-->
+<!--            </div>-->
+<!--            <div class="toff-submit-btn d-none mt-4 mb-5">-->
+<!--                <button class="btn" id="toffApplyBtn">Apply</button>-->
+<!--            </div>-->
+        </div>
+        <div class="toff-partitions ">
+            <div class="time-off-select-container d-flex justify-content-between mt-5">
+                <div class="toff-select-cont-left d-flex flex-column">
+                    <div class="financial-responsibility-scan d-flex justify-content-between">
+                        <label for="">Tam Maddi-Məsuliyyət Müqaviləsi Skan</label>
+                        <label class="btn btn-dark" for="frScan">Fayl Seçin</label>
+                        <input class="d-none" type="file" id="frScan" name="frScan">
+                    </div>
+                    <div class="privacy-contract-scan d-flex justify-content-between">
+                        <label for="">Məxfi Məlumatların Qorunması Müqaviləsi Skan</label>
+                        <label class="btn btn-dark" for="pcScan">Fayl Seçin</label>
+                        <input class="d-none" type="file" id="pcScan" name="pcScan">
+                    </div>
+                    <div class="health-certificate-scan d-flex justify-content-between">
+                        <label for="">Sağlamlıq Haqqında Arayış Skan</label>
+                        <label class="btn btn-dark" for="hcScan">Fayl Seçin</label>
+                        <input class="d-none" type="file" id="hcScan" name="hcScan">
                     </div>
                 </div>
-                <div class="toff-department">
-                    <label for="home_number">Ev telefonu:</label>
-                    <input type="number" name="home_number" id="home_number">
-                </div>
-                <div class="toff-emp-position">
-                    <label for="shift_start_time">İşə gəlmə vaxtı: </label>
-                    <input type="time" name="shift_start_t" id="shift_start_time">
-                </div>
-                <div class="toff-emp-comment">
-                    <label for="shift_end_time">İşdən çıxma vaxtı: </label>
-                    <input type="time" name="shift_end_t" id="shift_end_time">
-                </div>
-                <div class="toff-emp-comment">
-                    <label for="job_start_date">İşə başlama tarixi: </label>
-                    <input type="date" name="j_start_date" id="job_start_date">
-                </div>
-                <div class="toff-emp-comment">
-                    <label for="dayoff_days_total">Məzuniyyət günlərinin sayı:</label>
-                    <input type="number" name="dayoff_days_total" id="dayoff_days_total">
-                </div>
+                <div class="emp-select-cont-right d-flex flex-column">
+                    <div class="injunction-scan d-flex justify-content-between">
+                        <label for="">Əmr Skan</label>
+                        <label class="btn btn-dark" for="injScan">Fayl Seçin</label>
+                        <input class="d-none" type="file" id="injScan" name="injScan">
+                    </div>
+                    <div class="diploma-scan d-flex justify-content-between">
+                        <label for="">Diplom Skan</label>
+                        <label class="btn btn-dark" for="diplomaScan">Fayl Seçin</label>
+                        <input class="d-none" type="file" id="diplomaScan" name="diplomaScan">
+                    </div>
 
-                <div class="toff-emp-comment">
-                    <label for="working_days">İş günlərinin sayı:</label>
-                    <div>
-                        <input style="width: fit-content; height: fit-content" type="checkbox" name="full_day" id="full_day" checked>
-                        <input style="color: var(--web-text-color); box-shadow: -1px -1px 3px rgb(255 255 255), 2px 2px 6px rgb(0 0 0 / 30%), inset -2px -2px 10px rgb(255 255 255), inset 2px 2px 10px rgb(0 0 0 / 30%) !important;" type="number" name="working_days" id="working_days" disabled>
+                    <div class="id-scan d-flex justify-content-between">
+                        <label for="">Şəxsiyyət Vəsiqəsi Skan</label>
+                        <label class="btn btn-dark" for="idScan">Fayl Seçin</label>
+                        <input class="d-none" type="file" id="idScan" name="idScan">
                     </div>
-                </div>
-                <div class="toff-emp-comment">
-                    <label for="project_id">Proyekt:</label>
-                    <select class="select-width" name="project_id" id="project_id">
-                        {{#if pjResult}}
-                            {{#each pjResult}}
-                                <option value="{{this.id}}">{{this.name}}</option>
-                            {{/each}}
-                        {{/if}}
-                    </select>
-                </div>
-                <div class="toff-emp-comment">
-                    <label for="department_id">Departament:</label>
-                    <select class="select-width" name="department" id="department_id">
-                        {{#if deptResult}}
-                            {{#each deptResult}}
-                                <option value="{{this.id}}">{{this.name}}</option>
-                            {{/each}}
-                        {{/if}}
-                    </select>
-                </div>
-                <div class="toff-emp-comment">
-                    <label for="position_id">Vəzifəsi:</label>
-                    <select class="select-width" name="position_id" id="position_id">
-                        {{#if psResult}}
-                            {{#each psResult}}
-                                <option value="{{this.id}}">{{this.name}}</option>
-                            {{/each}}
-                        {{/if}}
-                    </select>
+                    <div class="labor-contract d-flex justify-content-between">
+                        <label for="">Əmək Müqaviləsi Skan</label>
+                        <label class="btn btn-dark" for="lcScan">Fayl Seçin</label>
+                        <input class="d-none" type="file" id="lcScan" name="lcScan">
+                    </div>
+                    <div class="picture-3x4 d-flex justify-content-between">
+                        <label for="">Şəkil 3x4</label>
+                        <label class="btn btn-dark" for="pp">Fayl Seçin</label>
+                        <input class="d-none" type="file" id="pp" name="pp">
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="time-off-select-container d-flex justify-content-between mt-5 scan-upload-form">
-            <span class=""></span>
+        <div class="toff-submit-btn mt-4 d-flex justify-content-end">
+            <button class="btn mx-1" type="button" id="toffPrevBtn" disabled>Əvvəlki</button>
+            <button class="btn mx-1" type="button" id="toffNextBtn">Növbəti</button>
         </div>
         <div class="toff-submit-btn mt-4 mb-5">
-            <span class="btn" id="toffNextBtn">Next</span>
-        </div>
-        <div class="toff-submit-btn d-none mt-4 mb-5">
             <button class="btn" id="toffApplyBtn">Apply</button>
         </div>
     </form>

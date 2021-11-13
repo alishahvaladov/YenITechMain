@@ -41,6 +41,11 @@ module.exports = (sequelize, DataTypes) => {
     role: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    active_status: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      default: 0
     }
   }, {
     hooks: {

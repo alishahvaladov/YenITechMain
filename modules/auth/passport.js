@@ -18,6 +18,11 @@ module.exports = function (passport) {
                           message: "Username or password is incorrect"
                       })
                   }
+                  if(user.active_status === 0) {
+                        return done(null, false, {
+                            message: "This user is not activated"
+                        });
+                  }
                   bcrypt.compare(password, user.password, (err, isMatch) => {
                       if (err) throw err;
                       if(isMatch) {

@@ -17,19 +17,44 @@
             <th></th>
             </thead>
             <tbody>
-            {{#if users}}
-                {{#each users}}
+            {{#if result}}
+                {{#each result}}
                     <tr>
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>{{dataValues.emp_id}}</td>
-                        <td>{{dataValues.username}}</td>
-                        <td>{{dataValues.email}}</td>
-                        <td>{{dataValues.role}}</td>
+                        <td>{{this.first_name}} {{this.last_name}} {{this.father_name}}</td>
+                        <td>{{this.username}}</td>
+                        <td>{{this.email}}</td>
                         <td>
-                            <a class="btn btn-outline-danger btn-sm" href="/delete/{{dataValues.id}}"><i class="bi bi-x-circle"></i></a>
-                            <a class="btn btn-outline-secondary btn-sm" href="/users/update/{{dataValues.id}}"><i class="bi bi-pencil-square"></i></a>
+                            {{#compare_if this.role 2}}
+                                Admin
+                            {{/compare_if}}
+                            {{#compare_if this.role 3}}
+                                Financier
+                            {{/compare_if}}
+                            {{#compare_if this.role 4}}
+                                HR Assistance
+                            {{/compare_if}}
+                            {{#compare_if this.role 5}}
+                                HR
+                            {{/compare_if}}
+                            {{#compare_if this.role 6}}
+                                Audit Director
+                            {{/compare_if}}
+                            {{#compare_if this.role 7}}
+                                Audit
+                            {{/compare_if}}
+                            {{#compare_if this.role 8}}
+                                Management
+                            {{/compare_if}}
+                            {{#compare_if this.role 9}}
+                                User
+                            {{/compare_if}}
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-danger btn-sm" href="/delete/{{this.id}}"><i class="bi bi-x-circle"></i></a>
+                            <a class="btn btn-outline-secondary btn-sm" href="/users/update/{{this.id}}"><i class="bi bi-pencil-square"></i></a>
                         </td>
                         <td></td>
                         <td></td>

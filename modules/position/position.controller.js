@@ -8,6 +8,22 @@ module.exports = {
         errors = [];
         const data = req.body;
         data.user_id = req.user.id;
+        if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(data.name) === false) {
+            req.flash("error_msg", "Position cannot contain symbol");
+            return res.redirect("/positions/add-position");
+        }
+        let seperatedName = data.name.split("");
+        if (seperatedName.length < 3) {
+            req.flash("error_msg", "Position must be at least 3 letter long");
+            return res.redirect("/positions/add-position");
+        }
+        for(let i = 0; i < seperatedName.length; i++) {
+            if(!isNaN(parseInt(seperatedName[i]))) {
+                req.flash("error_msg", "Position cannot contain number");
+                return res.redirect("/positions/add-position");
+                break;
+            }
+        }
 
         Position.findOne({
             where: {

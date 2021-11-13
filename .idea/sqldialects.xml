@@ -3,5 +3,7 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/api/fprints/service.js" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/fprints/service.js" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/user/user.service.js" dialect="GenericSQL" />
+    <file url="PROJECT" dialect="MySQL" />
   </component>
 </project>

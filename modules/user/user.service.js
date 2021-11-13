@@ -3,7 +3,10 @@ const {Op, QueryTypes} = require("sequelize");
 
 module.exports = {
     renderRegister: async (req, res) => {
-        return await sequelize.query("SELECT emp.id, emp.first_name, emp.last_name, emp.father_name, usr.* FROM Employees as emp LEFT JOIN Users as usr ON emp.id = usr.emp_id WHERE usr.emp_id IS NULL", {
+        return await sequelize.query(`SELECT emp.id as empID, emp.first_name as empName, emp.last_name as empLName, emp.father_name as empFName, usr.* 
+                                    FROM Employees as emp 
+                                    LEFT JOIN Users as usr ON emp.id = usr.emp_id 
+                                    WHERE usr.emp_id IS NULL OR (usr.emp_id IS NULL AND usr.deletedAt IS NOT NULL)`, {
             type: QueryTypes.SELECT,
             logging: false
         });
@@ -15,6 +18,7 @@ module.exports = {
             password: data.password,
             email: data.email,
             role: data.role,
+            active_status: 0,
             createdAt: Date.now(),
             updatedAt: Date.now()
         }, {
@@ -43,18 +47,13 @@ module.exports = {
             cb(err);
         })
     },
-    getUsers: (cb) => {
-        User.findAll({
-            where: {
-                role: {
-                    [Op.ne]: 1
-                }
-            },
+    getUsers: async () => {
+        return await sequelize.query(`SELECT usr.*, emp.first_name, emp.last_name, emp.father_name 
+                                    FROM Users as usr 
+                                    LEFT JOIN Employees as emp ON usr.emp_id = emp.id
+                                    WHERE usr.deletedAt IS NULL AND usr.role != 1`, {
+            type: QueryTypes.SELECT,
             logging: false
-        }).then((result) => {
-            cb(null, result);
-        }).catch((err) => {
-            cb(err)
         });
     },
     getUser: (id, cb) => {

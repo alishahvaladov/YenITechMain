@@ -3,6 +3,7 @@ const { User, sequelize } = require("../../db_config/models");
 const passport = require("passport");
 const {QueryTypes} = require("sequelize");
 const jsonConfig = require("../../config/config.json");
+const nodemailer = require("nodemailer");
 let errors = [];
 
 module.exports = {
@@ -69,7 +70,7 @@ module.exports = {
                     break;
                 }
             }
-            if (splitUser.length < 7) {
+            if (splitUser.length < 6) {
                 console.log("Username must be minimum 6 characters");
                 errors.push({msg: "Username must be minimum 6 characters"});
             }
@@ -175,6 +176,43 @@ module.exports = {
                                 });
                             }
                         }
+                        async function main() {
+                            // Generate test SMTP service account from ethereal.email
+                            // Only needed if you don't have a real mail account for testing
+
+                            // create reusable transporter object using the default SMTP transport
+                            let transporter = nodemailer.createTransport({
+                                host: "smtp.ethereal.email",
+                                port: 587,
+                                secure: false, // true for 465, false for other ports
+                                auth: {
+                                    user: "sienna.lehner79@ethereal.email", // generated ethereal user
+                                    pass: "mp5gWtbzVNXaYzJH8x", // generated ethereal password
+                                },
+                                tls: {
+                                    rejectUnauthorized: false
+                                }
+                            });
+
+                            // send mail with defined transport object
+                            let info = await transporter.sendMail({
+                                from: '"Test User" <test@ethereal.email>', // sender address
+                                to: "Ali.Shahveledov@yenihayat.az", // list of receivers
+                                subject: "Test", // Subject line
+                                text: "Test", // plain text body
+                                html: "<b>Test</b>", // html body
+                            });
+
+                            console.log("Message sent: %s", info.messageId);
+                            // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+                            // Preview only available when sending through an Ethereal account
+                            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+                            // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+                        }
+
+                        main().catch(console.error);
+
                         req.flash("success_msg", "You have registered successfully")
                         return res.redirect('/register');
                     });
@@ -224,25 +262,36 @@ module.exports = {
             }
         })
     },
-    getUsers: (req, res) => {
-        getUsers((err, result) => {
-            if(err) {
-                console.log(err);
-                req.flash("error_msg", "User not found");
-                return res.render("users/");
-            }
-            if (req.user.role === 5) {
+    getUsers: async (req, res) => {
+        errors = [];
+        try {
+            let result = await getUsers();
+            if(req.user.role === 1) {
                 res.render("users/users", {
-                    users: result,
+                   result,
+                   super_admin: true
+                });
+            } else if (req.user.role === 5) {
+                res.render("users/users", {
+                    result,
                     hr: true
                 });
-            } else if (req.user.role === 1 ) {
+            }
+        } catch (err) {
+            console.log(err);
+            errors.push({msg: "An unknown error has been occurred please contact System Admin"});
+            if(req.user.role === 1) {
                 res.render("users/users", {
-                    users: result,
+                    errors,
                     super_admin: true
                 });
+            } else if (req.user.role === 5) {
+                res.render("users/users", {
+                    errors,
+                    hr: true
+                });
             }
-        });
+        }
     },
     getUser: (req, res) => {
         const id = req.params.id;

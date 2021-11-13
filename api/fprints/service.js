@@ -68,4 +68,45 @@ module.exports = {
             logging: false
         });
     },
+    renderFPrints: async () => {
+        let result = {};
+        result.fprints = await sequelize.query(`SELECT fp.*, emp.first_name as name, emp.last_name as surname, emp.father_name as fname, proj.name as projName,
+                                                pos.name as posName, dept.name as deptName
+                                                FROM Employees as emp 
+                                                LEFT JOIN FPrints as fp ON fp.emp_id = emp.id
+                                                LEFT JOIN Projects as proj ON emp.project_id = proj.id
+                                                LEFT JOIN Departments as dept ON emp.department = dept.id
+                                                LEFT JOIN Positions as pos ON emp.position_id = pos.id
+                                                ORDER BY createdAt DESC 
+                                                LIMIT 15 OFFSET 0`, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
+        result.count = await sequelize.query(`SELECT COUNT(*) as count FROM FPrints`, {
+            logging: false,
+            type: QueryTypes.SELECT,
+        });
+        return result;
+    },
+    getFPrintsByPage: async (data) => {
+        let result = {};
+        let offset = data.offset;
+        offset = 15 * (offset-1);
+        result.fprints = await sequelize.query(`SELECT fp.*, emp.first_name as name, emp.last_name as surname, emp.father_name as fname, proj.name as projName,
+                                                pos.name as posName, dept.name as deptName
+                                                FROM Employees as emp 
+                                                LEFT JOIN FPrints as fp ON fp.emp_id = emp.id
+                                                LEFT JOIN Projects as proj ON emp.project_id = proj.id
+                                                LEFT JOIN Departments as dept ON emp.department = dept.id
+                                                LEFT JOIN Positions as pos ON emp.position_id = pos.id
+                                                ORDER BY createdAt DESC 
+                                                LIMIT 15 OFFSET :offset`, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                offset
+            }
+        });
+        return result;
+    }
 }

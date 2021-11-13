@@ -7,11 +7,11 @@
                     <div class="time-off-type">
                         <label for="time-off-selector">Məzuniyyətin Növü:</label>
                         <select name="time-off-type" id="time-off-selector">
-                            <option value="0">Type 1</option>
-                            <option value="1">Type 2</option>
-                            <option value="2">Type 3</option>
-                            <option value="3">Type 4</option>
-                            <option value="4">Type 5</option>
+                            {{#if tOffTypes}}
+                                {{#each tOffTypes}}
+                                    <option value="{{@key}}">{{this}}</option>
+                                {{/each}}
+                            {{/if}}
                         </select>
                     </div>
                     <div class="time-off-description">

@@ -58,6 +58,8 @@ module.exports = {
             name: data.name,
             f_print_time: data.f_print_time,
             tabel_no: data.tabel_no
+        }, {
+            logging: false
         }).then((insert) => {
             cb(null, insert);
         }).catch((err) => {
