@@ -1,16 +1,16 @@
-const { register, login, logout, userDelete, getUsers, getUser, updateUser, renderRegister} = require("./user.controller");
+const { register, login, logout, userDelete, getUsers, getUser, updateUser, renderRegister, activate, mailTest} = require("./user.controller");
 const express = require("express");
 const router = express.Router();
-const { forwardAuthenticated, ensureAuthenticated, admin } = require("../auth/auth");
+const { forwardAuthenticated, ensureAuthenticated, admin, ensureActivated } = require("../auth/auth");
 
-router.get('/register', admin, renderRegister);
+router.get('/register', admin, ensureActivated, renderRegister);
 router.get('/login', forwardAuthenticated, (req, res) => {
     res.render('login', {
         layout: 'login-layout'
     });
 });
 
-router.get("/dashboard", ensureAuthenticated, (req, res) => {
+router.get("/dashboard",  ensureActivated, ensureAuthenticated, (req, res) => {
     if (req.user.role === 5) {
         res.render('dashboard', {
             hr: true
@@ -22,18 +22,20 @@ router.get("/dashboard", ensureAuthenticated, (req, res) => {
     }
 });
 
-router.get("/users", admin, getUsers);
+router.get("/users", ensureActivated, admin, getUsers);
 
-router.get("/delete/:id", admin, userDelete);
+router.get("/delete/:id", ensureActivated, admin, userDelete);
 
 router.post('/login', login);
 
 router.get('/logout', logout);
 
-router.get("/users/update/:id", admin, getUser);
-router.post("/users/update/:id", admin, updateUser);
+router.get("/users/update/:id", ensureActivated, admin, getUser);
+router.post("/users/update/:id", ensureActivated, admin, updateUser);
 
-router.post('/register', admin, register);
+router.post('/register', ensureActivated, admin, register);
+router.get('/update-password', ensureAuthenticated, activate);
+router.get('/mail/test', mailTest);
 
 
 module.exports = router;

@@ -161,7 +161,7 @@ const pageFunctions = () => {
                 });
             }, 1000);
         });
-    })
+    });
 }
 const renderPage = () => {
     $.get("http://localhost:3000/api/fprints/all", (res) => {

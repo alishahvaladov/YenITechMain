@@ -5,9 +5,10 @@ let filePath = "";
 
 const fileFilter = (req, file, cb) => {
     if (
-        file.mimetype.includes("word") ||
         file.mimetype.includes("pdf") ||
-        file.originalname.includes("docx")
+        file.mimetype.includes("image") ||
+        file.mimetype.includes("jpeg") ||
+        file.mimetype.includes("png")
     ) {
         cb(null, true);
     } else {

@@ -176,42 +176,6 @@ module.exports = {
                                 });
                             }
                         }
-                        async function main() {
-                            // Generate test SMTP service account from ethereal.email
-                            // Only needed if you don't have a real mail account for testing
-
-                            // create reusable transporter object using the default SMTP transport
-                            let transporter = nodemailer.createTransport({
-                                host: "smtp.ethereal.email",
-                                port: 587,
-                                secure: false, // true for 465, false for other ports
-                                auth: {
-                                    user: "sienna.lehner79@ethereal.email", // generated ethereal user
-                                    pass: "mp5gWtbzVNXaYzJH8x", // generated ethereal password
-                                },
-                                tls: {
-                                    rejectUnauthorized: false
-                                }
-                            });
-
-                            // send mail with defined transport object
-                            let info = await transporter.sendMail({
-                                from: '"Test User" <test@ethereal.email>', // sender address
-                                to: "Ali.Shahveledov@yenihayat.az", // list of receivers
-                                subject: "Test", // Subject line
-                                text: "Test", // plain text body
-                                html: "<b>Test</b>", // html body
-                            });
-
-                            console.log("Message sent: %s", info.messageId);
-                            // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-                            // Preview only available when sending through an Ethereal account
-                            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-                            // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-                        }
-
-                        main().catch(console.error);
 
                         req.flash("success_msg", "You have registered successfully")
                         return res.redirect('/register');
@@ -222,11 +186,11 @@ module.exports = {
 
     },
     login: (req, res, next) => {
-        console.log(req.body);
-        passport.authenticate("local",  {
-            successRedirect: "/dashboard",
-            failureRedirect: "/login",
-            failureFlash: true
+        // console.log(passport);
+        passport.authenticate("local", {
+            successRedirect: '/dashboard',
+            failureRedirect: '/login',
+            failureFlash: 'Username or password is incorrect'
         })(req, res, next);
     },
     logout: (req, res) => {
@@ -336,5 +300,47 @@ module.exports = {
                 return res.redirect("/users/update/" + id);
             });
         }
+    },
+    activate: async (req, res) => {
+        return res.render("change-password/change-password");
+    },
+    mailTest: async (req, res) => {
+        console.log("yenihayat.local\\proqram.ali");
+        async function main() {
+            // Generate test SMTP service account from ethereal.email
+            // Only needed if you don't have a real mail account for testing
+
+            // create reusable transporter object using the default SMTP transport
+            let transporter = nodemailer.createTransport({
+                host: "mail.yenihayat.az",
+                port: 587,
+                secure: false, // true for 465, false for other ports
+                auth: {
+                    user: "yenihayat.local\\proqram.ali", // generated ethereal user
+                    pass: "-Ap203030!@#+", // generated ethereal password
+                },
+                tls: {
+                    rejectUnauthorized: false
+                }
+            });
+
+            // send mail with defined transport object
+            let info = await transporter.sendMail({
+                from: '"Test User" <Proqram.Ali@yenihayat.az>', // sender address
+                to: "Ali.Shahveledov@yenihayat.az", // list of receivers
+                subject: "Test", // Subject line
+                text: "Test", // plain text body
+                html: "<b>Test</b>", // html body
+            });
+
+            console.log("Message sent: %s", info.messageId);
+            // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+            // Preview only available when sending through an Ethereal account
+            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+            // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+        }
+
+        main().catch(console.error);
     }
 }

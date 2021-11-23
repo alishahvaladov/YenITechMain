@@ -1,7 +1,7 @@
 {{> messages }}
 <div class="time-off-form mb-5">
     <h1 class="text-center">Əməkdaş Qeydiyyat Formu</h1>
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         <div class="toff-partitions toff-active">
             <div class="time-off-select-container d-flex justify-content-between mt-5">
                 <div class="toff-select-cont-left d-flex flex-column">
@@ -128,12 +128,6 @@
                     </div>
                 </div>
             </div>
-<!--            <div class="toff-submit-btn mt-4 mb-5">-->
-<!--                <span class="btn" id="toffNextBtn">Növbəti</span>-->
-<!--            </div>-->
-<!--            <div class="toff-submit-btn d-none mt-4 mb-5">-->
-<!--                <button class="btn" id="toffApplyBtn">Apply</button>-->
-<!--            </div>-->
         </div>
         <div class="toff-partitions ">
             <div class="time-off-select-container d-flex justify-content-between mt-5">
@@ -153,6 +147,14 @@
                         <label class="btn btn-dark" for="hcScan">Fayl Seçin</label>
                         <input class="d-none" type="file" id="hcScan" name="hcScan">
                     </div>
+                    <div class="gross">
+                        <label for="gross">Rəsmi Əmək Haqqı</label>
+                        <input type="number" id="gross">
+                    </div>
+                    <div class="unpaid">
+                        <label for="unpaid">Q/R Əmək Haqqı</label>
+                        <input type="number" id="unpaid">
+                    </div>
                 </div>
                 <div class="emp-select-cont-right d-flex flex-column">
                     <div class="injunction-scan d-flex justify-content-between">
@@ -165,7 +167,6 @@
                         <label class="btn btn-dark" for="diplomaScan">Fayl Seçin</label>
                         <input class="d-none" type="file" id="diplomaScan" name="diplomaScan">
                     </div>
-
                     <div class="id-scan d-flex justify-content-between">
                         <label for="">Şəxsiyyət Vəsiqəsi Skan</label>
                         <label class="btn btn-dark" for="idScan">Fayl Seçin</label>

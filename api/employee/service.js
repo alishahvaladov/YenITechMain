@@ -18,7 +18,7 @@ module.exports = {
         })
     },
     getEmployee: async (id) => {
-        return await sequelize.query(`SELECT dept.name as deptName, proj.name as projName, pos.name as posName, emp.first_name, emp.last_name, emp.father_name, emp.phone_number FROM Employees as emp 
+        return await sequelize.query(`SELECT dept.name as deptName, proj.name as projName, pos.name as posName, emp.* FROM Employees as emp 
                                       LEFT JOIN Departments as dept ON emp.department = dept.id 
                                       LEFT JOIN Projects as proj ON emp.project_id = proj.id
                                       LEFT JOIN Positions as pos ON emp.position_id = pos.id
@@ -29,5 +29,41 @@ module.exports = {
                id: id
            }
         });
+    },
+    getEmpCount: async () => {
+      return await sequelize.query('SELECT COUNT(*) as empCount FROM Employees', {
+          logging: false,
+          type: QueryTypes.SELECT
+      });
+    },
+    empRenderPage: async () => {
+        return await sequelize.query(`
+            SELECT emp.*, pos.name as posName, dept.name as deptName, proj.name as projName FROM Employees as emp
+            LEFT JOIN Positions as pos ON emp.position_id = pos.id
+            LEFT JOIN Departments as dept ON emp.department = dept.id
+            LEFT JOIN Projects as proj ON emp.project_id = proj.id
+            WHERE emp.deletedAt IS NULL
+            ORDER BY emp.createdAt DESC
+            LIMIT 15 OFFSET 0
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
+    },
+    empRenderByPage: async (offset) => {
+        return await sequelize.query(`
+            SELECT emp.*, pos.name as posName, proj.name as projName, dep.name as deptName from Employees as emp
+            LEFT JOIN Positions as pos ON emp.position_id = pos.id
+            LEFT JOIN Departments as dep ON emp.department = dep.id
+            LEFT JOIN Projects as proj ON emp.project_id = proj.id
+            ORDER BY emp.createdAt DESC
+            LIMIT 15 OFFSET :offset
+        `, {
+            logging: false,
+            replacements: {
+                offset
+            },
+            type: QueryTypes.SELECT
+        })
     }
 }

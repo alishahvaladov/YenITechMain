@@ -1,4 +1,4 @@
-const { addEmployee, deleteEmployee, getEmployees, getEmployee, updateEmployee, updateJEnd, renderAddEmployee, checkUploadPath, uploadFilePathToDB} = require("./employee.controller");
+const { addEmployee, deleteEmployee, getEmployees, getEmployee, updateEmployee, updateJEnd, renderAddEmployee, checkUploadPath, uploadFilePathToDB, empAddUploadMiddleware, addEmpCheckUploadPath} = require("./employee.controller");
 const upload = require("./uplod-file-middleware");
 const express = require("express");
 const router = express.Router();

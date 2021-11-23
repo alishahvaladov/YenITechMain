@@ -5,6 +5,8 @@ const path = require("path");
 const fs = require("fs");
 const {home} = require("nodemon/lib/utils");
 const date = new Date();
+const multer = require('multer');
+let filePath = "";
 const year = date.getFullYear();
 const month = date.getMonth();
 const day = date.getDate();
@@ -14,6 +16,7 @@ module.exports = {
     addEmployee: (req, res) => {
         errors = [];
         const data = req.body;
+        console.log(req.body);
         data.user_id = req.user.id;
         let fName, lName, fatherName, j_start_date;
         if (data.first_name === '') {
@@ -362,8 +365,7 @@ module.exports = {
                         return res.redirect("/employee/add-employee");
                     }
                     console.log(results);
-                    req.flash("success_msg", "An employee has been added successfully");
-                    return  res.redirect("/salaries/salary/" + results.dataValues.id);
+                    req.body.emp = results;
                 });
             }
         });
@@ -679,9 +681,33 @@ module.exports = {
            next();
         });
     },
+    addEmpCheckUploadPath: async (req, res, next, empID) => {
+        let empPath = "";
+        const id = req.params.id;
+        try {
+            const result = await getEmployeeRemoveModule(id);
+            empPath = path.join(__dirname, "../../public/employees/recruitment/" + result[0].id.toString() + "-" + result[0].first_name.toLocaleLowerCase() + "-" + result[0].last_name.toLocaleLowerCase() + "-" + result[0].father_name.toLocaleLowerCase());
+        } catch (err) {
+            console.log(err);
+            req.flash("error_msg", "This employee couldn't find please try again or contact System Admin");
+            return res.redirect("/employee");
+        }
+        await fs.access(empPath, fs.constants.F_OK, err => {
+           if (err) {
+               fs.mkdir(empPath, { recursive: true }, (err) => {
+                  if (err) {
+                      console.log(err);
+                      req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
+                      return res.redirect("/employee");
+                  }
+               });
+           }
+           next();
+        });
+    },
     uploadFilePathToDB: async (req, res, next) => {
         if(req.fileValidationError) {
-            req.flash("error_msg", "Please choose correct file");
+            req.flash("error_msg", "Please choose correct file format");
             return res.redirect("/employee")
         }
         let data = {};
@@ -703,5 +729,47 @@ module.exports = {
             }
             next();
         });
+    },
+    empAddUploadMiddleware: async (req, res, next) => {
+        const multer = require("multer");
+        const {getEmployeeRemoveModule} = require("./employee.service");
+        let filePath = "";
+        const path = require("path");
+        const fileFilter = (req, file, cb) => {
+            if (
+                file.mimetype.includes("word") ||
+                file.mimetype.includes("pdf") ||
+                file.originalname.includes("docx")
+            ) {
+                cb(null, true);
+            } else {
+                req.fileValidationError = true;
+                cb(null, false, new Error("Please upload only word or pdf file."));
+            }
+        };
+
+        let storage = multer.diskStorage({
+            destination: async (req, file, cb) => {
+                let result = req.body.emp;
+                filePath = path.join(__dirname, "../../public/employees/recruitment/" + result.id.toString() + "-" + result.first_name.toLocaleLowerCase() + "-" + result.last_name.toLocaleLowerCase() + "-" + result.father_name.toLocaleLowerCase());
+                cb(null, filePath);
+            },
+
+            filename: async (req, file, cb) => {
+                let date = Date.now();
+                console.log(file.originalname);
+                let result = req.body.emp;
+                const projId = result[0].project_id.toString();
+                console.log(file);
+                cb(null, `${date}-${projId}-${file.fieldname}${path.extname(file.originalname)}`);
+            },
+        });
+
+        const upload = multer({ storage: storage, fileFilter: fileFilter});
+
+        // upload.fields([{name: "frScan"}, {name: }])
+
+        req.flash("success_msg", "An employee has been added successfully");
+        return  res.redirect("/employee");
     }
 }
