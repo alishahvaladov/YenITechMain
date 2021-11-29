@@ -1,7 +1,7 @@
 {{> messages }}
 <div class="time-off-form mb-5">
     <h1 class="text-center">Əməkdaş Qeydiyyat Formu</h1>
-    <form action="" method="post" enctype="multipart/form-data">
+    <form action="" method="post">
         <div class="toff-partitions toff-active">
             <div class="time-off-select-container d-flex justify-content-between mt-5">
                 <div class="toff-select-cont-left d-flex flex-column">
@@ -128,66 +128,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="toff-partitions ">
-            <div class="time-off-select-container d-flex justify-content-between mt-5">
-                <div class="toff-select-cont-left d-flex flex-column">
-                    <div class="financial-responsibility-scan d-flex justify-content-between">
-                        <label for="">Tam Maddi-Məsuliyyət Müqaviləsi Skan</label>
-                        <label class="btn btn-dark" for="frScan">Fayl Seçin</label>
-                        <input class="d-none" type="file" id="frScan" name="frScan">
-                    </div>
-                    <div class="privacy-contract-scan d-flex justify-content-between">
-                        <label for="">Məxfi Məlumatların Qorunması Müqaviləsi Skan</label>
-                        <label class="btn btn-dark" for="pcScan">Fayl Seçin</label>
-                        <input class="d-none" type="file" id="pcScan" name="pcScan">
-                    </div>
-                    <div class="health-certificate-scan d-flex justify-content-between">
-                        <label for="">Sağlamlıq Haqqında Arayış Skan</label>
-                        <label class="btn btn-dark" for="hcScan">Fayl Seçin</label>
-                        <input class="d-none" type="file" id="hcScan" name="hcScan">
-                    </div>
-                    <div class="gross">
-                        <label for="gross">Rəsmi Əmək Haqqı</label>
-                        <input type="number" id="gross">
-                    </div>
-                    <div class="unpaid">
-                        <label for="unpaid">Q/R Əmək Haqqı</label>
-                        <input type="number" id="unpaid">
-                    </div>
-                </div>
-                <div class="emp-select-cont-right d-flex flex-column">
-                    <div class="injunction-scan d-flex justify-content-between">
-                        <label for="">Əmr Skan</label>
-                        <label class="btn btn-dark" for="injScan">Fayl Seçin</label>
-                        <input class="d-none" type="file" id="injScan" name="injScan">
-                    </div>
-                    <div class="diploma-scan d-flex justify-content-between">
-                        <label for="">Diplom Skan</label>
-                        <label class="btn btn-dark" for="diplomaScan">Fayl Seçin</label>
-                        <input class="d-none" type="file" id="diplomaScan" name="diplomaScan">
-                    </div>
-                    <div class="id-scan d-flex justify-content-between">
-                        <label for="">Şəxsiyyət Vəsiqəsi Skan</label>
-                        <label class="btn btn-dark" for="idScan">Fayl Seçin</label>
-                        <input class="d-none" type="file" id="idScan" name="idScan">
-                    </div>
-                    <div class="labor-contract d-flex justify-content-between">
-                        <label for="">Əmək Müqaviləsi Skan</label>
-                        <label class="btn btn-dark" for="lcScan">Fayl Seçin</label>
-                        <input class="d-none" type="file" id="lcScan" name="lcScan">
-                    </div>
-                    <div class="picture-3x4 d-flex justify-content-between">
-                        <label for="">Şəkil 3x4</label>
-                        <label class="btn btn-dark" for="pp">Fayl Seçin</label>
-                        <input class="d-none" type="file" id="pp" name="pp">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="toff-submit-btn mt-4 d-flex justify-content-end">
-            <button class="btn mx-1" type="button" id="toffPrevBtn" disabled>Əvvəlki</button>
-            <button class="btn mx-1" type="button" id="toffNextBtn">Növbəti</button>
         </div>
         <div class="toff-submit-btn mt-4 mb-5">
             <button class="btn" id="toffApplyBtn">Apply</button>

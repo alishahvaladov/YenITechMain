@@ -33,13 +33,15 @@ module.exports = {
             working_days: data.working_days,
             position_id: data.position_id,
             project_id: data.project_id
+        }, {
+            logging: false
         }).then((result) => {
             cb(null, result);
         }).catch((err) => {
             cb(err); 
         })
     },
-    getEmployees: async (cb) => {
+    getEmployees: async () => {
         return await sequelize.query(`SELECT emp.*, dp.name as depName, pj.name as pjName, ps.name as psName from Employees as emp 
         LEFT JOIN Departments as dp ON emp.department = dp.id
         Left JOIN Projects as pj ON emp.project_id = pj.id
@@ -155,5 +157,73 @@ module.exports = {
         }).catch((err) => {
             cb(err);
         });
+    },
+    updateFileNames: (data, cb) => {
+        EmployeeFileDirectory.update({
+            update_user: data.user_id,
+            uploaded_files: data.files
+        }, {
+            where: {
+                emp_id: data.emp_id
+            },
+            logging: false
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+           cb(err);
+        });
+    },
+    deleteEmpFiles: (data, cb) => {
+        EmployeeFileDirectory.destroy({
+            where: {
+                emp_id: data.emp_id,
+                delete_user: data.user_id
+            },
+            logging: false
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
+    },
+    checkIfEmpFileExists: (emp_id, cb) => {
+        EmployeeFileDirectory.findOne({
+            where: {
+                emp_id
+            },
+            logging: false
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
+    },
+    checkIfEmpExists: (emp_id, cb) => {
+        Employee.findOne({
+            where: {
+                id: emp_id
+            },
+            logging: false
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+           cb(err);
+        });
+    },
+    getEmpProjName: (id) => {
+        return sequelize.query(`
+            SELECT pos.name FROM Employees as emp
+            LEFT JOIN Projects as pos ON emp.position_id = pos.id
+            WHERE emp.id = :id
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                id
+            }
+        });
+    },
+    uploadSalaryToDB: (data, cb) => {
+
     }
 }

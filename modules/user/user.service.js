@@ -1,5 +1,5 @@
 const { User, sequelize} = require("../../db_config/models");
-const {Op, QueryTypes} = require("sequelize");
+const {Op, QueryTypes, where} = require("sequelize");
 
 module.exports = {
     renderRegister: async (req, res) => {
@@ -96,5 +96,39 @@ module.exports = {
                 cb(err);
             }
         })
+    },
+    activateUser: async (id, password) => {
+        User.update({
+            password,
+            active_status: 1
+        }, {
+            where: {
+                id
+            }
+        }).then((res) => {
+            console.log(res);
+        });
+    },
+    forgotPassword: (userInput, password, cb) => {
+        User.findOne({
+            where: {
+                [Op.or]: [{username: userInput}, {email: userInput}]
+            }
+        }).then(res => {
+            let result = res.dataValues;
+            User.update({
+                password,
+                active_status: 0
+            }, {
+                where: {
+                    id: result.id
+                }
+            }).then(r => {
+                console.log(r);
+            });
+            cb(null, result);
+        }).catch((err) => {
+            cb(err);
+        });
     }
 }

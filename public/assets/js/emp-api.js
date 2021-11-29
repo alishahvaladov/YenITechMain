@@ -20,9 +20,9 @@ const inpShiftEnd = document.querySelector("#shiftEnd");
 const jStartDate = document.querySelector("#jStartDate");
 const dayOffDays = document.querySelector("#dayOffDays");
 const workingDays = document.querySelector("#workingDays");
-const inpProject = document.querySelector("#project");
-const inpDepartment = document.querySelector("#department");
-const inpPosition = document.querySelector("#position");
+let inpProject = document.querySelector("#project");
+let inpDepartment = document.querySelector("#department");
+let inpPosition = document.querySelector("#position");
 
 const empRemModule = () => {
    let empRemoveBtn;
@@ -38,7 +38,6 @@ const empRemModule = () => {
    });
 
    empRemoveBtn.each(function (index) {
-      console.log($(this).val());
       $(this).on("click", () => {
          $("body").css("cursor", "progress");
          const id = $(this).val();
@@ -47,7 +46,7 @@ const empRemModule = () => {
             emp_id: id
          }, (res) => {
             const form = $("#remove-form");
-            const inpResult = res.result[0];
+            const inpResult = res.result.empRes[0];
             console.log(inpResult);
             const eName = $("#empName");
             const eSName = $("#empSName");
@@ -80,23 +79,57 @@ const empEditModule = () => {
          $.post("http://localhost:3000/api/employee-data", {
            emp_id: id
          }, (res) => {
-            const result = res.result[0];
-            empName.value = result.first_name;
-            empMName.value = result.middle_name;
-            inpSurname.value = result.last_name;
-            fatherName.value = result.father_name;
-            inpDob.value = result.dob;
-            qAddress.value = result.q_address;
-            yAddress.value = result.y_address;
-            inpSSN.value = result.SSN;
-            inpFIN.value = result.FIN;
-            pNumber.value = result.phone_number;
-            hNumber.value = result.home_number;
-            shiftStart.value = result.shift_start_t;
-            inpShiftEnd.value = result.shift_end_t;
-            jStartDate.value = result.j_start_date;
-            dayOffDays.value = result.dayoff_days_total;
-            workingDays.value = result.working_days;
+            const empRes = res.result.empRes[0];
+            const projRes = res.result.projRes;
+            const deptRes = res.result.deptRes;
+            const posRes = res.result.posRes;
+            // const result = res.result[0];
+            console.log(deptRes);
+            empName.value = empRes.first_name;
+            empMName.value = empRes.middle_name;
+            inpSurname.value = empRes.last_name;
+            fatherName.value = empRes.father_name;
+            inpDob.value = empRes.dob;
+            qAddress.value = empRes.q_address;
+            yAddress.value = empRes.y_address;
+            inpSSN.value = empRes.SSN;
+            inpFIN.value = empRes.FIN;
+            pNumber.value = empRes.phone_number;
+            hNumber.value = empRes.home_number;
+            shiftStart.value = empRes.shift_start_t;
+            inpShiftEnd.value = empRes.shift_end_t;
+            jStartDate.value = empRes.j_start_date;
+            dayOffDays.value = empRes.dayoff_days_total;
+            workingDays.value = empRes.working_days;
+            let projOptions = '';
+            for (let i = 0; i < projRes.length; i++) {
+               projOptions += `
+                  <option value="${projRes[i].id}">${projRes[i].name}</option>
+               `
+            }
+            let deptOptions = '';
+            for (let i = 0; i < deptRes.length; i++) {
+               deptOptions += `
+                  <option value="${deptRes[i].id}">${deptRes[i].name}</option>
+               `
+            }
+            let posOptions = '';
+            for (let i = 0; i < posRes.length; i++) {
+               posOptions += `
+                  <option value="${posRes[i].id}">${posRes[i].name}</option>
+               `
+            }
+            inpProject.innerHTML = projOptions;
+            inpDepartment.innerHTML = deptOptions;
+            inpPosition.innerHTML = posOptions;
+
+            inpProject = document.querySelector("#project");
+            inpDepartment = document.querySelector("#department");
+            inpPosition = document.querySelector("#position");
+
+            inpProject.value = empRes.project_id;
+            inpDepartment.value = empRes.department;
+            inpPosition.value = empRes.position_id;
          });
       });
    });
@@ -104,7 +137,6 @@ const empEditModule = () => {
       empEditModal.classList.add("d-none");
    });
 }
-
 
 const pageFuncs = () => {
    let pgItems = document.querySelectorAll('.pagination-item');

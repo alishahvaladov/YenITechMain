@@ -1,4 +1,20 @@
-const { addEmployee, deleteEmployee, getEmployees, updateEmployee, getEmployee, updateJEnd, renderAddEmployeeForDept, renderAddEmployeeForPj, renderAddEmployeeForPos, getEmployeeRemoveModule, addFileNames } = require("./employee.service");
+const {
+    addEmployee,
+    deleteEmployee,
+    getEmployees,
+    updateEmployee,
+    getEmployee,
+    updateJEnd,
+    renderAddEmployeeForDept,
+    renderAddEmployeeForPj,
+    renderAddEmployeeForPos,
+    getEmployeeRemoveModule,
+    addFileNames,
+    checkIfEmpFileExists,
+    deleteEmpFiles,
+    updateFileNames,
+    checkIfEmpExists
+} = require("./employee.service");
 const { Employee } = require("../../db_config/models");
 const {Op} = require("sequelize");
 const path = require("path");
@@ -16,7 +32,6 @@ module.exports = {
     addEmployee: (req, res) => {
         errors = [];
         const data = req.body;
-        console.log(req.body);
         data.user_id = req.user.id;
         let fName, lName, fatherName, j_start_date;
         if (data.first_name === '') {
@@ -65,11 +80,9 @@ module.exports = {
         const date = new Date();
         const sex = data.sex;
 
-        // console.log(typeof fName + ' ' + lName + ' ' + fatherName);
 
         if(fName) {
             for (let i = 0; i < fName.length; i++) {
-                console.log(fName[i]);
                 if(!isNaN(parseInt(fName[i]))) {
                     console.log("First name cannot contain number");
                     req.flash("error_msg", "First name cannot contain number")
@@ -122,7 +135,6 @@ module.exports = {
                     console.log("Father name cannot contain symbol");
                     req.flash("error_msg", "Father name cannot contain symbol")
                     return res.redirect("/employee/add-employee");
-                    break;
                 }
             }
 
@@ -179,7 +191,6 @@ module.exports = {
                 console.log("SSN cannot contain letter or symbol");
                 req.flash("error_msg", "SSN cannot contain letter or symbol")
                 return res.redirect("/employee/add-employee");
-                break;
             }
         }
 
@@ -194,7 +205,6 @@ module.exports = {
                     console.log("FIN cannot contain symbol");
                     req.flash("error_msg", "FIN cannot contain symbol")
                     return res.redirect("/employee/add-employee");
-                    break;
                 }
             }
         }
@@ -260,7 +270,6 @@ module.exports = {
                     console.log("Home number should be only numbers!");
                     req.flash("error_msg", "Home number should be only numbers!");
                     return res.redirect("/employee/add-employee");
-                    break;
                 }
             }
         }
@@ -281,7 +290,6 @@ module.exports = {
             return res.redirect("/employee/add-employee");
         }
         if(j_start_date) {
-            console.log(j_start_date);
             if(parseInt(j_start_date[0]) <= year && parseInt(j_start_date[1]) < month) {
                 console.log("Maximum range for Job Start Date is 1 month");
                 req.flash("error_msg", "Maximum range for Job Start Date is 1 month");
@@ -336,7 +344,8 @@ module.exports = {
         Employee.findOne({
             where: {
                 SSN: data.SSN
-            }
+            },
+            logging: false
         }).then((employee) => {
             if(employee) {
                 console.log("This SSN already exists please check again");
@@ -348,15 +357,14 @@ module.exports = {
         Employee.findOne({
             where: {
                 FIN: data.FIN
-            }
+            },
+            logging: false
         }).then((employee) => {
             if(employee) {
                 console.log("This FIN already exists please check again");
                 req.flash("error_msg", "This FIN already exists please check again");
                 return res.redirect("/employee/add-employee");
             }
-            console.log(data);
-            console.log(errors);
             if (errors.length === 0) {
                 addEmployee(data, (err, results) => {
                     if(err) {
@@ -364,8 +372,10 @@ module.exports = {
                         req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
                         return res.redirect("/employee/add-employee");
                     }
-                    console.log(results);
                     req.body.emp = results;
+                    const empId = results.dataValues.id;
+                    req.flash("success_msg", "Employee has been added please fill employee data to continue");
+                    return res.redirect("/employee/emp-files/" + empId);
                 });
             }
         });
@@ -659,8 +669,13 @@ module.exports = {
         let empPath = "";
         const id = req.params.id;
         try {
-            const result = await getEmployeeRemoveModule(id);
-            empPath = path.join(__dirname, "../../public/employees/resignations/" + result[0].id.toString() + "-" + result[0].first_name.toLocaleLowerCase() + "-" + result[0].last_name.toLocaleLowerCase() + "-" + result[0].father_name.toLocaleLowerCase());
+            if (req.url.includes("/remove/")) {
+                const result = await getEmployeeRemoveModule(id);
+                empPath = path.join(__dirname, "../../public/employees/resignations/" + result[0].id.toString() + "-" + result[0].first_name.toLocaleLowerCase() + "-" + result[0].last_name.toLocaleLowerCase() + "-" + result[0].father_name.toLocaleLowerCase());
+            } else if (req.url.includes("/emp-files/")) {
+                const result = await getEmployeeRemoveModule(id);
+                empPath = path.join(__dirname, "../../public/employees/recruitment/" + result[0].id.toString() + "-" + result[0].first_name.toLocaleLowerCase() + "-" + result[0].last_name.toLocaleLowerCase() + "-" + result[0].father_name.toLocaleLowerCase());
+            }
         } catch (err) {
             console.log(err);
             req.flash("error_msg", "This employee couldn't find please try again or contact System Admin");
@@ -681,95 +696,113 @@ module.exports = {
            next();
         });
     },
-    addEmpCheckUploadPath: async (req, res, next, empID) => {
-        let empPath = "";
-        const id = req.params.id;
-        try {
-            const result = await getEmployeeRemoveModule(id);
-            empPath = path.join(__dirname, "../../public/employees/recruitment/" + result[0].id.toString() + "-" + result[0].first_name.toLocaleLowerCase() + "-" + result[0].last_name.toLocaleLowerCase() + "-" + result[0].father_name.toLocaleLowerCase());
-        } catch (err) {
-            console.log(err);
-            req.flash("error_msg", "This employee couldn't find please try again or contact System Admin");
-            return res.redirect("/employee");
-        }
-        await fs.access(empPath, fs.constants.F_OK, err => {
-           if (err) {
-               fs.mkdir(empPath, { recursive: true }, (err) => {
-                  if (err) {
-                      console.log(err);
-                      req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
-                      return res.redirect("/employee");
-                  }
-               });
-           }
-           next();
-        });
-    },
     uploadFilePathToDB: async (req, res, next) => {
+        let emp_id;
+        if(req.params.id) {
+            emp_id = req.params.id;
+        }
         if(req.fileValidationError) {
-            req.flash("error_msg", "Please choose correct file format");
-            return res.redirect("/employee")
+            if(req.url.includes("/remove/")) {
+                req.flash("error_msg", "Please choose correct file format");
+                return res.redirect("/employee")
+            } else if (req.url.includes("/emp-files/")) {
+                req.flash("error_msg", "Please choose correct file format");
+                return res.redirect("employee/emp-files/" + emp_id);
+            }
+        }
+        if(req.fileUploadError) {
+            if(req.url.includes("/remove/")) {
+                req.flash("error_msg", "An unknown error has been occurred");
+                return res.redirect("/employee")
+            } else if (req.url.includes("/emp-files/")) {
+                req.flash("error_msg", "An unknown error has been occurred");
+                return res.redirect("employee/emp-files/" + emp_id);
+            }
         }
         let data = {};
-        if(!req.files) {
-            console.log("No files received");
-            req.flash("error_ms", "There is an error loading files");
-            return res.redirect("/employee");
-        }
-        let files = JSON.stringify(req.files);
-        console.log(files);
-        data.files = files;
-        data.user_id = req.user.id;
-        data.emp_id = req.params.id;
-        await addFileNames(data, (err, result) => {
+
+        checkIfEmpExists(emp_id, (err, empRes) => {
             if(err) {
-                console.log(err);
-                req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
-                return res.redirect("/employee");
+                req.flash("error_msg", "An unknown error has been occurred");
+                return res.redirect("/employee/emp-files/" + emp_id);
             }
-            next();
+            if(empRes === null) {
+                req.flash("error_msg", "This employee does not exists");
+                return res.redirect("/employee/emp-files/" + emp_id);
+            }
+            checkIfEmpFileExists(emp_id, (err, empFileRes) => {
+                if(err) {
+                    console.log(err);
+                    req.flash("error_msg", "An unknown error has been occurred");
+                    return res.redirect("/employee/emp-files/" + emp_id);
+                }
+                if(empFileRes === null) {
+                    let files = {};
+                    if(req.url.includes("/remove/")) {
+                        files.resignations = JSON.stringify(req.files);
+                        data.files = JSON.stringify(files);
+                    } else if (req.url.includes("/emp-files/")) {
+                        files.recruitment = JSON.stringify(req.files);
+                        data.files = JSON.stringify(files);
+                    }
+                    data.user_id = req.user.id;
+                    data.emp_id = emp_id;
+                    addFileNames(data, (err, result) => {
+                        if(err) {
+                            console.log(err);
+                            req.flash("error_msg", "An unknown error has been occurred");
+                            return res.redirect("/employee/emp-files/" + emp_id);
+                        }
+                        if(req.url.includes("/remove/")) {
+                            next();
+                        } else {
+                            req.flash("success_msg", "Employee data has been updated successfully");
+                            return res.redirect("/employee");
+                        }
+                    })
+                } else {
+                    const empData = JSON.parse(empFileRes.dataValues.uploaded_files);
+                    if(req.url.includes("/remove/")) {
+                        empData.resignations = JSON.stringify(req.files);
+                    } else if (req.url.includes("/emp-files/")) {
+                        empData.recruitment = JSON.stringify(req.files);
+                    }
+                    data.user_id = req.user.id;
+                    data.emp_id = emp_id;
+                    data.files = JSON.stringify(empData);
+                    updateFileNames(data, (err, result) => {
+                        if(err) {
+                            if(req.url.includes("/emp-files/")) {
+                                req.flash("error_msg", "An unknown error has been occurred");
+                                return res.redirect("/employee/add-files/" + emp_id);
+                            } else {
+                                req.flash("error_msg", "An unknown error has been occurred");
+                                return res.redirect("/employee")
+                            }
+                        }
+                        if(req.url.includes("/emp-files/")) {
+                            req.flash("success_msg", "Employee has been updated");
+                            return res.redirect("/employee/add-files/" + emp_id);
+                        } else {
+                            next();
+                        }
+                    });
+                }
+            });
         });
     },
-    empAddUploadMiddleware: async (req, res, next) => {
-        const multer = require("multer");
-        const {getEmployeeRemoveModule} = require("./employee.service");
-        let filePath = "";
-        const path = require("path");
-        const fileFilter = (req, file, cb) => {
-            if (
-                file.mimetype.includes("word") ||
-                file.mimetype.includes("pdf") ||
-                file.originalname.includes("docx")
-            ) {
-                cb(null, true);
-            } else {
-                req.fileValidationError = true;
-                cb(null, false, new Error("Please upload only word or pdf file."));
+    renderEmpDirAddPage: (req, res) => {
+        const empId = req.params.id;
+        checkIfEmpExists(empId, (err, result) => {
+            if(err) {
+                console.log(err);
+                req.flash("error_msg", "An unknown error has been occurred");
+                return res.redirect("/employee");
             }
-        };
-
-        let storage = multer.diskStorage({
-            destination: async (req, file, cb) => {
-                let result = req.body.emp;
-                filePath = path.join(__dirname, "../../public/employees/recruitment/" + result.id.toString() + "-" + result.first_name.toLocaleLowerCase() + "-" + result.last_name.toLocaleLowerCase() + "-" + result.father_name.toLocaleLowerCase());
-                cb(null, filePath);
-            },
-
-            filename: async (req, file, cb) => {
-                let date = Date.now();
-                console.log(file.originalname);
-                let result = req.body.emp;
-                const projId = result[0].project_id.toString();
-                console.log(file);
-                cb(null, `${date}-${projId}-${file.fieldname}${path.extname(file.originalname)}`);
-            },
+            const name = `${result.dataValues.first_name} ${result.dataValues.last_name} ${result.dataValues.father_name}`;
+            return res.render("employee/employee-data", {
+                name
+            });
         });
-
-        const upload = multer({ storage: storage, fileFilter: fileFilter});
-
-        // upload.fields([{name: "frScan"}, {name: }])
-
-        req.flash("success_msg", "An employee has been added successfully");
-        return  res.redirect("/employee");
     }
 }

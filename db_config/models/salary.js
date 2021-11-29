@@ -22,10 +22,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.INTEGER
     },
-    unofficial_net: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
     unofficial_pay: {
       type: DataTypes.INTEGER,
       allowNull: true

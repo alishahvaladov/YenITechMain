@@ -18,17 +18,36 @@ module.exports = {
         })
     },
     getEmployee: async (id) => {
-        return await sequelize.query(`SELECT dept.name as deptName, proj.name as projName, pos.name as posName, emp.* FROM Employees as emp 
-                                      LEFT JOIN Departments as dept ON emp.department = dept.id 
-                                      LEFT JOIN Projects as proj ON emp.project_id = proj.id
-                                      LEFT JOIN Positions as pos ON emp.position_id = pos.id
-                                      WHERE emp.id = :id`, {
+        let empRes =  await sequelize.query(`SELECT emp.*, pos.name as posName, proj.name as projName, dept.name as deptName FROM Employees as emp
+                                    LEFT JOIN Positions as pos ON pos.id = emp.position_id
+                                    LEFT JOIN Projects as proj ON proj.id = emp.project_id
+                                    LEFT JOIN Departments as dept ON dept.id = emp.department
+                                    WHERE emp.id = :id`, {
            type: QueryTypes.SELECT,
            logging: false,
            replacements: {
                id: id
            }
         });
+        let posRes = await sequelize.query(`SELECT * FROM Positions`, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
+        let projRes = await sequelize.query(`SELECT * FROM Projects`, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
+        let deptRes = await sequelize.query(`SELECT * FROM Departments`, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
+        let result = {};
+        result.empRes = empRes;
+        result.posRes = posRes;
+        result.projRes = projRes;
+        result.deptRes = deptRes;
+
+        return result;
     },
     getEmpCount: async () => {
       return await sequelize.query('SELECT COUNT(*) as empCount FROM Employees', {

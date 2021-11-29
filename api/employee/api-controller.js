@@ -37,7 +37,6 @@ module.exports = {
         try {
             let result = await empRenderPage();
             let count = await getEmpCount();
-            console.log(result);
             let role = '';
             if(req.user.role === 1) {
                 role = 'super_admin'
@@ -65,6 +64,7 @@ module.exports = {
                 result
             });
         } catch (e) {
+            console.log(e);
             req.flash("error_msg", "An unknown error has been occurred");
             return res.redirect("/employees");
         }

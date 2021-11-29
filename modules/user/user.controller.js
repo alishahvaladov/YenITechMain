@@ -1,10 +1,73 @@
-const { registerUser, deleteUser, getUsers, getUser, updateUser, renderRegister} = require("./user.service");
+const { registerUser, deleteUser, getUsers, getUser, updateUser, renderRegister, activateUser, forgotPassword} = require("./user.service");
 const { User, sequelize } = require("../../db_config/models");
 const passport = require("passport");
 const {QueryTypes} = require("sequelize");
 const jsonConfig = require("../../config/config.json");
 const nodemailer = require("nodemailer");
 let errors = [];
+
+const mailTest = (mail, subject, mailContent) => {
+    async function main() {
+        // Generate test SMTP service account from ethereal.email
+        // Only needed if you don't have a real mail account for testing
+
+        // create reusable transporter object using the default SMTP transport
+        let transporter = nodemailer.createTransport({
+            host: "mail.yenihayat.az",
+            port: 587,
+            secure: false, // true for 465, false for other ports
+            auth: {
+                user: "yenihayat.local\\proqram.ali", // generated ethereal user
+                pass: "-Ap203030!@#+", // generated ethereal password
+            },
+            tls: {
+                rejectUnauthorized: false
+            }
+        });
+
+        // send mail with defined transport object
+        let info = await transporter.sendMail({
+            from: '"Test User" <Proqram.Ali@yenihayat.az>', // sender address
+            to: mail, // list of receivers
+            subject: subject, // Subject line
+            text: mailContent, // plain text body
+            html: `${mailContent}`, // html body
+        });
+
+        console.log("Message sent: %s", info.messageId);
+        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+        // Preview only available when sending through an Ethereal account
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+    }
+
+    main().catch(console.error);
+};
+const passwordGenerator = () => {
+    let password = '';
+    let uppCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let lowCaseLetters = "abcdefghijklmnopqrstuvwxyz";
+    let numbers = "1234567890";
+    let symbols = "!@#$%^&*()";
+    for (let i = 0; i < 3; i++) {
+        let uppChar = Math.floor(Math.random() * uppCaseLetters.length + 1);
+        password += uppCaseLetters.charAt(uppChar);
+        for (let y = 0; y < 2; y++) {
+            let symChar = Math.floor(Math.random() * symbols.length + 1);
+            password += symbols.charAt(symChar);
+            for (let k = 0; k < 1; k++) {
+                let numChar = Math.floor(Math.random() * numbers.length + 1);
+                password += numbers.charAt(numChar);
+                for (let j = 0; j < 1; j++) {
+                    let lowChar = Math.floor(Math.random() * lowCaseLetters.length + 1);
+                    password += lowCaseLetters.charAt(lowChar);
+                }
+            }
+        }
+    }
+    return password;
+}
 
 module.exports = {
     renderRegister: async (req, res) => {
@@ -46,91 +109,48 @@ module.exports = {
         const data = req.body;
         const userFirstLetter = data.username[0];
         const splitUser = data.username.split('');
-        const lWithNoNumb = data.password.replace(/[0-9]/g, "");
-        console.log(lWithNoNumb);
-        const splitPass = data.password.split('');
+        const password = passwordGenerator();
+        data.password = password;
+        let mail = data.email;
+        let subject = "Created User";
+        let mailContent = `
+            Hörmətli istifadəçi sizin üçün nəzərdə tutulmuş istifadəçi artıq yaradılmışdır. Zəhmət olmasa aşağıda verilən istifadəçi adı və şifrə ilə sistemə daxil olasınız.
+            Hesaba giriş edəbilmədiyiniz təqdirdə Sistem Administratoru ilə əlaqə saxlamağınız xahiş olunur.
+            <br>
+            <br>
+            <br>
+            <b>İstifadəçi Adı</b>: ${data.username}
+            <br>
+            <b>Şifrə</b>: ${password}
+        `
         if(typeof parseInt(data.emp_id) !== typeof 1) {
             console.log("Please select existing employee");
-            errors.push({msg: "Please select existing employee"});
+            req.flash("error_msg", "Please select existing employee");
+            return res.redirect("/register");
         }
         if(isNaN(parseInt(userFirstLetter)) === false) {
             console.log("Username cannot start with number");
-            errors.push({msg: "Username cannot start with number"});
-            console.log(errors);
+            req.flash("error_msg", "Username cannot start with number");
+            return res.redirect("/register");
         }
         if((/[a-zA-Z]/).test(userFirstLetter) === false) {
             console.log("Username cannot start with symbol");
-            errors.push({msg: "Username cannot start with symbol"});
+            req.flash("error_msg", "Username cannot start with symbol");
+            return res.redirect("/register");
         }
         if(splitUser) {
             for (let i = 0; i < splitUser.length; i++) {
                 if((/[a-zA-Z0-9.]/).test(splitUser[i]) === false) {
                     console.log("Username cannot contain symbols");
-                    errors.push({msg: "Username cannot contain symbols"})
-                    break;
+                    req.flash("error_msg", "Username cannot contain symbols");
+                    return res.redirect("/register");
                 }
             }
             if (splitUser.length < 6) {
                 console.log("Username must be minimum 6 characters");
-                errors.push({msg: "Username must be minimum 6 characters"});
+                req.flash("error_msg", "Username must be minimum 6 characters");
+                return res.redirect("/register");
             }
-        }
-        if(lWithNoNumb.length === 0) {
-            console.log("Password must be contain at least 1 letter");
-            errors.push({msg: "Password must be contain at least 1 letter"});
-        }
-        if (splitPass) {
-            for (let i = 0; i < lWithNoNumb.length; i++) {
-                let pLetter = parseInt(lWithNoNumb[i]);
-                let lastLetter = parseInt(lWithNoNumb[lWithNoNumb.length - 1]);
-                // console.log("Parsed: " + isNaN(pLetter) === 'true');
-                // console.log("Last: " + isNaN(lastLetter));
-                if(lWithNoNumb[i] === lWithNoNumb[i].toUpperCase()) {
-                    break;
-                } else if(i === lWithNoNumb.length - 1 && lWithNoNumb[lWithNoNumb.length-1] !== lWithNoNumb[lWithNoNumb.length-1].toUpperCase()) {
-                    console.log("Password must be contain at least 1 upper case letter");
-                    console.log("Last: " + isNaN(lastLetter));
-                    errors.push({msg: "Password must be contain at least 1 upper case letter"});
-                    break;
-                }
-            }
-
-            for (let i = 0; i < splitPass.length; i++) {
-                if(isNaN(parseInt(splitPass[i])) === false) {
-                    break;
-                } else if(i === splitPass.length - 1 && isNaN(parseInt(splitPass[i])) !== false) {
-                    console.log("Password must be contain at least 1 number");
-                    errors.push({
-                        msg: "Password must be contain at leas 1 number"
-                    })
-                    console.log("Splittetd is: " + splitPass[i]);
-                    break;
-                }
-            }
-
-            for (let i = 0; i < splitPass.length; i++) {
-                if((/[a-zA-Z0-9]/).test(splitPass[i]) === false) {
-                    console.log("SplitPass: " + typeof splitPass[i] + " " + splitPass[i]);
-                    break;
-                } else if(i === splitPass.length - 1 && (/[a-zA-Z0-9]/).test(splitPass[i]) === true) {
-                    console.log("Password must contain at least 1 symbol");
-                    errors.push({msg: "Password must contain at least 1 symbol"});
-                    break;
-                }
-            }
-
-            for (let i = 0; i < splitPass.length; i++) {
-                if(splitPass[i] === " ") {
-                    console.log("Password cannot contain space please try again!");
-                    errors.push({msg: "Password cannot contain space please try again!"});
-                    break;
-                }
-            }
-            if (splitPass.length < 9) {
-                console.log("Password must me minimum 8 characters");
-                errors.push({msg: "Password must me minimum 8 characters"});
-            }
-            console.log(errors);
         }
 
         User.findOne({
@@ -139,7 +159,7 @@ module.exports = {
             }
         }).then((user) => {
             if(user) {
-                errors.push({msg: "Username already exists"});
+                req.flash("error_msg", "Username already exists");
                 console.log("Username already exists");
             }
         });
@@ -149,12 +169,8 @@ module.exports = {
             }
         }).then((user) => {
             if(user) {
-                errors.push({msg: "This employee already registered"});
-                console.log("This employee already registered")
-                console.log("Emp error: " + errors.length);
-                res.render('users/register', {
-                    errors
-                });
+                req.flash("error_msg", "This employee already registered");
+                return res.redirect("/register");
             }
             if (errors.length === 0) {
                 if (data.role == 1) {
@@ -176,7 +192,7 @@ module.exports = {
                                 });
                             }
                         }
-
+                        mailTest(mail, subject, mailContent);
                         req.flash("success_msg", "You have registered successfully")
                         return res.redirect('/register');
                     });
@@ -304,43 +320,105 @@ module.exports = {
     activate: async (req, res) => {
         return res.render("change-password/change-password");
     },
-    mailTest: async (req, res) => {
-        console.log("yenihayat.local\\proqram.ali");
-        async function main() {
-            // Generate test SMTP service account from ethereal.email
-            // Only needed if you don't have a real mail account for testing
-
-            // create reusable transporter object using the default SMTP transport
-            let transporter = nodemailer.createTransport({
-                host: "mail.yenihayat.az",
-                port: 587,
-                secure: false, // true for 465, false for other ports
-                auth: {
-                    user: "yenihayat.local\\proqram.ali", // generated ethereal user
-                    pass: "-Ap203030!@#+", // generated ethereal password
-                },
-                tls: {
-                    rejectUnauthorized: false
+    activateUser: async (req, res) => {
+        let data = req.body;
+        let id = req.user.id;
+        let password = req.body.password;
+        let rePassword = req.body.re_password;
+        if (password !== rePassword) {
+            req.flash("error_msg", "Passwords do not match please try again");
+            return res.redirect("/update-password");
+        }
+        const splitPass = req.body.password.split('');
+        const lWithNoNumb = data.password.replace(/[0-9]/g, "");
+        if (splitPass) {
+            for (let i = 0; i < lWithNoNumb.length; i++) {
+                let lastLetter = parseInt(lWithNoNumb[lWithNoNumb.length - 1]);
+                if(lWithNoNumb[i] === lWithNoNumb[i].toUpperCase()) {
+                    break;
+                } else if(i === lWithNoNumb.length - 1 && lWithNoNumb[lWithNoNumb.length-1] !== lWithNoNumb[lWithNoNumb.length-1].toUpperCase()) {
+                    console.log("Password must be contain at least 1 upper case letter");
+                    console.log("Last: " + isNaN(lastLetter));
+                    req.flash("error_msg", "Password must be contain at least 1 upper case letter");
+                    return res.redirect("/update-password")
                 }
-            });
+            }
 
-            // send mail with defined transport object
-            let info = await transporter.sendMail({
-                from: '"Test User" <Proqram.Ali@yenihayat.az>', // sender address
-                to: "Ali.Shahveledov@yenihayat.az", // list of receivers
-                subject: "Test", // Subject line
-                text: "Test", // plain text body
-                html: "<b>Test</b>", // html body
-            });
+            for (let i = 0; i < splitPass.length; i++) {
+                if(isNaN(parseInt(splitPass[i])) === false) {
+                    break;
+                } else if(i === splitPass.length - 1 && isNaN(parseInt(splitPass[i])) !== false) {
+                    console.log("Password must be contain at least 1 number");
+                    console.log("Splittetd is: " + splitPass[i]);
+                    req.flash("error_msg", "Password must be contain at leas 1 number");
+                    return res.redirect("/update-password");
+                }
+            }
+            for (let i = 0; i < splitPass.length; i++) {
+                if((/[a-zA-Z0-9]/).test(splitPass[i]) === false) {
+                    console.log("SplitPass: " + typeof splitPass[i] + " " + splitPass[i]);
+                    break;
+                } else if(i === splitPass.length - 1 && (/[a-zA-Z0-9]/).test(splitPass[i]) === true) {
+                    console.log("Password must contain at least 1 symbol");
+                    req.flash("error_msg", "Password must contain at least 1 symbol");
+                    return res.redirect("/update-password");
+                }
+            }
+            for (let i = 0; i < splitPass.length; i++) {
+                if(splitPass[i] === " ") {
+                    console.log("Password cannot contain space please try again!");
+                    req.flash("error_msg", "Password cannot contain space please try again!");
+                    return res.redirect("/update-password");
+                }
+            }
+            if (splitPass.length < 9) {
+                console.log("Password must me minimum 8 characters");
+                req.flash("error_msg", "Password must me minimum 8 characters");
+                return res.redirect("/update-password");
+            }
 
-            console.log("Message sent: %s", info.messageId);
-            // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-            // Preview only available when sending through an Ethereal account
-            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-            // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+            if(lWithNoNumb.length === 0) {
+                console.log("Password must be contain at least 1 letter");
+                req.flash("error_msg", "Password must be contain at least 1 letter");
+                return res.redirect("/update-password");
+            }
         }
 
-        main().catch(console.error);
+        try {
+            await activateUser(id, password);
+            req.flash("success_msg", "Your account successfully activated");
+            return res.redirect("/dashboard");
+        } catch (err) {
+            console.log(err);
+            req.flash("error_msg", "An unknown error has been occurred");
+            return res.redirect("/update-password");
+        }
+    },
+    forgotPassword: (req, res) => {
+        let userInput = req.body.user_input;
+        const password = passwordGenerator();
+        forgotPassword(userInput, password, (err, result) => {
+            if(err) {
+                console.log(err);
+                req.flash("error_msg", "Username or email is incorrect");
+                return res.redirect("/forgot-password");
+            }
+            const username = result.username;
+            let email = result.email;
+            let subject = "Reset Password";
+            let mailContent = `
+            Your password has been reset successfully
+            <br>
+            <br>
+            <br>
+            <b>İstifadəçi adı: </b> ${username}
+            <br>
+            <b>Şifrə: </b> ${password} 
+        `;
+            mailTest(email, subject, mailContent);
+            // console.log(result);
+            req.flash("success_msg", "Your password has been changed please check your email");
+            return res.redirect("/login");
+        })
     }
 }
