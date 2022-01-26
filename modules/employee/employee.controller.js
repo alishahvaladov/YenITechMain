@@ -707,7 +707,7 @@ module.exports = {
                 return res.redirect("/employee")
             } else if (req.url.includes("/emp-files/")) {
                 req.flash("error_msg", "Please choose correct file format");
-                return res.redirect("employee/emp-files/" + emp_id);
+                return res.redirect("/employee/emp-files/" + emp_id);
             }
         }
         if(req.fileUploadError) {
@@ -774,7 +774,7 @@ module.exports = {
                         if(err) {
                             if(req.url.includes("/emp-files/")) {
                                 req.flash("error_msg", "An unknown error has been occurred");
-                                return res.redirect("/employee/add-files/" + emp_id);
+                                return res.redirect("/employee/emp-files/" + emp_id);
                             } else {
                                 req.flash("error_msg", "An unknown error has been occurred");
                                 return res.redirect("/employee")
@@ -782,7 +782,7 @@ module.exports = {
                         }
                         if(req.url.includes("/emp-files/")) {
                             req.flash("success_msg", "Employee has been updated");
-                            return res.redirect("/employee/add-files/" + emp_id);
+                            return res.redirect("/employee/emp-files/" + emp_id);
                         } else {
                             next();
                         }

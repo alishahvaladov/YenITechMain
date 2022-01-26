@@ -59,14 +59,7 @@ const search = () => {
     })
 }
 
-qEmp.keyup(search)
-qProj.keyup(search)
-qDept.keyup(search)
-qPos.keyup(search)
-qTime.keyup(search)
-qDay.change(search)
-qMonth.change(search)
-qYear.change(search)
+
 
 const pgContatiner = document.querySelector(".pagination-container");
 const loading = document.querySelector(".loading");
@@ -86,42 +79,61 @@ const pageFunctions = () => {
             item.classList.add('active');
             activeClass = document.querySelector('.active');
             index = pgItems.indexOf(activeClass);
-            if(index > 9 && index < pgItems.length - 10) {
-                fTDots.classList.remove('d-none');
-                lTDots.classList.remove('d-none');
-                for(let i = 1; i < pgItems.length - 1; i++) {
-                    pgItems[i].classList.add('d-none');
-                }
-                for (let i = index; i > index - 9; i--) {
-                    if (i < 1) {
-                        break;
+            if(pgItems.length > 21) {
+                if(index > 9 && index < pgItems.length - 10) {
+                    fTDots.classList.remove('d-none');
+                    lTDots.classList.remove('d-none');
+                    for(let i = 1; i < pgItems.length - 1; i++) {
+                        pgItems[i].classList.add('d-none');
                     }
-                    pgItems[i].classList.remove('d-none')
-                }
-                for (let i = index; i < index + 9; i++) {
-                    pgItems[i].classList.remove('d-none');
-                }
-            } else if (index <= 9) {
-                fTDots.classList.add('d-none');
-                lTDots.classList.remove('d-none');
-                for (let i = 21; i < pgItems.length - 2; i++) {
-                    pgItems[i].classList.add('d-none')
-                }
-                for (let i = 1; i < 21; i++) {
-                    pgItems[i].classList.remove('d-none');
-                }
-            } else {
-                lTDots.classList.add('d-none');
-                fTDots.classList.remove('d-none');
-                for (let i = 1; i < pgItems.length - 20; i++) {
-                    pgItems[i].classList.add('d-none');
-                }
-                for (let i = pgItems.length - 22; i < pgItems.length - 1; i++) {
-                    pgItems[i].classList.remove('d-none');
+                    for (let i = index; i > index - 9; i--) {
+                        if (i < 1) {
+                            break;
+                        }
+                        pgItems[i].classList.remove('d-none')
+                    }
+                    for (let i = index; i < index + 9; i++) {
+                        pgItems[i].classList.remove('d-none');
+                    }
+                } else if (index <= 9) {
+                    fTDots.classList.add('d-none');
+                    lTDots.classList.remove('d-none');
+                    for (let i = 21; i < pgItems.length - 2; i++) {
+                        pgItems[i].classList.add('d-none')
+                    }
+                    for (let i = 1; i < 21; i++) {
+                        pgItems[i].classList.remove('d-none');
+                    }
+                } else {
+                    lTDots.classList.add('d-none');
+                    fTDots.classList.remove('d-none');
+                    for (let i = 1; i < pgItems.length - 20; i++) {
+                        pgItems[i].classList.add('d-none');
+                    }
+                    for (let i = pgItems.length - 22; i < pgItems.length - 1; i++) {
+                        pgItems[i].classList.remove('d-none');
+                    }
                 }
             }
             setTimeout(() => {
+                let qEmp = $("#qEmployee").val();
+                let qProj = $("#qProject").val();
+                let qDept = $("#qDepartment").val();
+                let qPos = $("#qPosition").val();
+                let qTime = $("#qTime").val();
+                let qDay = $("#day").val();
+                let qMonth = $("#month").val();
+                let qYear = $("#year").val();
+
                 $.post('http://localhost:3000/api/fprints/by-page', {
+                    qEmployee: qEmp,
+                    qProject: qProj,
+                    qDepartment: qDept,
+                    qPosition: qPos,
+                    qTime: qTime,
+                    qDay: qDay,
+                    qMonth: qMonth,
+                    qYear: qYear,
                     offset: offset
                 }, (res) => {
                     let tbody = $("tbody");
@@ -163,8 +175,34 @@ const pageFunctions = () => {
         });
     });
 }
+
 const renderPage = () => {
-    $.get("http://localhost:3000/api/fprints/all", (res) => {
+    let qEmp = $("#qEmployee").val();
+    let qProj = $("#qProject").val();
+    let qDept = $("#qDepartment").val();
+    let qPos = $("#qPosition").val();
+    let qTime = $("#qTime").val();
+    let qDay = $("#day").val();
+    let qMonth = $("#month").val();
+    let qYear = $("#year").val();
+    let offset = 0;
+
+    console.log(qEmp);
+    console.log(offset);
+
+    $.post("http://localhost:3000/api/fprints/all", {
+            qEmployee: qEmp,
+            qProject: qProj,
+            qDepartment: qDept,
+            qPosition: qPos,
+            qTime: qTime,
+            qDay: qDay,
+            qMonth: qMonth,
+            qYear: qYear,
+            offset: offset
+        },
+        (res) => {
+        console.log(res)
         let fprints = res.fPrints.fprints;
         let count = res.fPrints.count[0].count;
         let html = '';
@@ -184,8 +222,10 @@ const renderPage = () => {
                 `
             }
             if (i === count) {
+                if(count > 21) {
+                    html += `<button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>`
+                }
                 html += `
-                    <button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>
                     <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
                 `
             }
@@ -227,6 +267,12 @@ const renderPage = () => {
 
 setTimeout(renderPage, 2500);
 
-
-
+qEmp.keyup(renderPage)
+qProj.keyup(renderPage)
+qDept.keyup(renderPage)
+qPos.keyup(renderPage)
+qTime.keyup(renderPage)
+qDay.change(renderPage)
+qMonth.change(renderPage)
+qYear.change(renderPage)
 

@@ -3,10 +3,7 @@
     <table class="table table-striped">
         <div class="container">
             <thead>
-                <th></th>
-                <th>Adı </th>
-                <th>Soyadı</th>
-                <th>Ata Adı</th>
+                <th>İşçi</th>
                 <th>Telefon Nömrəsi</th>
                 <th>Departament</th>
                 <th>Vəzifəsi</th>
@@ -16,18 +13,19 @@
                     <a class="btn btn-outline-success btn-sm w-100" href="/employee/add-employee">Əlavə <i class="bi bi-person-plus"></i></a>
                 </th>
             </thead>
-<!--            <thead>-->
-<!--                <th></th>-->
-<!--                <th><input type="text" name="empName"></th>-->
-<!--                <th><input type="text" name="empSurname"></th>-->
-<!--                <th><input type="text" name="empFatherName"></th>-->
-<!--                <th><input type="text" name="empPhone"></th>-->
-<!--                <th><input type="text" name="empDepartment"></th>-->
-<!--                <th><input type="text" name="empPosition"></th>-->
-<!--                <th><input type="text" name="empProject"></th>-->
-<!--                <th></th>-->
-<!--                <th></th>-->
-<!--            </thead>-->
+            <thead>
+                <th><input type="text" name="empName"></th>
+                <th><input type="text" name="empSurname"></th>
+                <th><input type="text" name="empFatherName"></th>
+                <th><input type="text" name="empPhone"></th>
+                <th><input type="text" name="empDepartment"></th>
+                <th>
+                    <select name="empPosition">
+                        <option value="">İşləyir</option>
+                        <option value="">İşdən Ayrılıb</option>
+                    </select>
+                </th>
+            </thead>
             <tbody>
                 <tr>
                     <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
@@ -37,9 +35,6 @@
                     <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
                     <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
                     <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                    <td class="bg-warning bg-opacity-50 text-black bold"></td>
                 </tr>
             </tbody>
         </div>
@@ -90,18 +85,36 @@
             </div>
             <div class="select-emp-rm-form-1 d-flex justify-content-between">
                 <label for="">Ərizə Skan</label>
-                <label class="btn btn-outline-dark btn-sm" for="application-form-1">Faylı Yükləyin</label>
-                <input class="d-none" type="file" name="application-form" id="application-form-1">
+                <div class="">
+                    <label class="btn btn-outline-dark btn-sm" for="application-form-1">Faylı Yükləyin</label>
+                    <span class="d-none">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                    </span>
+                    <p class="text-black-50"></p>
+                </div>
+                <input class="d-none resignation-inputs" type="file" name="application-form" id="application-form-1">
             </div>
             <div class="select-emp-rm-form-2 d-flex justify-content-between">
                 <label for="">Əmr Skan</label>
-                <label class="btn btn-outline-dark btn-sm" for="application-form-2">Faylı Yükləyin</label>
-                <input class="d-none" type="file" name="injunction" id="application-form-2">
+                <div class="">
+                    <label class="btn btn-outline-dark btn-sm" for="application-form-2">Faylı Yükləyin</label>
+                    <span class="d-none">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                    </span>
+                    <p class="text-black-50"></p>
+                </div>
+                <input class="d-none resignation-inputs" type="file" name="injunction" id="application-form-2">
             </div>
             <div class="select-emp-rm-work-book d-flex justify-content-between">
                 <label for="">Əmək Kitabçası Skan</label>
-                <label class="btn btn-outline-dark btn-sm" for="application-work-book">Faylı Yükləyin</label>
-                <input class="d-none" type="file" name="work-book" id="application-work-book">
+                <div class="">
+                    <label class="btn btn-outline-dark btn-sm" for="application-work-book">Faylı Yükləyin</label>
+                    <span class="d-none">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                    </span>
+                    <p class="text-black-50"></p>
+                </div>
+                <input class="d-none resignation-inputs" type="file" name="work-book" id="application-work-book">
             </div>
             <div class="emp-rm-buttons d-flex justify-content-between">
                 <span class="btn btn-outline-danger btn-sm empModalCancelBtn">Ləğv Et</span>
@@ -232,3 +245,4 @@
 
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/emp-api.js"></script>
+<script src="/assets/js/emp-functions.js"></script>

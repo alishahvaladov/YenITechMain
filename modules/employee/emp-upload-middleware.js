@@ -4,18 +4,67 @@ const path = require("path");
 let filePath = "";
 
 const fileFilter = (req, file, cb) => {
-    if (
-        file.mimetype.includes("pdf") ||
-        file.mimetype.includes("image") ||
-        file.mimetype.includes("jpeg") ||
-        file.mimetype.includes("jpg") ||
-        file.mimetype.includes("png")
-    ) {
+    if( file.fieldname === "frScan" && file.mimetype === "pdf" ||
+        file.fieldname === "frScan" && file.mimetype === "image" ||
+        file.fieldname === "frScan" && file.mimetype === "jpg" ||
+        file.fieldname === "frScan" && file.mimetype === "jpeg")
+    {
         cb(null, true);
     } else {
         req.fileValidationError = true;
+        req.fileValidationMessage = "Tam Maddi-Məsuliyyət müqaviləsinin yükləndiyindən və ya düzgün fayl formatının daxil olduğundan əmin olun";
         cb(null, false, new Error("Please upload only word or pdf file."));
     }
+
+    if( file.fieldname === "pcScan" && file.mimetype === "pdf" ||
+        file.fieldname === "pcScan" && file.mimetype === "image" ||
+        file.fieldname === "pcScan" && file.mimetype === "jpg" ||
+        file.fieldname === "pcScan" && file.mimetype === "jpeg")
+    {
+        cb(null, true);
+    } else {
+        req.fileValidationError = true;
+        req.fileValidationMessage = "Məxfi Məlumatların Qorunması müqaviləsinin yükləndiyindən və ya düzgün fayl formatının daxil olduğundan əmin olun";
+        cb(null, false, new Error("Please upload only word or pdf file."));
+    }
+
+    if( file.fieldname === "hcScan" && file.mimetype === "pdf" ||
+        file.fieldname === "hcScan" && file.mimetype === "image" ||
+        file.fieldname === "hcScan" && file.mimetype === "jpg" ||
+        file.fieldname === "hcScan" && file.mimetype === "jpeg")
+    {
+        cb(null, true);
+    } else {
+        req.fileValidationError = true;
+        req.fileValidationMessage = "Sağlamlıq Haqqında arayışın yükləndiyindən və ya düzgün fayl formatının daxil olduğundan əmin olun";
+        cb(null, false, new Error("Please upload only word or pdf file."));
+    }
+
+    if( file.fieldname === "injScan" && file.mimetype === "pdf" ||
+        file.fieldname === "injScan" && file.mimetype === "image" ||
+        file.fieldname === "injScan" && file.mimetype === "jpg" ||
+        file.fieldname === "injScan" && file.mimetype === "jpeg")
+    {
+        cb(null, true);
+    } else {
+        req.fileValidationError = true;
+        req.fileValidationMessage = "Əmrin yükləndiyindən və ya düzgün fayl formatının daxil olduğundan əmin olun";
+        cb(null, false, new Error("Please upload only word or pdf file."));
+    }
+
+    if( file.fieldname === "diplomaScan" && file.mimetype === "pdf" ||
+        file.fieldname === "diplomaScan" && file.mimetype === "image" ||
+        file.fieldname === "diplomaScan" && file.mimetype === "jpg" ||
+        file.fieldname === "diplomaScan" && file.mimetype === "jpeg")
+    {
+        cb(null, true);
+    } else {
+        req.fileValidationError = true;
+        req.fileValidationMessage = "Əmrin yükləndiyindən və ya düzgün fayl formatının daxil olduğundan əmin olun";
+        cb(null, false, new Error("Please upload only word or pdf file."));
+    }
+
+
 };
 
 let storage = multer.diskStorage({

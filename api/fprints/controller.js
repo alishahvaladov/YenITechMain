@@ -11,7 +11,9 @@ module.exports = {
     },
     renderFPrints: async (req, res) => {
         try {
-            let fPrints = await renderFPrints();
+            const data = req.body;
+            console.log(data);
+            let fPrints = await searchFPrint(req.body);
             res.send({
                 fPrints
             })
@@ -26,7 +28,7 @@ module.exports = {
     getFPrintsByPage: async (req, res) => {
         const data = req.body;
         try {
-            let fPrints = await getFPrintsByPage(data);
+            let fPrints = await searchFPrint(data);
             res.send({
                 fPrints
             });

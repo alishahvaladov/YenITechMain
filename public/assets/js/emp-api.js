@@ -210,10 +210,7 @@ const pageFuncs = () => {
                   trs +=
                       `
                     <tr>
-                        <td></td>
-                        <td>${emps[i].first_name}</td>
-                        <td>${emps[i].last_name}</td>
-                        <td>${emps[i].father_name}</td>
+                        <td>${emps[i].first_name + " " + emps[i].last_name + " " + emps[i].father_name}</td>
                         <td>${emps[i].phone_number}</td>
                         <td>${emps[i].deptName}</td>
                         <td>${emps[i].posName}</td>
@@ -253,7 +250,7 @@ const renderPage = () => {
       let pgHtml = '';
       let tdClass = '';
       let tdText = '';
-      count = Math.ceil(count / 15);
+      count = Math.ceil(count / 14);
 
       if(role === "super_admin") {
          for (let i = 0; i < result.length; i++) {
@@ -268,10 +265,7 @@ const renderPage = () => {
 
             html += `
          <tr>
-             <td></td>
-             <td>${result[i].first_name}</td>
-             <td>${result[i].last_name}</td>
-             <td>${result[i].father_name}</td>
+             <td>${result[i].first_name + " " + result[i].last_name + " " + result[i].father_name}</td>
              <td>${result[i].phone_number}</td>
              <td>${result[i].deptName}</td>
              <td>${result[i].posName}</td>

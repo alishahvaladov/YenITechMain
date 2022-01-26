@@ -63,7 +63,7 @@ module.exports = {
             LEFT JOIN Projects as proj ON emp.project_id = proj.id
             WHERE emp.deletedAt IS NULL
             ORDER BY emp.createdAt DESC
-            LIMIT 15 OFFSET 0
+            LIMIT 14 OFFSET 0
         `, {
             logging: false,
             type: QueryTypes.SELECT
@@ -76,7 +76,7 @@ module.exports = {
             LEFT JOIN Departments as dep ON emp.department = dep.id
             LEFT JOIN Projects as proj ON emp.project_id = proj.id
             ORDER BY emp.createdAt DESC
-            LIMIT 15 OFFSET :offset
+            LIMIT 14 OFFSET :offset
         `, {
             logging: false,
             replacements: {
