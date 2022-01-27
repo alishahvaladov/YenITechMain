@@ -15,7 +15,7 @@ const options = {
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: 'ytechyhayat20022021',
+    password: 'yhayatytech20022021',
     database: 'test'
 }
 
@@ -78,7 +78,7 @@ app.use(function (req, res, next) {
     res.locals.error_msg = req.flash("error_msg");
     res.locals.error = req.flash("error");
     next();
-})
+});
 
 // Import Routers
 const timeOffRequest = require("./modules/time-off-request/timeoff.router");
