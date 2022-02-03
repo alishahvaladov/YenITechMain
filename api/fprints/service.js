@@ -21,8 +21,8 @@ module.exports = {
                 countQuery += " AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)"
                 replacements.empName =  "%" + data.qEmployee + "%";
             } else if (qEmp.length === 2) {
-                query += " AND ((emp.first_name like :empName OR emp.father_name like :empName) AND (emp.last_name like :empName2 OR emp.father_name like :empName2))";
-                countQuery += " AND ((emp.first_name like :empName OR emp.father_name like :empName) AND (emp.last_name like :empName2 OR emp.father_name like :empName2))"
+                query += " AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.last_name like :empName AND emp.father_name like :empName2))";
+                countQuery += " AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.last_name like :empName AND emp.father_name like :empName2))"
                 replacements.empName = "%" + qEmp[0] + "%";
                 replacements.empName2 = "%" + qEmp[1] + "%";
             } else if(qEmp.length === 3) {

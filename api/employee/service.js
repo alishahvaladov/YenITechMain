@@ -44,7 +44,7 @@ module.exports = {
         let result = {};
         result.empRes = empRes;
         result.posRes = posRes;
-        result.projRes = projRes;
+        result.projRes = projRes; 
         result.deptRes = deptRes;
 
         return result;
@@ -55,34 +55,186 @@ module.exports = {
           type: QueryTypes.SELECT
       });
     },
-    empRenderPage: async () => {
-        return await sequelize.query(`
+    empRenderPage: async (data) => {
+        const empName = data.empInpNameVal;
+        const empPhone = data.empInpPhoneVal;
+        const empDept = data.empDeptVal;
+        const empPos = data.empPosVal;
+        const empProj = data.empProjVal;
+        const empStatus = data.empStatusVal;
+        console.log(empName);
+
+        let query = `
             SELECT emp.*, pos.name as posName, dept.name as deptName, proj.name as projName FROM Employees as emp
             LEFT JOIN Positions as pos ON emp.position_id = pos.id
             LEFT JOIN Departments as dept ON emp.department = dept.id
             LEFT JOIN Projects as proj ON emp.project_id = proj.id
             WHERE emp.deletedAt IS NULL
-            ORDER BY emp.createdAt DESC
-            LIMIT 14 OFFSET 0
-        `, {
-            logging: false,
-            type: QueryTypes.SELECT
-        });
-    },
-    empRenderByPage: async (offset) => {
-        return await sequelize.query(`
-            SELECT emp.*, pos.name as posName, proj.name as projName, dep.name as deptName from Employees as emp
+        `
+        let countQuery = `
+            SELECT COUNT(*) as count FROM Employees as emp
             LEFT JOIN Positions as pos ON emp.position_id = pos.id
-            LEFT JOIN Departments as dep ON emp.department = dep.id
+            LEFT JOIN Departments as dept ON emp.department = dept.id
             LEFT JOIN Projects as proj ON emp.project_id = proj.id
-            ORDER BY emp.createdAt DESC
-            LIMIT 14 OFFSET :offset
-        `, {
-            logging: false,
-            replacements: {
-                offset
-            },
-            type: QueryTypes.SELECT
+            WHERE emp.deletedAt IS NULL
+        `
+        let replacements = {};
+
+        if(empName !== '' && empName !== null) {
+            const splittedName = empName.split(" ");
+            if(splittedName.length === 1) {
+                query += `
+                    AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)
+                `
+                countQuery += `
+                    AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)
+                `
+                replacements.empName = `%${splittedName[0]}%`;
+            } else if (splittedName.length === 2) {
+                query += `
+                    AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.first_name like :empName AND emp.father_name like :empName2))
+                `
+                countQuery += `
+                    AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.first_name like :empName AND emp.father_name like :empName2))
+                `
+                replacements.empName = `%${splittedName[0]}%`;
+                replacements.empName2 = `%${splittedName[1]}%`;
+            } else if (splittedName.length === 3) {
+                query += `
+                    AND (emp.first_name like :empName AND emp.last_name like :empName2 AND emp.father_name like :empName3)
+                `
+                countQuery += `
+                    AND (emp.first_name like :empName AND emp.last_name like :empName2 AND emp.father_name like :empName3)
+                `
+                replacements.empName = `%${splittedName[0]}%`;
+                replacements.empName2 = `%${splittedName[1]}%`;
+                replacements.empName3 = `%${splittedName[2]}%`;
+            }
+        }
+        if (empPhone !== '' && empPhone !== null) {
+            query += " AND emp.phone_number like :phoneNumber";
+            countQuery += " AND emp.phone_number like :phoneNumber";
+            replacements.phoneNumber = `%${empPhone}%`;
+        }
+        if(empDept !== '' && empDept !== null) {
+            query += " AND dept.name like :deptName";
+            countQuery += " AND dept.name like :deptName";
+            replacements.deptName = `%${empDept}%`;
+        }
+        if(empPos !== '' && empPos !== null) {
+            query += " AND pos.name like :posName"
+            countQuery += " AND pos.name like :posName"
+            replacements.posName = `%${empPos}%`;
+        }
+        if(empProj !== '' && empProj !== null) {
+            query += " AND proj.name like :projName";
+            countQuery += " AND proj.name like :projName";
+            replacements.projName = `%${empProj}%`;
+        }
+        if(empStatus !== '' && empStatus !== null) {
+            if(parseInt(empStatus) === 1) {
+                query += " AND emp.j_end_date IS NULL";
+                countQuery += " AND emp.j_end_date IS NULL";
+            }
+            if(parseInt(empStatus) === 2) {
+                query += " AND emp.j_end_date IS NOT NULL";
+                countQuery += " AND emp.j_end_date IS NOT NULL";
+            }
+        }
+        query += `
+            ORDER BY emp.id DESC
+            LIMIT 10 OFFSET 0
+        `
+        let result = {};
+        const empData = await sequelize.query(query, {
+            // logging: false,
+            type: QueryTypes.SELECT,
+            replacements: replacements
+        });
+        const count = await sequelize.query(countQuery, {
+            // logging: false,
+            type: QueryTypes.SELECT,
+            replacements: replacements
         })
+        result.result = empData;
+        result.count = count;
+        return result;
+    },
+    empRenderByPage: async (offset, data) => {
+
+
+        const empName = data.empInpNameVal;
+        const empPhone = data.empInpPhoneVal;
+        const empDept = data.empDeptVal;
+        const empPos = data.empPosVal;
+        const empProj = data.empProjVal;
+        const empStatus = data.empStatusVal;
+
+        let query = `
+            SELECT emp.*, pos.name as posName, dept.name as deptName, proj.name as projName FROM Employees as emp
+            LEFT JOIN Positions as pos ON emp.position_id = pos.id
+            LEFT JOIN Departments as dept ON emp.department = dept.id
+            LEFT JOIN Projects as proj ON emp.project_id = proj.id
+            WHERE emp.deletedAt IS NULL
+        `
+        let replacements = {};
+        if(empName !== '' && empName !== null) {
+            const splittedName = empName.split(" ");
+            if(splittedName.length === 1) {
+                query += `
+                    AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)
+                `
+                replacements.empName = `%${splittedName[0]}%`;
+            } else if (splittedName.length === 2) {
+                query += `
+                    AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.first_name like :empName AND emp.father_name like :empName2))
+                `
+                replacements.empName = `%${splittedName[0]}%`;
+                replacements.empName2 = `%${splittedName[1]}%`;
+            } else if (splittedName.length === 3) {
+                query += `
+                    AND (emp.first_name like :empName AND emp.last_name like :empName2 AND emp.father_name like :empName3)
+                `
+                replacements.empName = `%${splittedName[0]}%`;
+                replacements.empName2 = `%${splittedName[1]}%`;
+                replacements.empName3 = `%${splittedName[2]}%`;
+            }
+        }
+        if (empPhone !== '' && empPhone !== null) {
+            query += " AND emp.phone_number like :phoneNumber";
+            replacements.phoneNumber = `%${empPhone}%`;
+        }
+        if(empDept !== '' && empDept !== null) {
+            query += " AND dept.name like :deptName";
+            replacements.deptName = `%${empDept}%`;
+        }
+        if(empPos !== '' && empPos !== null) {
+            query += " AND pos.name like :posName"
+            replacements.posName = `%${empPos}%`;
+        }
+        if(empProj !== '' && empProj !== null) {
+            query += " AND proj.name like :projName";
+            replacements.projName = `%${empProj}%`;
+        }
+        if(empStatus !== '' && empStatus !== null) {
+            if(parseInt(empStatus) === 1) {
+                query += " AND emp.j_end_date IS NULL";
+            }
+            if(parseInt(empStatus) === 2) {
+                query += " AND emp.j_end_date IS NOT NULL";
+            }
+        }
+        query += `
+            ORDER BY emp.id DESC
+            LIMIT 10 OFFSET :offset
+        `;
+        replacements.offset = offset;
+
+
+        return await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: replacements
+        });
     }
 }

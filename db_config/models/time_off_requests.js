@@ -32,10 +32,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    priority: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
     timeoff_start_date: {
       type: DataTypes.DATEONLY,
       allowNull: false

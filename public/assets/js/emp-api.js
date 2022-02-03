@@ -24,6 +24,29 @@ let inpProject = document.querySelector("#project");
 let inpDepartment = document.querySelector("#department");
 let inpPosition = document.querySelector("#position");
 
+
+let empInpName = $("#empName");
+let empInpPhone = $("#empPhoneNumb");
+let empDept = $("#empDept");
+let empPos = $("#empPos");
+let empProj = $("#empProj");
+let empStatus = $("#empStatus");
+
+let empInpNameVal = '';
+let empInpPhoneVal = '';
+let empDeptVal = '';
+let empPosVal = '';
+let empProjVal = '';
+let empStatusVal = '';
+
+const getEmpInps = () => {
+   empInpNameVal = $("#empName").val();
+   empInpPhoneVal = $("#empPhoneNumb").val();
+   empDeptVal = $("#empDept").val();
+   empPosVal = $("#empPos").val();
+   empProjVal = $("#empProj").val();
+   empStatusVal = $("#empStatus").val();
+}
 const empRemModule = () => {
    let empRemoveBtn;
    let empCancelBtn;
@@ -41,13 +64,11 @@ const empRemModule = () => {
       $(this).on("click", () => {
          $("body").css("cursor", "progress");
          const id = $(this).val();
-         console.log(id);
          $.post("http://localhost:3000/api/employee-data", {
             emp_id: id
          }, (res) => {
             const form = $("#remove-form");
             const inpResult = res.result.empRes[0];
-            console.log(inpResult);
             const eName = $("#empName");
             const eSName = $("#empSName");
             const eFName = $("#empFName");
@@ -84,7 +105,6 @@ const empEditModule = () => {
             const deptRes = res.result.deptRes;
             const posRes = res.result.posRes;
             // const result = res.result[0];
-            console.log(deptRes);
             empName.value = empRes.first_name;
             empMName.value = empRes.middle_name;
             inpSurname.value = empRes.last_name;
@@ -137,7 +157,6 @@ const empEditModule = () => {
       empEditModal.classList.add("d-none");
    });
 }
-
 const pageFuncs = () => {
    let pgItems = document.querySelectorAll('.pagination-item');
    let fTDots = document.querySelector('.fTDots');
@@ -190,39 +209,73 @@ const pageFuncs = () => {
                }
             }
          }
+         getEmpInps();
          setTimeout(() => {
             $.post('http://localhost:3000/api/emp-by-page', {
-               offset: offset
+               offset: offset,
+               empInpNameVal,
+               empInpPhoneVal,
+               empDeptVal,
+               empPosVal,
+               empProjVal,
+               empStatusVal
             }, (res) => {
                let tbody = $("tbody");
                let trs = "";
                tbody.text("");
                let emps = res.result;
-               console.log(emps);
-               for (let i = 0; i < emps.length; i++) {
-                  if (emps[i].j_end_date) {
-                     tdClass = 'text-danger';
-                     tdText = 'İşdən Ayrılıb'
-                  } else {
-                     tdClass = 'text-success';
-                     tdText = 'İşləyir';
+               let role = res.role;
+               if(role === "super_admin") {
+                  for (let i = 0; i < emps.length; i++) {
+                     if (emps[i].j_end_date) {
+                        tdClass = 'text-danger';
+                        tdText = 'İşdən Ayrılıb'
+                     } else {
+                        tdClass = 'text-success';
+                        tdText = 'İşləyir';
+                     }
+                     trs +=
+                         `
+                       <tr>
+                           <td>${emps[i].first_name + " " + emps[i].last_name + " " + emps[i].father_name}</td>
+                           <td>${emps[i].phone_number}</td>
+                           <td>${emps[i].deptName}</td>
+                           <td>${emps[i].posName}</td>
+                           <td>${emps[i].projName}</td>
+                           <td class="${tdClass}">${tdText}</td>
+                           <td class="d-flex justify-content-between last-td btn-group" style="position: relative">
+                                <a class="btn btn-outline-danger btn-sm" href="/employee/delete/${emps[i].id}"><i class="bi bi-person-x"></i></a>
+                                <button class="btn btn-outline-danger btn-sm empRmBtn" value="${emps[i].id}"><i class="bi bi-dash-circle"></i></button>
+                                <button class="btn btn-outline-secondary btn-sm empEditBtn" value="${emps[i].id}" "><i class="bi bi-pencil-square"></i></button>
+                            </td>
+                       </tr>
+                   `
                   }
-                  trs +=
-                      `
-                    <tr>
-                        <td>${emps[i].first_name + " " + emps[i].last_name + " " + emps[i].father_name}</td>
-                        <td>${emps[i].phone_number}</td>
-                        <td>${emps[i].deptName}</td>
-                        <td>${emps[i].posName}</td>
-                        <td>${emps[i].projName}</td>
-                        <td class="${tdClass}">${tdText}</td>
-                        <td class="d-flex justify-content-between last-td btn-group" style="position: relative">
-                             <a class="btn btn-outline-danger btn-sm" href="/employee/delete/${emps[i].id}"><i class="bi bi-person-x"></i></a>
-                             <button class="btn btn-outline-danger btn-sm empRmBtn" value="${emps[i].id}"><i class="bi bi-dash-circle"></i></button>
-                             <button class="btn btn-outline-secondary btn-sm empEditBtn" value="${emps[i].id}" "><i class="bi bi-pencil-square"></i></button>
-                         </td>
-                    </tr>
-                `
+               } else if (role === "hr") {
+                  for (let i = 0; i < emps.length; i++) {
+                     if (emps[i].j_end_date) {
+                        tdClass = 'text-danger';
+                        tdText = 'İşdən Ayrılıb'
+                     } else {
+                        tdClass = 'text-success';
+                        tdText = 'İşləyir';
+                     }
+                     trs +=
+                         `
+                       <tr>
+                           <td>${emps[i].first_name + " " + emps[i].last_name + " " + emps[i].father_name}</td>
+                           <td>${emps[i].phone_number}</td>
+                           <td>${emps[i].deptName}</td>
+                           <td>${emps[i].posName}</td>
+                           <td>${emps[i].projName}</td>
+                           <td class="${tdClass}">${tdText}</td>
+                           <td class="d-flex justify-content-between last-td btn-group" style="position: relative">
+                                <button class="btn btn-outline-danger btn-sm empRmBtn" value="${emps[i].id}"><i class="bi bi-dash-circle"></i></button>
+                                <button class="btn btn-outline-secondary btn-sm empEditBtn" value="${emps[i].id}" "><i class="bi bi-pencil-square"></i></button>
+                            </td>
+                       </tr>
+                   `
+                  }
                }
                if(trs.length !== 0) {
                   tbody.html(trs);
@@ -238,19 +291,27 @@ const pageFuncs = () => {
          }, 1000);
       });
    });
-
 }
 const renderPage = () => {
-   $.post("http://localhost:3000/api/all-employee", (res) => {
+   getEmpInps();
+   $.post("http://localhost:3000/api/all-employee", {
+      empInpNameVal,
+      empInpPhoneVal,
+      empDeptVal,
+      empPosVal,
+      empProjVal,
+      empStatusVal
+   }, (res) => {
       let tbody = document.querySelector('tbody');
       let result = res.result;
       let role = res.role;
-      let count = res.count[0].empCount;
+      console.log(res);
+      let count = res.count[0].count;
       let html = '';
       let pgHtml = '';
       let tdClass = '';
       let tdText = '';
-      count = Math.ceil(count / 14);
+      count = Math.ceil(count / 10);
 
       if(role === "super_admin") {
          for (let i = 0; i < result.length; i++) {
@@ -313,8 +374,76 @@ const renderPage = () => {
          empRemModule();
          pageFuncs();
          empEditModule();
+      } else if (role === "hr") {
+         for (let i = 0; i < result.length; i++) {
+            if (result[i].j_end_date) {
+               tdClass = 'text-danger';
+               tdText = 'İşdən Ayrılıb'
+            } else {
+               tdClass = 'text-success';
+               tdText = 'İşləyir';
+            }
+
+
+            html += `
+         <tr>
+             <td>${result[i].first_name + " " + result[i].last_name + " " + result[i].father_name}</td>
+             <td>${result[i].phone_number}</td>
+             <td>${result[i].deptName}</td>
+             <td>${result[i].posName}</td>
+             <td>${result[i].projName}</td>
+              <td><span class="${tdClass}">${tdText}</span></td>
+             <td class="d-flex justify-content-between last-td btn-group" style="position: relative">
+                 <button class="btn btn-outline-danger btn-sm empRmBtn" value="${result[i].id}"><i class="bi bi-dash-circle"></i></button>
+                 <button class="btn btn-outline-secondary btn-sm empEditBtn" value="${result[i].id}" "><i class="bi bi-pencil-square"></i></button>
+             </td>
+         </tr>
+      `
+         }
+         tbody.innerHTML = html;
+         for (let i = 1; i <= count; i++) {
+            if (i === 1) {
+               pgHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm active" value="${i}">${i}</button>`
+               if(count > 21) {
+                  pgHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
+               }
+            } if (i > 21 && i < count) {
+               pgHtml += `
+                    <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                `
+            } else if (i !== 1 && i !== count) {
+               pgHtml += `
+                    <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                `
+            }
+            if (i === count) {
+               if (count > 21) {
+                  pgHtml += `
+                    <button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>
+                  `
+               }
+               pgHtml += `
+                    <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                `
+            }
+         }
+         pgContainer.innerHTML = pgHtml;
+         setTimeout(() => {
+            loading.classList.add("d-none");
+         }, 200);
+         empRemModule();
+         pageFuncs();
+         empEditModule();
       }
    });
 }
+
+empInpName.keyup(renderPage);
+empInpPhone.keyup(renderPage);
+empDept.keyup(renderPage);
+empPos.keyup(renderPage);
+empProj.keyup(renderPage);
+empStatus.change(renderPage);
+
 
 setTimeout(renderPage, 2000);

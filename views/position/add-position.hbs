@@ -1,9 +1,10 @@
 <div class="add-position">
+    {{> messages }}
     <form action="" method="post">
-        Position Name <input type="text" name="name">
+        <div class="form-group">
+            <input type="text" class="form-control" id="inputPassword4" placeholder="Position Name" name="name">
+        </div>
 
-        <button type="submit">Add Position</button>
-
-        {{> messages }}
+        <button type="submit" class="btn btn-primary d-flex float-end mt-2">Add Position</button>
     </form>
 </div>

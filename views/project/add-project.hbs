@@ -1,11 +1,41 @@
 <div class="add-project">
-    <form action="/projects/add-project" method="post">
+        {{> messages}}
+
+    {{!-- <form action="/projects/add-project" method="post">
         Project Name <input type="text" name="name">
         Project Address <input type="text" name="address">
         Project Manager <input type="number" name="project_manager_id">
         Parent ID <input type="number" name="parent_id">
 
         <button type="submit">Add Project</button>
-        {{> messages}}
+    </form> --}}
+    <form action="/projects/add-project" method="post">
+        <div class="form-row d-flex justify-content-between my-4">
+            <div class="form-group col-sm-12 col-md-6 px-2">
+                <label for="inputEmail4">Project Name</label>
+                <input type="text" class="form-control" id="inputEmail4" placeholder="Project Name" name="name">
+            </div>
+            <div class="form-group col-sm-12 col-md-6 px-2">
+                <label for="inputPassword4">Project Address</label>
+                <input type="text" class="form-control" id="inputPassword4" placeholder="Project Address" name="address">
+            </div>
+        </div>
+        <div class="form-group my-4 px-2">
+            <label for="inputAddress">Project Manager</label>
+                <select id="inputState" class="form-control" name="project_manager_id">
+                    <option disabled hidden selected>Choose</option>
+                    <option value="12">Ali Shahvaladov</option>
+                    <option value="13">Tural Hasanov</option>
+                </select>
+        </div>
+        <div class="form-group my-4 px-2">
+            <label for="inputAddress">Parent Project</label>
+                <select id="inputState" class="form-control" name="parent_id">
+                    <option disabled hidden selected>Choose</option>
+                    <option value="13">GH</option>
+                    <option value="15">YH</option>
+                </select>
+        </div>
+        <button type="submit" class="btn btn-primary d-flex float-end mt-2">Add Project</button>
     </form>
 </div>

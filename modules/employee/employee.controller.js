@@ -19,9 +19,7 @@ const { Employee } = require("../../db_config/models");
 const {Op} = require("sequelize");
 const path = require("path");
 const fs = require("fs");
-const {home} = require("nodemon/lib/utils");
 const date = new Date();
-const multer = require('multer');
 let filePath = "";
 const year = date.getFullYear();
 const month = date.getMonth();
@@ -161,7 +159,7 @@ module.exports = {
 
 
         if(sex == 0 || sex == 1) {
-            console.log("Sex GG");
+            console.log("Gender verified");
         } else {
             console.log("Html interruption for sex: " + sex + "UserID" + req.user.id);
             req.flash("error_msg", "Please enter valid gender");
@@ -799,6 +797,7 @@ module.exports = {
                 req.flash("error_msg", "An unknown error has been occurred");
                 return res.redirect("/employee");
             }
+            console.log(result);
             const name = `${result.dataValues.first_name} ${result.dataValues.last_name} ${result.dataValues.father_name}`;
             return res.render("employee/employee-data", {
                 name

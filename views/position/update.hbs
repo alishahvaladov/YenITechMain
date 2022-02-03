@@ -1,9 +1,13 @@
 <div class="add-position">
     {{#if position}}
         <form action="/positions/update/{{position.id}}" method="post">
-            Position Name <input type="text" name="name" value="{{position.name}}">
 
-            <button type="submit">Add Position</button>
+             <div class="form-group">
+                <input type="text" class="form-control" id="inputPassword4" placeholder="Position Name" name="name" value="{{position.name}}">
+            </div>
+
+            <button type="submit" class="btn btn-primary d-flex float-end mt-2">Update Position</button>
+
 
             {{> messages }}
         </form>

@@ -14,7 +14,7 @@ router.get("/add-department", super_admin, (req, res) => {
             super_admin: true
         });
     }
-})
+});
 router.post("/add-department", super_admin, addDepartment);
 
 router.get("/delete/:id", super_admin, deleteDepartment);

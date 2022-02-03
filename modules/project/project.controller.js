@@ -21,9 +21,17 @@ module.exports = {
         }).then((project) => {
             if(project) {
                 errors.push({msg: "This project already exists"});
-                return res.render("project/add-project", {
-                    errors
-                });
+                if(req.user.role === 5) {
+                    return res.render("project/add-project", {
+                        errors,
+                        hr: true
+                    });
+                } else if (req.user.role === 1) {
+                    return res.render("project/add-project", {
+                        errors,
+                        super_admin: true
+                    });
+                }
             }
             if(errors.length === 0) {
                 addProject(data, (err, result) => {

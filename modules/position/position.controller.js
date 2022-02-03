@@ -32,9 +32,17 @@ module.exports = {
         }).then((position) => {
             if(position) {
                 errors.push({msg: "This position already exists"});
-                return res.render("position/add-position", {
-                    errors
-                })
+                if(req.user.role === 1) {
+                    return res.render("position/add-position", {
+                        errors,
+                        super_admin: true
+                    });
+                } else if (req.user.role === 5) {
+                    return res.render("position/add-position", {
+                        errors,
+                        hr: true
+                    });
+                }
             }
             if(errors.length === 0) {
                 addPosition(data, (err, results) => {

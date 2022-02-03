@@ -35,8 +35,9 @@ module.exports = {
     },
     empRenderPage: async (req, res) => {
         try {
-            let result = await empRenderPage();
-            let count = await getEmpCount();
+            let body = req.body;
+            console.log(body);
+            let result = await empRenderPage(body);
             let role = '';
             if(req.user.role === 1) {
                 role = 'super_admin'
@@ -44,9 +45,9 @@ module.exports = {
                 role = 'hr';
             }
             return res.send({
-                result,
-                role,
-                count
+                result: result.result,
+                count: result.count, 
+                role
             });
         } catch (err) {
             console.log(err);
@@ -57,11 +58,19 @@ module.exports = {
     },
     empRenderByPage: async (req, res) => {
         try {
+            const body = req.body;
+            let role = req.user.role;
+            if (role === 5) {
+                role = "hr";
+            } else if (role === 1) {
+                role = "super_admin"
+            }
             let offset = req.body.offset;
-            offset = offset - 1;
-            let result = await empRenderByPage(offset);
+            offset = (offset - 1) * 10;
+            let result = await empRenderByPage(offset, body);
             res.send({
-                result
+                result,
+                role
             });
         } catch (e) {
             console.log(e);
