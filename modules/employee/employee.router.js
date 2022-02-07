@@ -8,7 +8,7 @@ const {
     renderAddEmployee,
     checkUploadPath,
     uploadFilePathToDB,
-    renderEmpDirAddPage
+    renderEmpDirAddPage, exportEmployeesToExcel
 } = require("./employee.controller");
 const upload = require("./uplod-file-middleware");
 const addEmpUpload = require("./emp-upload-middleware");
@@ -28,15 +28,11 @@ router.get("/update/:id", hr, getEmployee);
 router.post("/add-employee", hr, addEmployee);
 router.post("/update/:id", hr, updateEmployee);
 router.get("/emp-files/:id", hr, renderEmpDirAddPage);
-
-
 router.post("/remove/:id", hr, checkUploadPath, upload.fields([
     {name: "application-form"},
     {name: "injunction"},
     {name: "work-book"}
 ]), uploadFilePathToDB,  updateJEnd);
-
-
 router.post("/emp-files/:id", hr, checkUploadPath, addEmpUpload.fields([
     {name: "frScan"},
     {name: "pcScan"},
@@ -47,6 +43,7 @@ router.post("/emp-files/:id", hr, checkUploadPath, addEmpUpload.fields([
     {name: "lcScan"},
     {name: "pp"}
 ]), uploadFilePathToDB);
+router.get("/exportExcelTest", hr, exportEmployeesToExcel);
 
 
 module.exports = router;

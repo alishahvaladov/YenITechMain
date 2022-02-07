@@ -225,5 +225,22 @@ module.exports = {
     },
     uploadSalaryToDB: (data, cb) => {
 
+    },
+    exportEmployeesToExcel: async () => {
+        return await sequelize.query(`
+            SELECT emp.first_name, emp.last_name, emp.father_name, emp.sex, emp.dob, emp.q_address, 
+            emp.y_address, emp.SSN, emp.FIN, emp.phone_number, emp.home_number,
+            emp.shift_start_t, emp.shift_end_t, emp.j_start_date, emp.j_end_date, 
+            emp.dayoff_days_total, emp.working_days, proj.name as project, dept.name as department,
+            pos.name as position
+            FROM Employees as emp
+            LEFT JOIN Departments as dept ON emp.department = dept.id
+            LEFT JOIN Positions as pos ON emp.position_id = pos.id
+            LEFT JOIN Projects as proj ON emp.project_id = proj.id
+            WHERE emp.deletedAt IS NULL AND emp.id != 1
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
     }
 }

@@ -13,12 +13,15 @@ const {
     checkIfEmpFileExists,
     deleteEmpFiles,
     updateFileNames,
-    checkIfEmpExists
+    checkIfEmpExists,
+    exportEmployeesToExcel
 } = require("./employee.service");
 const { Employee } = require("../../db_config/models");
 const {Op} = require("sequelize");
 const path = require("path");
 const fs = require("fs");
+const excelJS = require("exceljs");
+const workbook = new excelJS.Workbook();
 const date = new Date();
 let filePath = "";
 const year = date.getFullYear();
@@ -803,5 +806,45 @@ module.exports = {
                 name
             });
         });
+    },
+    exportEmployeesToExcel: async (req, res, next) => {
+        const worksheet = workbook.addWorksheet("İşçilər");
+        worksheet.columns = [
+            {header: "Ad"},
+            {header: "Soyad"},
+            {header: "Ata Adı"},
+            {header: "Cinsiyyət"},
+            {header: "Ad günü"},
+            {header: "Qeydiyyat Ünvanı"},
+            {header: "Faktiki Ünvan"},
+            {header: "SSN"},
+            {header: "FIN"},
+            {header: "Telefon Nömrəsi"},
+            {header: "Ev Nömrəsi"},
+            {header: "İşə Gəlmə Saatı"},
+            {header: "İşdən Ayrılma Saatı"},
+            {header: "İşə Başlama Tarixi"},
+            {header: "İşdən Ayrılma Tarixi"},
+            {header: "Məzuniyyət Sayı"},
+            {header: "İş Günləri"},
+            {header: "Layihə"},
+            {header: "Departament"},
+            {header: "Vəzifə"},
+        ]
+        const employees = await exportEmployeesToExcel();
+        console.log(employees);
+        let employeeData = [];
+        employees.forEach(employee => {
+            employeeData = [];
+            for (const [key, value] of Object.entries(employee)) {
+                employeeData.push(value);
+            }
+            worksheet.addRow(employeeData);
+        });
+        worksheet.getRow(1).eachCell(cell => {
+            cell.font = { bold: true }
+        });
+        await workbook.xlsx.writeFile('test.xlsx');
+        res.redirect("/dashboard");
     }
 }
