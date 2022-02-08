@@ -20,6 +20,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         default: 0
       },
+      fine_minute: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        default: 0
+      },
+      fine_status: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        default: 0
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

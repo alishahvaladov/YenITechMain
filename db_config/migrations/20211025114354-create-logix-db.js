@@ -17,7 +17,7 @@ module.exports = {
         allowNull: false
       },
       tabel_no: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: true
       },
       createdAt: {

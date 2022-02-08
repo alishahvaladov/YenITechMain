@@ -14,7 +14,8 @@ const {
     deleteEmpFiles,
     updateFileNames,
     checkIfEmpExists,
-    exportEmployeesToExcel
+    exportEmployeesToExcel,
+    addLogixDataToLogixDB
 } = require("./employee.service");
 const { Employee } = require("../../db_config/models");
 const {Op} = require("sequelize");
@@ -80,6 +81,10 @@ module.exports = {
         const project = data.project_id;
         const date = new Date();
         const sex = data.sex;
+
+        let logixData = {};
+
+        
 
 
         if(fName) {
@@ -375,6 +380,15 @@ module.exports = {
                     }
                     req.body.emp = results;
                     const empId = results.dataValues.id;
+                    logixData.emp_id  = empId;
+                    logixData.logix_name = data.logix_name;
+                    logixData.tabel_no = data.tabel_no;
+                    addLogixDataToLogixDB(logixData, (err, result) => {
+                        if(err) {
+                            req.flash("error_msg", "An unknown error occured while adding logix data. Please contact system admin or try again.");
+                            return res.redirect("/employee/update/" + empId);
+                        }
+                    });
                     req.flash("success_msg", "Employee has been added please fill employee data to continue");
                     return res.redirect("/employee/emp-files/" + empId);
                 });

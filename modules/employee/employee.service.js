@@ -1,4 +1,4 @@
-const { Employee, EmployeeFileDirectory } = require("../../db_config/models");
+const { Employee, EmployeeFileDirectory, LogixDB } = require("../../db_config/models");
 const {Op, QueryTypes} = require("sequelize");
 const {sequelize} = require("../../db_config/models/index");
 const date = new Date();
@@ -40,6 +40,19 @@ module.exports = {
         }).catch((err) => {
             cb(err); 
         })
+    },
+    addLogixDataToLogixDB: (data, cb) => {
+        LogixDB.create({
+            emp_id: data.emp_id,
+            name: data.logix_name,
+            tabel_no: data.tabel_no
+        }, {
+            logging: false
+        }).then((result) => {
+            cb(null, result);
+        }).catch(err => {
+            cb(err);
+        });
     },
     getEmployees: async () => {
         return await sequelize.query(`SELECT emp.*, dp.name as depName, pj.name as pjName, ps.name as psName from Employees as emp 

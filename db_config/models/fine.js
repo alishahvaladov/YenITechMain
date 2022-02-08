@@ -21,7 +21,17 @@ module.exports = (sequelize, DataTypes) => {
     minute_total: {
       type: DataTypes.INTEGER,
       default: 0
-    }
+    },
+    fine_minute: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      default: 0
+    },
+    fine_status: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      default: 0
+    },
   }, {
     sequelize,
     modelName: 'Fine',
