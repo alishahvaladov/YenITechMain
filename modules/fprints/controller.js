@@ -38,15 +38,10 @@ module.exports = {
                         }
                         const result = await findEmpFromLogix(empName, tabelNo);
                         if (result.length > 0) {
-                            let dateTime = currentRow[1];
-                            const unixTime = (dateTime - 25569) * 86400 * 1000;
-                            dateTime = new Date(unixTime).toLocaleDateString().split("/");
-                            dateTime = `${dateTime[2].toString()}-${dateTime[0].toString()}-${dateTime[1].toString()}`;
                             data.user_id = user_id;
                             data.emp_id = result[0].emp_id;
+                            data.f_print_date = readXlsxFile.parseExcelDate(currentRow[1]).toLocaleDateString();
                             data.f_print_time = currentRow[7];
-                            data.createdAt = dateTime;
-                            data.updatedAt = dateTime;
                             if(currentRow[4] !== null || currentRow[4] !== '' || currentRow[4] !== ' ') {
                                 data.tabel_no = currentRow[4];
                             }

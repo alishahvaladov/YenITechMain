@@ -58,19 +58,19 @@ module.exports = {
             replacements.fTime = "%" + data.qTime + "%";
         }
         if(data.qDay !== '' && data.qDay !== '00' && data.qDay !== 'gun') {
-            query += " AND DAY(fp.createdAt) = :fDay"
-            countQuery += " AND DAY(fp.createdAt) = :fDay"
+            query += " AND DAY(fp.f_print_date) = :fDay"
+            countQuery += " AND DAY(fp.f_print_date) = :fDay"
             replacements.fDay = data.qDay;
             console.log(typeof data.qDay)
         }
         if (data.qMonth !== '' && data.qMonth !== "00" && data.qMonth !== 'ay') {
-            query += " AND MONTH(fp.createdAt) = :fMonth"
-            countQuery += " AND MONTH(fp.createdAt) = :fMonth"
+            query += " AND MONTH(fp.f_print_date) = :fMonth"
+            countQuery += " AND MONTH(fp.f_print_date) = :fMonth"
             replacements.fMonth = data.qMonth;
         }
         if (data.qYear !== '' && data.qYear !== "00" && data.qYear !== "il") {
-            query += " AND YEAR(fp.createdAt) = :fYear"
-            countQuery += " AND YEAR(fp.createdAt) = :fYear"
+            query += " AND YEAR(fp.f_print_date) = :fYear"
+            countQuery += " AND YEAR(fp.f_print_date) = :fYear"
             replacements.fYear = data.qYear;
         }
         query += " LIMIT 15 OFFSET :offset"

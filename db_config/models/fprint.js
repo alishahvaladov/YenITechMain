@@ -22,6 +22,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    f_print_date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
     f_print_time: {
       type: DataTypes.TIME,
       allowNull: false

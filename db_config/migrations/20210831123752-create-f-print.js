@@ -16,6 +16,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      f_print_date: {
+        type: Sequelize.DATEONLY,
+        allowNull: false
+      },
       f_print_time: {
         type: Sequelize.TIME,
         allowNull: false

@@ -34,7 +34,7 @@ const search = () => {
         let trs = "";
         tbody.text("");
         for (let i = 0; i < result.length; i++) {
-            const date = new Date(result[i].createdAt);
+            const date = new Date(result[i].f_print_date);
             let createdAt = date.toLocaleDateString();
             createdAt = createdAt.split('/');
             let updatedDate = `${createdAt[1]}.${createdAt[0]}.${createdAt[2]}`
@@ -142,7 +142,7 @@ const pageFunctions = () => {
                     let fprints = res.fPrints.fprints;
                     console.log(fprints);
                     for (let i = 0; i < fprints.length; i++) {
-                        const date = new Date(fprints[i].createdAt);
+                        const date = new Date(fprints[i].f_print_date);
                         let time = [];
                         if(fprints[i].f_print_time) {
                             time = fprints[i].f_print_time.split(':');
@@ -236,7 +236,7 @@ const renderPage = () => {
         let trs = "";
         tbody.text("");
         for (let i = 0; i < fprints.length; i++) {
-            const date = new Date(fprints[i].createdAt);
+            const date = new Date(fprints[i].f_print_date);
             let time = fprints[i].f_print_time.split(':');
             time = time[0] + ":" + time[1];
             let createdAt = date.toLocaleDateString();

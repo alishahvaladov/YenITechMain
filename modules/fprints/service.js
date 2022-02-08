@@ -41,9 +41,8 @@ module.exports = {
         FPrint.create({
             user_id: data.user_id,
             emp_id: data.emp_id,
-            f_print_time: data.f_print_time,
-            createdAt: data.createdAt,
-            updatedAt: data.updatedAt
+            f_print_date: data.f_print_date,
+            f_print_time: data.f_print_time
         }, {
             logging: false
         }).then((logixData) => {
