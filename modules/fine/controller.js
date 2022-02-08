@@ -39,6 +39,12 @@ module.exports = {
                             let totalLate = parseInt(fineData.minute_total) + penalty_calc;
                             existingEmpData.emp_id = emp_id;
                             existingEmpData.minute_total = totalLate;
+                            addFine(existingEmpData, (err, result) => {
+                                if(err) {
+                                    req.flash("error_msg", "An unknown error has been occurred please contact system admin");
+                                    return res.redirect("/fine");
+                                }
+                            });
                         }
                     }
                 }
