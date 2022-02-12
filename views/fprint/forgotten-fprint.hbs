@@ -1,0 +1,56 @@
+<div class="department-table">
+    {{> messages }}
+    <table class="table table-striped">
+        <div class="container">
+            <thead>
+            <th>Əməkdaş</th>
+            <th>Barmaq izi tarixi(Giriş)</th>
+            <th>Barmaq izi tarixi(Çıxış)</th>
+            <th>Barmaq izi saatı</th>
+            </thead>
+
+            <thead>
+                <th><input type="text" name="qEmployee" id="qEmployee"></th>
+                <th><input type="text" name="qProject" id="qProject"></th>
+                <th><input type="text" name="qDepartment" id="qDepartment"></th>
+                <th><input type="text" name="qPosition" id="qPosition"></th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                </tr>
+            </tbody>
+        </div>
+    </table>
+    <div class="pagination d-flex justify-content-center">
+        <div class="pagination-container w-50 d-flex justify-content-between">
+            <button class="pagination-item btn btn-outline-dark btn-sm active disabled">1</button>
+        </div>
+    </div>
+</div>
+<div class="fprint-modal position-fixed w-100">
+    <div class="fprint-modal-container w-100 h-100 d-flex justify-content-center align-items-center">
+        <form action="" method="post" enctype="multipart/form-data">
+            <div class="fprint-background d-flex flex-column p-5">
+                <label for="upload" class="btn btn-outline-dark btn-sm mb-3">Fayl Seç</label>
+                <input class="d-none" type="file" id="upload" name="file">
+                <div class="buttons">
+                    <span id="fpCancelBtn" class="btn btn-outline-danger btn-sm" type="button">Ləğv et</span>
+                    <button class="btn btn-outline-primary btn-sm" type="submit">Təsdiqlə</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="loading position-absolute top-0 w-100" style="left: 0; height: 100vh">
+    <div class="loading-container bg-light bg-opacity-25 w-100 h-100 d-flex justify-content-center align-items-center">
+        <img src="/assets/img/loading-3.gif" style="width: 70px">
+    </div>
+</div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/fg-fprint-api.js"></script>

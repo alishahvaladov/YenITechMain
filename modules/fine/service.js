@@ -72,5 +72,5 @@ module.exports = {
             type: QueryTypes.SELECT,
             logging: false
         });
-    }
+    },
 }

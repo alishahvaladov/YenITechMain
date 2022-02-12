@@ -32,7 +32,7 @@ module.exports = {
                             addEmpFineDataIfNotExists(nonExistingEmpData, (err, result) => {
                                 if(err) {
                                     req.flash("error_msg", "An unknown error has been occurred please contact system admin");
-                                    return res.redirect("/fine");
+                                    return res.redirect("/fines");
                                 }
                             });
                         } else {
@@ -42,7 +42,7 @@ module.exports = {
                             addFine(existingEmpData, (err, result) => {
                                 if(err) {
                                     req.flash("error_msg", "An unknown error has been occurred please contact system admin");
-                                    return res.redirect("/fine");
+                                    return res.redirect("/fines");
                                 }
                             });
                         }
@@ -53,5 +53,16 @@ module.exports = {
         res.send({
             success: true
         });
+    },
+    renderFinePage: async (req, res) => {
+        if(req.user.role === 1) {
+            res.render("fine/fine", {
+                super_admin: true
+            });
+        } else if (req.user.role === 5) {
+            res.render("fine/fine", {
+                hr: true
+            });
+        }
     }
 }

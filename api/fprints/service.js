@@ -131,5 +131,15 @@ module.exports = {
             }
         });
         return result;
+    },
+    renderForgottenFPrints: async () => {
+        return await sequelize.query(`
+            SELECT fp.*, emp.first_name, emp.last_name, emp.father_name FROM ForgottenFPrints as fp
+            LEFT JOIN Employees as emp ON emp.id = fp.emp_id
+            WHERE emp.deletedAt IS NULL
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
     }
 }

@@ -96,6 +96,7 @@ const empAPI = require("./api/employee/employee-api");
 const timeOffAPI = require("./api/time-off/api");
 const fPrintAPI = require("./api/fprints/api");
 const fine = require("./modules/fine/router");
+const fineAPI = require("./api/fine/api");
 
 // Routers
 app.use("/", userRouter);
@@ -109,10 +110,11 @@ app.use("/salaries", salary);
 app.use("/calculation", calculate);
 app.use("/select-fprint", selectFPrint);
 app.use("/fprints", fprints);
-app.use("/fine", fine);
+app.use("/fines", fine);
 app.use("/api", empAPI);
 app.use("/api/time-off", timeOffAPI)
 app.use("/api/fprints", fPrintAPI);
+app.use("/api/fine", fineAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });
