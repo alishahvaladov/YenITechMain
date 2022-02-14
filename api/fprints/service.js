@@ -1,4 +1,4 @@
-const { sequelize } = require("../../db_config/models");
+const { sequelize, ForgottenFPrints, FPrint } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
 
 module.exports = {
@@ -141,5 +141,44 @@ module.exports = {
             logging: false,
             type: QueryTypes.SELECT
         });
+    },
+    getForgottenFPrintById: async (id) => {
+        return await sequelize.query(`
+            SELECT * FROM ForgottenFPrints WHERE id = :id 
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                id
+            }
+        });
+    },
+    updateForgottenFPrints: (data, cb) => {
+        ForgottenFPrints.update({
+            f_print_time_entrance: data.f_print_time_entrance,
+            f_print_time_exit: data.f_print_time_exit 
+        }, {
+            where: {
+                id: data.id
+            }
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
+    },
+    createFPrintForForgottenFPrint: (data, cb) => {
+        FPrint.create({
+            emp_id: data.emp_id,
+            user_id: data.user_id,
+            f_print_date: data.f_print_date,
+            f_print_time: data.f_print_time
+        }, {
+            logging: false
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        })
     }
 }

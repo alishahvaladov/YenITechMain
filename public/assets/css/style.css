@@ -591,3 +591,17 @@ input[type=number] {
     background-color: #fff;
     padding: 20px;
 }
+
+.add-time-modal {
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.411);
+}
+.add-time-modal-container {
+    height: fit-content;
+    width: fit-content;
+    padding: 25px;
+    background-color: #fff;
+}

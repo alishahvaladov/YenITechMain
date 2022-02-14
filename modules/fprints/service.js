@@ -44,9 +44,9 @@ module.exports = {
     addForgottenFPrintsToDB: (data, cb) => {
         ForgottenFPrints.create({
             emp_id: data.emp_id,
-            f_print_time: data.f_print_time,
-            f_print_date_entrance: data.f_print_date_entrance,
-            f_print_date_exit: data.f_print_date_exit
+            f_print_date: data.f_print_date,
+            f_print_time_entrance: data.f_print_time_entrance,
+            f_print_time_exit: data.f_print_time_exit
         }, {
             logging: false
         }).then((res) => {

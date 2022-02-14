@@ -28,7 +28,7 @@ module.exports = {
       fine_status: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        default: 0
+        default: 0 
       },
       createdAt: {
         allowNull: false,

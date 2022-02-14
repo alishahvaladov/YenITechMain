@@ -64,5 +64,19 @@ module.exports = {
         }).catch((err) => {
             cb(err);
         });
+    },
+    resetApprovedFine: (data, cb) => {
+        Fine.update({
+            fine_minute: 0,
+            minute_total: data.minute_total
+        }, {
+            where: {
+                id: data.id
+            }
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
     }
 }

@@ -1,4 +1,4 @@
-const { getFineData, approveEditedFine, getFineDataByID, deleteFromFine, approveFine} = require("./service");
+const { getFineData, approveEditedFine, getFineDataByID, deleteFromFine, approveFine, resetApprovedFine} = require("./service");
 
 module.exports = {
     getFineData: async (req, res, next) => {
@@ -23,10 +23,19 @@ module.exports = {
         console.log(fineData);
         const totalMinute = fineData[0].minute_total;
         const approvedFines = fineData[0].fine_minute;
-        data.fine_minute = parseInt(approvedMinute) + parseInt(approvedFines);
+        if(parseInt(approvedMinute) > parseInt(totalMinute) - 30 && parseInt(totalMinute) - 30 > 0) {
+            data.fine_minute = parseInt(totalMinute) - 30
+        } else if (parseInt(approvedMinute) > parseInt(totalMinute) - 30 && parseInt(totalMinute) - 30 < 1) {
+            data.fine_minute = parseInt(approvedFines);
+        } else {
+            data.fine_minute = parseInt(approvedMinute) + parseInt(approvedFines);
+        }
         data.id = id;
         deleteData.id = id;
         deleteData.deletedMinute = parseInt(totalMinute) - parseInt(approvedMinute);
+        if (parseInt(totalMinute) - parseInt(approvedMinute) < 0) {
+            deleteData.deletedMinute = 0;
+        }
         console.log(data);
         approveEditedFine(data, (err, result) => {
            if(err) {
@@ -94,5 +103,25 @@ module.exports = {
                message: "An employee has been fined successfully"
            });
         });
+    },
+    resetApprovedFine: async (req, res) => {
+        const data = {};
+        const { id } = req.params;
+        console.log(id);
+        const fineData = await getFineDataByID(id);
+        console.log(fineData);
+        data.id = id;
+        const minute_total = fineData[0].minute_total;
+        data.minute_total = parseInt(minute_total) + parseInt(fineData[0].fine_minute);
+        resetApprovedFine(data, (err, result) => {
+            if(err) {
+                console.log(err);
+                return res.status(400).json({
+                    success: false,
+                    message: "Unknown error has been occurred"
+                });
+            }
+            return res.status(204).send("Approved fine has been reset");
+        })
     }
 }

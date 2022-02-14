@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   db: 
@@ -13,7 +13,7 @@ services:
       - 3306:3306
 
   phpmyadmin: 
-    image: phpmyadmin
+    image: phpmyadmin:latest
     container_name: phpmyadmin
     restart: always
     ports:

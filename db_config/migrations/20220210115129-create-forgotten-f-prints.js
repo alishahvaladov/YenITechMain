@@ -12,17 +12,17 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      f_print_date_entrance: {
+      f_print_date: {
         type: Sequelize.DATEONLY,
-        allowNull: true
-      },
-      f_print_date_exit: {
-        type: Sequelize.DATEONLY,
-        allowNull: true
-      },
-      f_print_time: {
-        type: Sequelize.TIME,
         allowNull: false
+      },
+      f_print_time_entrance: {
+        type: Sequelize.TIME,
+        allowNull: true
+      },
+      f_print_time_exit: {
+        type: Sequelize.TIME,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,

@@ -9,10 +9,13 @@ const warningModalApprove = document.querySelector("#warningModalApprove");
 const warningModal = document.querySelector(".warning-modal");
 
 const renderPage = () => {
+    console.log("salam");
     $.get("http://localhost:3000/api/fine", (res) => {
         let html = "";
+        console.log(res);
         res.forEach(fine => {
             let date = new Date(fine.updatedAt);
+            console.log(fine);
             date = date.toLocaleDateString();
             const splitDate = date.toString().split("/");
             date = `${splitDate[1]}.${splitDate[0]}.${splitDate[2]}`

@@ -47,15 +47,15 @@ module.exports = {
                     const splittedTime = result[0].f_print_time.split(":");
                     if(parseInt(splittedTime[0]) >= splitShiftEnd - 2) {
                         fPrintData.emp_id = empIDsAndShiftTimes[j].id;
-                        fPrintData.f_print_time = result[0].f_print_time;
-                        fPrintData.f_print_date_entrance = null;
-                        fPrintData.f_print_date_exit = result[0].f_print_date;
+                        fPrintData.f_print_date = result[0].f_print_date;
+                        fPrintData.f_print_time_entrance = null;
+                        fPrintData.f_print_time_exit = result[0].f_print_time;
                         fPrintDataHasValue = true;
                     } else {
                         fPrintData.emp_id = empIDsAndShiftTimes[j].id;
-                        fPrintData.f_print_time = result[0].f_print_time;
-                        fPrintData.f_print_date_entrance = result[0].f_print_date;
-                        fPrintData.f_print_date_exit = null;
+                        fPrintData.f_print_date = result[0].f_print_date;
+                        fPrintData.f_print_time_entrance = result[0].f_print_time;
+                        fPrintData.f_print_time_exit = null;
                         fPrintDataHasValue = true;
                     }
                     if(fPrintDataHasValue) {
@@ -91,15 +91,15 @@ module.exports = {
                     }
                     if(countEntrance < 1) {
                         fPrintData.emp_id = empIDsAndShiftTimes[j].id;
-                        fPrintData.f_print_time = timeExit;
-                        fPrintData.f_print_date_entrance = null;
-                        fPrintData.f_print_date_exit = dateExit;
+                        fPrintData.f_print_time_exit = timeExit;
+                        fPrintData.f_print_time_entrance = null;
+                        fPrintData.f_print_date = dateExit;
                         fPrintDataHasValue = true;
                     } else if (countExit < 1) {
                         fPrintData.emp_id = empIDsAndShiftTimes[j].id;
-                        fPrintData.f_print_time = timeEntrance;
-                        fPrintData.f_print_date_entrance = dateEntrance;
-                        fPrintData.f_print_date_exit = null;
+                        fPrintData.f_print_time_entrance = timeEntrance;
+                        fPrintData.f_print_date = dateEntrance;
+                        fPrintData.f_print_time_exit = null;
                         console.log(fPrintData);
                         fPrintDataHasValue = true;
                     }

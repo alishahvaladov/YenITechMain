@@ -18,17 +18,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    f_print_date_entrance: {
+    f_print_date: {
       type: DataTypes.DATEONLY,
-      allowNull: true
-    },
-    f_print_date_exit: {
-      type: DataTypes.DATEONLY,
-      allowNull: true
-    },
-    f_print_time: {
-      type: DataTypes.TIME,
       allowNull: false
+    },
+    f_print_time_entrance: {
+      type: DataTypes.TIME,
+      allowNull: true
+    },
+    f_print_time_exit: {
+      type: DataTypes.TIME,
+      allowNull: true
     },
   }, {
     sequelize,

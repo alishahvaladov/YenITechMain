@@ -31,16 +31,20 @@ module.exports = {
                             nonExistingEmpData.fine_status = 0;
                             addEmpFineDataIfNotExists(nonExistingEmpData, (err, result) => {
                                 if(err) {
+                                    console.log("AddEmpFineDataIfNotExists Error");
+                                    console.log(err);
                                     req.flash("error_msg", "An unknown error has been occurred please contact system admin");
                                     return res.redirect("/fines");
                                 }
                             });
-                        } else {
+                        } else { 
                             let totalLate = parseInt(fineData.minute_total) + penalty_calc;
                             existingEmpData.emp_id = emp_id;
                             existingEmpData.minute_total = totalLate;
                             addFine(existingEmpData, (err, result) => {
                                 if(err) {
+                                    console.log("Add Fine Error")
+                                    console.log(err);
                                     req.flash("error_msg", "An unknown error has been occurred please contact system admin");
                                     return res.redirect("/fines");
                                 }
