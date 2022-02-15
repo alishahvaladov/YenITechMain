@@ -605,3 +605,15 @@ input[type=number] {
     padding: 25px;
     background-color: #fff;
 }
+
+#fPrintType {
+    padding: 5px;
+    outline: none;
+    width: fit-content;
+    color: var(--web-text-color);
+    background-color: var(--web-right-bg-color);
+    box-shadow: 2px 2px 5px var(--web-main-color);
+    border-radius: 5px;
+    margin-left: 10px;
+    border: none;
+}

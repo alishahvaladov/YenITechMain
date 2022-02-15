@@ -88,6 +88,7 @@ const employeeRouter = require("./modules/employee/employee.router");
 const project = require("./modules/project/project.router");
 const position = require("./modules/position/position.router");
 const nofprint = require("./modules/nofprint/nofprint.router");
+const noFprintAPI = require("./api/nofprint/api");
 const salary = require("./modules/salary/salary.router");
 const calculate = require("./modules/salary-calculation/router");
 const selectFPrint = require("./modules/all-f-print/router");
@@ -108,13 +109,14 @@ app.use("/positions", position);
 app.use("/nofprint", nofprint);
 app.use("/salaries", salary);
 app.use("/calculation", calculate);
-app.use("/select-fprint", selectFPrint);
+app.use("/all-fprints", selectFPrint);
 app.use("/fprints", fprints);
 app.use("/fines", fine);
 app.use("/api", empAPI);
 app.use("/api/time-off", timeOffAPI)
 app.use("/api/fprints", fPrintAPI);
 app.use("/api/fine", fineAPI);
+app.use("/api/nofprints", noFprintAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });

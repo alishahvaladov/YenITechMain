@@ -13,7 +13,6 @@ module.exports = {
                     errors
                 });
             }
-            console.log(result);
             if(req.user.role === 5) {
                 return res.render("nofprint/nofprint", {
                     employees: result,
@@ -34,16 +33,13 @@ module.exports = {
 
         Employee.findOne({
             where: {
-                id: data.id
+                id: data.emp_id
             }
         }).then((result) => {
-            if(result) {
-                console.log(result);
+            if(!result) {
                 req.flash('error_msg', "An unknown error has been occurred");
                 return res.redirect("/nofprint/add-nofprint");
             }
-            req.flash("success_msg", "Record has been added");
-            return res.redirect("/nofprint");
         })
 
         if(errors.length === 0) {
@@ -77,7 +73,6 @@ module.exports = {
                 }
             } else {
                 if(!result) {
-                    console.log(result)
                     errors.push({msg: "No record found for today"});
                     if(res.user.role === 5) {
                         return res.render("nofprint/nofprints", {

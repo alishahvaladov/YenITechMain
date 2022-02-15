@@ -73,7 +73,7 @@ module.exports = {
             countQuery += " AND YEAR(fp.f_print_date) = :fYear"
             replacements.fYear = data.qYear;
         }
-        query += " LIMIT 15 OFFSET :offset"
+        query += " ORDER BY fp.f_print_date DESC LIMIT 15 OFFSET :offset"
         replacements.offset = parseInt(data.offset);
         console.log(query);
         console.log(countQuery);

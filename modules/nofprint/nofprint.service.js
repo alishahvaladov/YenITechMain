@@ -20,10 +20,8 @@ module.exports = {
             emp_id: data.emp_id,
             enter_sign_time: data.enter_sign_time,
         }).then((print) => {
-            console.log(print);
             cb()
         }).catch((err) => {
-            console.log(err);
             cb(err);
         })
     },

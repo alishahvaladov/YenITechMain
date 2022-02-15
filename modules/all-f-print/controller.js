@@ -1,39 +1,22 @@
-const { getFPrints, getNoFPrints } = require("./service");
+const { getAllFPrints } = require("./service");
 let errors = [];
 
 
 module.exports = {
     getAllFPrints: async (req, res) => {
         errors = [];
+        const data = req.body;
         try {
-            let fResult = await getFPrints();
-            let nFResult = await getNoFPrints();
-            if(req.user.role === 1) {
-                return res.render("fprint-selector", {
-                    super_admin: true,
-                    fResult,
-                    nFResult
-                });
-            } else if (req.user.role === 5) {
-                return res.render("fprint-selector", {
-                    hr: true,
-                    fResult,
-                    nFResult
-                });
-            }
+            const result = await getAllFPrints(data);
+            res.status(200).json({
+                result: result
+            });
         } catch (err) {
-            errors.push({msg: "An unknown error has been occurred please contact System Admin"});
-            if(req.user.role === 1) {
-                return res.render("fprint-selector", {
-                    super_admin: true,
-                    errors
-                });
-            } else if (req.user.role === 5) {
-                return res.render("fprint-selector", {
-                    hr: true,
-                    errors
-                });
-            }
+            console.log(err);
+            res.status(400).json({
+               success: false,
+               message: "An unknown error has been occurred"
+            });
         }
     }
 }
