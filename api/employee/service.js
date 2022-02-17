@@ -62,7 +62,6 @@ module.exports = {
         const empPos = data.empPosVal;
         const empProj = data.empProjVal;
         const empStatus = data.empStatusVal;
-        console.log(empName);
 
         let query = `
             SELECT emp.*, pos.name as posName, dept.name as deptName, proj.name as projName FROM Employees as emp

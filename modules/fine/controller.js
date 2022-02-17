@@ -67,6 +67,10 @@ module.exports = {
             res.render("fine/fine", {
                 hr: true
             });
+        }else if (req.user.role === 2) {
+            res.render("fine/fine", {
+                hr: true
+            });
         }
     }
 }

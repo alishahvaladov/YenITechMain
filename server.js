@@ -38,6 +38,7 @@ app.use(passport.session());
 // Static Files
 app.use('/assets', express.static(path.join(__dirname, './public/assets')));
 app.use('/uploads', express.static(path.join(__dirname, './public/uploads')));
+app.use('/excels-for-delete', express.static(path.join(__dirname, './public/excels')));
 app.use('/salary-xlsx', express.static(path.join(__dirname, './salaries_xlsx')));
 
 // Initialize Passport

@@ -164,7 +164,7 @@ module.exports = {
                                 if (err) {
                                     console.log(err);
                                     req.flash("An unknown error has been occurred please contact System Admin");
-                                    return res.redirect("/fprints");
+                                    return res.redirect("/all-fprints");
                                 }
                             });
                         }
@@ -174,13 +174,13 @@ module.exports = {
                     setTimeout(next, 1000);
                 } else {
                     req.flash("error_msg", "Xahiş olunur düzgün excel faylını(Logix proqramından export olunmuş) yükləyin.");
-                    return await res.redirect("/fprints");
+                    return await res.redirect("/all-fprints");
                 }
             });
         } catch (err) {
             console.log(err);
             req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
-            res.redirect("/fprints");
+            res.redirect("/all-fprints");
         }
     },
     renderForgottenFPrints: (req, res) => {

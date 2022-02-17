@@ -43,7 +43,6 @@ router.post("/emp-files/:id", hr, checkUploadPath, addEmpUpload.fields([
     {name: "lcScan"},
     {name: "pp"}
 ]), uploadFilePathToDB);
-router.get("/exportExcelTest", hr, exportEmployeesToExcel);
 
 
 module.exports = router;

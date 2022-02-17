@@ -29,6 +29,10 @@ router.get("/dashboard",  ensureActivated, ensureAuthenticated, (req, res) => {
         res.render('dashboard', {
             super_admin: true
         })
+    } else if (req.user.role === 2) {
+        res.render('dashboard', {
+            hr: true
+        })
     }
 });
 router.get("/users", ensureActivated, admin, getUsers);

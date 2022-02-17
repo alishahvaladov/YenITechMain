@@ -7,4 +7,3 @@ router.get("/", renderFinePage);
 router.get("/fine-calculation", calculateFine);
 
 module.exports = router;
-

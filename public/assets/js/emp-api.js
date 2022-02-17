@@ -2,6 +2,7 @@ const pgContainer = document.querySelector('.pagination-container');
 const loading = document.querySelector(".loading");
 const empEditModal = document.querySelector(".employee-full-data-modal");
 const empModalCloseBtn = document.querySelector(".empModalCloseBtn");
+const exportToExcelBtn = document.querySelector("#exportToExcel");
 
 const empName = document.querySelector("#name");
 const empMName = document.querySelector("#midName");
@@ -437,6 +438,39 @@ const renderPage = () => {
       }
    });
 }
+const exportToExcel = () => {
+   getEmpInps();
+   const method = "post";
+   let params = {
+      empInpNameVal,
+      empInpPhoneVal,
+      empDeptVal,
+      empPosVal,
+      empProjVal,
+      empStatusVal
+   }
+   let form = document.createElement('form');
+   form.setAttribute("method", method);
+   form.setAttribute("action", "http://localhost:3000/api/download-excel");
+
+   for (let key in params) {
+      if (params.hasOwnProperty(key)) {
+         const hiddenField = document.createElement("input");
+         hiddenField.setAttribute('type', 'hidden');
+         hiddenField.setAttribute('name', key);
+         hiddenField.setAttribute('value', params[key]);
+         console.log(params[key]);
+         form.appendChild(hiddenField);
+      }
+   }
+   document.body.appendChild(form);
+   form.submit();
+}
+
+exportToExcelBtn.addEventListener("click", () => {
+   exportToExcel();
+});
+
 
 empInpName.keyup(renderPage);
 empInpPhone.keyup(renderPage);

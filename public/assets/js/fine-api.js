@@ -13,7 +13,7 @@ const renderPage = () => {
     $.get("http://localhost:3000/api/fine", (res) => {
         let html = "";
         console.log(res);
-        res.forEach(fine => {
+        res.result.forEach(fine => {
             let date = new Date(fine.updatedAt);
             console.log(fine);
             date = date.toLocaleDateString();
@@ -24,29 +24,53 @@ const renderPage = () => {
             } else {
                 fine.minute_total -= 30
             }
-            html += `
-            <tr> 
-                <td>
-                    ${fine.first_name} ${fine.last_name} ${fine.father_name}
-                </td>
-                <td>
-                    ${fine.minute_total}
-                </td>
-                <td>
-                    ${fine.fine_minute}
-                </td>
-                <td>
-                    ${date}
-                </td>                  
-                <td>
-                    <div class="btn-group">
-                        <button class="btn btn-outline-success approve-fine" value="${fine.fineID}"><i class="bi bi-check-circle-fill"></i></button>
-                        <button class="btn btn-outline-danger delete-fine" value="${fine.fineID}"><i class="bi bi-x-circle-fill"></i></button>
-                        <button class="btn btn-outline-secondary reset-fine" value="${fine.fineID}"><i class="bi bi-pencil-square"></i></button>
-                    </div>
-                </td>     
-            </tr>
-        `
+            if (res.role === "admin") {
+                html += `
+                    <tr> 
+                        <td>
+                            ${fine.first_name} ${fine.last_name} ${fine.father_name}
+                        </td>
+                        <td>
+                            ${fine.minute_total}
+                        </td>
+                        <td>
+                            ${fine.fine_minute}
+                        </td>
+                        <td>
+                            ${date}
+                        </td>                  
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-primary reset-approved-fine" value="${fine.fineID}"><i class="bi bi-arrow-clockwise"></i></button>
+                            </div>
+                        </td>     
+                    </tr>
+                `
+            } else {
+                html += `
+                    <tr> 
+                        <td>
+                            ${fine.first_name} ${fine.last_name} ${fine.father_name}
+                        </td>
+                        <td>
+                            ${fine.minute_total}
+                        </td>
+                        <td>
+                            ${fine.fine_minute}
+                        </td>
+                        <td>
+                            ${date}
+                        </td>                  
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-success approve-fine" value="${fine.fineID}"><i class="bi bi-check-circle-fill"></i></button>
+                                <button class="btn btn-outline-danger delete-fine" value="${fine.fineID}"><i class="bi bi-x-circle-fill"></i></button>
+                                <button class="btn btn-outline-secondary reset-fine" value="${fine.fineID}"><i class="bi bi-pencil-square"></i></button>
+                            </div>
+                        </td>     
+                    </tr>
+                `
+            }
         });
         tbody.innerHTML = html;
         const approveFineBtnS = document.querySelectorAll(".approve-fine");
