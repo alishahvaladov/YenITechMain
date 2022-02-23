@@ -103,6 +103,7 @@ const fine = require("./modules/fine/router");
 const fineAPI = require("./api/fine/api");
 const profile = require("./modules/profile/router");
 const profileAPI = require("./api/profile/api");
+const salaryAPI = require("./api/salary/api");
 
 // Routers
 app.use("/", userRouter);
@@ -124,6 +125,7 @@ app.use("/api/fprints", fPrintAPI);
 app.use("/api/fine", fineAPI);
 app.use("/api/nofprints", noFprintAPI);
 app.use("/api/profile", profileAPI);
+app.use("/api/salary", salaryAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });

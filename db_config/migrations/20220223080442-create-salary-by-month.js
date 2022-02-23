@@ -1,28 +1,24 @@
 'use strict';
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Salaries', {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('SalaryByMonths', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
       emp_id: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      gross: {
-        type: Sequelize.INTEGER,
+      salary_date: {
+        type: Sequelize.DATEONLY,
         allowNull: false
       },
-      unofficial_net: {
+      salary_cost: {
         type: Sequelize.INTEGER,
-        allowNull: true
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -34,7 +30,7 @@ module.exports = {
       }
     });
   },
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Salaries');
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('SalaryByMonths');
   }
 };

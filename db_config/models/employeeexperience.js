@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Salary extends Model {
+  class EmployeeExperience extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,31 +12,19 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-  };
-  Salary.init({
+  }
+  EmployeeExperience.init({
     emp_id: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    user_id: {
-      allowNull: false,
-      type: DataTypes.INTEGER
-    },
-    gross: {
+    employee_experience_year: {
       type: DataTypes.INTEGER,
       allowNull: false
-    },
-    unofficial_net: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    createdAt: {
-      allowNull: false,
-      type: DataTypes.DATE
     },
   }, {
     sequelize,
-    modelName: 'Salary',
+    modelName: 'EmployeeExperience',
   });
-  return Salary;
+  return EmployeeExperience;
 };
