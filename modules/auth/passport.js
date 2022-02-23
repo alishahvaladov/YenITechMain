@@ -1,6 +1,22 @@
 const localStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
-const { User } = require("../../db_config/models");
+const { User, sequelize } = require("../../db_config/models");
+const {QueryTypes} = require("sequelize");
+
+const fileDirectories = async (id) => {
+    return await sequelize.query(`
+            SELECT empd.uploaded_files, emp.id, emp.first_name, emp.last_name, emp.father_name FROM Users as usr
+            LEFT JOIN EmployeeFileDirectories as empd ON usr.emp_id = empd.emp_id
+            LEFT JOIN Employees as emp ON usr.emp_id = emp.id
+            WHERE usr.id = :id
+        `, {
+        logging: false,
+        type: QueryTypes.SELECT,
+        replacements: {
+            id
+        }
+    });
+}
 
 module.exports = function (passport) {
     passport.use(
@@ -43,7 +59,18 @@ module.exports = function (passport) {
                id: id
            },
            logging: false
-       }).then((user) => {
+       }).then(async (user) => {
+           const fileDirectoriesData = await fileDirectories(user.id);
+           const parsedFileDirectories = JSON.parse(fileDirectoriesData[0].uploaded_files);
+           const recruitmentDirectories = JSON.parse(parsedFileDirectories.recruitment);
+           let empName = fileDirectoriesData[0].first_name;
+           empName = empName.toLowerCase();
+           let empSurname = fileDirectoriesData[0].last_name;
+           empSurname = empSurname.toLowerCase();
+           let empFatherName = fileDirectoriesData[0].father_name;
+           empFatherName = empFatherName.toLowerCase();
+           const profilePicture = recruitmentDirectories.profilePicture;
+           user.dataValues.profilePicture = `/employees/directs/recruitment/${fileDirectoriesData[0].id}-${empName}-${empSurname}-${empFatherName}/${profilePicture[0].filename}`;
            done(null, user.get());
        })
     });

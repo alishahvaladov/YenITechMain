@@ -502,6 +502,7 @@ input[type=number] {
     outline: none;
     float: right;
 }
+#toffNextBtn,
 #empRegApply {
     background-color: var(--web-right-bg-color);
     font-size: 20px;
@@ -515,6 +516,7 @@ input[type=number] {
     outline: none;
 }
 
+#toffNextBtn:hover,
 #empRegApply:hover {
     color: var(--web-text-color);
     box-shadow: -1px -1px 3px rgba(255, 255, 255, 1),
@@ -616,4 +618,10 @@ input[type=number] {
     border-radius: 5px;
     margin-left: 10px;
     border: none;
+}
+
+.user-info-list {
+    width: 30%;
+    margin-right: 1%;
+    margin-bottom: 3%;
 }

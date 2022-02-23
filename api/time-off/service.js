@@ -1,4 +1,4 @@
-const { sequelize } = require("../../db_config/models");
+const { sequelize, TimeOffRequest } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
 
 module.exports = {
@@ -14,5 +14,30 @@ module.exports = {
             },
             logging: false
         });
+    },
+    getTimeOffs: async () => {
+        return await sequelize.query(`
+            SELECT toff.*, emp.first_name, emp.last_name, emp.father_name FROM TimeOffRequests as toff
+            LEFT JOIN Employees as emp ON toff.emp_id = emp.id
+            WHERE emp.deletedAt IS NULL
+            AND emp.id IS NOT NULL
+        `, {
+            type: QueryTypes.SELECT,
+            logging: false
+        });
+    },
+    addTimeOff: (data, cb) => {
+        TimeOffRequest.create({
+            emp_id: data.emp,
+            timeoff_type: data.timeOffType,
+            timeoff_start_date: data.timeOffStartDate,
+            timeoff_end_date: data.timeOffEndDate,
+            timeoff_job_start_date: data.wStartDate,
+            status: 0
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        })
     }
 }

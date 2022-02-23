@@ -813,7 +813,6 @@ module.exports = {
                 req.flash("error_msg", "An unknown error has been occurred");
                 return res.redirect("/employee");
             }
-            console.log(result);
             const name = `${result.dataValues.first_name} ${result.dataValues.last_name} ${result.dataValues.father_name}`;
             return res.render("employee/employee-data", {
                 name

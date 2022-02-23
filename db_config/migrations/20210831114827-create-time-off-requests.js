@@ -20,10 +20,6 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      timeoff_description: {
-        type: Sequelize.TEXT,
-        allowNull: true
-      },
       timeoff_start_date: {
         type: Sequelize.DATEONLY,
         allowNull: false

@@ -146,12 +146,12 @@ module.exports = {
         `
         let result = {};
         const empData = await sequelize.query(query, {
-            // logging: false,
+            logging: false,
             type: QueryTypes.SELECT,
             replacements: replacements
         });
         const count = await sequelize.query(countQuery, {
-            // logging: false,
+            logging: false,
             type: QueryTypes.SELECT,
             replacements: replacements
         })

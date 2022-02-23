@@ -18,27 +18,16 @@ module.exports = {
             return res.redirect("/timeoffrequests/requests");
         })
     },
-    getTimeOffs: (req, res) => {
-        getTimeOffs((err, result) => {
-            if(err) {
-                console.log(err);
-                req.flash("error_msg", "There are no any time off request");
-                return res.redirect("/timeoffrequests");
-            } else {
-                console.log(result)
-                if (req.user.role === 5) {
-                    return res.render("time-off-request/timeoffrequests", {
-                        timeoffrequests: result,
-                        hr: true
-                    });
-                } else if (req.user.role === 1 ) {
-                    return res.render("time-off-request/timeoffrequests", {
-                        timeoffrequests: result,
-                        super_admin: true
-                    });
-                }
-            }
-        })
+    renderTimeOffPage: (req, res) => {
+        if (req.user.role === 5) {
+            return res.render("time-off-request/timeoffrequests", {
+                hr: true
+            });
+        } else if (req.user.role === 1 ) {
+            return res.render("time-off-request/timeoffrequests", {
+                super_admin: true
+            });
+        }
     },
     getTimeOff: (req, res) => {
         const id = req.params.id;

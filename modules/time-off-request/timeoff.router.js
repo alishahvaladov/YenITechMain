@@ -1,4 +1,4 @@
-const { addTimeOff, getTimeOffs, getTimeOff, addTimeOffNonUser, getTimeOffNonUser } = require("./timeoff.controller");
+const { addTimeOff, renderTimeOffPage, getTimeOff, addTimeOffNonUser, getTimeOffNonUser } = require("./timeoff.controller");
 const express = require("express");
 const {ensureAuthenticated, hr} = require("../auth/auth");
 const router = express.Router();
@@ -21,5 +21,5 @@ router.post("/add-toff-non-user", hr, addTimeOffNonUser);
 
 router.post("/requests", ensureAuthenticated, addTimeOff);
 router.get("/request/:id", hr, getTimeOff);
-router.get("/", hr, getTimeOffs);
+router.get("/", hr, renderTimeOffPage);
 module.exports = router;

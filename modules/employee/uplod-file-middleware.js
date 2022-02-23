@@ -4,6 +4,7 @@ const path = require("path");
 let filePath = "";
 
 const fileFilter = (req, file, cb) => {
+    req.fileValidationError = false;
     if (
         file.mimetype.includes("pdf") ||
         file.mimetype.includes("image") ||

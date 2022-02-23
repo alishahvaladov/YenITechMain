@@ -1,0 +1,13 @@
+module.exports = {
+    renderProfilePage: async (req, res) => {
+        if(req.user.role === 1) {
+            res.render("profile/profile", {
+                super_admin: true
+            });
+        } else if (req.user.role === 5) {
+            res.render("profile/profile", {
+                hr: true
+            });
+        }
+    }
+}

@@ -40,6 +40,7 @@ app.use('/assets', express.static(path.join(__dirname, './public/assets')));
 app.use('/uploads', express.static(path.join(__dirname, './public/uploads')));
 app.use('/excels-for-delete', express.static(path.join(__dirname, './public/excels')));
 app.use('/salary-xlsx', express.static(path.join(__dirname, './salaries_xlsx')));
+app.use('/employees/directs', express.static(path.join(__dirname, './public/employees')))
 
 // Initialize Passport
 
@@ -54,7 +55,8 @@ app.engine(
                     return opts.fn(this);
                 }
             },
-        }
+        },
+
     })
 );
 app.set("view engine", ".hbs");
@@ -99,6 +101,8 @@ const timeOffAPI = require("./api/time-off/api");
 const fPrintAPI = require("./api/fprints/api");
 const fine = require("./modules/fine/router");
 const fineAPI = require("./api/fine/api");
+const profile = require("./modules/profile/router");
+const profileAPI = require("./api/profile/api");
 
 // Routers
 app.use("/", userRouter);
@@ -113,11 +117,13 @@ app.use("/calculation", calculate);
 app.use("/all-fprints", selectFPrint);
 app.use("/fprints", fprints);
 app.use("/fines", fine);
+app.use("/profile", profile);
 app.use("/api", empAPI);
 app.use("/api/time-off", timeOffAPI)
 app.use("/api/fprints", fPrintAPI);
 app.use("/api/fine", fineAPI);
 app.use("/api/nofprints", noFprintAPI);
+app.use("/api/profile", profileAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });

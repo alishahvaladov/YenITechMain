@@ -41,7 +41,7 @@ router.post("/emp-files/:id", hr, checkUploadPath, addEmpUpload.fields([
     {name: "diplomaScan"},
     {name: "idScan"},
     {name: "lcScan"},
-    {name: "pp"}
+    {name: "profilePicture"}
 ]), uploadFilePathToDB);
 
 

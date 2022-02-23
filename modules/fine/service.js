@@ -50,7 +50,7 @@ module.exports = {
     },
     getFprints: async (date, emp_id) => {
         return await sequelize.query(`
-            SELECT fp.*, emp.first_name, emp.last_name, emp.father_name, emp.shift_start_t, emp.shift_end_t FROM FPrints as fp
+            SELECT DISTINCT fp.*, emp.first_name, emp.last_name, emp.father_name, emp.shift_start_t, emp.shift_end_t FROM FPrints as fp
             LEFT JOIN Employees as emp ON fp.emp_id = emp.id
             WHERE fp.f_print_date = :date
             AND fp.emp_id = :emp_id

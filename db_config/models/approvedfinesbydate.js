@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class TimeOffRequest extends Model {
+  class ApprovedFinesByDate extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,44 +12,27 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-  };
-  TimeOffRequest.init({
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER
-    },
+  }
+  ApprovedFinesByDate.init({
     emp_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
-    timeoff_type: {
+    approved_fine_minute: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    timeoff_start_date: {
+    approved_date: {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
-    timeoff_end_date: {
+    fined_date: {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
-    timeoff_job_start_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false
-    },
-    status: {
-      default: 0,
-      allowNull: false,
-      type: DataTypes.INTEGER
-    }
   }, {
     sequelize,
-    modelName: 'TimeOffRequest',
-    createdAt: "created_at",
-    updatedAt: "updated_at"
+    modelName: 'ApprovedFinesByDate',
   });
-  return TimeOffRequest;
+  return ApprovedFinesByDate;
 };

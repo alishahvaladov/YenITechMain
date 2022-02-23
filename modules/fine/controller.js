@@ -17,10 +17,12 @@ module.exports = {
                 if(fPrintData.length > 1) {
                     const emp_id = fPrintData[0].emp_id;
                     let fPrintTime = fPrintData[0].f_print_time.split(":");
+                    let fPrintLeaveTime = fPrintData[fPrintData.length - 1].f_print_time.split(":");
                     let shiftStartTime = fPrintData[0].shift_start_t.split(":");
+                    let shiftEndTime = fPrintData[0].shift_end_t.split(":");
                     let fineData = await getFineData(emp_id);
-                    let penaltyHourToMinute = (parseInt(fPrintTime[0]) - parseInt(shiftStartTime[0])) * 60;
-                    let penaltyMinute = parseInt(fPrintTime[1]) - parseInt(shiftStartTime[1]);
+                    let penaltyHourToMinute = ((parseInt(fPrintTime[0]) - parseInt(shiftStartTime[0])) * 60) + (parseInt(fPrintLeaveTime[0]) - parseInt(shiftEndTime[0]) * 60);
+                    let penaltyMinute = (parseInt(fPrintTime[1]) - parseInt(shiftStartTime[1])) + (parseInt(fPrintLeaveTime[1]) - parseInt(shiftEndTime[1]));
                     penalty_calc = penaltyHourToMinute + penaltyMinute;
                     if(penalty_calc > 0) {
                         console.log(fPrintData[0]);
@@ -54,9 +56,8 @@ module.exports = {
                 }
             }
         }
-        res.send({
-            success: true
-        });
+        req.flash("success_msg", "Cərimələr hesablandı")
+        return res.redirect("/fines");
     },
     renderFinePage: async (req, res) => {
         if(req.user.role === 1) {

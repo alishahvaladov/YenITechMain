@@ -1,7 +1,10 @@
 <div class="container">
-    <div class="time-off-form mb-5">
-        <h1 class="text-center">Məzuniyyət Formu</h1>
-        <form action="" method="get">
+    <div class="time-off-form-container d-flex justify-content-center align-items-center" style="height: 90vh">
+        <div class="time-off-form mb-5">
+            <h1 class="text-center">Məzuniyyət Formu</h1>
+            <div class="messages">
+
+            </div>
             <div class="time-off-select-container d-flex justify-content-between mt-5">
                 <div class="toff-select-cont-left d-flex flex-column">
                     <div class="time-off-type">
@@ -12,13 +15,6 @@
                                     <option value="{{@key}}">{{this}}</option>
                                 {{/each}}
                             {{/if}}
-                        </select>
-                    </div>
-                    <div class="time-off-description">
-                        <label for="toff-description">Məzmun: </label>
-                        <select name="time-off-description" id="toff-description">
-                            <option value="0">Məzmun 1</option>
-                            <option value="1">Məzmun 2</option>
                         </select>
                     </div>
                     <div class="toff-start-date">
@@ -32,8 +28,7 @@
                     <div class="w-start-date">
                         <label for="w-start-date">İşə Qayıtma Tarixi: </label>
                         <select type="date" id="w-start-date">
-                            <option value="0">Day 1</option>
-                            <option value="1">Day 2</option>
+
                         </select>
                     </div>
                     <div class="possible-toff-days d-flex align-items-center">
@@ -42,7 +37,7 @@
                     </div>
                 </div>
                 <div class="toff-select-cont-right d-flex flex-column">
-                     <div class="toff-maker">
+                    <div class="toff-maker">
                         <label for="toff-maker">Təşəbbüsçü:</label>
                         <select name="emp_id" id="toff-maker">
                             <option value="0" hidden>Əməkdaş Seçin</option>
@@ -69,10 +64,10 @@
                     </div>
                 </div>
             </div>
-            <div class="toff-submit-btn mt-4 mb-5">
-                <button type="submit" id="toffBtn">Növbəti</button>
+            <div class="toff-submit-btn mt-4 d-flex justify-content-end">
+                <button class="btn" id="toffNextBtn">Təsdiqlə</button>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 

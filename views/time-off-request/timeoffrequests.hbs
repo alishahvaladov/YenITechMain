@@ -3,9 +3,6 @@
     <table class="table table-striped">
         <div class="container">
             <thead>
-            <th></th>
-            <th></th>
-            <th></th>
             <th>Employer</th>
             <th>Time Off Type</th>
             <th>Priority</th>
@@ -16,34 +13,22 @@
             <th>
                 <a class="btn btn-outline-success btn-sm" href="/timeoffrequests/add-toff-non-user">Əlavə <i class="bi bi-plus-circle"></i></a>
             </th>
-            <th></th>
-            <th></th>
-            <th></th>
             </thead>
             <tbody>
-            {{#if timeoffrequests}}
-                {{#each timeoffrequests}}
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>{{dataValues.emp_id}}</td>
-                        <td>{{dataValues.timeoff_type}}</td>
-                        <td>{{dataValues.priority}}</td>
-                        <td>{{dataValues.timeoff_start_date}}</td>
-                        <td>{{dataValues.timeoff_end_date}}</td>
-                        <td>{{dataValues.timeoff_job_start_date}}</td>
-                        <td>{{dataValues.status}}</td>
-                        <td>
-                            <a class="btn btn-outline-secondary btn-sm" href="/timeoffrequests/request/{{dataValues.id}}"><i class="bi bi-pencil-square"></i></a>
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                {{/each}}
-            {{/if}}
+                <tr>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                </tr>
             </tbody>
         </div>
     </table>
 </div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/time-off-request-api.js"></script>
