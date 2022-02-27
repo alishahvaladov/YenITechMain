@@ -1,4 +1,18 @@
 const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs } = require("./service");
+const jsDateF = new Date();
+const month = jsDateF.getMonth();
+const year = jsDateF.getFullYear();
+const date = jsDateF.getDate();
+
+function sundaysInMonth( m, y ) {
+    var days = new Date( y,m,0 ).getDate();
+    var sundays = [ 8 - (new Date( m +'/01/'+ y ).getDay()) ];
+    for ( var i = sundays[0] + 7; i < days; i += 7 ) {
+      sundays.push( i );
+    }
+    return sundays;
+}
+
 
 module.exports = {
     calculateSalary: async (req, res) => {
@@ -10,7 +24,7 @@ module.exports = {
             const timeOffs = await getTimeOffs(emp_id);
             const gross = salary.gross;
             const unofficialNet = salary.unofficial_net;
-            let calculatedSalary, dsmfTax, unempTax, healthTax, fine;
+            let calculatedSalary, dsmfTax, unempTax, healthTax, fine, daysOfWork;
             let totalTimeOffCost = 0;
             if(unofficialNet === null) {
                 if(gross > 200) {
@@ -25,13 +39,27 @@ module.exports = {
                             let timeOffEnd = timeOff.timeoff_end_date.split("-");
                             const monthsLength = monthLySalaries.length;
                             let totalMonthSalary = 0;
-                            if(timeOff.timeoff_type === 2) {
+                            if(timeOff.timeoff_type === 1) {
+                                let sundays;
+                                if (date === 1) {
+                                    sundays = sundaysInMonth(month, year);
+                                    const lastDayOfMonth = new Date(month, year, 0).getDate();
+                                    daysOfWork = parseInt(lastDayOfMonth) - parseInt(sundays.length);
+                                } else {
+                                    sundays = sundaysInMonth(month + 1, year);
+                                    const lastDayOfMonth = new Date(month + 1, year, 0).getDate();
+                                    daysOfWork = parseInt(lastDayOfMonth) - parseInt(sundays.length);
+                                }
+                            } else if(timeOff.timeoff_type === 2) {
                                 monthLySalaries.forEach(salaryByMonth => {
                                     totalMonthSalary += parseInt(salaryByMonth.salary_cost);
                                 });
+                                const costForADay = totalMonthSalary / monthsLength / 30.4;
+                                totalTimeOffCost += (parseInt(timeOffEnd[2]) - parseInt(timeOffStart[2])) * costForADay
+                            } else if(timeOff.timeoff_type === 3) {
+                                
                             }
-                            const costForADay = totalMonthSalary / monthsLength / 30.4;
-                            totalTimeOffCost += (parseInt(timeOffEnd[2]) - parseInt(timeOffStart[2])) * costForADay
+                           
                         });
                         console.log(totalTimeOffCost.toFixed(2));
                     }

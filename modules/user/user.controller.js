@@ -3,7 +3,8 @@ const { User, sequelize } = require("../../db_config/models");
 const passport = require("passport");
 const {QueryTypes} = require("sequelize");
 const jsonConfig = require("../../config/config.json");
-const nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer"); 
+
 let errors = [];
 
 const mailTest = (mail, subject, mailContent) => {
@@ -202,7 +203,6 @@ module.exports = {
 
     },
     login: (req, res, next) => {
-        // console.log(passport);
         passport.authenticate("local", {
             successRedirect: '/dashboard',
             failureRedirect: '/login',
@@ -210,9 +210,9 @@ module.exports = {
         })(req, res, next);
     },
     logout: (req, res) => {
-      req.logout();
-      req.flash("success_msg", "You are logged out");
-      return res.redirect("/login");
+        req.logout();
+        req.flash("success_msg", "You are logged out");
+        return res.redirect("/login");
     },
     userDelete: (req, res) => {
         const id = req.params.id;

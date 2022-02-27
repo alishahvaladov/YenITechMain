@@ -3,6 +3,7 @@
     <table class="table table-striped">
         <div class="container">
             <thead>
+                <th></th>
                 <th>İşçi</th>
                 <th>Telefon Nömrəsi</th>
                 <th>Departament</th>
@@ -12,8 +13,17 @@
                 <th>
                     <a class="btn btn-outline-success btn-sm w-100" href="/employee/add-employee">Əlavə <i class="bi bi-person-plus"></i></a>
                 </th>
-            </thead>
+            </thead> 
             <thead>
+                <th>
+                    <select id="limitCount">
+                        <option value="10">10</option>
+                        <option value="15" selected>15</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                        <option value="all">ALL</option>
+                    </select>
+                </th>
                 <th><input type="text" name="empName" id="empName"></th>
                 <th><input type="text" name="empPhoneNumb" id="empPhoneNumb"></th>
                 <th><input type="text" name="empDept" id="empDept"></th>
@@ -32,6 +42,7 @@
             </thead>
             <tbody>
                 <tr>
+                    <td></td>
                     <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
                     <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
                     <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>

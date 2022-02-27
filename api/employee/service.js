@@ -140,12 +140,20 @@ module.exports = {
                 countQuery += " AND emp.j_end_date IS NOT NULL";
             }
         }
-        query += `
+        if (data.limit === "all") {
+            query += `
             ORDER BY emp.id DESC
-            LIMIT 10 OFFSET 0
-        `
+        `    
+        } else {
+            query += `
+                ORDER BY emp.id DESC
+                LIMIT :limit OFFSET 0
+            `
+            replacements.limit = parseInt(data.limit);
+        }
+        
         let result = {};
-        const empData = await sequelize.query(query, {
+        const empData = await sequelize.query(query, { 
             logging: false,
             type: QueryTypes.SELECT,
             replacements: replacements
@@ -160,14 +168,13 @@ module.exports = {
         return result;
     },
     empRenderByPage: async (offset, data) => {
-
-
         const empName = data.empInpNameVal;
         const empPhone = data.empInpPhoneVal;
         const empDept = data.empDeptVal;
         const empPos = data.empPosVal;
         const empProj = data.empProjVal;
         const empStatus = data.empStatusVal;
+        const limit = parseInt(data.limit);
 
         let query = `
             SELECT emp.*, pos.name as posName, dept.name as deptName, proj.name as projName FROM Employees as emp
@@ -223,11 +230,22 @@ module.exports = {
                 query += " AND emp.j_end_date IS NOT NULL";
             }
         }
-        query += `
+
+        if(limit === "all") {
+            query += `
             ORDER BY emp.id DESC
-            LIMIT 10 OFFSET :offset
         `;
+        } else if (limit === 10 || limit === 15 || limit === 30 || limit === 50) {
+            query += `
+            ORDER BY emp.id DESC
+            LIMIT :limit OFFSET :offset
+        `;
+        } else {
+            " AND 1 = 0"
+        }
         replacements.offset = offset;
+        replacements.limit = limit;
+
 
 
         return await sequelize.query(query, {

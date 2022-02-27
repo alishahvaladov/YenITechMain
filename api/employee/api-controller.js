@@ -87,6 +87,8 @@ module.exports = {
         console.log(data.empInpName);
         const date = new Date();
         const filename = `${date.getTime()}-əməkdaşlar.xlsx`;
+        let offset = req.body.offset;
+        offset = (offset - 1) * 10;
         let empData = await empRenderPage(data);
         empData = empData.result;
         const workbook = new excelJS.Workbook();
@@ -115,7 +117,7 @@ module.exports = {
         ]
         empData.forEach(employee => {
             const empDataFromDB = {
-                adı: employee.first_name,
+                first_name: employee.first_name,
                 last_name: employee.last_name,
                 father_name: employee.father_name,
                 sex: employee.sex,

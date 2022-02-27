@@ -1,3 +1,5 @@
+const socket = require('../socket/socket');
+
 module.exports = {
     super_admin: (req, res, next) => {
         if(req.user.active_status === 0) {

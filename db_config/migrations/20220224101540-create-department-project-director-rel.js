@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('CalculatedSalaries', {
+    await queryInterface.createTable('DepartmentProjectDirectorRels', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,11 +12,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      salary_calculated_date: {
-        type: Sequelize.DATEONLY,
+      department_id: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
-      salary_calculated_cost: {
+      project_id: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
@@ -31,6 +31,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('CalculatedSalaries');
+    await queryInterface.dropTable('DepartmentProjectDirectorRels');
   }
 };

@@ -2,6 +2,7 @@ const localStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
 const { User, sequelize } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
+const socket = require("../socket/socket");
 
 const fileDirectories = async (id) => {
     return await sequelize.query(`
@@ -62,15 +63,19 @@ module.exports = function (passport) {
        }).then(async (user) => {
            const fileDirectoriesData = await fileDirectories(user.id);
            const parsedFileDirectories = JSON.parse(fileDirectoriesData[0].uploaded_files);
-           const recruitmentDirectories = JSON.parse(parsedFileDirectories.recruitment);
-           let empName = fileDirectoriesData[0].first_name;
-           empName = empName.toLowerCase();
-           let empSurname = fileDirectoriesData[0].last_name;
-           empSurname = empSurname.toLowerCase();
-           let empFatherName = fileDirectoriesData[0].father_name;
-           empFatherName = empFatherName.toLowerCase();
-           const profilePicture = recruitmentDirectories.profilePicture;
-           user.dataValues.profilePicture = `/employees/directs/recruitment/${fileDirectoriesData[0].id}-${empName}-${empSurname}-${empFatherName}/${profilePicture[0].filename}`;
+           if(parsedFileDirectories) {
+            const recruitmentDirectories = JSON.parse(parsedFileDirectories.recruitment);
+            let empName = fileDirectoriesData[0].first_name;
+            empName = empName.toLowerCase();
+            let empSurname = fileDirectoriesData[0].last_name;
+            empSurname = empSurname.toLowerCase();
+            let empFatherName = fileDirectoriesData[0].father_name;
+            empFatherName = empFatherName.toLowerCase();
+            const profilePicture = recruitmentDirectories.profilePicture;
+            user.dataValues.profilePicture = `/employees/directs/recruitment/${fileDirectoriesData[0].id}-${empName}-${empSurname}-${empFatherName}/${profilePicture[0].filename}`;
+           }
+           user.dataValues.socket = socket;
+           user.dataValues.socket.connect();
            done(null, user.get());
        })
     });

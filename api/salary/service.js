@@ -4,7 +4,7 @@ const { QueryTypes } = require("sequelize");
 module.exports = {
     getSalary: async () => {
         return await sequelize.query(`
-            SELECT sl.* FROM Salaries as sl
+            SELECT sl.*, emp.working_days FROM Salaries as sl
             LEFT JOIN Employees as emp ON sl.emp_id = emp.id
             WHERE emp.deletedAt IS NULL
         `, {
@@ -51,5 +51,10 @@ module.exports = {
                     emp_id
                 }
             });
+    },
+    getFPrints: async(month, emp_id) => {
+        return await sequelize.query(`
+            SELCT * FROM FPrints 
+        `);
     }
 }

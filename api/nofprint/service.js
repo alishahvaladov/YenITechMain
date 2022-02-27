@@ -84,10 +84,14 @@ module.exports = {
             replacements.fYear = data.qYear;
         }
 
-        query += " ORDER BY nfp.createdAt DESC LIMIT 15 OFFSET :offset"
-        replacements.offset = parseInt(data.offset);
-
-        result.nfprints = await sequelize.query(query, {
+        if (data.limit = "all") {
+            query += " ORDER BY nfp.createdAt DESC"
+        } else {
+            query += " ORDER BY nfp.createdAt DESC LIMIT 15 OFFSET :offset"
+            replacements.offset = parseInt(data.offset);    
+        }
+        
+        result.nfprints = await sequelize.query(query, { 
             type: QueryTypes.SELECT,
             replacements: replacements,
             logging: false

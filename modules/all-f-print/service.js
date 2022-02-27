@@ -72,6 +72,7 @@ module.exports = {
         let countEnd = (" ) as Count");
 
         if(data.qEmployee !== '') {
+            console.log(data.qEmployee);
             let qEmp = data.qEmployee.split(" ");
             if(qEmp.length === 1) {
                 fpQuery += " AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)";
@@ -175,8 +176,13 @@ module.exports = {
             replacements.fYear = data.qYear;
         }
 
-        query += fpQuery + nfpEQuery + nfpLQuery + " ORDER BY date DESC LIMIT 15 OFFSET :offset";
-        replacements.offset = parseInt(data.offset);
+        if (data.limit === "all") {
+            query += fpQuery + nfpEQuery + nfpLQuery + " ORDER BY date DESC";
+        } else {
+            query += fpQuery + nfpEQuery + nfpLQuery + " ORDER BY date DESC LIMIT 15 OFFSET :offset";
+            replacements.offset = parseInt(data.offset);
+        }
+        
 
         countQuery += countStart + fpCount + " ) +" + nfpECount + " ) +" + nfpLCount + " )" + countEnd;
 

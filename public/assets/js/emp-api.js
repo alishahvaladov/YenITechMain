@@ -24,6 +24,7 @@ const workingDays = document.querySelector("#workingDays");
 let inpProject = document.querySelector("#project");
 let inpDepartment = document.querySelector("#department");
 let inpPosition = document.querySelector("#position");
+let limit = document.querySelector("#limitCount");
 
 
 let empInpName = $("#empName");
@@ -39,6 +40,7 @@ let empDeptVal = '';
 let empPosVal = '';
 let empProjVal = '';
 let empStatusVal = '';
+let limitVal;
 
 const getEmpInps = () => {
    empInpNameVal = $("#empName").val();
@@ -47,6 +49,7 @@ const getEmpInps = () => {
    empPosVal = $("#empPos").val();
    empProjVal = $("#empProj").val();
    empStatusVal = $("#empStatus").val();
+   limitVal = $("#limitCount").val();
 }
 const empRemModule = () => {
    let empRemoveBtn;
@@ -92,7 +95,7 @@ const empRemModule = () => {
       });
    });
 }
-const empEditModule = () => {
+const empEditModule = () => { 
    const editBtns = document.querySelectorAll(".empEditBtn");
    editBtns.forEach(item => {
       item.addEventListener("click", () => {
@@ -219,7 +222,8 @@ const pageFuncs = () => {
                empDeptVal,
                empPosVal,
                empProjVal,
-               empStatusVal
+               empStatusVal,
+               limit: limitVal
             }, (res) => {
                let tbody = $("tbody");
                let trs = "";
@@ -238,6 +242,7 @@ const pageFuncs = () => {
                      trs +=
                          `
                        <tr>
+                           <td></td>
                            <td>${emps[i].first_name + " " + emps[i].last_name + " " + emps[i].father_name}</td>
                            <td>${emps[i].phone_number}</td>
                            <td>${emps[i].deptName}</td>
@@ -301,18 +306,18 @@ const renderPage = () => {
       empDeptVal,
       empPosVal,
       empProjVal,
-      empStatusVal
+      empStatusVal,
+      limit: limitVal
    }, (res) => {
       let tbody = document.querySelector('tbody');
       let result = res.result;
       let role = res.role;
-      console.log(res);
       let count = res.count[0].count;
       let html = '';
       let pgHtml = '';
       let tdClass = '';
       let tdText = '';
-      count = Math.ceil(count / 10);
+      count = Math.ceil(count / parseInt(limitVal));
 
       if(role === "super_admin") {
          for (let i = 0; i < result.length; i++) {
@@ -327,6 +332,7 @@ const renderPage = () => {
 
             html += `
          <tr>
+            <td></td>
              <td>${result[i].first_name + " " + result[i].last_name + " " + result[i].father_name}</td>
              <td>${result[i].phone_number}</td>
              <td>${result[i].deptName}</td>
@@ -363,9 +369,12 @@ const renderPage = () => {
                     <button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>
                   `
                }
-               pgHtml += `
+               if (count > 1) {
+                  pgHtml += `
                     <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
                 `
+               }
+               
             }
          }
          pgContainer.innerHTML = pgHtml;
@@ -447,7 +456,8 @@ const exportToExcel = () => {
       empDeptVal,
       empPosVal,
       empProjVal,
-      empStatusVal
+      empStatusVal,
+      limit: "all"
    }
    let form = document.createElement('form');
    form.setAttribute("method", method);
@@ -459,7 +469,6 @@ const exportToExcel = () => {
          hiddenField.setAttribute('type', 'hidden');
          hiddenField.setAttribute('name', key);
          hiddenField.setAttribute('value', params[key]);
-         console.log(params[key]);
          form.appendChild(hiddenField);
       }
    }
@@ -470,6 +479,13 @@ const exportToExcel = () => {
 exportToExcelBtn.addEventListener("click", () => {
    exportToExcel();
 });
+
+limit.addEventListener("change", () => {
+   loading.classList.remove("d-none");
+   setTimeout(() => {
+      renderPage();
+   }, 2000);
+}); 
 
 
 empInpName.keyup(renderPage);

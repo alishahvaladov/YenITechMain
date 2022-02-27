@@ -225,6 +225,10 @@ const inputThForNoFPrints = `
                          </select>
                     </span>
                 </th>
+                <th>
+                     <button class="btn btn-success btn-sm w-100" id="exportAllFPrint"><i class="bi bi-file-earmark-excel-fill"></i> Export</button>
+                </th>
+
 `
 const inputThForFPrintsAndAllFPrints = `
     <th><input type="text" name="qEmployee" id="qEmployee"></th>
@@ -417,7 +421,9 @@ const inputThForFPrintsAndAllFPrints = `
                          </select>
                     </span>
                 </th>
-                <th></th>
+                <th>
+                     <button class="btn btn-success btn-sm w-100" id="exportAllFPrint"><i class="bi bi-file-earmark-excel-fill"></i> Export</button>
+                </th>
 `;
 const inputThForInappropriateFPrints = `
             <th><input type="text" name="qProject" id="qProject"></th>
@@ -651,59 +657,6 @@ const renderAllFPrint = () => {
     const qMonth = $("#month");
     const qYear = $("#year");
 
-    const search = () => {
-        let qEmp = $("#qEmployee").val();
-        let qProj = $("#qProject").val();
-        let qDept = $("#qDepartment").val();
-        let qPos = $("#qPosition").val();
-        let qTime = $("#qTime").val();
-        let qDay = $("#day").val();
-        let qMonth = $("#month").val();
-        let qYear = $("#year").val();
-
-        console.log(qEmp);
-
-        $.post("http://localhost:3000/all-fprints/api", {
-            qEmployee: qEmp,
-            qProject: qProj,
-            qDepartment: qDept,
-            qPosition: qPos,
-            qTime: qTime,
-            qDay: qDay,
-            qMonth: qMonth,
-            qYear: qYear
-        }, (res) => {
-            let result = res.result;
-            let tbody = $("tbody");
-            let trs = "";
-            tbody.text("");
-            for (let i = 0; i < result.length; i++) {
-                const date = new Date(result[i].date);
-                let createdAt = date.toLocaleDateString();
-                createdAt = createdAt.split('/');
-                let updatedDate = `${createdAt[1]}.${createdAt[0]}.${createdAt[2]}`
-                trs +=
-                    `
-                    <tr>
-                        <td>${result[i].name} ${result[i].surname} ${result[i].fname}</td>
-                        <td>${result[i].projName}</td>
-                        <td>${result[i].deptName}</td>
-                        <td>${result[i].posName}</td>
-                        <td>${result[i].time}</td>
-                        <td>${date}</td>
-                        <td></td>
-                    </tr>
-                `
-            }
-            if(trs.length !== 0) {
-                tbody.html(trs);
-            } else {
-                tbody.text("No Data Found");
-            }
-        })
-    }
-
-
 
     const pgContatiner = document.querySelector(".pagination-container");
     const loading = document.querySelector(".loading");
@@ -907,8 +860,51 @@ const renderAllFPrint = () => {
                 loading.classList.add('d-none');
                 pageFunctions();
             });
-    }
+    } 
+    
+    const exportToExcel = () => {
+        let qEmployee = $("#qEmployee").val();
+        let qProject = $("#qProject").val();
+        let qDepartment = $("#qDepartment").val();
+        let qPosition = $("#qPosition").val();
+        let qTime = $("#qTime").val();
+        let qDay = $("#day").val();
+        let qMonth = $("#month").val();
+        let qYear = $("#year").val();
 
+        const method = "post";
+        let params = {
+            qEmployee,
+            qProject,
+            qDepartment,
+            qPosition,
+            qTime,
+            qDay,
+            qMonth,
+            qYear,
+            limit: "all"
+        }
+        let form = document.createElement('form');
+        form.setAttribute("method", method);
+        form.setAttribute("action", "http://localhost:3000/all-fprints/api/excel-report");
+     
+        for (let key in params) {
+           if (params.hasOwnProperty(key)) {
+              const hiddenField = document.createElement("input");
+              hiddenField.setAttribute('type', 'hidden');
+              hiddenField.setAttribute('name', key);
+              hiddenField.setAttribute('value', params[key]);
+              form.appendChild(hiddenField);
+           }
+        }
+        document.body.appendChild(form);
+        form.submit();
+     }
+     const exportAllFPrint = document.querySelector("#exportAllFPrint");
+
+     exportAllFPrint.addEventListener("click", () => {
+        exportToExcel()
+    });
     setTimeout(renderPage, 2500);
 
     qEmp.keyup(renderPage)
@@ -1135,6 +1131,51 @@ const renderFPrint = () => {
                 pageFunctions();
             });
     }
+
+    const exportToExcel = () => {
+        let qEmployee = $("#qEmployee").val();
+        let qProject = $("#qProject").val();
+        let qDepartment = $("#qDepartment").val();
+        let qPosition = $("#qPosition").val();
+        let qTime = $("#qTime").val();
+        let qDay = $("#day").val();
+        let qMonth = $("#month").val();
+        let qYear = $("#year").val();
+
+        const method = "post";
+        let params = {
+            qEmployee,
+            qProject,
+            qDepartment,
+            qPosition,
+            qTime,
+            qDay,
+            qMonth,
+            qYear,
+            limit: "all"
+        }
+        let form = document.createElement('form');
+        form.setAttribute("method", method);
+        form.setAttribute("action", "http://localhost:3000/api/fprints/export-excel");
+     
+        for (let key in params) {
+           if (params.hasOwnProperty(key)) {
+              const hiddenField = document.createElement("input");
+              hiddenField.setAttribute('type', 'hidden');
+              hiddenField.setAttribute('name', key);
+              hiddenField.setAttribute('value', params[key]);
+              form.appendChild(hiddenField);
+           }
+        }
+        document.body.appendChild(form);
+        form.submit();
+     }
+
+     const exportAllFPrint = document.querySelector("#exportAllFPrint");
+
+     exportAllFPrint.addEventListener("click", () => {
+        exportToExcel()
+    });
 
     setTimeout(renderPage, 2500);
 
@@ -1386,6 +1427,54 @@ const renderNoFPrints = () => {
                 pageFunctions();
             });
     }
+
+    const exportToExcel = () => {
+        let qEmp = $("#qEmployee").val();
+        let qProj = $("#qProject").val();
+        let qDept = $("#qDepartment").val();
+        let qPos = $("#qPosition").val();
+        let qTimeEnter = $("#qTimeEnter").val();
+        let qTimeLeave = $("#qTimeLeave").val();
+        let qDay = $("#day").val();
+        let qMonth = $("#month").val();
+        let qYear = $("#year").val();
+        let offset = 0;
+
+        const method = "post";
+        let params = {
+            qEmployee: qEmp,
+                qProject: qProj,
+                qDepartment: qDept,
+                qPosition: qPos,
+                qTimeEnter: qTimeEnter,
+                qTimeLeave: qTimeLeave,
+                qDay: qDay,
+                qMonth: qMonth,
+                qYear: qYear,
+                limit: "all"
+        }
+        let form = document.createElement('form');
+        form.setAttribute("method", method);
+        form.setAttribute("action", "http://localhost:3000/api/nofprints/export-excel");
+     
+        for (let key in params) {
+           if (params.hasOwnProperty(key)) {
+              const hiddenField = document.createElement("input");
+              hiddenField.setAttribute('type', 'hidden');
+              hiddenField.setAttribute('name', key);
+              hiddenField.setAttribute('value', params[key]);
+              form.appendChild(hiddenField);
+           }
+        }
+        document.body.appendChild(form);
+        form.submit();
+     }
+
+     const exportAllFPrint = document.querySelector("#exportAllFPrint");
+
+     exportAllFPrint.addEventListener("click", () => {
+        exportToExcel()
+    });
 
     setTimeout(renderPage, 2500);
 

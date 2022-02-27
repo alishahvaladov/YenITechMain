@@ -21,7 +21,6 @@ router.get('/login', forwardAuthenticated, (req, res) => {
     });
 });
 router.get("/dashboard",  ensureActivated, ensureAuthenticated, (req, res) => {
-    console.log(req.user.profilePicture);
     if (req.user.role === 5) {
         res.render('dashboard', {
             hr: true

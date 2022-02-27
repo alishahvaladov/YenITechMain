@@ -625,3 +625,14 @@ input[type=number] {
     margin-right: 1%;
     margin-bottom: 3%;
 }
+
+.notification-alert {
+    right: 70px;
+    bottom: 70px;
+    width: 200px;
+    height: fit-content;
+}
+.notification-p {
+    background-color:rgba(17, 100, 0, 0.733);
+    width: 100%;
+}

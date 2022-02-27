@@ -45,6 +45,7 @@
                                 <option value="{{this.id}}">{{this.first_name}} {{this.last_name}} {{this.father_name}}</option>
                             {{/each}}
                         </select>
+                        <input type="hidden" id="empNameForWord">
                     </div>
                     <div class="toff-branch">
                         <label for="toff-branch">Filial: </label>
@@ -62,14 +63,27 @@
                         <label for="toff-emp-comment">Şərh: </label>
                         <textarea name="toff-emp-comment" id="toff-emp-comment" placeholder="Şərhinizi bizə bildirin"></textarea>
                     </div>
+                    <div class="d-none toff-directors-hidden-inputs">
+                        <input type="hidden" id="deptDirector">
+                        <input type="hidden" id="director">
+                    </div>
                 </div>
             </div>
+            <div class="time-off-select-container d-flex justify-content-between mt-5">
+                <div class="time-off-select-container d-none word-btn-container justify-content-between mt-5">
+                <button class="btn btn-primary" id="downloadDoc"><i class="bi bi-file-earmark-word"></i> Ərizəni Yükləyin</button>
+                <label for="uploadDoc" class="btn btn-info mx-2">Ərizəni əlavə et</label>
+                <input class="d-none" type="file" id="uploadDoc" disabled>
+            </div>
+            </div>
             <div class="toff-submit-btn mt-4 d-flex justify-content-end">
-                <button class="btn" id="toffNextBtn">Təsdiqlə</button>
+                <button class="btn" id="toffNextBtn">Növbəti</button>
+                <button class="btn d-none" id="toffApplyBtn">Təsdiqlə</button>
             </div>
         </div>
     </div>
 </div>
 
 <script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/number-to-azeri-word.js"></script>
 <script src="/assets/js/time-off-api.js"></script>

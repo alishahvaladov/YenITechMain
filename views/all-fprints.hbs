@@ -3,7 +3,7 @@
     <h2 class="text-center">Barmaq İzləri Qeydiyyatı</h2>
     <select id="fPrintType">
         <option value="0" selected>Bütün</option>
-        <option value="1">Barmaq izi tutanlar</option>
+        <option value="1">Barmaq izi tutanlar</option> 
         <option value="2">Barmaq izi tutmayanlar</option>
         <option value="3">Uyğunsuzluqlar</option>
     </select>
@@ -212,7 +212,9 @@
                          </select>
                     </span>
                 </th>
-                <th></th>
+                <th>
+                     <button class="btn btn-success btn-sm w-100" id="exportAllFPrint"><i class="bi bi-file-earmark-excel-fill"></i> Export</button>
+                </th>
             </thead>
             <tbody>
                 <tr>
@@ -245,6 +247,18 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+ 
+<div class="add-time-modal d-none position-fixed justify-content-center align-items-center">
+    <div class="add-time-modal-container">
+        <div class="time-input my-2">
+            <input type="time" id="timeInput">
+        </div>
+        <div class="add-time-btns btn-group d-flex justify-content-between my-2">
+            <button class="btn btn-outline-danger" id="timeInputCancel">Ləğv Et</button>
+            <button class="btn btn-outline-success" id="timeInputSubmit">Təsdiqlə</button>
+        </div>
     </div>
 </div>
 

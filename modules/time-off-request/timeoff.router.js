@@ -16,6 +16,19 @@ router.get("/requests", ensureAuthenticated, (req, res) => {
     }
 });
 
+router.get("/approve-requests/hr", hr, (req, res) => {
+    if(req.user.role === 1) {
+        res.render("time-off-request/approve-or-disapprove", {
+            super_admin: true
+        });
+    } else if (req.user.role === 5) {
+        res.render("time-off-request/approve-or-disapprove", {
+            hr: true
+        });
+    }
+})
+
+
 router.get("/add-toff-non-user", hr, getTimeOffNonUser);
 router.post("/add-toff-non-user", hr, addTimeOffNonUser);
 

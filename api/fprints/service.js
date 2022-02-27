@@ -6,6 +6,9 @@ module.exports = {
         let result = {}
         let countQuery = `SELECT COUNT(*) as count FROM FPrints as fp
                             LEFT JOIN Employees as emp ON emp.id = fp.emp_id
+                            LEFT JOIN Projects as proj ON emp.project_id = proj.id
+                            LEFT JOIN Departments as dept ON emp.department = dept.id
+                            LEFT JOIN Positions as pos ON emp.position_id = pos.id
                             WHERE fp.f_print_time IS NOT NULL AND (emp.deletedAt OR emp.j_end_date) IS NULL`;
         let query = `SELECT fp.*, emp.first_name as name, emp.last_name as surname, emp.father_name as fname, proj.name as projName, dept.name as deptName, pos.name as posName FROM Employees as emp LEFT JOIN FPrints as fp ON emp.id = fp.emp_id
                                         LEFT JOIN Projects as proj ON emp.project_id = proj.id
@@ -73,12 +76,13 @@ module.exports = {
             countQuery += " AND YEAR(fp.f_print_date) = :fYear"
             replacements.fYear = data.qYear;
         }
-        query += " ORDER BY fp.f_print_date DESC LIMIT 15 OFFSET :offset"
-        replacements.offset = parseInt(data.offset);
-        console.log(query);
-        console.log(countQuery);
-        console.log(replacements);
 
+        if (data.limit = "all") {
+            query += " ORDER BY fp.f_print_date DESC"
+        } else {
+            query += " ORDER BY fp.f_print_date DESC LIMIT 15 OFFSET :offset"
+            replacements.offset = parseInt(data.offset);
+        }
         result.fprints = await sequelize.query(query, {
             type: QueryTypes.SELECT,
             replacements: replacements,
@@ -112,22 +116,32 @@ module.exports = {
         return result;
     },
     getFPrintsByPage: async (data) => {
+        let query = `GET
+            SELECT fp.*, emp.first_name as name, emp.last_name as surname, emp.father_name as fname, proj.name as projName,
+            pos.name as posName, dept.name as deptName
+            FROM Employees as emp 
+            LEFT JOIN FPrints as fp ON fp.emp_id = emp.id
+            LEFT JOIN Projects as proj ON emp.project_id = proj.id
+            LEFT JOIN Departments as dept ON emp.department = dept.id
+            LEFT JOIN Positions as pos ON emp.position_id = pos.id
+        `
         let result = {};
         let offset = data.offset;
+        if (data.limit === "all") {
+            query += " ORDER BY createdAt DESC";
+        } else {
+            query += `
+                ORDER BY createdAt DESC
+                LIMIT :limit OFFSET :offset 
+            `;
+        }
         offset = 15 * (offset-1);
-        result.fprints = await sequelize.query(`SELECT fp.*, emp.first_name as name, emp.last_name as surname, emp.father_name as fname, proj.name as projName,
-                                                pos.name as posName, dept.name as deptName
-                                                FROM Employees as emp 
-                                                LEFT JOIN FPrints as fp ON fp.emp_id = emp.id
-                                                LEFT JOIN Projects as proj ON emp.project_id = proj.id
-                                                LEFT JOIN Departments as dept ON emp.department = dept.id
-                                                LEFT JOIN Positions as pos ON emp.position_id = pos.id
-                                                ORDER BY createdAt DESC 
-                                                LIMIT 15 OFFSET :offset`, {
+        result.fprints = await sequelize.query(query, {
             logging: false,
             type: QueryTypes.SELECT,
             replacements: {
-                offset
+                offset,
+                limit: parseInt(data.limit)
             }
         });
         return result;
