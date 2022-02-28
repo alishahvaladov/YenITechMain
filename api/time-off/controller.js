@@ -13,7 +13,8 @@ const { getEmpInfo,
     getTimeOffApproveForDR,
     cancelRequestByDR,
     approveRequestByDR,
-    getEmployeeByUserID } = require("./service");
+    getEmployeeByUserID,
+    getTimeOffByID } = require("./service");
 const path = require("path");
 const fs = require("fs");
 
@@ -47,6 +48,13 @@ module.exports = {
         }
         res.status(200).send({
             timeOffs
+        });
+    },
+    getTimeOffByID: async (req, res) => {
+        const id = req.params.id;
+        const result = await getTimeOffByID(id);
+        res.send({
+            result
         });
     },
     addTimeOff: async (req, res) => {

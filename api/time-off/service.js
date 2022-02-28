@@ -40,6 +40,22 @@ module.exports = {
             }
         });
     },
+    getTimeOffByID: async (id) => {
+        return await sequelize.query(`
+            SELECT tor.*, emp.first_name, emp.last_name, emp.father_name, emp.sex, emp.project_id, emp.department, pos.name as posName, proj.name as projName, dept.name as deptName, proj.address as projAddress FROM TimeOffRequests as tor
+            LEFT JOIN Employees as emp ON emp.id = tor.emp_id
+            LEFT JOIN Projects as proj ON emp.project_id = proj.id
+            LEFT JOIN Positions as pos ON emp.position_id = pos.id
+            LEFT JOIN Departments as dept ON emp.department = dept.id
+            WHERE tor.id = :id
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                id
+            }
+        });
+    },
     addTimeOff: (data, cb) => {
         TimeOffRequest.create({
             emp_id: data.emp,

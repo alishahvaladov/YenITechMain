@@ -154,8 +154,6 @@ nextBtn.addEventListener("click", () => {
         let directorName = document.querySelector("#director");
         directorName = directorName.value;
         let dayOffD = dayEnd.getTime() - dayStart.getTime();
-  
-        // To calculate the no. of days between two dates
         dayOffD = dayOffD / (1000 * 3600 * 24);
         const dayOffDWithWords = new NumberAzeriTranslator(dayOffD);
         dayOffD = `${dayOffD}(${dayOffDWithWords.translate()})`;

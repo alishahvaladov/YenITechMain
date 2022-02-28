@@ -1,5 +1,5 @@
 const { getEmpInfo, getTimeOffs, addTimeOff, getDirectors, checkUploadPath, uploadFilePathToDB,
-    getTimeOffApproveForHR, cancelRequestByHr, approveRequestByHr, getTimeOffApproveForDR, cancelRequestByDR, approveRequestByDR} = require("./controller");
+    getTimeOffApproveForHR, cancelRequestByHr, approveRequestByHr, getTimeOffApproveForDR, cancelRequestByDR, approveRequestByDR, getTimeOffByID} = require("./controller");
 const express = require("express");
 const router = express.Router();
 const upload = require("./upload-middleware");
@@ -8,6 +8,7 @@ const { hr, deptDirector} = require("../../modules/auth/auth");
 
 router.post("/emp-info", hr, getEmpInfo);
 router.get("/", hr, getTimeOffs);
+router.get("/get-time-off-data/:id", hr, getTimeOffByID);
 router.get("/for-director", deptDirector, getTimeOffs);
 router.post('/add', hr, addTimeOff);
 router.post("/get-directors", hr, getDirectors);
