@@ -1,8 +1,10 @@
 const { getEmpInfo, getTimeOffs, addTimeOff, getDirectors, checkUploadPath, uploadFilePathToDB,
-    getTimeOffApproveForHR, cancelRequestByHr, approveRequestByHr, getTimeOffApproveForDR, cancelRequestByDR, approveRequestByDR, getTimeOffByID} = require("./controller");
+    getTimeOffApproveForHR, cancelRequestByHr, approveRequestByHr, getTimeOffApproveForDR, 
+    cancelRequestByDR, approveRequestByDR, getTimeOffByID, uploadLetterFilePathToDB, checkLetterUploadPath} = require("./controller");
 const express = require("express");
 const router = express.Router();
 const upload = require("./upload-middleware");
+const letterUpload = require("./upload-letter");
 const { hr, deptDirector} = require("../../modules/auth/auth");
 
 
@@ -13,6 +15,12 @@ router.get("/for-director", deptDirector, getTimeOffs);
 router.post('/add', hr, addTimeOff);
 router.post("/get-directors", hr, getDirectors);
 router.post("/upload-form/:id", hr, checkUploadPath, upload.single('file'), uploadFilePathToDB, (req, res) => {
+    res.send({
+        success: true,
+        message: "Time off successfully added"
+    })
+});
+router.post("/upload-letter/:id", hr, checkLetterUploadPath, letterUpload.single('file'), uploadLetterFilePathToDB, (req, res) => {
     res.send({
         success: true,
         message: "Time off successfully added"

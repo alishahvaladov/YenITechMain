@@ -3,6 +3,25 @@ const dateToAzVersion = (date) => {
     const splittedDate = date.split("-");
     return `${splittedDate[2]}.${splittedDate[1]}.${splittedDate[0]}`
 }
+const sendTimeOffRequest = (id) => {
+    let fd = new FormData();
+    let file = uploadDoc.files[0];
+    if (file) {
+        fd.append('file', file);
+        $.ajax({
+            url: `http://localhost:3000/api/time-off/upload-letter/${id}`,
+            type: "post", 
+            data: fd,
+            enctype: "multipart/form-data",
+            contentType: false,
+            processData: false,
+            success: (res) => {
+                console.log(res);
+            }
+        })
+    }
+    
+}
 const renderPage = () => {
     $.get("http://localhost:3000/api/time-off", (res) => {
         console.log(res);
@@ -63,7 +82,10 @@ const renderPage = () => {
                         console.log(res);
                         document.querySelector(".t-o-m-request").classList.remove("d-none");
                         const downloadDoc = document.querySelector("#downloadDoc");
+                        const submitUploadBtn = document.querySelector("#submitUploadBtn");
                         downloadDoc.addEventListener("click", () => {
+                            let uplaodDoc = document.querySelector("#uploadDoc");
+                            uploadDoc.disabled = false;
                             let emrNo = document.querySelector("#emrNo");
                             emrNo = emrNo.value;
                             const date = new Date()
@@ -102,6 +124,12 @@ const renderPage = () => {
                             const dayOffDWithWords = new NumberAzeriTranslator(dayOffD);
                             dayOffD = `${dayOffD}(${dayOffDWithWords.translate()})`;
                             let directorName;
+                            const id = result.emp_id;
+                            submitUploadBtn.addEventListener("click", () => {
+                                sendTimeOffRequest(id);
+                            });
+
+
                             $.post("http://localhost:3000/api/time-off/emp-info", {
                                 id: tOffID
                             }, (res) => {

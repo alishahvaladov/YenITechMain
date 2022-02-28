@@ -303,4 +303,118 @@ module.exports = {
             })
         })
     },
+    checkLetterUploadPath: async (req, res, next) => {
+        let empPath = "";
+        const id = parseInt(req.params.id);
+        try {
+            const result = await getEmployeeData(id);
+            empPath = path.join(__dirname, "../../public/employees/time-off/letter/" + result[0].id.toString() + "-" + result[0].first_name.toLocaleLowerCase() + "-" + result[0].last_name.toLocaleLowerCase() + "-" + result[0].father_name.toLocaleLowerCase());
+        } catch (err) {
+            console.log(err);
+            return res.status(404).send({
+                success: false,
+                message: "This employee couldn't find please try again or contact System Admin"
+            });
+        }
+        await fs.access(empPath, fs.constants.F_OK, err => {
+           if (err) {
+               fs.mkdir(empPath, { recursive: true }, (err) => {
+                  if (err) {
+                      console.log(err);
+                      return res.status(400).send({
+                          success: false,
+                          message: "An unknown error has been occurred please contact System Admin"
+                      });
+                  } 
+               });
+           }
+           next();
+        });
+    },
+    uploadLetterFilePathToDB: async (req, res, next) => {
+        let emp_id;
+        if(req.params.id) {
+            emp_id = parseInt(req.params.id);
+        } else {
+            return res.status(400).send({
+                success: false,
+                message: "Please select employee"
+            });
+        }
+        if(req.fileValidationError) {
+            res.status(400).send({
+                success: false,
+                message: "Please choose correct file format"
+            })
+        }
+        if(req.fileUploadError) {
+            return res.status(400).send({
+                success: false,
+                message: "An unknown error has been occurred"
+            })
+        }
+        let data = {};
+
+        checkIfEmpExists(emp_id, (err, empRes) => {
+            if(err) {
+                console.log(err);
+                return res.status(400).send({
+                    success: false,
+                    message: "An unknown error has been occurred"
+                })
+            }
+            if(empRes === null) {
+                return res.status(400).send({
+                    success: false,
+                    message: "This employee does not exists"
+                })
+            }
+            checkIfEmpFileExists(emp_id, (err, empFileRes) => {
+                if(err) {
+                    console.log(err);
+                    return res.status(400).send({
+                        success: false,
+                        message: "An unknown error has been occurred"
+                    });
+                }
+                if(empFileRes === null) {
+                    let files = {};
+                    files.letter = JSON.stringify(req.file);
+                    data.files = JSON.stringify(files);
+                    data.user_id = req.user.id;
+                    data.emp_id = emp_id;
+                    addFileNames(data, (err, result) => {
+                        if(err) {
+                            console.log(err);
+                            req.flash("error_msg", "An unknown error has been occurred");
+                            return res.status(400).send({
+                                success: false,
+                                message: "An unknown error has been occurred"
+                            })
+                        }
+                        res.send({
+                            result
+                        })
+                    });
+                } else {
+                    const empData = JSON.parse(empFileRes.dataValues.uploaded_files);
+                    empData.letter = JSON.stringify(req.file);
+                    data.user_id = req.user.id;
+                    data.emp_id = emp_id;
+                    data.files = JSON.stringify(empData);
+                    updateFileNames(data, (err, result) => {
+                        if(err) {
+                            return res.status(400).send({
+                                success: false,
+                                message: "An unknown error has been occurred"
+                            })
+                        }
+                        res.send({
+                            result
+                        });
+                    });
+                }
+            });
+        });
+    },
 }

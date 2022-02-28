@@ -29,7 +29,7 @@ let storage = multer.diskStorage({
             console.log(err);
             cb("An error has been occurred please contact System Admin", false);
         }
-        filePath = path.join(__dirname, "../../public/employees/time-off/form/" + result[0].id.toString() + "-" + result[0].first_name.toLocaleLowerCase() + "-" + result[0].last_name.toLocaleLowerCase() + "-" + result[0].father_name.toLocaleLowerCase());
+        filePath = path.join(__dirname, "../../public/employees/time-off/letter/" + result[0].id.toString() + "-" + result[0].first_name.toLocaleLowerCase() + "-" + result[0].last_name.toLocaleLowerCase() + "-" + result[0].father_name.toLocaleLowerCase());
         cb(null, filePath);
     },
     filename: async (req, file, cb) => {
