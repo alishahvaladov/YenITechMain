@@ -5,7 +5,7 @@ const dateToAzVersion = (date) => {
     return `${splittedDate[2]}.${splittedDate[1]}.${splittedDate[0]}`
 }
 const renderPage = () => {
-    $.get("http://localhost:3000/api/time-off", (res) => {
+    $.get("http://localhost:3000/api/time-off/for-director", (res) => {
         console.log(res);
         const timeOffs = res.timeOffs;
         let html = "";
@@ -32,6 +32,7 @@ const renderPage = () => {
                 } else if (timeOff.status === 7) {
                     status = `<td class=""><span class="bg-danger text-light p-1 border border-danger rounded-3">Ləğv Edildi</span></td>`
                 }
+                
                 html += `
                     <tr> 
                         <td>${timeOff.first_name} ${timeOff.last_name} ${timeOff.father_name}</td>

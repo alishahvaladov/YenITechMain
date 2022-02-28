@@ -5,7 +5,7 @@ const dateToAzVersion = (date) => {
     return `${splittedDate[2]}.${splittedDate[1]}.${splittedDate[0]}`
 }
 const renderPage = () => {
-    $.get("http://localhost:3000/api/time-off", (res) => {
+    $.get("http://localhost:3000/api/time-off/for-director?director_approve=true", (res) => {
         console.log(res);
         const timeOffs = res.timeOffs;
         let html = "";
@@ -21,17 +21,7 @@ const renderPage = () => {
                 } else if (timeOff.timeoff_type === 3) {
                     timeOff.timeoff_type = "Sağlamlıq məzuniyyəti"
                 }
-                if(timeOff.status === 0) {
-                    status = `<td class=""><span class="bg-secondary text-light p-1 border border-secondary rounded-3">Sənəd Əksikdir</span></td>`
-                } else if (timeOff.status === 1){
-                    status = `<td class=""><span class="bg-warning text-light p-1 border border-warning rounded-3">Emaldadır(HR Təsdiq)</span></td>`
-                } else if (timeOff.status === 2) {
-                    status = `<td class=""><span class="bg-primary text-light p-1 border border-primary rounded-3">Emaldadır(Şöbə Rəhbəri Təsdiq)</span></td>`
-                } else if (timeOff.status === 3) {
-                    status = `<td class=""><span class="bg-success text-light p-1 border border-success rounded-3">Təsdiqləndi</span></td>`
-                } else if (timeOff.status === 7) {
-                    status = `<td class=""><span class="bg-danger text-light p-1 border border-danger rounded-3">Ləğv Edildi</span></td>`
-                }
+                let approveBtn = `<td><a class="btn btn-outline-secondary" href="http://localhost:3000/timeoffrequests/approve-requests/dr/${timeOff.id}"><i class="bi bi-arrow-right-circle-fill"></i></a></td>`
                 html += `
                     <tr> 
                         <td>${timeOff.first_name} ${timeOff.last_name} ${timeOff.father_name}</td>
@@ -39,9 +29,7 @@ const renderPage = () => {
                         <td>${dateToAzVersion(timeOff.timeoff_start_date)}</td>
                         <td>${dateToAzVersion(timeOff.timeoff_end_date)}</td>
                         <td>${dateToAzVersion(timeOff.timeoff_job_start_date)}</td>
-                        ${status} 
-                        <td></td>
-                        <td></td>
+                        ${approveBtn}
                     </tr>
                 `
             });
@@ -50,4 +38,5 @@ const renderPage = () => {
         
     })
 }
+
 renderPage();

@@ -1,5 +1,8 @@
 const { sequelize, ForgottenFPrints, FPrint } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
+const date = new Date();
+let month = date.getMonth();
+month = parseInt(month) + 1;
 
 module.exports = {
     searchFPrint: async (data) => {
@@ -70,6 +73,10 @@ module.exports = {
             query += " AND MONTH(fp.f_print_date) = :fMonth"
             countQuery += " AND MONTH(fp.f_print_date) = :fMonth"
             replacements.fMonth = data.qMonth;
+        } else {
+            query += " AND MONTH(fp.f_print_date) = :fMonth"
+            countQuery += " AND MONTH(fp.f_print_date) = :fMonth"
+            replacements.fMonth = month;
         }
         if (data.qYear !== '' && data.qYear !== "00" && data.qYear !== "il") {
             query += " AND YEAR(fp.f_print_date) = :fYear"

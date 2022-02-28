@@ -27,6 +27,10 @@ module.exports = {
             return res.render("time-off-request/timeoffrequests", {
                 super_admin: true
             });
+        } else if (req.user.role === 10 ) {
+            return res.render("time-off-request/timeoffrequests", {
+                deptDirector: true
+            });
         }
     },
     getTimeOff: (req, res) => {
@@ -97,6 +101,39 @@ module.exports = {
                     hr: true
                 });
             }
+        }
+    },
+    renderApproveTimeOffHR: async (req, res) => {
+        const id = req.params.id;
+        if(req.user.role === 1) {
+            return res.render("time-off-request/request-single", {
+                super_admin: true,
+                id
+            });
+        } else if (req.user.role === 5) {
+            return res.render("time-off-request/request-single", {
+                hr: true,
+                id
+            });
+        }
+    },
+    renderApproveTimeOffDR: async (req, res) => {
+        const id = req.params.id;
+        if(req.user.role === 1) {
+            return res.render("time-off-request/request-single", {
+                super_admin: true,
+                id
+            });
+        } else if (req.user.role === 5) {
+            return res.render("time-off-request/request-single", {
+                hr: true,
+                id
+            });
+        } else if (req.user.role === 10) {
+            return res.render("time-off-request/request-single", {
+                deptDirector: true,
+                id
+            });
         }
     }
 }

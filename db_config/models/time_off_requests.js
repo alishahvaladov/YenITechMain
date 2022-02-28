@@ -40,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
+    emr_no: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     status: {
       default: 0,
       allowNull: false,

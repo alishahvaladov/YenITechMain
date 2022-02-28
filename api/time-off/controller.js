@@ -1,4 +1,19 @@
-const { getEmpInfo, getTimeOffs, addTimeOff, getDirectors, getEmployeeData, checkIfEmpExists, checkIfEmpFileExists, addFileNames, updateFileNames } = require("./service");
+const { getEmpInfo, 
+    getTimeOffs, 
+    addTimeOff,
+    getDirectors,
+    getEmployeeData,
+    checkIfEmpExists, 
+    checkIfEmpFileExists, 
+    addFileNames, 
+    updateFileNames, 
+    getTimeOffApproveForHR, 
+    cancelRequestByHr,
+    approveRequestByHr,
+    getTimeOffApproveForDR,
+    cancelRequestByDR,
+    approveRequestByDR,
+    getEmployeeByUserID } = require("./service");
 const path = require("path");
 const fs = require("fs");
 
@@ -12,11 +27,24 @@ module.exports = {
         })
     },
     getTimeOffs: async (req, res) => {
+        let timeOffs;
+        let directorProject;
         let hr_approve = false;
-        if (req.query.hr_approve === true) {
-            hr_approve = true;
+        let director_approve = false;
+        let id = req.user.id;
+        if (req.user.role === 10) {
+            directorProject = await getEmployeeByUserID(id);
+            directorProject = directorProject[0].project_id;
         }
-        const timeOffs = await getTimeOffs(hr_approve);
+        if (req.query.hr_approve === "true") {
+            hr_approve = true;
+            timeOffs = await getTimeOffs(hr_approve, director_approve);
+        } else if (req.query.director_approve === "true") {
+            director_approve = true;
+            timeOffs = await getTimeOffs(hr_approve, director_approve, directorProject);
+        } else {
+            timeOffs = await getTimeOffs(hr_approve, director_approve);
+        }
         res.status(200).send({
             timeOffs
         });
@@ -154,7 +182,9 @@ module.exports = {
                                 message: "An unknown error has been occurred"
                             })
                         }
-                        return next();
+                        res.send({
+                            result
+                        })
                     });
                 } else {
                     const empData = JSON.parse(empFileRes.dataValues.uploaded_files);
@@ -169,7 +199,9 @@ module.exports = {
                                 message: "An unknown error has been occurred"
                             })
                         }
-                        return next();
+                        res.send({
+                            result
+                        });
                     });
                 }
             });
@@ -181,18 +213,86 @@ module.exports = {
         const uploaded_files = JSON.parse(result[0].uploaded_files);
         const dayOffForm = JSON.parse(uploaded_files.dayoffform);
         const fileName = dayOffForm.filename;
-        result.fileName = fileName;
-        console.log(result);
-        if (req.user.role === 1) {
-            return res.render("time-off-request/request-single", {
-                result,
-                super_admin: true
-            });
-        } else if (req.user.role === 5) {
-            return res.render("time-off-request/request-single", {
-                result,
-                hr: true
-            });
-        }
-    }
+        result[0].uploaded_files = null
+        return res.status(200).send({
+            result,
+            fileName
+        });
+    },
+    getTimeOffApproveForDR: async (req, res) => {
+        const id = req.params.id;
+        const result = await getTimeOffApproveForDR(id);
+        const uploaded_files = JSON.parse(result[0].uploaded_files);
+        const dayOffForm = JSON.parse(uploaded_files.dayoffform);
+        const fileName = dayOffForm.filename;
+        result[0].uploaded_files = null
+        return res.status(200).send({
+            result,
+            fileName
+        });
+    },
+    cancelRequestByHr: (req, res) => {
+        let id = req.params.id;
+        console.log(id)
+        cancelRequestByHr(id, (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.send({
+                    success: false,
+                    message: "An unknown error has been occurred"
+                });
+            }
+            res.send({
+                message: "Canceled"
+            })
+        })
+    },
+    cancelRequestByDR: (req, res) => {
+        let id = req.params.id;
+        console.log(id)
+        cancelRequestByDR(id, (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.send({
+                    success: false,
+                    message: "An unknown error has been occurred"
+                });
+            }
+            res.send({
+                message: "Canceled"
+            })
+        })
+    },
+    approveRequestByHr: (req, res) => {
+        let id = req.params.id;
+        console.log(id)
+        approveRequestByHr(id, (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.send({
+                    success: false,
+                    message: "An unknown error has been occurred"
+                });
+            }
+            res.send({
+                message: "Approved"
+            })
+        })
+    },
+    approveRequestByDR: (req, res) => {
+        let id = req.params.id;
+        console.log(id)
+        approveRequestByDR(id, (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.send({
+                    success: false,
+                    message: "An unknown error has been occurred"
+                });
+            }
+            res.send({
+                message: "Approved"
+            })
+        })
+    },
 }

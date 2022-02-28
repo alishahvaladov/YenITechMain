@@ -6,19 +6,30 @@
 
             </div>
             <div class="time-off-select-container d-flex justify-content-between mt-5">
-                <div class="toff-select-cont-left d-flex flex-column">
-                    
+                <div class="toff-select-cont-left d-flex flex-column  justify-content-between">
+                    {{#if id}}
+                        <input type="hidden" id="id" value="{{id}}">
+                    {{/if}}
                 </div>
                 <div class="toff-select-cont-right d-flex flex-column">
-                    
+                    <img src="" alt="">
                 </div>
             </div>
             <div class="toff-submit-btn mt-4 d-flex justify-content-between">
-                <button class="btn btn-danger" id="timOffCancel">Ləğv Et</button>
-                <button class="btn btn-success" id="timOffApprove">Təsdiqlə</button>
+                <button class="btn btn-danger" id="timeOffCancel">Ləğv Et</button>
+                <button class="btn btn-success" id="timeOffApprove">Təsdiqlə</button>
             </div>
         </div>
     </div>
 </div>
 
 <script src="/assets/js/jquery.min.js"></script>
+{{#if hr}}
+<script src="/assets/js/request-single.js"></script>
+{{/if}}
+{{#if deptDirector}}
+<script src="/assets/js/request-single-dr.js"></script>
+{{/if}}
+{{#if super_admin}}
+<script src="/assets/js/request-single.js"></script>
+{{/if}}

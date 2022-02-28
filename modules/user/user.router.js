@@ -33,6 +33,10 @@ router.get("/dashboard",  ensureActivated, ensureAuthenticated, (req, res) => {
         res.render('dashboard', {
             hr: true
         })
+    } else if (req.user.role === 10) {
+        res.render('dashboard', {
+            deptDirector: true
+        })
     }
 });
 router.get("/users", ensureActivated, admin, getUsers);

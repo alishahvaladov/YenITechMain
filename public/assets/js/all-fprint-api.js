@@ -822,9 +822,11 @@ const renderAllFPrint = () => {
                         if(count > 21) {
                             html += `<button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>`
                         }
-                        html += `
-                    <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                `
+                        if (i > 1) {
+                            html += `
+                                <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                            `
+                        }
                     }
                 }
                 pgContatiner.innerHTML = html;

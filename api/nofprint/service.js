@@ -1,5 +1,8 @@
 const { sequelize } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
+const date = new Date();
+let month = date.getMonth();
+month = parseInt(month) + 1;
 
 module.exports = {
     getNoFPrints: async (data) => {
@@ -77,6 +80,10 @@ module.exports = {
             query += " AND MONTH(nfp.createdAt) = :fMonth"
             countQuery += " AND MONTH(nfp.createdAt) = :fMonth"
             replacements.fMonth = data.qMonth;
+        } else {
+            query += " AND MONTH(nfp.createdAt) = :fMonth"
+            countQuery += " AND MONTH(nfp.createdAt) = :fMonth"
+            replacements.fMonth = month;
         }
         if (data.qYear !== '' && data.qYear !== "00" && data.qYear !== "il") {
             query += " AND YEAR(nfp.createdAt) = :fYear"

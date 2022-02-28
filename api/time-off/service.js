@@ -15,7 +15,7 @@ module.exports = {
             logging: false
         });
     },
-    getTimeOffs: async (hr_approve) => {
+    getTimeOffs: async (hr_approve, director_approve, directorProject = null) => {
         let query = `
             SELECT toff.*, emp.first_name, emp.last_name, emp.father_name FROM TimeOffRequests as toff
             LEFT JOIN Employees as emp ON toff.emp_id = emp.id
@@ -24,10 +24,20 @@ module.exports = {
         `;
         if (hr_approve) {
             query += " AND toff.status = 1"
+        } else if (director_approve) {
+            query += " AND toff.status = 2"
         }
+
+        if(directorProject !== null) {
+            query += " AND emp.project_id = :directorProject"
+        }
+
         return await sequelize.query(query, {
             type: QueryTypes.SELECT,
-            logging: false
+            logging: false,
+            replacements: {
+                directorProject
+            }
         });
     },
     addTimeOff: (data, cb) => {
@@ -37,7 +47,7 @@ module.exports = {
             timeoff_start_date: data.timeOffStartDate,
             timeoff_end_date: data.timeOffEndDate,
             timeoff_job_start_date: data.wStartDate,
-            status: 0
+            status: 1
         }, {
             logging: false
         }).then((res) => {
@@ -145,6 +155,7 @@ module.exports = {
             LEFT JOIN EmployeeFileDirectories as efd on tor.emp_id = efd.emp_id
             LEFT JOIN Employees as emp on tor.emp_id = emp.id
             WHERE tor.id = :id
+            AND tor.status = 1
         `, {
             type: QueryTypes.SELECT,
             logging: false,
@@ -152,5 +163,90 @@ module.exports = {
                 id
             }
         });
+    },
+    getTimeOffApproveForDR: async (id) => {
+        return await sequelize.query(`
+            SELECT tor.*, efd.uploaded_files, emp.first_name, emp.last_name, emp.father_name FROM TimeOffRequests as tor
+            LEFT JOIN EmployeeFileDirectories as efd on tor.emp_id = efd.emp_id
+            LEFT JOIN Employees as emp on tor.emp_id = emp.id
+            WHERE tor.id = :id
+        `, {
+            type: QueryTypes.SELECT,
+            logging: false,
+            replacements: {
+                id
+            }
+        });
+    },
+    cancelRequestByHr: (id, cb) => {
+        console.log(id);
+        TimeOffRequest.update({
+            status: 7
+        }, {
+            where: {
+                id: id
+            }
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
+    },
+    cancelRequestByDR: (id, cb) => {
+        console.log(id);
+        TimeOffRequest.update({
+            status: 7
+        }, {
+            where: {
+                id: id
+            }
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
+    },
+    approveRequestByHr: (id, cb) => {
+        console.log(id);
+        TimeOffRequest.update({
+            status: 2
+        }, {
+            where: {
+                id: id
+            }
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
+    },
+    approveRequestByDR: (id, cb) => {
+        console.log(id);
+        TimeOffRequest.update({
+            status: 3
+        }, {
+            where: {
+                id: id
+            }
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
+    },
+    getEmployeeByUserID: async (id) => {
+        return await sequelize.query(`
+            SELECT dpdr.project_id FROM Users as usr
+            LEFT JOIN Employees as emp ON usr.emp_id = emp.id
+            LEFT JOIN DepartmentProjectDirectorRels as dpdr ON dpdr.emp_id = usr.emp_id
+            WHERE emp.deletedAt IS NULL
+            AND usr.id = :id
+        `, {
+            type: QueryTypes.SELECT,
+            logging: false,
+            replacements: {
+                id
+            }
+        })
     }
 }

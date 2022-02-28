@@ -1,5 +1,8 @@
 const { sequelize } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
+const date = new Date();
+let month = date.getMonth();
+month = parseInt(month) + 1;
 
 module.exports = {
     getAllFPrints: async (data) => {
@@ -140,39 +143,47 @@ module.exports = {
         }
         if(data.qTime !== '') {
             fpQuery += " AND fp.f_print_time like :fTime"
-            nfpEQuery += " AND fp.f_print_time like :fTime"
-            nfpLQuery += " AND fp.f_print_time like :fTime"
+            nfpEQuery += " AND nfp.enter_sign_time like :fTime"
+            nfpLQuery += " AND nfp.leave_sign_time like :fTime"
             fpCount += " AND fp.f_print_time like :fTime"
-            nfpECount += " AND fp.f_print_time like :fTime"
-            nfpLCount += " AND fp.f_print_time like :fTime"
+            nfpECount += " AND nfp.enter_sign_time like :fTime"
+            nfpLCount += " AND nfp.leave_sign_time like :fTime"
             replacements.fTime = "%" + data.qTime + "%";
         }
         if(data.qDay !== '' && data.qDay !== '00' && data.qDay !== 'gun') {
             fpQuery += " AND DAY(fp.f_print_date) = :fDay"
-            nfpEQuery += " AND DAY(fp.f_print_date) = :fDay"
-            nfpLQuery += " AND DAY(fp.f_print_date) = :fDay"
+            nfpEQuery += " AND DAY(nfp.createdAt) = :fDay"
+            nfpLQuery += " AND DAY(nfp.createdAt) = :fDay"
             fpCount += " AND DAY(fp.f_print_date) = :fDay"
-            nfpECount += " AND DAY(fp.f_print_date) = :fDay"
-            nfpLCount += " AND DAY(fp.f_print_date) = :fDay"
+            nfpECount += " AND DAY(nfp.createdAt) = :fDay"
+            nfpLCount += " AND DAY(nfp.createdAt) = :fDay"
             replacements.fDay = data.qDay;
             console.log(typeof data.qDay)
         }
         if (data.qMonth !== '' && data.qMonth !== "00" && data.qMonth !== 'ay') {
             fpQuery += " AND MONTH(fp.f_print_date) = :fMonth"
-            nfpEQuery += " AND MONTH(fp.f_print_date) = :fMonth"
-            nfpLQuery += " AND MONTH(fp.f_print_date) = :fMonth"
+            nfpEQuery += " AND MONTH(nfp.createdAt) = :fMonth"
+            nfpLQuery += " AND MONTH(nfp.createdAt) = :fMonth"
             fpCount += " AND MONTH(fp.f_print_date) = :fMonth"
-            nfpECount += " AND MONTH(fp.f_print_date) = :fMonth"
-            nfpLCount += " AND MONTH(fp.f_print_date) = :fMonth"
+            nfpECount += " AND MONTH(nfp.createdAt) = :fMonth"
+            nfpLCount += " AND MONTH(nfp.createdAt) = :fMonth"
             replacements.fMonth = data.qMonth;
+        }  else {
+            fpQuery += " AND MONTH(fp.f_print_date) = :fMonth"
+            nfpEQuery += " AND MONTH(nfp.createdAt) = :fMonth"
+            nfpLQuery += " AND MONTH(nfp.createdAt) = :fMonth"
+            fpCount += " AND MONTH(fp.f_print_date) = :fMonth"
+            nfpECount += " AND MONTH(nfp.createdAt) = :fMonth"
+            nfpLCount += " AND MONTH(nfp.createdAt) = :fMonth"
+            replacements.fMonth = month;
         }
         if (data.qYear !== '' && data.qYear !== "00" && data.qYear !== "il") {
             fpQuery += " AND YEAR(fp.f_print_date) = :fYear"
-            nfpEQuery += " AND YEAR(fp.f_print_date) = :fYear"
-            nfpLQuery += " AND YEAR(fp.f_print_date) = :fYear"
+            nfpEQuery += " AND YEAR(nfp.createdAt) = :fYear"
+            nfpLQuery += " AND YEAR(nfp.createdAt) = :fYear"
             fpCount += " AND YEAR(fp.f_print_date) = :fYear"
-            nfpECount += " AND YEAR(fp.f_print_date) = :fYear"
-            nfpLCount += " AND YEAR(fp.f_print_date) = :fYear"
+            nfpECount += " AND YEAR(nfp.createdAt) = :fYear"
+            nfpLCount += " AND YEAR(nfp.createdAt) = :fYear"
             replacements.fYear = data.qYear;
         }
 

@@ -60,12 +60,13 @@ const sendTimeOffRequest = () => {
         fd.append('file', file);
         $.ajax({
             url: `http://localhost:3000/api/time-off/upload-form/${id}`,
-            type: "post",
+            type: "post", 
             data: fd,
             enctype: "multipart/form-data",
             contentType: false,
             processData: false,
-            success: () => {
+            success: (res) => {
+                console.log(res);
                 $.post("http://localhost:3000/api/time-off/add", {
                     timeOffType: timeOffType.value,
                     timeOffStartDate: timeOffStartDate.value,
@@ -75,7 +76,7 @@ const sendTimeOffRequest = () => {
                 }).done((data) => {
                     let html = `
                         <div class="alert alert-success alert-dismissible fade show">
-                        Məzuniyyət sorğusu əlavə olundu
+                            Məzuniyyət sorğusu əlavə olundu
                         </div>
                     `
                     messageDIV.innerHTML = html;

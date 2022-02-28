@@ -2,6 +2,7 @@
     {{> messages }}
     <table class="table table-striped">
         <div class="container">
+            <h1 class="text-center my-5">Təsdiqləmə Matrisi</h1>
             <thead>
             <th>Əməkdaş</th>
             <th>Məzuniyyətin Tipi</th>
@@ -12,9 +13,18 @@
             <th>
                 <a class="btn btn-outline-success btn-sm" href="/timeoffrequests/add-toff-non-user">Əlavə <i class="bi bi-plus-circle"></i></a>
             </th>
+            <th>
+                {{#if hr}}
+                    <a class="btn btn-outline-primary btn-sm" href="/timeoffrequests/approve-requests/hr">Emal <i class="bi bi-check2-square"></i></a>
+                {{/if}}
+                {{#if deptDirector}}
+                    <a class="btn btn-outline-primary btn-sm" href="/timeoffrequests/approve-requests/dr">Emal <i class="bi bi-check2-square"></i></a>
+                {{/if}}
+            </th>
             </thead>
             <tbody>
                 <tr>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
                     <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
                     <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
                     <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
@@ -29,6 +39,12 @@
 </div>
 
 <script src="/assets/js/jquery.min.js"></script>
-<script src="/assets/js/socket.io.min.js"></script>
-<script src="/assets/js/time-off-socket.js"></script>
-<script src="/assets/js/time-off-request-api.js"></script> 
+{{#if hr}} 
+    <script src="/assets/js/time-off-request-api.js"></script> 
+{{/if}}
+{{#if super_admin}} 
+    <script src="/assets/js/time-off-request-api.js"></script> 
+{{/if}}
+{{#if deptDirector}}
+    <script src="/assets/js/time-off-request-dr-api.js"></script> 
+{{/if}}

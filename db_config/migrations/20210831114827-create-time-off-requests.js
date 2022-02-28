@@ -32,6 +32,10 @@ module.exports = {
         type: Sequelize.DATEONLY,
         allowNull: false
       },
+      emr_no: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       status: {
         default: 0,
         allowNull: false,
