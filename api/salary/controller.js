@@ -124,11 +124,14 @@ module.exports = {
                 }
                 if (timeOffs.length > 0) {
                     net = timeOffCalculation(timeOffs, monthLySalaries, emp_id, gross);
-                    // console.log(net);
+                    console.log(net);
                 }
-                dsmfTax = ((gross - 200) * 10 / 100) + 6;
-                unempTax = gross * 0.5 / 100;
-                healthTax = gross * 2 / 100;
+                dsmfTax = ((net - 200) * 10 / 100) + 6;
+                console.log(`DSMF Tax: ${dsmfTax}`)
+                unempTax = net * 0.5 / 100;
+                console.log(`unempTax: ${unempTax}`)
+                healthTax = net * 2 / 100;
+                console.log(`healthTax: ${healthTax}`)
                 net = net - (dsmfTax + unempTax + healthTax);
             } else {
                 dsmfTax = gross * 3 / 100;
