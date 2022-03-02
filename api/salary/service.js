@@ -43,7 +43,7 @@ module.exports = {
         return await sequelize.query(`
                 SELECT * FROM TimeOffRequests
                 WHERE emp_id = :emp_id
-                AND status = 1
+                AND status = 5
             `, {
                 type: QueryTypes.SELECT,
                 logging: false,
@@ -55,6 +55,21 @@ module.exports = {
     getFPrints: async(month, emp_id) => {
         return await sequelize.query(`
             SELCT * FROM FPrints 
-        `);
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
+    }, 
+    getEmployeeExperience: async (emp_id) => {
+        return await sequelize.query(`
+            SELECT * FROM EmployeeExperiences
+            WHERE emp_id = :emp_id
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                emp_id
+            }
+        })
     }
 }
