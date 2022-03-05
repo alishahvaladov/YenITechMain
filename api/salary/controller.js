@@ -25,59 +25,46 @@ function weekends( m, y ) {
 
 function timeOffCalculation(timeOffs, monthLySalaries, emp_id, gross) {
     let net = 0;
-    let totalTimeOffCost = 0;
+    let totalTimeOffDaysVacation = 0;
     let daysOfWork;
+    let timeOffTypes = {};
+    let notAtWorkCost = 0;
+    let weekendsBySunAndSat;
+    let allDaysOfWork;
+    let totalMonthSalary = 0;
+    let monthsLength;
+    if (date === 1) {
+        weekendsBySunAndSat = weekends(month, year);
+        const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
+        allDaysOfWork = parseInt(lastDayOfMonth) - parseInt(weekendsBySunAndSat.sunCount);
+        daysOfWork = parseInt(lastDayOfMonth) - parseInt(weekendsBySunAndSat.sunCount) - parseInt(weekendsBySunAndSat.satCount);
+    } else if (date > 27) {
+        weekendsBySunAndSat = weekends(month + 1, year);
+        const lastDayOfMonth = new Date(month + 1, year, 0).getDate();
+        allDaysOfWork = parseInt(lastDayOfMonth) - parseInt(weekendsBySunAndSat.sunCount);
+        daysOfWork = parseInt(lastDayOfMonth) - parseInt(weekendsBySunAndSat.sunCount) - parseInt(weekendsBySunAndSat.satCount);
+    }
+
+    if (monthLySalaries.length > 0) {
+        monthsLength = monthLySalaries.length;
+    } else {
+        monthsLength = 1;
+    }
     timeOffs.forEach(timeOff => {
         let timeOffStart = new Date(timeOff.timeoff_start_date);
         let timeOffEnd = new Date(timeOff.timeoff_end_date);
-        let monthsLength;
-        if (monthLySalaries.length > 0) {
-            monthsLength = monthLySalaries.length;
-        } else {
-            monthsLength = 1;
-        }
-        let notAtWorkCost = 0;
-        let weekendsBySunAndSat;
-        let allDaysOfWork;
-        let totalMonthSalary = 0;
-        if (date === 1) {
-            // console.log(month);
-            // console.log(year);
-            weekendsBySunAndSat = weekends(month, year);
-            const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
-            allDaysOfWork = parseInt(lastDayOfMonth) - parseInt(weekendsBySunAndSat.sunCount);
-            daysOfWork = parseInt(lastDayOfMonth) - parseInt(weekendsBySunAndSat.sunCount) - parseInt(weekendsBySunAndSat.satCount);
-            console.log(allDaysOfWork)
-            // console.log(weekendsBySunAndSat)
-        } else if (date > 27) {
-            weekendsBySunAndSat = weekends(month + 1, year);
-            const lastDayOfMonth = new Date(month + 1, year, 0).getDate();
-            allDaysOfWork = parseInt(lastDayOfMonth) - parseInt(weekendsBySunAndSat.sunCount);
-            daysOfWork = parseInt(lastDayOfMonth) - parseInt(weekendsBySunAndSat.sunCount) - parseInt(weekendsBySunAndSat.satCount);
-            console.log(allDaysOfWork);
-        }
-        if(timeOff.timeoff_type === 1 && timeOff.status === 5) {
+        if(timeOff.timeoff_type === 1 && timeOff.status === 4) {
             var Difference_In_Time = timeOffEnd.getTime() - timeOffStart.getTime();
             var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
             const costForADay = parseInt(gross) / parseInt(allDaysOfWork); 
-            totalTimeOffCost += (parseInt(Difference_In_Days) * costForADay);
-            gross -= totalTimeOffCost;
-        } else if(timeOff.timeoff_type === 2 && timeOff.status === 5) {
-            if(monthLySalaries.length > 0) {
-                monthLySalaries.forEach(salaryByMonth => {
-                    totalMonthSalary += parseInt(salaryByMonth.salary_cost);
-                });
-            }
-            console.log(totalMonthSalary);
-            const costForADay = totalMonthSalary / monthsLength / 30.4;
-            var Difference_In_Time = timeOffEnd.getTime() - timeOffStart.getTime();
-            var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-
-            totalTimeOffCost += (parseInt(Difference_In_Days) * costForADay);
-            notAtWorkCost = parseInt(Difference_In_Days) * parseInt(gross) / parseInt(allDaysOfWork);
-            net = gross - notAtWorkCost + totalTimeOffCost;
-            console.log(Difference_In_Days);
-        } else if(timeOff.timeoff_type === 3 && timeOff.status === 5) {
+            totalTimeOffDaysVacation += (parseInt(Difference_In_Days) * costForADay);
+            gross -= totalTimeOffDaysVacation;
+        } else if(timeOff.timeoff_type === 2 && timeOff.status === 4) {
+            let Difference_In_Time = timeOffEnd.getTime() - timeOffStart.getTime();
+            let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+            totalTimeOffDaysVacation += parseInt(Difference_In_Days);
+            timeOffTypes.vacation = true;
+        } else if(timeOff.timeoff_type === 3 && timeOff.status === 4) {
             let experience = getEmployeeExperience(emp_id);
             experience = experience[0].employee_experience_year;
             monthLySalaries.forEach(salaryByMonth => {
@@ -87,7 +74,7 @@ function timeOffCalculation(timeOffs, monthLySalaries, emp_id, gross) {
             var Difference_In_Time = timeOffEnd.getTime() - timeOffStart.getTime();
             var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
 
-            totalTimeOffCost += (parseInt(Difference_In_Days) * costForADay);
+            totalTimeOffDaysVacation += (parseInt(Difference_In_Days) * costForADay);
             notAtWorkCost = parseInt(Difference_In_Days) * parseInt(gross) / parseInt(allDaysOfWork);
             net = gross - notAtWorkCost;
             if (parseInt(experience) < 5) {
@@ -100,6 +87,17 @@ function timeOffCalculation(timeOffs, monthLySalaries, emp_id, gross) {
             net = gross + notAtWorkCost;
         }
     });
+    if (timeOffTypes.vacation === true) {
+        const atWorkDays = allDaysOfWork - totalTimeOffDaysVacation;
+        const atWorkCost = gross / allDaysOfWork * atWorkDays;
+        if(monthLySalaries.length > 0) {
+            monthLySalaries.forEach(salaryByMonth => {
+                totalMonthSalary += parseInt(salaryByMonth.salary_cost);
+            });
+        }
+        const timeOffCost = totalMonthSalary / monthsLength / 30.4 * totalTimeOffDaysVacation;
+        net = atWorkCost + timeOffCost;
+    }
     return net;
 }
 
@@ -124,15 +122,14 @@ module.exports = {
                 }
                 if (timeOffs.length > 0) {
                     net = timeOffCalculation(timeOffs, monthLySalaries, emp_id, gross);
-                    console.log(net);
                 }
                 dsmfTax = ((net - 200) * 10 / 100) + 6;
-                console.log(`DSMF Tax: ${dsmfTax}`)
                 unempTax = net * 0.5 / 100;
-                console.log(`unempTax: ${unempTax}`)
                 healthTax = net * 2 / 100;
-                console.log(`healthTax: ${healthTax}`)
-                net = net - (dsmfTax + unempTax + healthTax);
+                net = net - dsmfTax - unempTax - healthTax;
+                if (unofficialNet !== null || parseInt(unofficialNet) > 0) {
+                    net += parseInt(unofficialNet);
+                }
             } else {
                 dsmfTax = gross * 3 / 100;
                 unempTax = gross * 0.5 / 100;

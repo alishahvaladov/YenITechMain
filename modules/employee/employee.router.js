@@ -14,7 +14,7 @@ const upload = require("./uplod-file-middleware");
 const addEmpUpload = require("./emp-upload-middleware");
 const express = require("express");
 const router = express.Router();
-const { hr, super_admin } = require("../auth/auth");
+const { hr, super_admin, checkRoles } = require("../auth/auth");
 
 
 
@@ -22,10 +22,10 @@ router.get("/add-employee", hr, renderAddEmployee);
 
 
 router.get('/employees')
-router.get('/delete/:id', super_admin, deleteEmployee);
+router.get('/delete/:id', super_admin, checkRoles, deleteEmployee);
 router.get("/", hr, getEmployees);
 router.get("/update/:id", hr, getEmployee);
-router.post("/add-employee", hr, addEmployee);
+router.post("/add-employee", hr, checkRoles, addEmployee);
 router.post("/update/:id", hr, updateEmployee);
 router.get("/emp-files/:id", hr, renderEmpDirAddPage);
 router.post("/remove/:id", hr, checkUploadPath, upload.fields([

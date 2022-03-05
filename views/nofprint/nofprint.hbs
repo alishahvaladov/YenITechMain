@@ -1,17 +1,27 @@
 <div class="nofprint">
+    {{> messages }}
     <form action="" method="post">
-        Employee
-        <select name="emp_id" id="">
-            {{#if employees}}
-                {{#each employees}}
-                    <option value="{{dataValues.id}}">{{dataValues.first_name}} {{dataValues.last_name}} {{dataValues.father_name}}</option>
-                {{/each}}
-            {{/if}}
-        </select>
-        Enter Sign Time <input type="time" name="enter_sign_time">
-
-        <button type="submit">Add NoFPrint</button>
-
-        {{> messages }}
+        <div class="form-group my-4 px-2">
+            <label for="inputAddress">Employee</label>
+            <select id="inputState" class="form-control" name="emp_id">
+                <option disabled hidden selected>Choose</option>
+                {{#if employees}}
+                    {{#each employees}}
+                        <option value="{{dataValues.id}}">{{dataValues.first_name}} {{dataValues.last_name}} {{dataValues.father_name}}</option>
+                    {{/each}}
+                {{/if}}
+            </select>
+        </div>
+        <div class="form-row d-flex justify-content-between my-4">
+            <div class="form-group col-sm-12 col-md-6 px-2">
+                <label for="inputPassword4">Enter Sign Date</label>
+                <input type="date" class="form-control" id="inputPassword4" placeholder="Enter Sign Date" name="enter_sign_date">
+            </div>
+            <div class="form-group col-sm-12 col-md-6 px-2">
+                <label for="inputEmail4">Enter Sign Time</label>
+                <input type="time" class="form-control" id="inputEmail4" placeholder="Enter Sign Time" name="enter_sign_time">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary d-flex float-end mt-2">Add No Fprint</button>
     </form>
-</div>
+</div> 

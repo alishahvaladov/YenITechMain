@@ -12,24 +12,30 @@ module.exports = {
         return res.redirect("/not-found");
     },
     admin: (req, res, next) => {
-          if(req.user.active_status === 0) {
-              req.flash("error_msg", "Please update password");
-              return res.redirect("/update-password");
-          }
-          if(req.isAuthenticated() && req.user.role === 2 || req.isAuthenticated() && req.user.role === 1) {
-              return next();
-          }
-          return res.redirect("/not-found")
+            // req.roleAuthenticated = false;
+            if(req.user.active_status === 0) {
+                req.flash("error_msg", "Please update password");
+                return res.redirect("/update-password");
+            }
+            if(req.isAuthenticated() && req.user.role === 2 || req.isAuthenticated() && req.user.role === 1) {
+                req.roleAuthenticated = true;
+                return next();
+            }
+            next()
+        //   return res.redirect("/not-found")
     },
     hr: (req, res, next) => {
+        // req.roleAuthenticated = false;
         if(req.user.active_status === 0) {
             req.flash("error_msg", "Please update password");
             return res.redirect("/update-password");
         }
         if(req.isAuthenticated() && req.user.role === 5 || req.isAuthenticated() && req.user.role === 1) {
+            req.roleAuthenticated = true;
             return next();
         }
-        return res.redirect("/not-found");
+        next();
+        // return res.redirect("/not-found");
     },
     deptDirector: (req, res, next) => {
         if(req.user.active_status === 0) {
@@ -65,5 +71,13 @@ module.exports = {
             return next();
         }
         return res.redirect('/dashboard');
+    },
+    checkRoles: (req, res, next) => {
+        if(req.isAuthenticated() && req.roleAuthenticated === true) {
+            console.log(req.roleAuthenticated);
+            return next();
+        }
+        console.log(req.roleAuthenticated);
+        return res.redirect("/not-found");
     }
 }

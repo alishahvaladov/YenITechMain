@@ -57,6 +57,11 @@ const renderPage = () => {
                     <td class=""><span class="bg-success text-light p-1 border border-success rounded-3">Təsdiqləndi</span></td>
                     <td class=""><button value="${timeOff.id}" class="bg-primary text-light p-1 border border-success rounded-3 download-letter"><i class="bi bi-file-earmark-word"></i> Əmri Çap Et</button></td>
                     `
+                } else if (timeOff.status === 4) {
+                    status = `
+                        <td class=""><span class="bg-success text-light p-1 border border-success rounded-3">Təsdiqləndi</span></td>
+                        <td></td>
+                    `
                 } else if (timeOff.status === 7) {
                     status = `<td class=""><span class="bg-danger text-light p-1 border border-danger rounded-3">Ləğv Edildi</span></td>
                     <td></td>

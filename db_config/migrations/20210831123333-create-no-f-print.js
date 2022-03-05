@@ -30,6 +30,10 @@ module.exports = {
           as: 'emp_id'
         }
       },
+      date: {
+        allowNull: false,
+        type: Sequelize.DATEONLY
+      },
       enter_sign_time: {
         type: Sequelize.TIME
       },

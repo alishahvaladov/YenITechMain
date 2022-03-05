@@ -71,30 +71,30 @@ module.exports = {
             replacements.fTimeLeave = "%" + data.qTimeLeave + "%";
         }
         if(data.qDay !== '' && data.qDay !== '00' && data.qDay !== 'gun') {
-            query += " AND DAY(nfp.createdAt) = :fDay"
-            countQuery += " AND DAY(nfp.createdAt) = :fDay"
+            query += " AND DAY() = :fDay"
+            countQuery += " AND DAY(nfp.date) = :fDay"
             replacements.fDay = data.qDay;
             console.log(typeof data.qDay)
         }
         if (data.qMonth !== '' && data.qMonth !== "00" && data.qMonth !== 'ay') {
-            query += " AND MONTH(nfp.createdAt) = :fMonth"
-            countQuery += " AND MONTH(nfp.createdAt) = :fMonth"
+            query += " AND MONTH(nfp.date) = :fMonth"
+            countQuery += " AND MONTH(nfp.date) = :fMonth"
             replacements.fMonth = data.qMonth;
         } else {
-            query += " AND MONTH(nfp.createdAt) = :fMonth"
-            countQuery += " AND MONTH(nfp.createdAt) = :fMonth"
+            query += " AND MONTH(nfp.date) = :fMonth"
+            countQuery += " AND MONTH(nfp.date) = :fMonth"
             replacements.fMonth = month;
         }
         if (data.qYear !== '' && data.qYear !== "00" && data.qYear !== "il") {
-            query += " AND YEAR(nfp.createdAt) = :fYear"
-            countQuery += " AND YEAR(nfp.createdAt) = :fYear"
+            query += " AND YEAR(nfp.date) = :fYear"
+            countQuery += " AND YEAR(nfp.date) = :fYear"
             replacements.fYear = data.qYear;
         }
 
         if (data.limit = "all") {
-            query += " ORDER BY nfp.createdAt DESC"
+            query += " ORDER BY nfp.leave_sign_time ASC"
         } else {
-            query += " ORDER BY nfp.createdAt DESC LIMIT 15 OFFSET :offset"
+            query += " ORDER BY nfp.leave_sign_time ASC LIMIT 15 OFFSET :offset"
             replacements.offset = parseInt(data.offset);    
         }
         

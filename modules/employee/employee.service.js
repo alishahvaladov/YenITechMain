@@ -236,7 +236,19 @@ module.exports = {
             }
         });
     },
-    uploadSalaryToDB: (data, cb) => {
-
+    checkIfTabelNoExists: async (tabelNo) => {
+        return await sequelize.query(
+            `
+                SELECT * FROM LogixDBs 
+                WHERE tabel_no = :tabelNo
+            `,
+            {
+                logging: false,
+                type: QueryTypes.SELECT,
+                replacements: {
+                    tabelNo
+                }
+            }
+        );
     },
 }

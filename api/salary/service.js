@@ -43,7 +43,7 @@ module.exports = {
         return await sequelize.query(`
                 SELECT * FROM TimeOffRequests
                 WHERE emp_id = :emp_id
-                AND status = 5
+                AND status = 4
             `, {
                 type: QueryTypes.SELECT,
                 logging: false,

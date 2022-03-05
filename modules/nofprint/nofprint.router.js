@@ -8,6 +8,6 @@ router.get("/add-nofprint", hr, renderAdd);
 router.post("/add-nofprint", hr, addFPrint);
 
 router.get("/", hr, getNoFPrints);
-router.get("/update/:id", hr, update);
+router.post("/update", hr, update);
 
-module.exports = router;
+module.exports = router; 

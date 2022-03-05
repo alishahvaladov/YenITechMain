@@ -14,7 +14,8 @@ const {
     deleteEmpFiles,
     updateFileNames,
     checkIfEmpExists,
-    addLogixDataToLogixDB
+    addLogixDataToLogixDB,
+    checkIfTabelNoExists
 } = require("./employee.service");
 const { Employee } = require("../../db_config/models");
 const {Op} = require("sequelize");
@@ -30,7 +31,7 @@ const day = date.getDate();
 let errors = [];
 
 module.exports = {
-    addEmployee: (req, res) => {
+    addEmployee: async (req, res) => {
         errors = [];
         const data = req.body;
         data.user_id = req.user.id;
@@ -53,6 +54,7 @@ module.exports = {
         } else {
             fatherName = data.father_name.split('');
         }
+        const tabelNo = data.tabel_no;
         const dob = data.dob;
         const SSN = data.SSN;
         const FIN = data.FIN;
@@ -92,14 +94,12 @@ module.exports = {
                     console.log("First name cannot contain number");
                     req.flash("error_msg", "First name cannot contain number")
                     return res.redirect("/employee/add-employee");
-                    break;
                 }
 
                 if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(fName[i]) === false) {
                     console.log("First name cannot contain symbol");
                     req.flash("error_msg", "First name cannot contain symbol")
                     return res.redirect("/employee/add-employee");
-                    break;
                 }
             }
         } else {
@@ -120,7 +120,6 @@ module.exports = {
                     console.log("Last name cannot contain symbol");
                     req.flash("error_msg", "Last name cannot contain symbol")
                     return res.redirect("/employee/add-employee");
-                    break;
                 }
             }
         } else {
@@ -134,7 +133,6 @@ module.exports = {
                     console.log("Father name cannot contain number");
                     req.flash("error_msg", "Father name cannot contain number")
                     return res.redirect("/employee/add-employee");
-                    break;
                 }
                 if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(fatherName[i]) === false) {
                     console.log("Father name cannot contain symbol");
@@ -154,13 +152,11 @@ module.exports = {
                 console.log("Middle name cannot contain number");
                 req.flash("error_msg", "Middle name cannot contain number")
                 return res.redirect("/employee/add-employee");
-                break;
             }
             if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(midName[i]) === false) {
                 console.log("Middle name cannot contain symbol");
                 req.flash("error_msg", "Middle name cannot contain symbol")
                 return res.redirect("/employee/add-employee");
-                break;
             }
         }
 
@@ -252,7 +248,6 @@ module.exports = {
                 console.log("Phone number should be only numbers!");
                 req.flash("error_msg", "Phone number should be only numbers!");
                 return res.redirect("/employee/add-employee");
-                break;
             }
         }
 
@@ -268,8 +263,6 @@ module.exports = {
             homeNumber = null;
         } else if(homeNumber.length !== 7) {
             console.log("Home number should be 7 characters!");
-            req.flash("error_msg", "Home number should be 7 characters!");
-            return res.redirect("/employee/add-employee");
             for (let i = 0; i < seperatedH.length; i++) {
                 if(isNaN(parseInt(seperatedH[i]))) {
                     console.log("Home number should be only numbers!");
@@ -277,6 +270,8 @@ module.exports = {
                     return res.redirect("/employee/add-employee");
                 }
             }
+            req.flash("error_msg", "Home number should be 7 characters!");
+            return res.redirect("/employee/add-employee");
         }
 
         if(parseInt(shiftType) === 1 || parseInt(shiftType) === 2 || parseInt(shiftType) === 3) {
@@ -345,6 +340,17 @@ module.exports = {
             return res.redirect("/employee/add-employee");
         }
 
+        if(tabelNo === "" || tabelNo === null) {
+            req.flash("error_msg", "Please enter tabel no");
+            return res.redirect("/employee/add-employee");
+        } else {
+            let checkTabel = await checkIfTabelNoExists(data.tabel_no);
+            console.log(checkTabel.length);
+            if (checkTabel.length > 0) {
+                req.flash("error_msg", "This tabel no already in use. Please write another one");
+                return res.redirect("/employee/add-employee");
+            } 
+        }
 
         Employee.findOne({
             where: {
@@ -384,13 +390,15 @@ module.exports = {
                     logixData.tabel_no = data.tabel_no;
                     addLogixDataToLogixDB(logixData, (err, result) => {
                         if(err) {
+                            console.log(err);
                             req.flash("error_msg", "An unknown error occured while adding logix data. Please contact system admin or try again.");
                             return res.redirect("/employee/update/" + empId);
                         }
+                        console.log(result);
+                        req.flash("success_msg", "Employee has been added please fill employee data to continue");
+                        return res.redirect("/employee/emp-files/" + empId);
                     });
-                    req.flash("success_msg", "Employee has been added please fill employee data to continue");
-                    return res.redirect("/employee/emp-files/" + empId);
-                });
+                }); 
             }
         });
     },

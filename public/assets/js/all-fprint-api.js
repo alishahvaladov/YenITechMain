@@ -1201,7 +1201,10 @@ const renderNoFPrints = () => {
     const qDay = $("#day");
     const qMonth = $("#month");
     const qYear = $("#year");
-
+    const timeModal = document.querySelector(".add-time-modal");
+    const timeInput = document.querySelector("#timeInput");
+    const timeInputCancel = document.querySelector("#timeInputCancel");
+    const timeInputSubmit = document.querySelector("#timeInputSubmit");
     const pgContatiner = document.querySelector(".pagination-container");
     const loading = document.querySelector(".loading");
 
@@ -1209,6 +1212,7 @@ const renderNoFPrints = () => {
         let pgItems = document.querySelectorAll('.pagination-item');
         let fTDots = document.querySelector('.fTDots');
         let lTDots = document.querySelector('.lTDots');
+        const timeModal = document.querySelector(".add-time-modal");
         pgItems = Array.from(pgItems);
         pgItems.forEach(item => {
             item.addEventListener("click", () => {
@@ -1285,7 +1289,7 @@ const renderNoFPrints = () => {
                         let nfprints = res.result.nfprints;
                         console.log(nfprints);
                         for (let i = 0; i < nfprints.length; i++) {
-                            const date = new Date(nfprints[i].createdAt);
+                            const date = new Date(nfprints[i].date);
                             let enterTime = [];
                             let leaveTime = [];
                             if(nfprints[i].enter_sign_time) {
@@ -1296,7 +1300,7 @@ const renderNoFPrints = () => {
                                 leaveTime = nfprints[i].leave_sign_time.split(':');
                                 leaveTime = leaveTime[0] + ":" + leaveTime[1];
                             } else {
-                                leaveTime = `<button class="btn btn-outline-warning btn-sm"><i class="bi bi-check-lg"></i></button>`
+                                leaveTime = `<button class="btn btn-outline-warning btn-sm add-leave-time" value="${nfprints[i].id}"><i class="bi bi-check-lg"></i></button>`
                             }
                             let createdAt = date.toLocaleDateString();
                             createdAt = createdAt.split('/');
@@ -1338,6 +1342,7 @@ const renderNoFPrints = () => {
         let qMonth = $("#month").val();
         let qYear = $("#year").val();
         let offset = 0;
+        
 
         console.log(qEmp);
         console.log(offset);
@@ -1389,7 +1394,7 @@ const renderNoFPrints = () => {
                 let trs = "";
                 tbody.text("");
                 for (let i = 0; i < nfprints.length; i++) {
-                    const date = new Date(nfprints[i].createdAt);
+                    const date = new Date(nfprints[i].date);
                     let enterTime = [];
                     if (nfprints[i].enter_sign_time) {
                         enterTime = nfprints[i].enter_sign_time.split(':')
@@ -1400,7 +1405,7 @@ const renderNoFPrints = () => {
                         leaveTime = nfprints[i].leave_sign_time.split(':');
                         leaveTime = leaveTime[0] + ":" + leaveTime[1];
                     } else {
-                        leaveTime = `<button class="btn btn-outline-warning btn-sm"><i class="bi bi-check-lg"></i></button>`
+                        leaveTime = `<button class="btn btn-outline-warning btn-sm add-leave-time" value="${nfprints[i].id}"><i class="bi bi-check-lg"></i></button>`
 
                     }
                     let createdAt = date.toLocaleDateString();
@@ -1422,11 +1427,22 @@ const renderNoFPrints = () => {
                 }
                 if(trs.length !== 0) {
                     tbody.html(trs);
+                    const addLeaveTime = document.querySelectorAll(".add-leave-time");
+                    addLeaveTime.forEach(lTimeBtn => {
+                        lTimeBtn.addEventListener("click", () => {
+                            const id = lTimeBtn.value;
+                            timeInputSubmit.value = id;
+                            timeModal.classList.remove("d-none");
+                            timeModal.classList.add("d-flex");
+                        });
+                    })
                 } else {
                     tbody.text("No Data Found");
                 }
                 loading.classList.add('d-none');
                 pageFunctions();
+
+                
             });
     }
 
@@ -1478,6 +1494,25 @@ const renderNoFPrints = () => {
         exportToExcel()
     });
 
+
+    timeInputCancel.addEventListener("click", () => {
+        timeModal.classList.remove("d-flex");
+        timeModal.classList.add("d-none");
+    });
+
+    timeInputSubmit.addEventListener("click", () => {
+        const id = timeInputSubmit.value;
+        const leave_sign_time = timeInput.value;
+        $.post(`http://localhost:3000/nofprint/update`, {
+            id :id,
+            leave_sign_time
+        }, (res) => {
+            console.log(res);
+        });
+        loading.classList.remove('d-none');
+        timeModal.classList.add('d-none');
+        setTimeout(renderPage, 1500);
+    });
     setTimeout(renderPage, 2500);
 
     qEmp.keyup(renderPage)

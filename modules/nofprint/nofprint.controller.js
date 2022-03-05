@@ -30,6 +30,19 @@ module.exports = {
         errors = [];
         const data = req.body;
         data.create_user_id = req.user.id;
+        
+        const fPrintTime = data.enter_sign_time;
+        const fPrintDate = data.enter_sign_date;
+
+        if(fPrintDate === "" || fPrintDate === " " || fPrintDate === null) {
+            req.flash("error_msg", "Please select Enter Sign Date");
+            return res.redirect("/nofprint/add-nofprint");
+        }
+
+        if(fPrintTime === "" || fPrintTime === " " || fPrintTime === null) {
+            req.flash("error_msg", "Please select Enter Sign Time");
+            return res.redirect("/nofprint/add-nofprint");
+        }
 
         Employee.findOne({
             where: {
@@ -37,7 +50,7 @@ module.exports = {
             }
         }).then((result) => {
             if(!result) {
-                req.flash('error_msg', "An unknown error has been occurred");
+                req.flash('error_msg', "This employee doesn't exist please try again");
                 return res.redirect("/nofprint/add-nofprint");
             }
         })
@@ -50,7 +63,7 @@ module.exports = {
                    return res.redirect("/nofprint/add-nofprint");
                }
                req.flash("success_msg", "NoFPrint added successfully");
-               return res.redirect("/nofprint");
+               return res.redirect("/all-fprints");
             });
         }
     },
@@ -110,17 +123,20 @@ module.exports = {
         })
     },
     update: (req, res) => {
-        const id = req.params.id;
+        const data = req.body;
         const user_id = req.user.id;
-        update(id, user_id,(err, result) => {
+        update(data, user_id,(err, result) => {
             if(err) {
                 console.log(err);
-                req.flash("error_msg", "This fingerprint record not found please try again");
-                return res.redirect("/nofprint");
-            } else {
-                req.flash("success_msg", "Status successfully changed");
-                return res.redirect("/nofprint");
+                return res.status(404).send({
+                    success: false,
+                    message: "This fingerprint record not found please try again"
+                });
             }
+            return res.status(204).send({
+                success: false,
+                message: "Status successfully changed"
+            });
         });
     }
 }
