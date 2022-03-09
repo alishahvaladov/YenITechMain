@@ -18,12 +18,7 @@ const renderPage = () => {
             console.log(fine);
             date = date.toLocaleDateString();
             const splitDate = date.toString().split("/");
-            date = `${splitDate[1]}.${splitDate[0]}.${splitDate[2]}`
-            if(fine.minute_total - 30 < 0) {
-                fine.minute_total = 0;
-            } else {
-                fine.minute_total -= 30
-            }
+            date = `${splitDate[1]}.${splitDate[0]}.${splitDate[2]}`;
             if (res.role === "admin") {
                 html += `
                     <tr> 
@@ -76,6 +71,21 @@ const renderPage = () => {
         const approveFineBtnS = document.querySelectorAll(".approve-fine");
         const deleteFineBtnS = document.querySelectorAll(".delete-fine");
         const resetFineBtnS = document.querySelectorAll(".reset-fine");
+        const resetApprovedFineBtns = document.querySelectorAll(".reset-approved-fine");
+
+        // console.log(resetApprovedFineBtns.length);
+        if (resetApprovedFineBtns.length > 0) {
+            resetApprovedFineBtns.forEach(resetApprovedBtn => {
+                resetApprovedBtn.addEventListener("click", () => {
+                    loading.classList.remove("d-none");
+                    const id = resetApprovedBtn.value;
+                    $.get(`http://localhost:3000/api/fine/reset-approved-fine/${id}`, (res) => {
+                        console.log(res);
+                        setTimeout(renderPage, 1500);
+                    });
+                });
+            });
+        }
 
 
         approveFineBtnS.forEach(item => {
@@ -138,3 +148,4 @@ approveModalCancel.addEventListener("click", () => {
 warningModalCancel.addEventListener("click", () => {
     warningModal.classList.add("d-none");
 });
+

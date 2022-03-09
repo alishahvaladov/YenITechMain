@@ -11,7 +11,6 @@ module.exports = {
         let countQuery = "";
         let replacements = {};
         const result = {};
-
         //Select Query
         let fpQuery = `
             SELECT fp.id, fp.emp_id, fp.f_print_date as date, fp.f_print_time as time, emp.first_name as name, emp.last_name as surname, emp.father_name as fname,
@@ -44,7 +43,7 @@ module.exports = {
             AND nfp.leave_sign_time IS NOT NULL
         `;
         // Count Query
-        let countStart = ("SELECT ( ");
+        let countStart = ("SELECT (");
         let fpCount = `
             (
                 SELECT COUNT(*) FROM FPrints as fp 
@@ -195,7 +194,6 @@ module.exports = {
             nfpLCount += " AND YEAR(nfp.date) = :fYear"
             replacements.fYear = year;
         }
-
         if (data.limit === "all") {
             query += fpQuery + nfpEQuery + nfpLQuery + " ORDER BY date DESC";
         } else {

@@ -56,19 +56,17 @@ module.exports = {
             logging: false
         });
     },
-    getUser: (id, cb) => {
-        User.findOne({
-            where: {
-                id: id,
-                role: {
-                    [Op.ne]: 1
-                }
-            },
-            logging: false
-        }).then((result) => {
-            cb(null, result);
-        }).catch((err) => {
-            cb(err);
+    getUser: async (id) => {
+        return await sequelize.query(`
+            SELECT usr.id, usr.username, usr.email, usr.role, emp.first_name, emp.last_name, emp.father_name FROM Users as usr
+            LEFT JOIN Employees as emp ON usr.emp_id = emp.id
+            WHERE usr.emp_id = :id
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                id
+            }
         })
     },
     updateUser: (id, data, cb) => {
@@ -130,5 +128,6 @@ module.exports = {
         }).catch((err) => {
             cb(err);
         });
-    }
+    },
+   
 }

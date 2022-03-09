@@ -2,8 +2,9 @@ const { getFineData, approveEditedFine, getFineDataByID, deleteFromFine, approve
 
 module.exports = {
     getFineData: async (req, res, next) => {
+        const role = req.user.role;
         try {
-            const fineData = await getFineData();
+            const fineData = await getFineData(role);
             const result = {};
             result.result = fineData;
             if (req.user.role === 2) {

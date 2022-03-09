@@ -1,4 +1,4 @@
-const { registerUser, deleteUser, getUsers, getUser, updateUser, renderRegister, activateUser, forgotPassword} = require("./user.service");
+const { registerUser, deleteUser, getUsers, getUser, updateUser, renderRegister, activateUser, forgotPassword, updatePassword} = require("./user.service");
 const { User, sequelize } = require("../../db_config/models");
 const passport = require("passport");
 const {QueryTypes} = require("sequelize");
@@ -256,6 +256,11 @@ module.exports = {
                     result,
                     hr: true
                 });
+            } else if (req.user.role === 2) {
+                res.render("users/users", {
+                    result,
+                    admin: true
+                });
             }
         } catch (err) {
             console.log(err);
@@ -270,52 +275,45 @@ module.exports = {
                     errors,
                     hr: true
                 });
+            } else if (req.user.role === 2) {
+                res.render("users/users", {
+                    result,
+                    admin: true
+                });
             }
         }
     },
-    getUser: (req, res) => {
+    getUser: async (req, res) => {
         const id = req.params.id;
-        getUser(id, (err, result) => {
-            if(err) {
-                console.log(err);
-                req.flash("error_msg", "This User doesn't exist");
-                return res.redirect("/users");
-            }
-            console.log(result.dataValues);
-            if(req.user.role === 1) {
-                return res.render("users/user-update", {
-                    user: result.dataValues,
-                    super_admin: true
-                });
-            } else if (req.user.role === 5) {
-                return res.render("users/user-update", {
-                    user: result.dataValues,
-                    hr: true
-                });
-            }
-        })
+
+        if(req.user.role === 1) {
+            return res.render("users/user-update", {
+                super_admin: true
+            });
+        } else if (req.user.role === 5) {
+            return res.render("users/user-update", {
+                hr: true
+            });
+        }else if (req.user.role === 2) {
+            res.render("users/user-update", {
+                admin: true
+            });
+        }
     },
     updateUser: (req, res) => {
         const data = req.body;
         const id = req.params.id;
+        const roles = jsonConfig.roles;
 
-        console.log(data.role);
-
-        if (data.role == 1) {
-            req.flash("error_msg", "Please choose valid role");
-            return res.redirect("/users/update/" + id);
-        } else {
-            updateUser(id, data, (err, result) => {
-                if(err) {
-                    console.log(err);
-                    req.flash("error_msg", "An unknown error occurred please contact System Admin");
-                    return res.redirect("/users/update/" + id);
-                }
-                console.log(result);
-                req.flash("success_msg", "The user has been updated.");
-                return res.redirect("/users/update/" + id);
-            });
-        }
+        const result = updateUser(id, data, (err, result) => {
+            if (err) {
+                console.log(err);
+                req.flash("error_msg", "An unknown error has been occurred");
+                return res.redirect(`/users/update/${id}`);
+            }
+            req.flash("success_msg", "User has been updated");
+            return res.redirect("/users");
+        });
     },
     activate: async (req, res) => {
         return res.render("change-password/change-password");
@@ -420,5 +418,6 @@ module.exports = {
             req.flash("success_msg", "Your password has been changed please check your email");
             return res.redirect("/login");
         })
-    }
+    },
+    
 }
