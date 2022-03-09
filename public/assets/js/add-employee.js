@@ -1,7 +1,9 @@
 const projSelector = $("#project_id");
 const deptSelector = $("#department_id");
 const posSelector = $("#position_id");
-
+const shiftTypeSelect = document.querySelector("#select_shift_type");
+const shiftAuto = document.querySelector(".shift-auto");
+const shiftManual = document.querySelector(".shift-manual");
 
 if(projSelector) {
     projSelector.change(() => {
@@ -35,11 +37,8 @@ if(deptSelector) {
         });
     });
 }
-
 const fullDay = document.querySelector("#full_day");
 const workingDayInput = document.querySelector("#working_days");
-
-
 if(fullDay) {
     fullDay.addEventListener("click", () => {
         if(fullDay.checked) {
@@ -52,10 +51,7 @@ if(fullDay) {
         }
     });
 }
-
-
 const recInputs = document.querySelectorAll(".recruitment-scans");
-
 if(recInputs) {
     recInputs.forEach(item => {
         item.addEventListener("change", () => {
@@ -65,3 +61,14 @@ if(recInputs) {
         });
     });
 }
+
+shiftTypeSelect.addEventListener("change", () => {
+    const value = shiftTypeSelect.value;
+    if (parseInt(value) === 1) {
+        shiftAuto.classList.remove('d-none');
+        shiftManual.classList.add('d-none');
+    } else if (parseInt(value) === 2) {
+        shiftManual.classList.remove('d-none');
+        shiftAuto.classList.add('d-none');
+    }
+});

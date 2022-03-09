@@ -1,0 +1,38 @@
+<div class="department-table">
+    {{> messages }}
+    <h2 class="text-center">Barmaq İzləri Qeydiyyatı</h2>
+    <select id="fPrintType">
+        <option value="0" selected>Bütün</option>
+        <option value="1">Barmaq izi tutanlar</option> 
+        <option value="2">Barmaq izi tutmayanlar</option>
+        <option value="3">Uyğunsuzluqlar</option>
+    </select>
+    <table class="table table-striped">
+        <div class="container">
+            <thead class="headers">
+                <th>Barmaq izi(tarixi)</th>
+                <th>Barmaq izi(vaxtı)</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                </tr>
+            </tbody>
+        </div>
+    </table>
+    <div class="pagination d-flex justify-content-center">
+        <div class="pagination-container w-50 d-flex justify-content-between">
+
+        </div>
+    </div>
+</div>
+
+<div class="loading position-absolute top-0 w-100" style="left: 0; height: 100vh">
+    <div class="loading-container bg-light bg-opacity-25 w-100 h-100 d-flex justify-content-center align-items-center">
+        <img src="/assets/img/loading-3.gif" style="width: 70px">
+    </div>
+</div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/cumilative-fine.js"></script>

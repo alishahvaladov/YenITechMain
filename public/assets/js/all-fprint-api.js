@@ -4,7 +4,15 @@ const tbody = document.querySelector("tbody");
 const pgContainer = document.querySelector(".pagination-container");
 const thead = document.querySelector(".headers");
 const inputs = document.querySelector(".inputs");
-const thForFPrintsAndAllFPrints = `
+const thForAllFPrints = `
+        <th>Əməkdaş</th>
+        <th>Proyekt</th>
+        <th>Departament</th>
+        <th>Vəzifə</th>
+        <th>Barmaq izi(vaxtı)</th>
+        <th>Tarix</th>
+`;
+const thForFPrints = `
     <th>Əməkdaş</th>
     <th>Proyekt</th>
     <th>Departament</th>
@@ -1179,6 +1187,22 @@ const renderFPrint = () => {
         exportToExcel()
     });
 
+    const fpUploadBtn = document.querySelector("#fpUploadBtn");
+    const fpModal = document.querySelector(".fprint-modal");
+    const fpCancelBtn = document.querySelector("#fpCancelBtn");
+
+
+    if(fpUploadBtn) {
+    fpUploadBtn.addEventListener("click", () => {
+        fpModal.style.display = "inherit";
+    });
+    }
+    if(fpCancelBtn) {
+    fpCancelBtn.addEventListener("click", () => {
+        fpModal.style.display = "none";
+    });
+    }
+
     setTimeout(renderPage, 2500);
 
     qEmp.keyup(renderPage)
@@ -1609,19 +1633,17 @@ const renderInappropriateFPrints = () => {
 
     setTimeout(renderPage, 1500);
 }
-
 renderAllFPrint();
-
 fPrintType.addEventListener("change", () => {
     if(parseInt(fPrintType.value) === 0) {
-        thead.innerHTML = thForFPrintsAndAllFPrints;
+        thead.innerHTML = thForAllFPrints;
         inputs.innerHTML = inputThForFPrintsAndAllFPrints;
         tbody.innerHTML = tr;
         loading.classList.remove("d-none");
         pgContainer.innerHTML = "";
         renderAllFPrint();
     } else if (parseInt(fPrintType.value) === 1) {
-        thead.innerHTML = thForFPrintsAndAllFPrints;
+        thead.innerHTML = thForFPrints;
         inputs.innerHTML = inputThForFPrintsAndAllFPrints;
         tbody.innerHTML = tr;
         loading.classList.remove("d-none");

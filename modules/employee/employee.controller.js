@@ -82,11 +82,9 @@ module.exports = {
         const project = data.project_id;
         const date = new Date();
         const sex = data.sex;
+        const selectedShiftType = data.select_shift_type;
 
         let logixData = {};
-
-        
-
 
         if(fName) {
             for (let i = 0; i < fName.length; i++) {
@@ -159,7 +157,6 @@ module.exports = {
                 return res.redirect("/employee/add-employee");
             }
         }
-
 
         if(sex == 0 || sex == 1) {
             console.log("Gender verified");
@@ -274,20 +271,32 @@ module.exports = {
             return res.redirect("/employee/add-employee");
         }
 
-        if(parseInt(shiftType) === 1 || parseInt(shiftType) === 2 || parseInt(shiftType) === 3) {
-            if(parseInt(shiftType) === 1) {
-                data.shift_start_t = '10:00';
-                data.shift_end_t = '19:00';
-            } else if (parseInt(shiftType) === 2) {
-                data.shift_start_t = '10:00';
-                data.shift_end_t = '14:00';
-            } else if (parseInt(shiftType) === 3) {
-                data.shift_start_t = '14:00';
-                data.shift_end_t = '19:00';
+        if(parseInt(selectedShiftType) === 1) {
+            if(parseInt(shiftType) === 1 || parseInt(shiftType) === 2 || parseInt(shiftType) === 3) {
+                if(parseInt(shiftType) === 1) {
+                    data.shift_start_t = '10:00';
+                    data.shift_end_t = '19:00';
+                } else if (parseInt(shiftType) === 2) {
+                    data.shift_start_t = '10:00';
+                    data.shift_end_t = '14:00';
+                } else if (parseInt(shiftType) === 3) {
+                    data.shift_start_t = '14:00';
+                    data.shift_end_t = '19:00';
+                }
+            } else {
+                req.flash("Wrong shift type selected please try again");
+                return res.redirect("/employee/add-employee");
+            }
+        } else if(parseInt(selectedShiftType) === 2) {
+            const shiftStartT = data.shift_start_t;
+            const shiftEndT = data.shift_end_t;
+            if(shiftStartT === "" || shiftStartT === null || shiftEndT === "" || shiftEndT === null) {
+                req.flash("error_msg", "Please fill shift times");
+                return res.redirect('/employee/add-employee');
             }
         } else {
-            req.flash("Wrong shift type selected please try again");
-            return res.redirect("/employee/add-employee");
+            req.flash("error_msg", "Please choose shift type");
+            return res.redirect('/employee/add-employee');
         }
         if(j_start_date) {
             if(parseInt(j_start_date[0]) <= year && parseInt(j_start_date[1]) < month) {

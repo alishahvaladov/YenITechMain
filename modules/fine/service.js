@@ -1,11 +1,11 @@
-const { Fine } = require("../../db_config/models");
+const { Fine, CalculatedFineData } = require("../../db_config/models");
 const {Op, QueryTypes} = require("sequelize");
 const {sequelize} = require("../../db_config/models/index");
 const date = new Date();
 const month = date.getMonth();
 const year = date.getFullYear();
 
-
+ 
 
 module.exports = {
     addFine: async (data, cb) => {
@@ -14,8 +14,7 @@ module.exports = {
         }, {
             where: {
                 emp_id: data.emp_id
-            }
-        }, {
+            },
             logging: false
         }).then((result) => {
             cb(null, result);
@@ -50,7 +49,7 @@ module.exports = {
     },
     getFprints: async (date, emp_id) => {
         return await sequelize.query(`
-            SELECT DISTINCT fp.*, emp.first_name, emp.last_name, emp.father_name, emp.shift_start_t, emp.shift_end_t FROM FPrints as fp
+            SELECT DISTINCT fp.emp_id, fp.f_print_time, fp.f_print_date, emp.first_name, emp.last_name, emp.father_name, emp.shift_start_t, emp.shift_end_t FROM FPrints as fp
             LEFT JOIN Employees as emp ON fp.emp_id = emp.id
             WHERE fp.f_print_date = :date
             AND fp.emp_id = :emp_id
@@ -73,4 +72,18 @@ module.exports = {
             logging: false
         });
     },
+    addCalculatedFine: (data, cb) => {
+        CalculatedFineData.create({
+            emp_id: data.emp_id,
+            f_print_date: data.f_print_date,
+            f_print_time: data.f_print_time,
+            calculatedMinute: data.calculatedMinute
+        }, {
+            logging: false
+        }).then((result) => {
+            cb(null, result);
+        }).catch((err) => {
+            cb(err);
+        })
+    }
 }

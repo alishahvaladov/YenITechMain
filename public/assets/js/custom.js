@@ -56,6 +56,8 @@ if(fpUploadBtn) {
    fpUploadBtn.addEventListener("click", () => {
       fpModal.style.display = "inherit";
    });
+}
+if(fpCancelBtn) {
    fpCancelBtn.addEventListener("click", () => {
       fpModal.style.display = "none";
    });

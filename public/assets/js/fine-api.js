@@ -61,6 +61,7 @@ const renderPage = () => {
                                 <button class="btn btn-outline-success approve-fine" value="${fine.fineID}"><i class="bi bi-check-circle-fill"></i></button>
                                 <button class="btn btn-outline-danger delete-fine" value="${fine.fineID}"><i class="bi bi-x-circle-fill"></i></button>
                                 <button class="btn btn-outline-secondary reset-fine" value="${fine.fineID}"><i class="bi bi-pencil-square"></i></button>
+                                <a class="btn btn-outline-info" href="/fines/cumilative/${fine.emp_id}"><i class="bi bi-arrow-return-right"></i></a>
                             </div>
                         </td>     
                     </tr>

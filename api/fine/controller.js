@@ -1,4 +1,4 @@
-const { getFineData, approveEditedFine, getFineDataByID, deleteFromFine, approveFine, resetApprovedFine} = require("./service");
+const { getFineData, approveEditedFine, getFineDataByID, deleteFromFine, approveFine, resetApprovedFine, getFinedData} = require("./service");
 
 module.exports = {
     getFineData: async (req, res, next) => {
@@ -131,5 +131,21 @@ module.exports = {
             }
             return res.status(204).send("Approved fine has been reset");
         })
+    },
+    getFinedData: async (req, res) => {
+        const id = req.params.id;
+        try {
+            const result = await getFinedData(id);
+
+            return res.status(200).json({
+                result
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(400).json({
+                success: false,
+                message: "An unknown error has been occurred"
+            });
+        }
     }
 }

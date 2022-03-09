@@ -70,10 +70,8 @@ module.exports = {
     },
     checkRoles: (req, res, next) => {
         if(req.isAuthenticated() && req.roleAuthenticated === true) {
-            console.log(req.roleAuthenticated);
             return next();
         }
-        console.log(req.roleAuthenticated);
         return res.redirect("/not-found");
     }
 }

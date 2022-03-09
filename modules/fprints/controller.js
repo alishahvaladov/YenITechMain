@@ -42,7 +42,6 @@ module.exports = {
                 const result = await getFPrintsByDate(empIDsAndShiftTimes[j].id, i);
                 const splitShiftStart = parseInt(empIDsAndShiftTimes[j].shift_start_t.split(":")[0]);
                 const splitShiftEnd = parseInt(empIDsAndShiftTimes[j].shift_end_t.split(":")[0]);
-                console.log(result.length);
                 if (result.length === 1) {
                     const splittedTime = result[0].f_print_time.split(":");
                     if(parseInt(splittedTime[0]) >= splitShiftEnd - 2) {
@@ -79,8 +78,6 @@ module.exports = {
                         if(parseInt(splittedTime[0]) >= splitShiftEnd - 2) {
                             timeExit = result[k].f_print_time;
                             dateExit = result[k].f_print_date;
-                            console.log("timeExit: " + timeExit);
-                            console.log(splittedTime);
                             countExit++;
                         }
                         if(parseInt(splittedTime[0]) <= splitShiftStart + 2) {
@@ -100,7 +97,6 @@ module.exports = {
                         fPrintData.f_print_time_entrance = timeEntrance;
                         fPrintData.f_print_date = dateEntrance;
                         fPrintData.f_print_time_exit = null;
-                        console.log(fPrintData);
                         fPrintDataHasValue = true;
                     }
                     if(fPrintDataHasValue) {
@@ -108,7 +104,7 @@ module.exports = {
                             if(err) {
                                 console.log(err);
                                 req.flash("error_msg", "An unknown error has been occurred.");
-                                return res.redirect("/fprints");
+                                return res.redirect("/all-fprints");
                             }
                         });
                     }
@@ -116,7 +112,7 @@ module.exports = {
             }
         }
         req.flash("success_msg", "Finger print information have been uploaded successfully. Please check for forgotten finger prints");
-        return res.redirect("/fprints");
+        return res.redirect("/all-fprints");
     },
     addFPrintToDB: async (req, res, next) => {
         try {
@@ -153,8 +149,9 @@ module.exports = {
                                 if (err) {
                                     console.log("There is an error uploading the excel row");
                                     console.log(err);
+                                    req.flash("error_msg", "There is an error uploading the excel row");
+                                    return res.redirect("/all-fprints");
                                 }
-                                // console.log(res);
                             });
                         } else {
                             data.name = currentRow[2];
@@ -163,7 +160,7 @@ module.exports = {
                             addUnknownEmpsToDB(data, (err, result) => {
                                 if (err) {
                                     console.log(err);
-                                    req.flash("An unknown error has been occurred please contact System Admin");
+                                    req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
                                     return res.redirect("/all-fprints");
                                 }
                             });
@@ -174,13 +171,13 @@ module.exports = {
                     setTimeout(next, 1000);
                 } else {
                     req.flash("error_msg", "Xahiş olunur düzgün excel faylını(Logix proqramından export olunmuş) yükləyin.");
-                    return await res.redirect("/all-fprints");
+                    return res.redirect("/all-fprints");
                 }
             });
         } catch (err) {
             console.log(err);
             req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
-            res.redirect("/all-fprints");
+            return res.redirect("/all-fprints");
         }
     },
     renderForgottenFPrints: (req, res) => {

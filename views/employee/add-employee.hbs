@@ -48,7 +48,7 @@
                         <label for="y_address">Yaşadığı ünvan:</label>
                         <input type="text" id="y_address" name="y_address">
                     </div>
-                                        <div class="toff-branch">
+                    <div class="toff-branch">
                         <label for="phone_number">Telefon Nömrəsi: </label>
                         <div class="">
                             <select style="width: 135px;" name="prefix" id="prefix">
@@ -65,12 +65,13 @@
                             <input style="width: 150px;" type="number" name="phone_number" id="phone_number">
                         </div>
                     </div>
-                </div>
-                <div class="emp-select-cont-right d-flex flex-column">
                     <div class="toff-department">
                         <label for="home_number">Ev telefonu:</label>
                         <input type="number" name="home_number" id="home_number">
                     </div>
+                </div>
+                <div class="emp-select-cont-right d-flex flex-column">
+                    
                     <div class="toff-branch">
                         <label for="logix_name">Logix Adı: </label>
                         <input type="text" name="logix_name" id="logix_name">                           
@@ -78,15 +79,34 @@
                     <div class="toff-department">
                         <label for="tabel_no">Logix Tabel No:</label>
                         <input type="text" name="tabel_no" id="tabel_no">
-                    </div>
-                    <div class="toff-emp-position">
-                        <label for="shift_type">Ştat: </label>
-                        <select name="shift_type" id="shift_type">
-                            <option value="default" hidden>Ştat qrafiki</option>
-                            <option value="1">Tam Ştat</option>
-                            <option value="2">Yarımştat (Günün 1-ci yarısı)</option>
-                            <option value="3">Yarımştat (Günün 2-ci yarısı)</option>
+                    </div> 
+                    <div class="toff-emp-position time-off-shiftTypeSelect">
+                        <label for="select_shift_type">Ştat Tipi: </label>
+                        <select name="select_shift_type" id="select_shift_type">
+                            <option value="1" selected>Avto</option>
+                            <option value="2">Manual</option>
                         </select>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <div class="shift-auto d-flex justify-content-between w-100 px-0">
+                            <label for="shift_type">Ştat: </label>
+                            <select name="shift_type" id="shift_type">
+                                <option value="default" hidden>Ştat qrafiki</option>
+                                <option value="1">Tam Ştat</option>
+                                <option value="2">Yarımştat (Günün 1-ci yarısı)</option>
+                                <option value="3">Yarımştat (Günün 2-ci yarısı)</option>
+                            </select>
+                        </div>
+                        <div class="shift-manual d-flex flex-column justify-content-between w-100 p-0 d-none">
+                            <div class="toff-emp-comment d-flex justify-content-between w-100 px-0">
+                                <label for="shift_start_t">İşə gəlmə vaxtı: </label>
+                                <input type="time" name="shift_start_t" id="shift_start_t">
+                            </div>
+                            <div class="toff-emp-comment d-flex justify-content-between w-100 px-0">
+                                <label for="shift_end_t">İşdən çıxma vaxtı: </label>
+                                <input type="time" name="shift_end_t" id="shift_end_t">
+                            </div>
+                        </div>
                     </div>
                     <div class="toff-emp-comment">
                         <label for="job_start_date">İşə başlama tarixi: </label>
