@@ -56,6 +56,24 @@ module.exports = {
                                         return res.redirect("/fines");
                                     }
                                 });
+                                if (fPrintEnterTotalMinutes < 0 || fPrintLeaveTotalMinutes < 0) {
+                                    if (fPrintEnterTotalMinutes < 0) {
+                                        calculatedFine.f_print_time = fPrintData[0].f_print_time;
+                                        calculatedFine.f_print_date = fPrintData[0].f_print_date;
+                                        calculatedFine.calculatedMinute = fPrintEnterTotalMinutes;
+                                    } else if(fPrintLeaveTotalMinutes < 0) {
+                                        calculatedFine.f_print_time = fPrintData[fPrintData.length - 1].f_print_time;
+                                        calculatedFine.f_print_date = fPrintData[fPrintData.length - 1].f_print_date;
+                                        calculatedFine.calculatedMinute = fPrintLeaveTotalMinutes;
+                                    }
+                                    addCalculatedFine(calculatedFine, (err, result) => {
+                                        if(err) {
+                                            console.log(err);
+                                            req.flash("error_msg", "An unknown error has been occurred");
+                                            return res.redirect("/fines");
+                                        }
+                                    });
+                                }
                             } else if (fPrintEnterTotalMinutes > 0 && fPrintLeaveTotalMinutes > 0) {
                                 calculatedFine.emp_id = emp_id;
                                 calculatedFine.f_print_time = fPrintData[0].f_print_time;
@@ -90,6 +108,9 @@ module.exports = {
                                     req.flash("error_msg", "An unknown error has been occurred please contact system admin");
                                     return res.redirect("/fines");
                                 }
+                                if (emp_id === 180) {
+                                    console.log("2 defe ishleyir")
+                                }
                             });
                         } else if(fineData.length === 1) {
                             let minuteTotal;
@@ -116,6 +137,24 @@ module.exports = {
                                         return res.redirect("/fines");
                                     }
                                 });
+                                if (fPrintEnterTotalMinutes < 0 || fPrintLeaveTotalMinutes < 0) {
+                                    if (fPrintEnterTotalMinutes < 0) {
+                                        calculatedFine.f_print_time = fPrintData[0].f_print_time;
+                                        calculatedFine.f_print_date = fPrintData[0].f_print_date;
+                                        calculatedFine.calculatedMinute = fPrintEnterTotalMinutes;
+                                    } else if(fPrintLeaveTotalMinutes < 0) {
+                                        calculatedFine.f_print_time = fPrintData[fPrintData.length - 1].f_print_time;
+                                        calculatedFine.f_print_date = fPrintData[fPrintData.length - 1].f_print_date;
+                                        calculatedFine.calculatedMinute = fPrintLeaveTotalMinutes;
+                                    }
+                                    addCalculatedFine(calculatedFine, (err, result) => {
+                                        if(err) {
+                                            console.log(err);
+                                            req.flash("error_msg", "An unknown error has been occurred");
+                                            return res.redirect("/fines");
+                                        }
+                                    });
+                                }
                             } else if (fPrintEnterTotalMinutes > 0 && fPrintLeaveTotalMinutes > 0) {
                                 calculatedFine.emp_id = emp_id;
                                 calculatedFine.f_print_time = fPrintData[0].f_print_time;

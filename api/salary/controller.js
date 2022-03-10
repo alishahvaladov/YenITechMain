@@ -24,8 +24,10 @@ function weekends( m, y ) {
 }
 
 function timeOffCalculation(timeOffs, monthLySalaries, emp_id, gross) {
-    let net = 0;
+    let net = gross;
     let totalTimeOffDaysVacation = 0;
+    let totalTimeOffDaysSelfVacation = 0;
+    let totalTimeOffDaysHealthVacation = 0;
     let daysOfWork;
     let timeOffTypes = {};
     let notAtWorkCost = 0;
@@ -57,8 +59,8 @@ function timeOffCalculation(timeOffs, monthLySalaries, emp_id, gross) {
             var Difference_In_Time = timeOffEnd.getTime() - timeOffStart.getTime();
             var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
             const costForADay = parseInt(gross) / parseInt(allDaysOfWork); 
-            totalTimeOffDaysVacation += (parseInt(Difference_In_Days) * costForADay);
-            gross -= totalTimeOffDaysVacation;
+            totalTimeOffDaysSelfVacation += (parseInt(Difference_In_Days) * costForADay);
+            timeOffTypes.selfVacation = true;
         } else if(timeOff.timeoff_type === 2 && timeOff.status === 4) {
             let Difference_In_Time = timeOffEnd.getTime() - timeOffStart.getTime();
             let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
@@ -74,7 +76,7 @@ function timeOffCalculation(timeOffs, monthLySalaries, emp_id, gross) {
             var Difference_In_Time = timeOffEnd.getTime() - timeOffStart.getTime();
             var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
 
-            totalTimeOffDaysVacation += (parseInt(Difference_In_Days) * costForADay);
+            totalTimeOffDaysHealthVacation += (parseInt(Difference_In_Days) * costForADay);
             notAtWorkCost = parseInt(Difference_In_Days) * parseInt(gross) / parseInt(allDaysOfWork);
             net = gross - notAtWorkCost;
             if (parseInt(experience) < 5) {
@@ -97,6 +99,10 @@ function timeOffCalculation(timeOffs, monthLySalaries, emp_id, gross) {
         }
         const timeOffCost = totalMonthSalary / monthsLength / 30.4 * totalTimeOffDaysVacation;
         net = atWorkCost + timeOffCost;
+    }
+    if(timeOffTypes.vacation === true) {
+        const absentCost = gross / allDaysOfWork * totalTimeOffDaysSelfVacation;
+        net = net - absentCost;
     }
     return net;
 }

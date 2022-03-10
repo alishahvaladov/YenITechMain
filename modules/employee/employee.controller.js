@@ -288,6 +288,12 @@ module.exports = {
                 return res.redirect("/employee/add-employee");
             }
         } else if(parseInt(selectedShiftType) === 2) {
+            const splittedShiftStart = data.shift_start_t.split(":");
+            const splittedShiftEnd = data.shift_end_t.split(":");
+            if (parseInt(splittedShiftStart[0]) - parseInt(splittedShiftEnd[0]) > 0) {
+                req.flash("error_msg", "Please choose valid shift times");
+                return res.redirect("/employee/add-employee");
+            }
             const shiftStartT = data.shift_start_t;
             const shiftEndT = data.shift_end_t;
             if(shiftStartT === "" || shiftStartT === null || shiftEndT === "" || shiftEndT === null) {
