@@ -3,13 +3,14 @@ const dateToAzVersion = (date) => {
     const splittedDate = date.split("-");
     return `${splittedDate[2]}.${splittedDate[1]}.${splittedDate[0]}`
 }
-const sendTimeOffRequest = (id) => {
+const sendTimeOffRequest = (emp_id, id) => {
     let fd = new FormData();
     let file = uploadDoc.files[0];
     if (file) {
         fd.append('file', file);
+        fd.append('id', id);
         $.ajax({
-            url: `http://localhost:3000/api/time-off/upload-letter/${id}`,
+            url: `http://localhost:3000/api/time-off/upload-letter/${emp_id}`,
             type: "post", 
             data: fd,
             enctype: "multipart/form-data",
@@ -41,29 +42,29 @@ const renderPage = () => {
                 }
                 if(timeOff.status === 0) {
                     status = `
-                    <td class=""><span class="bg-secondary text-light p-1 border border-secondary rounded-3">Sənəd Əksikdir</span></td>
+                    <td class="bg-secondary"><button class="btn text-light shadow-none" style="cursor: inherit">Sənəd Əksikdir</button></td>
                     <td></td>
                     `
                 } else if (timeOff.status === 1){
-                    status = `<td class=""><span class="bg-warning text-light p-1 border border-warning rounded-3">Emaldadır(HR Təsdiq)</span></td>
+                    status = `<td class="bg-warning"><button class="btn text-light shadow-none" style="cursor: inherit">Emaldadır(HR Təsdiq)</button></td>
                     <td></td>
                     `
                 } else if (timeOff.status === 2) {
-                    status = `<td class=""><span class="bg-primary text-light p-1 border border-primary rounded-3">Emaldadır(Şöbə Rəhbəri Təsdiq)</span></td>
+                    status = `<td class="bg-primary"><button class="btn text-light shadow-none" style="cursor: inherit">Emaldadır(Şöbə Rəhbəri Təsdiq)</button></td>
                     <td></td>
                     `
                 } else if (timeOff.status === 3) {
                     status = `
-                    <td class=""><span class="bg-success text-light p-1 border border-success rounded-3">Təsdiqləndi</span></td>
-                    <td class=""><button value="${timeOff.id}" class="bg-primary text-light p-1 border border-success rounded-3 download-letter"><i class="bi bi-file-earmark-word"></i> Əmri Çap Et</button></td>
+                    <td class="bg-info  p-1 border border-info rounded-3"><button class="btn text-light shadow-none" style="cursor: inherit">Əmr təsdiqi gözləyir</button></td>
+                    <td class=""><button value="${timeOff.id}" class="bg-primary text-light p-1 border border-info rounded-3 download-letter"><i class="bi bi-file-earmark-word"></i> Əmri Çap Et</button></td>
                     `
                 } else if (timeOff.status === 4) {
                     status = `
-                        <td class=""><span class="bg-success text-light p-1 border border-success rounded-3">Təsdiqləndi</span></td>
+                        <td class="bg-success"><button class="btn text-light shadow-none" style="cursor: inherit">Təsdiqləndi</button></td>
                         <td></td>
                     `
                 } else if (timeOff.status === 7) {
-                    status = `<td class=""><span class="bg-danger text-light p-1 border border-danger rounded-3">Ləğv Edildi</span></td>
+                    status = `<td class="bg-danger"><button class="btn text-light shadow-none" style="cursor: inherit">Ləğv Edildi</butt></td>
                     <td></td>
                     `
                 }
@@ -130,9 +131,11 @@ const renderPage = () => {
                                 const dayOffDWithWords = new NumberAzeriTranslator(dayOffD);
                                 dayOffD = `${dayOffD}(${dayOffDWithWords.translate()})`;
                                 let directorName;
-                                const id = result.emp_id;
+                                const emp_id = result.emp_id;
                                 submitUploadBtn.addEventListener("click", () => {
-                                    sendTimeOffRequest(id);
+                                    sendTimeOffRequest(emp_id, tOffID);
+                                    document.querySelector(".t-o-m-request").classList.add("d-none");
+                                    setTimeout(renderPage, 500);
                                 });
     
     
@@ -187,9 +190,7 @@ const renderPage = () => {
                         });
                     });
                 })
-                
-        }
-        
-    })
+        } 
+    });
 }
 renderPage();

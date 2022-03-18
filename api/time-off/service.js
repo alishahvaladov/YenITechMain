@@ -59,10 +59,13 @@ module.exports = {
     addTimeOff: (data, cb) => {
         TimeOffRequest.create({
             emp_id: data.emp,
+            user_id: data.user_id,
             timeoff_type: data.timeOffType,
             timeoff_start_date: data.timeOffStartDate,
             timeoff_end_date: data.timeOffEndDate,
             timeoff_job_start_date: data.wStartDate,
+            timoff_time: data.toffTime,
+            timoff_time_date: data.toffTimeDate,
             status: 1
         }, {
             logging: false
@@ -264,5 +267,18 @@ module.exports = {
                 id
             }
         })
+    },
+    approveTimeOffRequest: (id, cb) => {
+        TimeOffRequest.update({
+            status: 4
+        }, {
+            where: {
+                id
+            }
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
     }
 }

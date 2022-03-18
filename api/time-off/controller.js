@@ -14,7 +14,8 @@ const { getEmpInfo,
     cancelRequestByDR,
     approveRequestByDR,
     getEmployeeByUserID,
-    getTimeOffByID } = require("./service");
+    getTimeOffByID, 
+    approveTimeOffRequest} = require("./service");
 const path = require("path");
 const fs = require("fs");
 
@@ -59,14 +60,28 @@ module.exports = {
     },
     addTimeOff: async (req, res) => {
         const body = req.body;
-        const socket = req.user.socket;
-        if(body.emp === "" || parseInt(body.emp) === 0 || body.timeOffStartDate === "" || body.timeOffEndDate === "" || body.timeOffType === "" || body.wStartDate === "") {
-            return res.status(400).send({
-                success: false,
-                message: "Missing requirements"
-            });
+        body.user_id = req.user.id;
+        if (parseInt(body.timeOffType) === 4) {
+            if(body.emp === "" || parseInt(body.emp) === 0 || body.toffTime === "" || body.toffTimeDate === "" || body.timeOffType === "") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Missing requirements"
+                });
+            }
+            body.timeOffStartDate = null;
+            body.timeOffEndDate = null;
+            body.wStartDate = null;
+        } else {
+            if(body.emp === "" || parseInt(body.emp) === 0 || body.timeOffStartDate === "" || body.timeOffEndDate === "" || body.timeOffType === "" || body.wStartDate === "") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Missing requirements"
+                });
+            }
+            body.toffTime = null;
+            body.toffTimeDate = null;
         }
-        const empInfo = await getEmpInfo(body.emp);
+
         addTimeOff(body, async (err, result) => {
             if(err) {
                 console.log(err);
@@ -75,24 +90,10 @@ module.exports = {
                     message: "An unknown error has been occurred"
                 });
             }
-            let data = {
-                employee: `${empInfo[0].first_name} ${empInfo[0].last_name} ${empInfo[0].father_name}`,
-                project: empInfo[0].project_id,
-                department: empInfo[0].department,
-                position: empInfo[0].position_id
-            }
-            socket.emit("time-off-notification", data);
-            socket.on("new-time-off-notification", (data) => {
-                console.log(data);
-            });
-            console.log("Time Off Request Added");
             return res.status(200).send({
                 success: true
             });
         });
-
-
-
     },
     getDirectors: async (req, res) => {
         const body = req.body;
@@ -333,6 +334,7 @@ module.exports = {
     },
     uploadLetterFilePathToDB: async (req, res, next) => {
         let emp_id;
+        const id = parseInt(req.body.id);
         if(req.params.id) {
             emp_id = parseInt(req.params.id);
         } else {
@@ -342,7 +344,7 @@ module.exports = {
             });
         }
         if(req.fileValidationError) {
-            res.status(400).send({
+            return res.status(400).send({
                 success: false,
                 message: "Please choose correct file format"
             })
@@ -386,13 +388,21 @@ module.exports = {
                     addFileNames(data, (err, result) => {
                         if(err) {
                             console.log(err);
-                            req.flash("error_msg", "An unknown error has been occurred");
                             return res.status(400).send({
                                 success: false,
                                 message: "An unknown error has been occurred"
-                            })
+                            });
                         }
-                        res.send({
+                        approveTimeOffRequest(id, (err, result) => {
+                            if(err) {
+                                console.log(err);
+                                return res.status(400).send({
+                                    success: false,
+                                    message: "An unknown error has been occurred"
+                                });
+                            }
+                        });
+                        return res.send({
                             result
                         })
                     });
@@ -407,9 +417,18 @@ module.exports = {
                             return res.status(400).send({
                                 success: false,
                                 message: "An unknown error has been occurred"
-                            })
+                            });
                         }
-                        res.send({
+                        approveTimeOffRequest(id, (err, result) => {
+                            if(err) {
+                                console.log(err);
+                                return res.status(400).send({
+                                    success: false,
+                                    message: "An unknown error has been occurred"
+                                });
+                            }
+                        });
+                        return res.send({
                             result
                         });
                     });

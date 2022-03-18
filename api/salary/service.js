@@ -4,9 +4,10 @@ const { QueryTypes } = require("sequelize");
 module.exports = {
     getSalary: async () => {
         return await sequelize.query(`
-            SELECT sl.*, emp.working_days FROM Salaries as sl
+            SELECT sl.*, emp.working_days, emp.first_name, emp.last_name, emp.father_name FROM Salaries as sl
             LEFT JOIN Employees as emp ON sl.emp_id = emp.id
             WHERE emp.deletedAt IS NULL
+            AND emp.j_end_date IS NULL
         `, {
             logging: false,
             type: QueryTypes.SELECT
@@ -71,5 +72,40 @@ module.exports = {
                 emp_id
             }
         })
+    },
+    getSalariesByMonth: async () => {
+        return await sequelize.query(`
+            SELECT sbm.*, emp.first_name, emp.last_name, emp.father_name FROM SalaryByMonths as sbm
+            LEFT JOIN Employees as emp ON emp.id = sbm.emp_id
+            WHERE emp.deletedAt IS NULL
+            AND emp.j_end_date IS NULL
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
+    },
+    getMonthlyWorkingDays: async (limit) => {
+        return await sequelize.query(`
+            SELECT * FROM MonthlyWorkDays
+            ORDER BY year DESC, month DESC
+            LIMIT :limit OFFSET 0
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                limit
+            }
+        });
+    },
+    addCalculatedGrossToDB: (data, cb) => {
+        SalaryByMonth.create({
+            emp_id: data.emp_id,
+            salary_date: data.salary_date,
+            salary_cost: data.salary_cost
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
     }
 }

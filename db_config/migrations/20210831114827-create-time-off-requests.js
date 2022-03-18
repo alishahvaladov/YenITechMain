@@ -22,15 +22,23 @@ module.exports = {
       },
       timeoff_start_date: {
         type: Sequelize.DATEONLY,
-        allowNull: false
+        allowNull: true
       },
       timeoff_end_date: {
         type: Sequelize.DATEONLY,
-        allowNull: false
+        allowNull: true
       },
       timeoff_job_start_date: {
         type: Sequelize.DATEONLY,
-        allowNull: false
+        allowNull: true
+      },
+      timeoff_time: {
+        type: Sequelize.TIME,
+        allowNull: true
+      },
+      timeoff_time_date: {
+        type: Sequelize.DATEONLY,
+        allowNull: true
       },
       emr_no: {
         type: Sequelize.STRING,

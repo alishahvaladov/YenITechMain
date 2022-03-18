@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
+    user_id: {
+      allowNull: false,
+      type: DataTypes.INTEGER
+    },
     emp_id: {
       type: DataTypes.INTEGER,
       allowNull: false
@@ -38,7 +42,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     timeoff_job_start_date: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: true
+    },
+    timeoff_time: {
+      type: DataTypes.TIME,
+      allowNull: true
+    },
+    timeoff_time_date: {
+      type: DataTypes.DATEONLY,
+      allowNull: true
     },
     emr_no: {
       type: DataTypes.STRING,

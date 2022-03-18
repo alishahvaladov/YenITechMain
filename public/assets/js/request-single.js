@@ -54,7 +54,7 @@ const renderPage = () => {
             
             rightContHtml = `
                 <div>
-                    <img src="/employees/directs/time-off/form/${result.emp_id}-${result.first_name.toLocaleLowerCase()}-${result.last_name.toLocaleLowerCase()}-${result.father_name.toLocaleLowerCase()}/${filename}" style="height: 400px">
+                    <img src="/employees/directs/time-off/form/${result.emp_id}-${result.first_name.toLocaleLowerCase()}-${result.last_name.toLocaleLowerCase()}-${result.father_name.toLocaleLowerCase()}/${filename}" style="width: 300px">
                 </div>
             `
         }

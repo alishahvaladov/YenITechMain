@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class MonthlySalary extends Model {
+  class MonthlyWorkDays extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,12 +12,23 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-  };
-  MonthlySalary.init({
-    emp_id: DataTypes.INTEGER
+  }
+  MonthlyWorkDays.init({
+    work_days: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    month: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    year: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
   }, {
     sequelize,
-    modelName: 'MonthlySalary',
+    modelName: 'MonthlyWorkDays',
   });
-  return MonthlySalary;
+  return MonthlyWorkDays;
 };

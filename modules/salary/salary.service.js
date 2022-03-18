@@ -1,4 +1,5 @@
-const { Salary, Employee } = require("../../db_config/models");
+const { QueryTypes } = require("sequelize");
+const { Salary, Employee, sequelize } = require("../../db_config/models");
 
 module.exports = {
     getSalaryPage: (id, cb) => {
@@ -33,13 +34,15 @@ module.exports = {
             cb(err);
         });
     },
-    getSalaries: (cb) => {
-        Salary.findAll({
-            order: [['createdAt', 'DESC']]
-        }).then((result) => {
-            cb(null, result);
-        }).catch((err) => {
-            cb(err);
+    getSalaries: async () => {
+        return await sequelize.query(`
+            SELECT sal.* FROM Salaries as sal
+            LEFT JOIN Employees as emp ON emp.id = sal.emp_id
+            WHERE emp.deletedAt IS NULL
+            AND emp.j_end_date IS NULL
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT
         });
     }
 }

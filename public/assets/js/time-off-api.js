@@ -5,7 +5,11 @@ const empNameForWord = $("#empNameForWord");
 const deptDirectorInp = $("#deptDirector");
 const directorInp = $("#director");
 const uploadDoc = document.querySelector("#uploadDoc");
-
+const toffStartDiv = document.querySelector('.toff-start-date');
+const toffEndDiv = document.querySelector('.toff-end-date');
+const toffTimeDiv = document.querySelector(".toff-authorized-time");
+const toffTimeDateDiv = document.querySelector('.timeoff-time-date');
+const wStartDateDiv = document.querySelector('.w-start-date');
 
 empSelector.change(function () {
     let id = empSelector.val();
@@ -40,6 +44,9 @@ const applyBtn = document.querySelector("#toffApplyBtn");
 const nextBtn = document.querySelector("#toffNextBtn");
 const timeOffSelectContainer = document.querySelector(".time-off-select-container");
 const wordBtnContainer = document.querySelector(".word-btn-container");
+const toffTime = document.querySelector("#toff-authorized-time");
+const toffTimeDate = document.querySelector('#timeoff-time-date');
+
 
 timeOffEndDate.addEventListener("change", () => {
     let timeOffEndDateValue = timeOffEndDate.value.split("-");
@@ -72,7 +79,9 @@ const sendTimeOffRequest = () => {
                     timeOffStartDate: timeOffStartDate.value,
                     timeOffEndDate: timeOffEndDate.value,
                     wStartDate: wStartDate.value,
-                    emp: emp.value,
+                    toffTime: toffTime.value,
+                    toffTimeDate: toffTimeDate.value,
+                    emp: emp.value
                 }).done((data) => {
                     let html = `
                         <div class="alert alert-success alert-dismissible fade show">
@@ -190,4 +199,22 @@ nextBtn.addEventListener("click", () => {
          document.body.appendChild(form);
          form.submit();
     }); 
+});
+
+
+timeOffType.addEventListener('change', () => {
+    console.log(timeOffType.value);
+    if (parseInt(timeOffType.value) === 4) {
+        toffStartDiv.classList.add('d-none');
+        toffEndDiv.classList.add('d-none');
+        wStartDateDiv.classList.add('d-none');
+        toffTimeDiv.classList.remove('d-none');
+        toffTimeDateDiv.classList.remove('d-none');
+    } else {
+        toffStartDiv.classList.remove('d-none');
+        toffEndDiv.classList.remove('d-none');
+        wStartDateDiv.classList.remove('d-none');
+        toffTimeDiv.classList.add('d-none');
+        toffTimeDateDiv.classList.add('d-none');
+    }
 });

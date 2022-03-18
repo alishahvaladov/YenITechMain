@@ -58,6 +58,11 @@ module.exports = {
     },
     addTimeOffNonUser: (req, res) => {
         const data = req.body;
+        const timeOffType = data.timeoff_type;
+        if (parseInt(timeOffType) === 4) {
+            data.timeoff_start_date = null;
+            data.timeoff_end_date = null;
+        }
         addTimeOffNonUser(data, (err, result) => {
             if(err) {
                 console.log(err);
