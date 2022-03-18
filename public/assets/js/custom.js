@@ -63,3 +63,12 @@ if(fpCancelBtn) {
    });
 }
 
+$.get('http://localhost:3000/api/notification', (res) => {
+      console.log(res);
+});
+
+setInterval(() => {
+   $.get('http://localhost:3000/api/notification', (res) => {
+      console.log(res);
+   });
+}, 5000)

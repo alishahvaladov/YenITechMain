@@ -9,13 +9,10 @@ const warningModalApprove = document.querySelector("#warningModalApprove");
 const warningModal = document.querySelector(".warning-modal");
 
 const renderPage = () => {
-    console.log("salam");
     $.get("http://localhost:3000/api/fine", (res) => {
         let html = "";
-        console.log(res);
         res.result.forEach(fine => {
             let date = new Date(fine.updatedAt);
-            console.log(fine);
             date = date.toLocaleDateString();
             const splitDate = date.toString().split("/");
             date = `${splitDate[1]}.${splitDate[0]}.${splitDate[2]}`;
@@ -74,14 +71,12 @@ const renderPage = () => {
         const resetFineBtnS = document.querySelectorAll(".reset-fine");
         const resetApprovedFineBtns = document.querySelectorAll(".reset-approved-fine");
 
-        // console.log(resetApprovedFineBtns.length);
         if (resetApprovedFineBtns.length > 0) {
             resetApprovedFineBtns.forEach(resetApprovedBtn => {
                 resetApprovedBtn.addEventListener("click", () => {
                     loading.classList.remove("d-none");
                     const id = resetApprovedBtn.value;
                     $.get(`http://localhost:3000/api/fine/reset-approved-fine/${id}`, (res) => {
-                        console.log(res);
                         setTimeout(renderPage, 1500);
                     });
                 });
