@@ -20,7 +20,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      unofficial_net: {
+      unofficial_pay: {
         type: Sequelize.INTEGER,
         allowNull: true
       },

@@ -8,6 +8,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      header: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      description: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       belongs_to_role: {
         type: Sequelize.INTEGER,
         allowNull: false 
@@ -18,6 +26,14 @@ module.exports = {
       },
       belongs_to_table: {
         type: Sequelize.STRING,
+        allowNull: false
+      },
+      url: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      importance: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       createdAt: {

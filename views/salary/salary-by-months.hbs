@@ -8,6 +8,25 @@
                 <th>Salary Date</th>
                 <th><button class="btn btn-success" id="export"><i class="bi bi-file-earmark-excel"></i> Export</button></th>
             </thead>
+            <thead>
+                <th><input class="py-1 px-2" type="text" id="emp"></th>
+                <th><input class="py-1 px-2" type="number" id="min" placeholder="min"> <input class="py-1 px-2" type="number" id="max" placeholder="max"> </th>
+                <th>
+                    <div class="d-flex">
+                        <select class="py-1 px-2 mx-1" id="month">
+                            
+                        </select>
+                        <select class="py-1 px-2 mx-1" id="year">
+                        </select>
+                        <div class="mx-1" id="resetDate">
+                            <span class="btn btn-outline-primary d-flex justify-content-center align-items-center">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </span>
+                        </div>
+                    </div>
+                </th>
+                <th class="text-center"></th>
+            </thead>
             <tbody>
                 <tr>
                     <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>

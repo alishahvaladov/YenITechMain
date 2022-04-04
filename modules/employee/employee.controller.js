@@ -17,6 +17,7 @@ const {
     addLogixDataToLogixDB,
     checkIfTabelNoExists
 } = require("./employee.service");
+const { addSalary } = require('../salary/salary.service');
 const { Employee } = require("../../db_config/models");
 const {Op} = require("sequelize");
 const path = require("path");
@@ -735,6 +736,7 @@ module.exports = {
     },
     uploadFilePathToDB: async (req, res, next) => {
         let emp_id;
+        console.log(req.body.u_pay);
         if(req.params.id) {
             emp_id = req.params.id;
         }
@@ -757,9 +759,11 @@ module.exports = {
             }
         }
         let data = {};
+        let salaryData = {};
 
         checkIfEmpExists(emp_id, (err, empRes) => {
             if(err) {
+                console.log(err);
                 req.flash("error_msg", "An unknown error has been occurred");
                 return res.redirect("/employee/emp-files/" + emp_id);
             }
@@ -779,6 +783,22 @@ module.exports = {
                         files.resignations = JSON.stringify(req.files);
                         data.files = JSON.stringify(files);
                     } else if (req.url.includes("/emp-files/")) {
+                        const gross = req.body.gross;
+                        const unofficialPay = req.body.u_pay;
+                        if (parseInt(unofficialPay) < 1) {
+                            unofficialPay = null
+                        }
+                        salaryData.gross = gross;
+                        salaryData.unofficial_pay = unofficialPay;
+                        salaryData.emp_id = emp_id;
+                        salaryData.user_id = req.user.id;
+                        addSalary(salaryData, (err , result) => {
+                            if (err) {
+                                console.log(err);
+                                req.flash('error_msg', 'An unkown error has been occurred');
+                                return res.redirect('/employee/emp-files' + emp_id);
+                            }
+                        });
                         files.recruitment = JSON.stringify(req.files);
                         data.files = JSON.stringify(files);
                     }
@@ -803,6 +823,22 @@ module.exports = {
                         empData.resignations = JSON.stringify(req.files);
                     } else if (req.url.includes("/emp-files/")) {
                         empData.recruitment = JSON.stringify(req.files);
+                        const gross = req.body.gross;
+                        const unofficialPay = req.body.u_pay;
+                        if (parseInt(unofficialPay) < 1) {
+                            unofficialPay = null
+                        }
+                        salaryData.gross = gross;
+                        salaryData.unofficial_pay = unofficialPay;
+                        salaryData.emp_id = emp_id;
+                        salaryData.user_id = req.user.id;
+                        addSalary(salaryData, (err , result) => {
+                            if (err) {
+                                console.log(err);
+                                req.flash('error_msg', 'An unkown error has been occurred');
+                                return res.redirect('/employee/emp-files' + emp_id);
+                            }
+                        });
                     }
                     data.user_id = req.user.id;
                     data.emp_id = emp_id;

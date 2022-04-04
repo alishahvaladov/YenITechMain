@@ -107,5 +107,208 @@ module.exports = {
         }).catch((err) => {
             cb(err);
         });
+    },
+    search: async (data) => {
+        let query = `
+            SELECT slr.*, emp.first_name, emp.last_name, emp.father_name FROM Salaries as slr
+            LEFT JOIN Employees as emp ON slr.emp_id = emp.id
+            WHERE emp.deletedAt IS NULL 
+            AND emp.j_end_date IS NULL
+        `;
+        let countQuery = `
+            SELECT COUNT(*) as count FROM Salaries as slr
+            LEFT JOIN Employees as emp ON slr.emp_id = emp.id
+            WHERE emp.deletedAt IS NULL 
+            AND emp.j_end_date IS NULL
+        `;
+        const result = {};
+        let replacements = {};
+        const emp = data.emp;
+        const uPay = parseInt(data.uPay);
+        const min = data.min;
+        const max = data.max;
+
+        if (emp !== null && emp !== "" && emp !== " ") {
+            const splitEmp = emp.split(' ');
+            if(splitEmp.length === 1) {
+                query += `
+                    AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)
+                `
+                countQuery += `
+                    AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)
+                `
+                replacements.empName = `%${splitEmp[0]}%`;
+            }
+            if(splitEmp.length === 2) {
+                query += `
+                    AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.first_name like :empName AND emp.father_name like :empName2) OR (emp.last_name like :empName AND emp.father_name like :empName2))
+                `
+                countQuery += `
+                    AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.first_name like :empName AND emp.father_name like :empName2) OR (emp.last_name like :empName AND emp.father_name like :empName2))
+                `
+                replacements.empName = `%${splitEmp[0]}%`;
+                replacements.empName2 = `%${splitEmp[1]}%`;
+            }
+            if (splitEmp.length > 2) {
+                query += `
+                    AND (emp.first_name like :empName AND emp.last_name like :empName2 AND emp.father_name like :empName3)
+                `
+                countQuery += `
+                    AND (emp.first_name like :empName AND emp.last_name like :empName2 AND emp.father_name like :empName3)
+                `
+                replacements.empName = `%${splitEmp[0]}%`;
+                replacements.empName2 = `%${splitEmp[1]}%`;
+                replacements.empName3 = `%${splitEmp[2]}%`;
+            }
+        }
+        if (uPay === 1 || uPay === 2) {
+            if (uPay === 1) {
+                query += `
+                    AND slr.unofficial_pay IS NOT NULL
+                `
+                countQuery += `
+                    AND slr.unofficial_pay IS NOT NULL
+                `
+            }
+            if (uPay === 2) {
+                query += `
+                    AND slr.unofficial_pay IS NULL
+                `
+                countQuery += `
+                    AND slr.unofficial_pay IS NULL
+                `
+            }
+        }
+        if (min !== null && min !== "" && min !== " ") {
+            query += `
+                AND slr.gross >= :min
+            `
+            countQuery += `
+                AND slr.gross >= :min
+            `
+            replacements.min = min;
+        }
+        if (max !== null && max !== "" && max !== " ") {
+            query += `
+                AND slr.gross <= :max
+            `
+            countQuery += `
+                AND slr.gross <= :max
+            `
+            replacements.max = max;
+        }
+        result.salaries = await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
+        });
+        result.countSalary = await sequelize.query(countQuery, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
+        });
+        return result;
+    },
+    searchSalaryByMonts: async (data) => {
+        let query = `
+            SELECT sbm.*, emp.first_name, emp.last_name, emp.father_name FROM SalaryByMonths as sbm
+            LEFT JOIN Employees as emp ON sbm.emp_id = emp.id
+            WHERE emp.deletedAt IS NULL 
+            AND emp.j_end_date IS NULL
+        `;
+        let countQuery = `
+            SELECT COUNT(*) as count FROM SalaryByMonths as sbm
+            LEFT JOIN Employees as emp ON sbm.emp_id = emp.id
+            WHERE emp.deletedAt IS NULL 
+            AND emp.j_end_date IS NULL
+        `;
+        const result = {};
+        let replacements = {};
+        const emp = data.emp;
+        const month = data.month;
+        const year = data.year;
+        const min = data.min;
+        const max = data.max;
+
+        if (emp !== null && emp !== "" && emp !== " ") {
+            const splitEmp = emp.split(' ');
+            if(splitEmp.length === 1) {
+                query += `
+                    AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)
+                `
+                countQuery += `
+                    AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)
+                `
+                replacements.empName = `%${splitEmp[0]}%`;
+            }
+            if(splitEmp.length === 2) {
+                query += `
+                    AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.first_name like :empName AND emp.father_name like :empName2) OR (emp.last_name like :empName AND emp.father_name like :empName2))
+                `
+                countQuery += `
+                    AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.first_name like :empName AND emp.father_name like :empName2) OR (emp.last_name like :empName AND emp.father_name like :empName2))
+                `
+                replacements.empName = `%${splitEmp[0]}%`;
+                replacements.empName2 = `%${splitEmp[1]}%`;
+            }
+            if (splitEmp.length > 2) {
+                query += `
+                    AND (emp.first_name like :empName AND emp.last_name like :empName2 AND emp.father_name like :empName3)
+                `
+                countQuery += `
+                    AND (emp.first_name like :empName AND emp.last_name like :empName2 AND emp.father_name like :empName3)
+                `
+                replacements.empName = `%${splitEmp[0]}%`;
+                replacements.empName2 = `%${splitEmp[1]}%`;
+                replacements.empName3 = `%${splitEmp[2]}%`;
+            }
+        }
+        if (month !== null && month !== "" && month !== " " && month !== "Ay") {
+            query += `
+                AND MONTH(sbm.salary_date) = :month
+            `
+            countQuery += `
+                AND MONTH(sbm.salary_date) = :month
+            `
+            replacements.month = month;
+        }
+        if (year !== null && year !== "" && year !== " " && year !== "İl") {
+            query += `
+                AND YEAR(sbm.salary_date) = :year
+            `
+            countQuery += `
+                AND YEAR(sbm.salary_date) = :year
+            `
+            replacements.year = year;
+        }
+        if (min !== null && min !== "" && min !== " ") {
+            query += `
+                AND sbm.salary_cost >= :min
+            `
+            countQuery += `
+                AND sbm.salary_cost >= :min
+            `
+            replacements.min = min;
+        }
+        if (max !== null && max !== "" && max !== " ") {
+            query += `
+                AND sbm.salary_cost <= :max
+            `
+            countQuery += `
+                AND sbm.salary_cost <= :max
+            `
+            replacements.max = max;
+        }
+        result.salaries = await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
+        });
+        result.countSalary = await sequelize.query(countQuery, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
+        });
+        return result;
     }
 }

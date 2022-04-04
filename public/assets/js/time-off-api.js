@@ -182,22 +182,39 @@ nextBtn.addEventListener("click", () => {
             sedrName,
             directorName
         }
-        const method = "post";
-        let form = document.createElement('form');
-        form.setAttribute("method", method);
-        form.setAttribute("action", "http://localhost:5000/day-off/form");
-        
-        for (let key in params) {
-            if (params.hasOwnProperty(key)) {
-               const hiddenField = document.createElement("input");
-               hiddenField.setAttribute('type', 'hidden');
-               hiddenField.setAttribute('name', key);
-               hiddenField.setAttribute('value', params[key]);
-               form.appendChild(hiddenField);
+        $.ajax({
+            method: "post",
+            url: "http://localhost:5000/day-off/form/validate",
+            data: params,
+            dataType: 'json',
+            success: function(json, status) {
+                if (json.success === true) {
+                    const method = "post";
+                    let form = document.createElement('form');
+                    form.setAttribute("method", method);
+                    form.setAttribute("action", "http://localhost:5000/day-off/form/download");
+                    
+                    for (let key in params) {
+                        if (params.hasOwnProperty(key)) {
+                        const hiddenField = document.createElement("input");
+                        hiddenField.setAttribute('type', 'hidden');
+                        hiddenField.setAttribute('name', key);
+                        hiddenField.setAttribute('value', params[key]);
+                        form.appendChild(hiddenField);
+                        }
+                    }
+                    document.body.appendChild(form);
+                    form.submit();
+                } else if (json.success === false ) {
+                    alert(json.message);
+                }
+            },
+            error: function(result, status, err) {
+                console.log(result);
+                console.log(status);
+                console.log(err);
             }
-         }
-         document.body.appendChild(form);
-         form.submit();
+        });
     }); 
 });
 

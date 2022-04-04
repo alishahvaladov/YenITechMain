@@ -14,6 +14,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Notification.init({
+    header: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     belongs_to_role: {
       type: DataTypes.INTEGER,
       allowNull: false 
@@ -24,6 +32,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     belongs_to_table: {
       type: DataTypes.STRING,
+      allowNull: false
+    },
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    importance: {
+      type: DataTypes.INTEGER,
       allowNull: false
     },
   }, {

@@ -33,7 +33,7 @@ module.exports = {
         allowNull: true
       },
       timeoff_time: {
-        type: Sequelize.TIME,
+        type: Sequelize.INTEGER,
         allowNull: true
       },
       timeoff_time_date: {

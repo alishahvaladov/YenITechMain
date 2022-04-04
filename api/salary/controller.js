@@ -1,4 +1,4 @@
-const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB } = require("./service");
+const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB, search, searchSalaryByMonts } = require("./service");
 const jsDateF = new Date();
 const month = jsDateF.getMonth();
 const year = jsDateF.getFullYear();
@@ -270,5 +270,35 @@ module.exports = {
         }, 10000);
         res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         res.download(excelPath, "Aylıq Maaşlar.xlsx");
+    },
+    search: async (req, res) => {
+        const data = req.body;
+        try {
+            const result = await search(data);
+            return res.status(200).send({
+                result: result
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(404).json({
+                success: false,
+                message: "An unkown error has been occurred"
+            });
+        }
+    },
+    searchSalaryByMonts: async (req, res) => {
+        const data = req.body;
+        try {
+            const result = await searchSalaryByMonts(data);
+            return res.status(200).send({
+                result: result
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(404).json({
+                success: false,
+                message: "An unkown error has been occurred"
+            });
+        }
     }
 }

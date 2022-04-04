@@ -8,6 +8,19 @@
                 <th>Gross</th>
                 <th class="text-center"><a class="btn btn-outline-info" href="/salaries/salary-by-months">Aylıq alınan maaşlar</a></th>
             </thead>
+            <thead>
+                <th><input type="text" id="emp"></th>
+                <th>
+                    <select class="p2" id="u_pay">
+                        <option hidden>Seçin</option>
+                        <option value="0">Hamısı</option>
+                        <option value="1">Olanlar</option>
+                        <option value="2">Olmayanlar</option>
+                    </select>
+                </th>
+                <th><input class="px-2" type="number" id="min" placeholder="min"> <input class="px-2" type="number" id="max" placeholder="max"> </th>
+                <th class="text-center">Actions</th>
+            </thead>
             <tbody>
                 <tr>
                     <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>

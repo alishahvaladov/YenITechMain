@@ -34,18 +34,18 @@ module.exports = (sequelize, DataTypes) => {
     },
     timeoff_start_date: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: true
     },
     timeoff_end_date: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: true
     },
     timeoff_job_start_date: {
       type: DataTypes.DATEONLY,
       allowNull: true
     },
     timeoff_time: {
-      type: DataTypes.TIME,
+      type: DataTypes.INTEGER,
       allowNull: true
     },
     timeoff_time_date: {

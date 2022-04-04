@@ -91,10 +91,10 @@ module.exports = {
                 replacements.empName = `%${splittedName[0]}%`;
             } else if (splittedName.length === 2) {
                 query += `
-                    AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.first_name like :empName AND emp.father_name like :empName2))
+                    AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.first_name like :empName AND emp.father_name like :empName2) OR (emp.last_name like :empName AND emp.father_name like :empName2))
                 `
                 countQuery += `
-                    AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.first_name like :empName AND emp.father_name like :empName2))
+                    AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.first_name like :empName AND emp.father_name like :empName2) OR (emp.last_name like :empName AND emp.father_name like :empName2))
                 `
                 replacements.empName = `%${splittedName[0]}%`;
                 replacements.empName2 = `%${splittedName[1]}%`;

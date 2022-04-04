@@ -21,7 +21,7 @@ module.exports = {
                 });
             }
         } else {
-            res.status(400).json({
+            res.status(200).json({
                 new_notification: false,
                 message: "No notification found"
             });
