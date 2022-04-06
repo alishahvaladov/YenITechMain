@@ -3,6 +3,7 @@ const loading = document.querySelector(".loading");
 const empEditModal = document.querySelector(".employee-full-data-modal");
 const empModalCloseBtn = document.querySelector(".empModalCloseBtn");
 const exportToExcelBtn = document.querySelector("#exportToExcel");
+const empEditCancelBtn = document.querySelector("#empEditCancelBtn");
 
 const empName = document.querySelector("#name");
 const empMName = document.querySelector("#midName");
@@ -445,6 +446,9 @@ const renderPage = () => {
          pageFuncs();
          empEditModule();
       }
+   });
+   empEditCancelBtn.addEventListener("click", () => {
+      empEditModal.classList.add('d-none');
    });
 }
 const exportToExcel = () => {

@@ -5,6 +5,8 @@ module.exports = {
         Position.create({
             user_id: data.user_id,
             name: data.name
+        }, {
+            logging: false
         }).then((position) => {
             console.log(position);
             cb()
@@ -13,7 +15,9 @@ module.exports = {
         })
     },
     getPositions: (cb) => {
-        Position.findAll().then((results) => {
+        Position.findAll({
+            logging: false
+        }).then((results) => {
             cb(null, results);
         }).catch((err) => {
             cb(err);
@@ -23,7 +27,8 @@ module.exports = {
         Position.destroy({
             where: {
                 id: id
-            }
+            },
+            logging: false
         }).then((result) => {
             cb(null, result);
         }).catch((err) => {
@@ -34,7 +39,8 @@ module.exports = {
         Position.findOne({
             where: {
                 id: id
-            }
+            },
+            logging: false
         }).then((result) => {
             cb(null, result);
         }).catch((err) => {

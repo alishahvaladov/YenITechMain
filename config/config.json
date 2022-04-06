@@ -1,6 +1,5 @@
 {
   "roles" : {
-    "1" : "Super Admin",
     "2" : "Admin",
     "3": "Financier",
     "4": "HR Assistance",

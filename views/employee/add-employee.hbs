@@ -127,6 +127,7 @@
                     <div class="toff-emp-comment">
                         <label for="project_id">Proyekt:</label>
                         <select class="select-width" name="project_id" id="project_id">
+                            <option value="" hidden>Seçin</option>
                             {{#if pjResult}}
                                 {{#each pjResult}}
                                     <option value="{{this.id}}">{{this.name}}</option>
@@ -137,21 +138,13 @@
                     <div class="toff-emp-comment">
                         <label for="department_id">Departament:</label>
                         <select class="select-width" name="department" id="department_id">
-                            {{#if deptResult}}
-                                {{#each deptResult}}
-                                    <option value="{{this.id}}">{{this.name}}</option>
-                                {{/each}}
-                            {{/if}}
+                            
                         </select>
                     </div>
                     <div class="toff-emp-comment">
                         <label for="position_id">Vəzifəsi:</label>
                         <select class="select-width" name="position_id" id="position_id">
-                            {{#if psResult}}
-                                {{#each psResult}}
-                                    <option value="{{this.id}}">{{this.name}}</option>
-                                {{/each}}
-                            {{/if}}
+                            
                         </select>
                     </div>
                 </div>

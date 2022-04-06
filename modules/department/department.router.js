@@ -1,7 +1,7 @@
 const { addDepartment, deleteDepartment, getDepartments, updateDepartment, getDepartment} = require("./department.controller");
 const express = require("express");
 const router = express.Router();
-const {super_admin} = require("../auth/auth");
+const {super_admin, checkRoles} = require("../auth/auth");
 
 
 router.get("/add-department", super_admin, (req, res) => {

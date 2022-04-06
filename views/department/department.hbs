@@ -1,36 +1,25 @@
 <div class="department-table">
     {{> messages }}
+    <h2 class="text-center mb-4">Departament</h2>
     <table class="table table-striped">
     <div class="container">
             <thead>
-            <th></th>
-            <th></th>
-            <th></th>
             <th>Department Name</th>
-            <th>Project</th>
-            <th>Department Manager</th>
+            {{!-- <th>Project</th> --}}
+            {{!-- <th>Department Manager</th> --}}
             <th>
                 <a class="btn btn-outline-success btn-sm" href="/department/add-department">Əlavə <i class="bi bi-plus-circle"></i></a>
             </th>
-            <th></th>
-            <th></th>
-            <th></th>
             </thead>
             <tbody>
             {{#if departments}}
                 {{#each departments}}
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
                         <td>{{dataValues.name}}</td>
                         <td>
                             <a class="btn btn-outline-danger btn-sm" href="/department/delete/{{dataValues.id}}"><i class="bi bi-x-circle"></i></a>
                             <a class="btn btn-outline-secondary btn-sm" href="/department/update/{{dataValues.id}}"><i class="bi bi-pencil-square"></i></a>
                         </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
                     </tr>
                 {{/each}}
             {{/if}}

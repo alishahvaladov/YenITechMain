@@ -1,8 +1,16 @@
 <div class="add-department">
-    <form action="" method="post">
-        Department Name <input type="text" name="name">
-        <button type="submit">Add Department</button>
+    {{> messages }}
+    <div class="form-group">
+        <input type="text" class="form-control" id="inputPassword4" placeholder="Departament adı" name="name">
+    </div>
+    <div class="projects-header my-3">
+        <h3 class="text-center">Zəhmət olmasa aid olduğu layihələri və ya layihəni seçin</h3>
+    </div>
+    <div class="projects d-flex justify-content-between">
+        
+    </div>
 
-        {{> messages}}
-    </form>
+    <button type="submit" class="btn btn-primary d-flex float-end mt-3" id="submitDepartment">Əlavə Et</button>
 </div>
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/add-department-api.js"></script>

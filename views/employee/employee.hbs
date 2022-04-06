@@ -141,7 +141,7 @@
 
 <div class="d-none employee-full-data-modal position-fixed w-100 bg-dark bg-opacity-50 top-0" style="height: 100vh; left: 0">
     <div class="emp-modal-container w-100 h-100 d-flex justify-content-center align-items-center">
-        <div class="emp-modal-bg-light position-relative bg-light h-75 d-flex flex-wrap justify-content-between p-4" style="width: 30%; overflow-y: hidden;">
+        <div class="emp-modal-bg-light position-relative bg-light d-flex flex-wrap justify-content-between p-4" style="width: 40%; height: 85vh; overflow-y: hidden;">
             <h2 class="bold position-absolute w-100 text-center text-black py-2" style="left: 0; top: 15px; pointer-events: none">Əməkdaş Məlumatı</h2>
             <div class="close-emp-modal w-100">
                 <span class="btn float-end empModalCloseBtn">
@@ -151,7 +151,7 @@
             <div class="emp-infos d-flex flex-column mt-5 py-3">
                 <div class="w-100 d-flex flex-wrap" style="height: 20%">
                     <div class="profile-picture" style="width: 40%; height: 100%;">
-                        <img src="/assets/img/q.jpg" style="border: 1px solid #000; box-shadow: 2px 2px 5px #000; height: 100%; width: 100%; object-fit: cover; object-position: top">
+                        <img src="/assets/img/q.jpg" style="border: 1px solid #000; box-shadow: 2px 2px 5px #000; height: 100%; width: 100%; object-fit: contain;">
                     </div>
                     <div class="d-flex flex-column justify-content-between align-items-center" style="width: 60%; height: 100%">
                         <div class="d-flex justify-content-between w-100 px-4">
@@ -172,7 +172,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex flex-wrap justify-content-between mt-4" style="overflow-y: scroll; height: 35%">
+                <div class="d-flex flex-wrap justify-content-between mt-4" style="overflow-y: scroll; height: 30%">
                     <div class="gender my-2 d-flex w-100 justify-content-between">
                         <label class="bold" for="">Cinnsiyyəti</label>
                         <select name="sex" id="sex">
@@ -246,6 +246,10 @@
 
                         </select>
                     </div>
+                </div>
+                <div class="emp-edit-buttons d-flex justify-content-between align-items-center">
+                    <button class="btn btn-outline-danger" id="empEditCancelBtn">Ləğv Et</button>
+                    <button class="btn btn-outline-success" id="empEditApplyBtn">Təsdiqlə</button>
                 </div>
             </div>
         </div>

@@ -8,26 +8,22 @@ const shiftManual = document.querySelector(".shift-manual");
 if(projSelector) {
     projSelector.change(() => {
         let id = projSelector.val();
-        $.post("http://localhost:3000/api/department", {
-            id: id
-        }, (res) => {
+        $.get(`http://localhost:3000/api/department/by-project/${id}`, (res) => {
             const result = res.result;
             deptSelector.text(" ");
+            deptSelector.append(`<option value="" hidden>Seçin</option>`)
             for (let i = 0; i < result.length; i++) {
                 deptSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
             }
             console.log(result);
-        })
+        });
     });
 }
+
 if(deptSelector) {
     deptSelector.change(() => {
-        let projID = projSelector.val();
         let deptID = deptSelector.val();
-        $.post("http://localhost:3000/api/position", {
-            projID: projID,
-            deptID: deptID
-        }, (res) => {
+        $.get(`http://localhost:3000/api/position/by-department/${deptID}`, (res) => {
             const result = res.result;
             posSelector.text(" ");
             for (let i = 0; i < result.length; i++) {
@@ -37,8 +33,10 @@ if(deptSelector) {
         });
     });
 }
+
 const fullDay = document.querySelector("#full_day");
 const workingDayInput = document.querySelector("#working_days");
+
 if(fullDay) {
     fullDay.addEventListener("click", () => {
         if(fullDay.checked) {
@@ -51,7 +49,9 @@ if(fullDay) {
         }
     });
 }
+
 const recInputs = document.querySelectorAll(".recruitment-scans");
+
 if(recInputs) {
     recInputs.forEach(item => {
         item.addEventListener("change", () => {

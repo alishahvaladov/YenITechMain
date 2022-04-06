@@ -4,20 +4,23 @@
     "password": "yhayatytech20022021",
     "database": "test",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "logging": false
   },
   "test": {
     "username": "root",
     "password": "yhayatytech20022021",
     "database": "test",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "logging": false
   },
   "production": {
     "username": "root",
     "password": "yhayatytech20022021",
     "database": "test",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "logging": false
   }
 }

@@ -69,6 +69,6 @@ $.get('http://localhost:3000/api/notification', (res) => {
 
 setInterval(() => {
    $.get('http://localhost:3000/api/notification', (res) => {
-      console.log(res);
+      // console.log(res);
    });
 }, 5000)

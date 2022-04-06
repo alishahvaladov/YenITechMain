@@ -106,6 +106,8 @@ const profileAPI = require("./api/profile/api");
 const salaryAPI = require("./api/salary/api");
 const userAPI = require("./api/users/api");
 const notificationAPI = require("./api/notifications/api");
+const departmentAPI = require('./api/department/api');
+const positionAPI = require("./api/position/api");
 
 // Routers
 app.use("/", userRouter);
@@ -130,6 +132,8 @@ app.use("/api/profile", profileAPI);
 app.use("/api/salary", salaryAPI);
 app.use("/api/users", userAPI);
 app.use("/api/notification", notificationAPI);
+app.use("/api/department", departmentAPI);
+app.use("/api/position", positionAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });
