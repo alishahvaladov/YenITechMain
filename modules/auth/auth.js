@@ -49,8 +49,8 @@ module.exports = {
     },
     ensureActivated: (req, res, next) => {
         if(req.isAuthenticated() && req.user.active_status === 1) {
-            next();
-        } else if(req.user.active_status === 0) {
+            return next();
+        } else {
             req.flash("error_msg", "Please update password");
             return res.redirect("/update-password");
         }

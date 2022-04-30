@@ -1,11 +1,11 @@
-const { sequelize, FPrint, UnapprovedFPrints, ForgottenFPrints } = require("../../db_config/models");
+const { sequelize, FPrintDraft, UnapprovedFPrints, ForgottenFPrints } = require("../../db_config/models");
 const { QueryTypes} = require("sequelize");
 const date = new Date();
 let month = date.getMonth();
 
 module.exports = {
     getFPrints: async () => {
-        return await sequelize.query(`SELECT fp.*, emp.first_name, emp.last_name, emp.father_name, proj.name as projName, dept.name as deptName, pos.name as posName FROM Employees as emp LEFT JOIN FPrints as fp ON emp.id = fp.emp_id
+        return await sequelize.query(`SELECT fp.*, emp.first_name, emp.last_name, emp.father_name, proj.name as projName, dept.name as deptName, pos.name as posName FROM Employees as emp LEFT JOIN FPrintDrafts as fp ON emp.id = fp.emp_id
                                         LEFT JOIN Projects as proj ON emp.project_id = proj.id
                                         LEFT JOIN Departments as dept ON emp.department = dept.id
                                         LEFT JOIN Positions as pos ON emp.position_id = pos.id
@@ -16,7 +16,8 @@ module.exports = {
     },
     getFPrintsByDate: async (emp_id, date) => {
         month += 1;
-        return await sequelize.query(`SELECT DISTINCT fp.user_id, fp.emp_id, fp.f_print_date, fp.f_print_time, emp.first_name, emp.last_name, emp.father_name, proj.name as projName, dept.name as deptName, pos.name as posName FROM Employees as emp LEFT JOIN FPrints as fp ON emp.id = fp.emp_id
+        return await sequelize.query(`SELECT DISTINCT fp.user_id, fp.emp_id, fp.f_print_date, fp.f_print_time, emp.first_name, emp.last_name, emp.father_name, proj.name as projName, dept.name as deptName, pos.name as posName FROM Employees as emp 
+                                        LEFT JOIN FPrintDrafts as fp ON emp.id = fp.emp_id
                                         LEFT JOIN Projects as proj ON emp.project_id = proj.id
                                         LEFT JOIN Departments as dept ON emp.department = dept.id
                                         LEFT JOIN Positions as pos ON emp.position_id = pos.id
@@ -81,7 +82,7 @@ module.exports = {
         }
     },
     addLogixDataToDB: (data, cb) => {
-        FPrint.create({
+        FPrintDraft.create({
             user_id: data.user_id,
             emp_id: data.emp_id,
             f_print_date: data.f_print_date,

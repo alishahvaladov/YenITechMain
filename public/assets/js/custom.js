@@ -30,6 +30,7 @@ const day = date.getDate();
 const monthWN = date.getMonth();
 const month = monthsAz[monthWN];
 let timeElem = document.querySelector("#time");
+const mainProfilePicture = document.querySelector("#mainProfilePicture");
 
 let getTime = () => {
    const dateTime = new Date();
@@ -67,8 +68,14 @@ $.get('http://localhost:3000/api/notification', (res) => {
       console.log(res);
 });
 
-setInterval(() => {
-   $.get('http://localhost:3000/api/notification', (res) => {
-      // console.log(res);
-   });
-}, 5000)
+$.get('http://localhost:3000/api/profile/profile-picture', (res) => {
+   const filename = res.filename;
+   mainProfilePicture.src = filename;
+   console.log(filename);
+});
+
+// setInterval(() => {
+//    $.get('http://localhost:3000/api/notification', (res) => {
+//       console.log(res);
+//    });
+// }, 5000)

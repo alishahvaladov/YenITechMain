@@ -74,7 +74,6 @@ module.exports = {
             query += " AND DAY() = :fDay"
             countQuery += " AND DAY(nfp.date) = :fDay"
             replacements.fDay = data.qDay;
-            console.log(typeof data.qDay)
         }
         if (data.qMonth !== '' && data.qMonth !== "00" && data.qMonth !== 'ay') {
             query += " AND MONTH(nfp.date) = :fMonth"

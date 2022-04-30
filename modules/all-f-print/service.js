@@ -75,7 +75,6 @@ module.exports = {
         let countEnd = (" ) as Count");
 
         if(data.qEmployee !== '') {
-            console.log(data.qEmployee);
             let qEmp = data.qEmployee.split(" ");
             if(qEmp.length === 1) {
                 fpQuery += " AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)";
@@ -158,7 +157,6 @@ module.exports = {
             nfpECount += " AND DAY(nfp.date) = :fDay"
             nfpLCount += " AND DAY(nfp.date) = :fDay"
             replacements.fDay = data.qDay;
-            console.log(typeof data.qDay)
         }
         if (data.qMonth !== '' && data.qMonth !== "00" && data.qMonth !== 'ay') {
             fpQuery += " AND MONTH(fp.f_print_date) = :fMonth"

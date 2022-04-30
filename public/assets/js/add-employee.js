@@ -5,34 +5,32 @@ const shiftTypeSelect = document.querySelector("#select_shift_type");
 const shiftAuto = document.querySelector(".shift-auto");
 const shiftManual = document.querySelector(".shift-manual");
 
-if(projSelector) {
-    projSelector.change(() => {
-        let id = projSelector.val();
-        $.get(`http://localhost:3000/api/department/by-project/${id}`, (res) => {
-            const result = res.result;
-            deptSelector.text(" ");
-            deptSelector.append(`<option value="" hidden>Seçin</option>`)
-            for (let i = 0; i < result.length; i++) {
-                deptSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
-            }
-            console.log(result);
-        });
+projSelector.change(() => {
+    let id = projSelector.val();
+    $.get(`http://localhost:3000/api/department/by-project/${id}`, (res) => {
+        const result = res.result;
+        deptSelector.text(" ");
+        deptSelector.append(`<option value="" hidden>Seçin</option>`)
+        for (let i = 0; i < result.length; i++) {
+            deptSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
+        }
+        posSelector.html(" ");
+        console.log(result);
     });
-}
+});
 
-if(deptSelector) {
-    deptSelector.change(() => {
-        let deptID = deptSelector.val();
-        $.get(`http://localhost:3000/api/position/by-department/${deptID}`, (res) => {
-            const result = res.result;
-            posSelector.text(" ");
-            for (let i = 0; i < result.length; i++) {
-                posSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
-            }
-            console.log(result);
-        });
+deptSelector.change(() => {
+    let deptID = deptSelector.val();
+    $.get(`http://localhost:3000/api/position/by-department/${deptID}`, (res) => {
+        const result = res.result;
+        posSelector.text(" ");
+        posSelector.append(`<option value="" hidden>Seçin</option>`)
+        for (let i = 0; i < result.length; i++) {
+            posSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
+        }
+        console.log(result);
     });
-}
+});
 
 const fullDay = document.querySelector("#full_day");
 const workingDayInput = document.querySelector("#working_days");

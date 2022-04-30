@@ -45,14 +45,12 @@ module.exports = {
             }
         }).then((dept) => {
             if(dept) {
-                console.log(dept);
                 deleteDepartment(id, (err, result) => {
                     if (err) {
                         console.log(err);
                         req.flash("error_msg", "This department doesn't exist")
                         return res.redirect("/department");
                     }
-                    console.log(result);
                     req.flash("success_msg", "Department has been deleted");
                     return res.redirect("/department");
                 });
@@ -74,7 +72,6 @@ module.exports = {
                 req.flash("error_msg", "An unknown error occurred. Please contact Sys Admin");
                 return res.redirect("/department");
             }
-            console.log(result);
             const departments = result;
             if(req.user.role === 5) {
                 return res.render("department/department", {
@@ -109,7 +106,6 @@ module.exports = {
                 req.flash("error_msg", "An unknown error occurred. Please contact sysadmin");
                 return res.redirect('/department/update/' + id);
             }
-            console.log(result);
             req.flash("success_msg", "Department has been updated");
             return res.redirect("/department/update/" + id);
         });

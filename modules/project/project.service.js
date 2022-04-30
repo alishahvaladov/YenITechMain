@@ -9,8 +9,10 @@ module.exports = {
             address: data.address,
             project_manager_id: data.project_manager_id,
             parent_id: data.parent_id
+        }, {
+            logging: false
         }).then((project) => {
-            cb()
+            cb(null, project)
         }).catch(err => {
             cb(err);
         })
@@ -21,9 +23,9 @@ module.exports = {
             order: [['createdAt', 'DESC']],
             where: {
                 parent_id: null
-            }
+            },
+            logging: false
         }).then((results) => {
-            console.log(results);
             cb(null, results);
         }).catch((err) => {
             cb(err);
@@ -33,7 +35,8 @@ module.exports = {
         Project.findOne({
             where: {
                 id: id
-            }
+            },
+            logging: false
         }).then((result) => {
             cb(null, result);
         }).catch((err) => {
@@ -49,7 +52,8 @@ module.exports = {
         }, {
             where: {
                 id: id
-            }
+            },
+            logging: false
         }).then((result) => {
             cb(null, result);
         }).catch((err) => {
@@ -60,7 +64,8 @@ module.exports = {
         Project.destroy({
             where: {
                 id: id
-            }
+            },
+            logging: false
         }).then((result) => {
             cb(null, result);
         }).catch((err) => {

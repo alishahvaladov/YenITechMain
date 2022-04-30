@@ -27,10 +27,11 @@ empSelector.change(function () {
             projID: res.result[0].project_id,
             deptID: res.result[0].department
         }, (res) => {
-            const deptDirector = `${res.result.deptDirector[0].first_name} ${res.result.deptDirector[0].last_name}`;
-            const director = `${res.result.director[0].first_name} ${res.result.director[0].last_name}`;
-            deptDirectorInp.val(deptDirector);
-            directorInp.val(director);
+            // console.log(res);
+            // const deptDirector = `${res.result.deptDirector[0].first_name} ${res.result.deptDirector[0].last_name}`;
+            // const director = `${res.result.director[0].first_name} ${res.result.director[0].last_name}`;
+            // deptDirectorInp.val(deptDirector);
+            // directorInp.val(director);
         });
     });
 });
@@ -88,9 +89,11 @@ const sendTimeOffRequest = () => {
                             Məzuniyyət sorğusu əlavə olundu
                         </div>
                     `
+                    $("body").css("cursor", "progress")
                     messageDIV.innerHTML = html;
                     setTimeout(() => {
                         messageDIV.innerHTML = "";
+                        location.href = "/timeoffrequests"
                     }, 2000);
                 }).fail((err) => {
                     const message = err.responseJSON.message;
@@ -105,6 +108,17 @@ const sendTimeOffRequest = () => {
                     }, 2000);
                 });
             }
+        }).catch((err) => {
+            const message = err.responseJSON.message;
+            let html = `
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    ${message}
+                </div>
+            `
+            messageDIV.innerHTML = html;
+            setTimeout(() => {
+                messageDIV.innerHTML = "";
+            }, 2000);
         })
     }
     
@@ -166,8 +180,6 @@ nextBtn.addEventListener("click", () => {
         dayOffD = dayOffD / (1000 * 3600 * 24);
         const dayOffDWithWords = new NumberAzeriTranslator(dayOffD);
         dayOffD = `${dayOffD}(${dayOffDWithWords.translate()})`;
-        
-
         const params = {
             project,
             dayOffType,
@@ -179,9 +191,10 @@ nextBtn.addEventListener("click", () => {
             position,
             time,
             dayOffD,
-            sedrName,
-            directorName
+            sedrName: "Mahir Mammadzada",
+            directorName: "Mehdi Mammadzada",
         }
+
         $.ajax({
             method: "post",
             url: "http://localhost:5000/day-off/form/validate",
@@ -189,6 +202,7 @@ nextBtn.addEventListener("click", () => {
             dataType: 'json',
             success: function(json, status) {
                 if (json.success === true) {
+                    params.time = json.time;
                     const method = "post";
                     let form = document.createElement('form');
                     form.setAttribute("method", method);

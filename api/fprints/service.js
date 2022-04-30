@@ -1,4 +1,4 @@
-const { sequelize, ForgottenFPrints, FPrint } = require("../../db_config/models");
+const { sequelize, ForgottenFPrints, FPrintDraft } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
 const date = new Date();
 let month = date.getMonth();
@@ -18,7 +18,6 @@ module.exports = {
                                         LEFT JOIN Departments as dept ON emp.department = dept.id
                                         LEFT JOIN Positions as pos ON emp.position_id = pos.id
                                         WHERE fp.f_print_time IS NOT NULL AND (emp.deletedAt OR emp.j_end_date) IS NULL`;
-        console.log(data)
         let replacements = {};
         if(data.qEmployee !== '') {
             let qEmp = data.qEmployee.split(" ");
@@ -67,7 +66,6 @@ module.exports = {
             query += " AND DAY(fp.f_print_date) = :fDay"
             countQuery += " AND DAY(fp.f_print_date) = :fDay"
             replacements.fDay = data.qDay;
-            console.log(typeof data.qDay)
         }
         if (data.qMonth !== '' && data.qMonth !== "00" && data.qMonth !== 'ay') {
             query += " AND MONTH(fp.f_print_date) = :fMonth"
@@ -153,14 +151,18 @@ module.exports = {
         });
         return result;
     },
-    renderForgottenFPrints: async () => {
+    renderForgottenFPrints: async (offset) => {
         return await sequelize.query(`
             SELECT fp.*, emp.first_name, emp.last_name, emp.father_name FROM ForgottenFPrints as fp
             LEFT JOIN Employees as emp ON emp.id = fp.emp_id
             WHERE emp.deletedAt IS NULL
+            LIMIT 15 OFFSET :offset
         `, {
             logging: false,
-            type: QueryTypes.SELECT
+            type: QueryTypes.SELECT,
+            replacements: {
+                offset
+            }
         });
     },
     getForgottenFPrintById: async (id) => {
@@ -189,7 +191,7 @@ module.exports = {
         });
     },
     createFPrintForForgottenFPrint: (data, cb) => {
-        FPrint.create({
+        FPrintDraft.create({
             emp_id: data.emp_id,
             user_id: data.user_id,
             f_print_date: data.f_print_date,

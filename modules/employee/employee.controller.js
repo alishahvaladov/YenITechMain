@@ -30,36 +30,41 @@ const year = date.getFullYear();
 const month = date.getMonth();
 const day = date.getDate();
 let errors = [];
+let validationError = {};
 
-module.exports = {
-    addEmployee: async (req, res) => {
-        errors = [];
-        const data = req.body;
-        data.user_id = req.user.id;
+const validateEmployee = async (data, cb) => {
         let fName, lName, fatherName, j_start_date;
+        let fNameError = [];
+        let lNameError = [];
+        let fatherNameError = [];
+        let midNameError = [];
+        let ssnError = [];
+        let dobError = [];
+        let finError = [];
+        let phoneNumberError = [];
+        let homeNumberError = [];
+        let shiftTypeError = [];
         if (data.first_name === '') {
             fName = false;
         } else {
             fName = data.first_name.split('');
         }
-
         if (data.last_name === '') {
             lName = false;
         } else {
             lName = data.last_name.split('');
         }
-
         const midName = data.middle_name.split('');
         if (data.father_name === '') {
             fatherName = false;
         } else {
             fatherName = data.father_name.split('');
         }
+
         const tabelNo = data.tabel_no;
         const dob = data.dob;
         const SSN = data.SSN;
         const FIN = data.FIN;
-        const prefix = data.prefix;
         const phoneNumber = data.phone_number;
         let homeNumber = data.home_number;
         const shiftType = data.shift_type;
@@ -85,125 +90,143 @@ module.exports = {
         const sex = data.sex;
         const selectedShiftType = data.select_shift_type;
 
-        let logixData = {};
-
         if(fName) {
             for (let i = 0; i < fName.length; i++) {
                 if(!isNaN(parseInt(fName[i]))) {
                     console.log("First name cannot contain number");
-                    req.flash("error_msg", "First name cannot contain number")
-                    return res.redirect("/employee/add-employee");
+                    fNameError.push = "First name cannot contain number";
+                    validationError.fName = fNameError;
+                    return cb(true, validationError);
                 }
 
                 if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(fName[i]) === false) {
                     console.log("First name cannot contain symbol");
-                    req.flash("error_msg", "First name cannot contain symbol")
-                    return res.redirect("/employee/add-employee");
+                    fNameError.push("First name cannot contain symbol");
+                    validationError.fName = fNameError;
+                    return cb(true, validationError);
                 }
             }
         } else {
             console.log("Please enter Employee's First Name");
-            req.flash("error_msg", "Please enter Employee's First Name");
-            return res.redirect("/employee/add-employee");
+            fNameError.push("Please enter Employee's First Name");
+            validationError.fName = fNameError;
+            return cb(true, validationError);
         }
 
         if(lName) {
             for (let i = 0; i < lName.length; i++) {
                 if(!isNaN(parseInt(lName[i]))) {
                     console.log("Last name cannot contain number");
-                    req.flash("error_msg", "Last name cannot contain number")
-                    return res.redirect("/employee/add-employee");
-                    break;
+                    lNameError.push("Last name cannot contain number")
+                    validationError.lName = lNameError;
+                    return cb(true, validationError);
                 }
                 if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(lName[i]) === false) {
                     console.log("Last name cannot contain symbol");
-                    req.flash("error_msg", "Last name cannot contain symbol")
-                    return res.redirect("/employee/add-employee");
+                    lNameError.push("Last name cannot contain symbol")
+                    validationError.lName = lNameError;
+                    return cb(true, validationError);
                 }
             }
         } else {
             console.log("Please enter Employee's Last Name");
-            req.flash("error_msg", "Please enter Employee's Last Name");
-            return res.redirect("/employee/add-employee");
+            lNameError.push("Please enter Employee's Last Name");
+            validationError.lName = lNameError;
+            return cb(true, validationError);
         }
+
+
         if(fatherName) {
             for (let i = 0; i < fatherName.length; i++) {
                 if(!isNaN(parseInt(fatherName[i]))) {
                     console.log("Father name cannot contain number");
-                    req.flash("error_msg", "Father name cannot contain number")
-                    return res.redirect("/employee/add-employee");
+                    fatherNameError.push("Father name cannot contain number")
+                    validationError.fatherName = fatherNameError;
+                    return false;
                 }
                 if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(fatherName[i]) === false) {
                     console.log("Father name cannot contain symbol");
-                    req.flash("error_msg", "Father name cannot contain symbol")
-                    return res.redirect("/employee/add-employee");
+                    fatherNameError.push("Father name cannot contain symbol")
+                    validationError.fatherName = fatherNameError;
+                    return false;
                 }
             }
-
         } else {
             console.log("Please enter Employee's Father Name");
-            req.flash("error_msg", "Please enter Employee's Father Name");
-            return res.redirect("/employee/add-employee");
+            fatherNameError.push("Please enter Employee's Father Name");
+            validationError.fatherName = fatherNameError;
+            return false;
         }
 
-        for (let i = 0; i < midName.length; i++) {
-            if(!isNaN(parseInt(midName[i]))) {
-                console.log("Middle name cannot contain number");
-                req.flash("error_msg", "Middle name cannot contain number")
-                return res.redirect("/employee/add-employee");
-            }
-            if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(midName[i]) === false) {
-                console.log("Middle name cannot contain symbol");
-                req.flash("error_msg", "Middle name cannot contain symbol")
-                return res.redirect("/employee/add-employee");
+        if(midName) {
+            for (let i = 0; i < midName.length; i++) {
+                if(!isNaN(parseInt(midName[i]))) {
+                    console.log("Middle name cannot contain number");
+                    midNameError.push("Middle name cannot contain number")
+                    validationError.midName = midNameError;
+                    return cb(true, validationError);
+                }
+                if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(midName[i]) === false) {
+                    console.log("Middle name cannot contain symbol");
+                    midNameError.push("Middle name cannot contain symbol")
+                    validationError.midName = midNameError;
+                    return cb(true, validationError);
+                }
             }
         }
+
 
         if(sex == 0 || sex == 1) {
             console.log("Gender verified");
         } else {
             console.log("Html interruption for sex: " + sex + "UserID" + req.user.id);
-            req.flash("error_msg", "Please enter valid gender");
-            return res.redirect("/employee/add-employee");
+            validationError.sex("Please enter valid gender");
+            return cb(true, validationError);
         }
 
         if (dob) {
             const sDOB = dob.split("-");
             if(isNaN(parseInt(sDOB[0])) === true || isNaN(parseInt(sDOB[1])) === true || isNaN(parseInt(sDOB[2])) === true) {
-                req.flash("error_msg", "Please enter valid date for date of birth");
-                return res.redirect("/employee/add-employee");
+                dobError.push("Please enter valid date for date of birth");
+                validationError.dob = dobError;
+                return cb(true, validationError);
             }
             if(parseInt(sDOB[0]) > date.getFullYear() - 16) {
-                req.flash("error_msg", "This person's age is not enough to work. Please contact with Audit department to approve this person");
-                return res.redirect("/employee/add-employee");
+                dobError.push("This person's age is not enough to work. Please contact with Audit department to approve this person");
+                validationError.dob = dobError;
+                return cb(true, validationError);
             }
         }
 
         const seperatedSSN = SSN.split('');
         if(seperatedSSN.length !== 13) {
             console.log("SSN must be 13 numbers");
-            req.flash("error_msg", "SSN must be 13 numbers")
-            return res.redirect("/employee/add-employee");
+            ssnError.push("SSN must be 13 numbers")
+            validationError.ssn = ssnError;
+            return cb(true, validationError);
         }
         for (let i = 0; i < seperatedSSN.length; i++) {
             if((/[0-9]/).test(seperatedSSN[i]) === false) {
                 console.log("SSN cannot contain letter or symbol");
-                req.flash("error_msg", "SSN cannot contain letter or symbol")
-                return res.redirect("/employee/add-employee");
+                ssnError.push("SSN cannot contain letter or symbol")
+                validationError.ssn = ssnError;
+                return cb(true, validationError);
             }
         }
 
         if(FIN) {
             if(FIN.length !== 7) {
                 console.log("FIN must be 7 length long");
-                req.flash("error_msg", "FIN must be 7 length long")
-                return res.redirect("/employee/add-employee");
+                finError.push("FIN must be 7 length long")
+                validationError.fin = finError;
+                return cb(true, validationError);
             }
             for (let i = 0; i < FIN.length; i++) {
                 if((/[a-zA-Z0-9]/).test(FIN[i]) === false) {
                     console.log("FIN cannot contain symbol");
-                    req.flash("error_msg", "FIN cannot contain symbol")
-                    return res.redirect("/employee/add-employee");
+                    finError.push("FIN cannot contain symbol")
+                    validationError.fin = finError;
+                    return cb(true, validationError);
                 }
             }
         }
@@ -211,45 +234,39 @@ module.exports = {
         if(q_address) {
             if(q_address.length < 10) {
                 console.log("Q Address must be greater than 10 characters");
-                req.flash("error_msg", "Q Address must be greater than 10 characters")
-                return res.redirect("/employee/add-employee");
+                validationError.q_address = "Q Address must be greater than 10 characters";
+                return cb(true, validationError);
             }
         }
 
         if(y_address !== null) {
             if(y_address.length < 10) {
                 console.log("Y Address must be greater than 10 characters");
-                req.flash("error_msg", "Y Address must be greater than 10 characters")
-                return res.redirect("/employee/add-employee");
+                validationError.q_address = "Y Address must be greater than 10 characters";
+                return cb(true, validationError);
             }
         }
 
 
-        if(prefix === '050' || prefix === '051' || prefix === '055' || prefix === '099' || prefix === '070' || prefix === '077' || prefix === '060' || prefix === '010') {
-            console.log("Prefix validated");
+
+        if(phoneNumber.length === 10 && phoneNumber.length === 12) {
+            const seperatedP = phoneNumber.replace(" ", "").split("");
+            for (let i = 0; i < seperatedP.length; i++) {
+                if(isNaN(parseInt(seperatedP[i]))) {
+                    console.log("Phone number should be only numbers!");
+                    phoneNumberError.push("Phone number should be only numbers!");
+                    validationError.phoneNumber = phoneNumberError;
+                    return cb(true, validationError);
+                }
+            }
         } else {
-            console.log("Please select valid prefix");
-            req.flash("error_msg", "Please select valid prefix");
-            return res.redirect("/employee/add-employee");
+            console.log("Phone number should be 10 or 12 characters!");
+            phoneNumberError.push("Phone number should be 10 or 12 characters!");
+            validationError.phoneNumber = phoneNumberError;
+            return cb(true, validationError);
         }
 
-        if(phoneNumber.length !== 7) {
-            console.log("Phone number should be 7 characters!");
-            req.flash("error_msg", "Phone number should be 7 characters!");
-            return res.redirect("/employee/add-employee");
-        }
-
-        const seperatedP = phoneNumber.replace(" ", "").split("");
-
-        for (let i = 0; i < seperatedP.length; i++) {
-            if(isNaN(parseInt(seperatedP[i]))) {
-                console.log("Phone number should be only numbers!");
-                req.flash("error_msg", "Phone number should be only numbers!");
-                return res.redirect("/employee/add-employee");
-            }
-        }
-
-        data.phone_number = prefix.toString() + phoneNumber.toString();
+        data.phone_number = phoneNumber.toString();
 
         let seperatedH;
 
@@ -259,17 +276,20 @@ module.exports = {
 
         if (homeNumber === '' || homeNumber === null) {
             homeNumber = null;
-        } else if(homeNumber.length !== 7) {
-            console.log("Home number should be 7 characters!");
+        } else if(homeNumber.length === 7 || homeNumber.length === 12) {
             for (let i = 0; i < seperatedH.length; i++) {
                 if(isNaN(parseInt(seperatedH[i]))) {
                     console.log("Home number should be only numbers!");
-                    req.flash("error_msg", "Home number should be only numbers!");
-                    return res.redirect("/employee/add-employee");
+                    homeNumberError.push("Home number should be only numbers!");
+                    validationError.homeNumber = homeNumberError;
+                    return cb(true, validationError);
                 }
-            }
-            req.flash("error_msg", "Home number should be 7 characters!");
-            return res.redirect("/employee/add-employee");
+            } 
+        } else {
+            console.log("Home number should be 10 or 12 characters!");
+            homeNumberError.push("Home number should be 10 or 12 characters!");
+            validationError.homeNumber = homeNumberError;
+            return cb(true, validationError);
         }
 
         if(parseInt(selectedShiftType) === 1) {
@@ -285,138 +305,156 @@ module.exports = {
                     data.shift_end_t = '19:00';
                 }
             } else {
-                req.flash("Wrong shift type selected please try again");
-                return res.redirect("/employee/add-employee");
+                validationError.shift = "Wrong shift type selected please try again";
+                return cb(true, validationError);
             }
         } else if(parseInt(selectedShiftType) === 2) {
             const splittedShiftStart = data.shift_start_t.split(":");
             const splittedShiftEnd = data.shift_end_t.split(":");
             if (parseInt(splittedShiftStart[0]) - parseInt(splittedShiftEnd[0]) > 0) {
-                req.flash("error_msg", "Please choose valid shift times");
-                return res.redirect("/employee/add-employee");
+                validationError.shift = "Please choose valid shift times";
+                return cb(true, validationError);
             }
             const shiftStartT = data.shift_start_t;
             const shiftEndT = data.shift_end_t;
             if(shiftStartT === "" || shiftStartT === null || shiftEndT === "" || shiftEndT === null) {
-                req.flash("error_msg", "Please fill shift times");
-                return res.redirect('/employee/add-employee');
+                validationError.shift = "Please fill shift times";
+                return cb(true, validationError);
             }
         } else {
-            req.flash("error_msg", "Please choose shift type");
-            return res.redirect('/employee/add-employee');
+            validationError.shift = "Please choose shift type";
+            return cb(true, validationError);
         }
+
         if(j_start_date) {
             if(parseInt(j_start_date[0]) <= year && parseInt(j_start_date[1]) < month) {
                 console.log("Maximum range for Job Start Date is 1 month");
-                req.flash("error_msg", "Maximum range for Job Start Date is 1 month");
-                return res.redirect("/employee/add-employee");
+                validationError.jStartDate = "Maximum range for Job Start Date is 1 month";
+                return cb(true, validationError);
             }
             if (parseInt(j_start_date[0]) >= year && parseInt(j_start_date[1]) >= month + 1 && parseInt(j_start_date[2]) > day) {
                 console.log("You cannot add employee (a day/days) after from today!");
-                req.flash("error_msg", "You cannot add employee (a day/days) after from today!");
-                return res.redirect("/employee/add-employee");
+                validationError.jStartDate = "You cannot add employee (a day/days) after from today!";
+                return cb(true, validationError);
             }
         } else {
             console.log("Please enter Job Start Date!");
-            req.flash("error_msg", "Please enter Job Start Date!");
-            return res.redirect("/employee/add-employee");
+            validationError.jStartDate = "Please enter Job Start Date!";
+            return cb(true, validationError);
         }
 
         if(isNaN(parseInt(dayOffDays))) {
             console.log("Please enter valid day off dates");
-            req.flash("error_msg", "Please enter valid day off dates");
-            return res.redirect("/employee/add-employee");
+            validationError.dayOffDays = "Please enter valid day off dates";
+            return cb(true, validationError);
         }
 
         if(fDay === 'on') {
             data.working_days = 77;
         } else if (parseInt(wDays) > 26) {
-            req.flash("Working days cannot be greater than maximum working day limit");
-            return res.redirect("/employee/add-employee");
+            validationError.wDay = "Working days cannot be greater than maximum working day limit";
+            return cb(true, validationError);
         } else if(isNaN(parseInt(wDays))) {
-            req.flash("Please enter valid working days");
-            res.redirect("/employee/add-employee");
+            validationError.wDay = "Please enter valid working days";
+            return cb(true, validationError);
         }
 
         if(isNaN(parseInt(department))) {
             console.log("Please enter valid department");
-            req.flash("error_msg", "Please enter valid department");
-            return res.redirect("/employee/add-employee");
+            validationError.department = "Please enter valid department";
+            return cb(true, validationError);
         }
 
         if(isNaN(parseInt(position))) {
             console.log("Please enter valid position");
-            req.flash("error_msg", "Please enter valid position");
-            return res.redirect("/employee/add-employee");
+            validationError.position = "Please enter valid position";
+            return cb(true, validationError);
         }
 
         if(isNaN(parseInt(project))) {
             console.log("Please enter valid project");
-            req.flash("error_msg", "Please enter valid project");
-            return res.redirect("/employee/add-employee");
+            validationError.project = "Please enter valid project";
+            return cb(true, validationError);
         }
 
         if(tabelNo === "" || tabelNo === null) {
-            req.flash("error_msg", "Please enter tabel no");
-            return res.redirect("/employee/add-employee");
+            validationError.tabelNo = "Please enter tabel no";
+            return cb(true, validationError);
         } else {
             let checkTabel = await checkIfTabelNoExists(data.tabel_no);
-            console.log(checkTabel.length);
             if (checkTabel.length > 0) {
-                req.flash("error_msg", "This tabel no already in use. Please write another one");
-                return res.redirect("/employee/add-employee");
+                validationError.tabelNo = "This tabel no already in use. Please write another one";
+                return cb(true, validationError);
             } 
         }
 
-        Employee.findOne({
-            where: {
-                SSN: data.SSN
-            },
-            logging: false
-        }).then((employee) => {
-            if(employee) {
-                console.log("This SSN already exists please check again");
-                req.flash("error_msg", "This SSN already exists please check again");
-                return res.redirect("/employee/add-employee");
-            }
-        });
+        return cb(null, null, data);
+}
 
-        Employee.findOne({
-            where: {
-                FIN: data.FIN
-            },
-            logging: false
-        }).then((employee) => {
-            if(employee) {
-                console.log("This FIN already exists please check again");
-                req.flash("error_msg", "This FIN already exists please check again");
-                return res.redirect("/employee/add-employee");
+module.exports = {
+    addEmployee: async (req, res) => {
+        errors = [];
+        const data = req.body;
+        await validateEmployee(data, (err, message, result) => {
+            if (err) {
+                for (const [key, value] of Object.entries(message)) {
+                    console.log(`Error of ${key} is ${value}`);
+                    req.flash("error_msg", value);
+                    return res.redirect("/employee/add-employee");
+                }
             }
-            if (errors.length === 0) {
-                addEmployee(data, (err, results) => {
-                    if(err) {
-                        console.log("Error" + err.message);
-                        req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
-                        return res.redirect("/employee/add-employee");
-                    }
-                    req.body.emp = results;
-                    const empId = results.dataValues.id;
-                    logixData.emp_id  = empId;
-                    logixData.logix_name = data.logix_name;
-                    logixData.tabel_no = data.tabel_no;
-                    addLogixDataToLogixDB(logixData, (err, result) => {
+            result.user_id = req.user.id;
+            let logixData = {};
+            Employee.findOne({
+                where: {
+                    SSN: result.SSN
+                },
+                logging: false
+            }).then((employee) => {
+                if(employee) {
+                    console.log("This SSN already exists please check again");
+                    req.flash("error_msg", "This SSN already exists please check again");
+                    return res.redirect("/employee/add-employee");
+                }
+            });
+    
+            Employee.findOne({
+                where: {
+                    FIN: result.FIN
+                },
+                logging: false
+            }).then((employee) => {
+                if(employee) {
+                    console.log("This FIN already exists please check again");
+                    req.flash("error_msg", "This FIN already exists please check again");
+                    return res.redirect("/employee/add-employee");
+                }
+                if (errors.length === 0) {
+                    addEmployee(result, (err, results) => {
                         if(err) {
-                            console.log(err);
-                            req.flash("error_msg", "An unknown error occured while adding logix data. Please contact system admin or try again.");
-                            return res.redirect("/employee/update/" + empId);
+                            console.log("Error" + err.message);
+                            req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
+                            return res.redirect("/employee/add-employee");
                         }
-                        console.log(result);
-                        req.flash("success_msg", "Employee has been added please fill employee data to continue");
-                        return res.redirect("/employee/emp-files/" + empId);
-                    });
-                }); 
-            }
+                        req.body.emp = results;
+                        const empId = results.dataValues.id;
+                        logixData.emp_id  = empId;
+                        logixData.logix_name = data.logix_name;
+                        logixData.tabel_no = data.tabel_no;
+                        addLogixDataToLogixDB(logixData, (err, result) => {
+                            if(err) {
+                                console.log(err);
+                                req.flash("error_msg", "An unknown error occured while adding logix data. Please contact system admin or try again.");
+                                return res.redirect("/employee/update/" + empId);
+                            }
+                            req.flash("success_msg", "Employee has been added please fill employee data to continue");
+                            return res.redirect("/employee/emp-files/" + empId);
+                        });
+                    }); 
+                }
+            });
         });
+        
     },
     deleteEmployee: (req, res) => {
         const id = req.params.id;
@@ -457,179 +495,87 @@ module.exports = {
             res.redirect("/employee");
         }
     },
-    updateEmployee: (req, res) => {
+    updateEmployee: async (req, res) => {
         errors = [];
         const data = req.body;
-        const fName = data.first_name;
-        const lName = data.last_name;
-        const fatherName = data.father_name;
-        const dob = data.dob;
-        const SSN = data.SSN;
-        const phoneNumber = data.phone_number;
-        const homeNumber = data.home_number;
-        const dayOffDays = data.dayoff_days_total;
-        const department = data.department;
-        const position = data.position_id;
-        const project = data.project_id;
-        const sex = data.sex;
-        const date = new Date();
         const id = req.params.id;
-
-        fName.split('').forEach(item => {
-            if(!isNaN(parseInt(item))) {
-                console.log("First name cannot contain number");
-                errors.push({msg: "First name cannot contain number"});
-            }
-        });
-        lName.split('').forEach(item => {
-            if(!isNaN(parseInt(item))) {
-                console.log("First name cannot contain number");
-                errors.push({msg: "First name cannot contain number"});
-            }
-        });
-        fatherName.split('').forEach(item => {
-            if(!isNaN(parseInt(item))) {
-                console.log("First name cannot contain number");
-                errors.push({msg: "First name cannot contain number"});
-            }
-        });
-
-        if (dob) {
-            const sDOB = dob.split("-");
-            if(isNaN(parseInt(sDOB[0])) === true || isNaN(parseInt(sDOB[1])) === true || isNaN(parseInt(sDOB[1])) === true) {
-                errors.push("Please enter valid date for date of birth");
-            }
-            if(parseInt(sDOB[2]) > date.getFullYear() - 18) {
-                errors.push("This person's age is not enough to work. Please contact with Audit department to approve this person")
-            }
-        }
-
-
-        if(sex !== 0 || sex !== 1) {
-            console.log("Gender has changed manually from html codes: " + sex + req.user.id);
-            errors.push({msg: "Please choose valid gender from list"});
-        }
-
-        const seperatedSSN = SSN.split('');
-
-        for (let i = 0; i < seperatedSSN; i++) {
-            if(!isNaN(parseInt(seperatedSSN[i]))) {
-                console.log("SSN should be only numbers!");
-                errors.push({msg: "SSN should be only numbers!"});
-                break;
-            }
-        }
-
-        const seperatedP = phoneNumber.replace(" ", "").split("");
-
-        for (let i = 0; i < seperatedP.length; i++) {
-            if(isNaN(parseInt(seperatedP[i]))) {
-                console.log("Phone number should be only numbers!");
-                errors.push({msg: "Phone number should be only numbers!"});
-                break;
-            }
-        }
-
-        const seperatedH = homeNumber.replace(" ", "").split("");
-
-        for (let i = 0; i < seperatedH.length; i++) {
-            if(isNaN(parseInt(seperatedH[i]))) {
-                console.log("Home number should be only numbers!");
-                errors.push({msg: "Home number should be only numbers!"});
-                break;
-            }
-        }
-
-        if(isNaN(parseInt(dayOffDays))) {
-            console.log("Please enter valid dates");
-            errors.push("Please enter valid dates");
-        }
-
-        if(isNaN(parseInt(department))) {
-            console.log("Please enter valid department");
-            errors.push("Please enter valid department");
-        }
-
-        if(isNaN(parseInt(position))) {
-            console.log("Please enter valid position");
-            errors.push("Please enter valid position");
-        }
-
-        if(isNaN(parseInt(project))) {
-            console.log("Please enter valid project");
-            errors.push("Please enter valid project");
-        }
-
-
-        Employee.findOne({
-            where: {
-                SSN: data.SSN,
-                id: {
-                    [Op.ne]: id
+        await validateEmployee(data, (err, message, validatedResult) => {
+            if (err) {
+                for (const [key, value] of Object.entries(message)) {
+                    console.log(`Error of ${key} is ${value}`);
+                    req.flash("error_msg", value);
+                    return res.redirect("/employee/add-employee");
                 }
             }
-        }).then((employee) => {
-            if(employee) {
-                errors.push({msg: "This SSN already exists please check again"});
-                console.log(employee);
-                req.flash("error_msg", "This SSN already exists please check again");
-                return res.redirect("/employee/update/" + id);
-            }
-        });
-        console.log("Data: " + data);
-
-        Employee.findOne({
-            where: {
-                FIN: data.FIN,
-                id: {
-                    [Op.ne]: id
-                }
-            }
-        }).then((employee) => {
-            if(employee) {
-                errors.push({msg: "This FIN already exists please check again"});
-                console.log(employee);
-                req.flash("error_msg", "This FIN already exists please check again");
-                return res.redirect("/employee/update/" + id);
-            }
-            console.log(errors);
-
-           if(errors.length !== 0) {
-               Employee.findOne({
-                   where: {
-                       id:id
-                   }
-               }).then((result) => {
-                   console.log(result);
-                   if(req.user.role === 5) {
-                       return res.render("employee/update", {
-                           hr: true,
-                           employee: result.dataValues,
-                           errors
-                       });
-                   } else if (req.user.role === 1) {
-                       return res.render("employee/update", {
-                           super_admin: true,
-                           employee: result.dataValues,
-                           errors
-                       });
-                   }
-               });
-           }
-
-            if (errors.length === 0) {
-                console.log("Errors: " + errors);
-                updateEmployee(id, data, (err, results) => {
-                    if(err) {
-                        console.log("Error" + err.message);
-                        req.flash("error_msg", "An unknown error occurred");
-                        return res.redirect("/employee/update" + id);
+            validatedResult.user_id = req.user.id;
+            Employee.findOne({
+                where: {
+                    SSN: validatedResult.SSN,
+                    id: {
+                        [Op.ne]: id
                     }
-                    req.flash("success_msg", "An employee has been updated");
-                    return  res.redirect("/employee/update/" + id);
-                })
-            }
-        });
+                }
+            }).then((employee) => {
+                if(employee) {
+                    errors.push({msg: "This SSN already exists please check again"});
+                    req.flash("error_msg", "This SSN already exists please check again");
+                    return res.redirect("/employee/update/" + id);
+                }
+            });
+    
+            Employee.findOne({
+                where: {
+                    FIN: validatedResult.FIN,
+                    id: {
+                        [Op.ne]: id
+                    }
+                }
+            }).then((employee) => {
+                if(employee) {
+                    errors.push({msg: "This FIN already exists please check again"});
+                    req.flash("error_msg", "This FIN already exists please check again");
+                    return res.redirect("/employee/update/" + id);
+                }
+                console.log(errors);
+    
+               if(errors.length !== 0) {
+                   Employee.findOne({
+                       where: {
+                           id:id
+                       }
+                   }).then((result) => {
+                       if(req.user.role === 5) {
+                           return res.render("employee/update", {
+                               hr: true,
+                               employee: result.dataValues,
+                               errors
+                           });
+                       } else if (req.user.role === 1) {
+                           return res.render("employee/update", {
+                               super_admin: true,
+                               employee: result.dataValues,
+                               errors
+                           });
+                       }
+                   });
+               }
+    
+                if (errors.length === 0) {
+                    updateEmployee(id, validatedResult, (err, results) => {
+                        if(err) {
+                            console.log("Error" + err.message);
+                            req.flash("error_msg", "An unknown error occurred");
+                            return res.redirect("/employee/update" + id);
+                        }
+                        req.flash("success_msg", "An employee has been updated");
+                        return  res.redirect("/employee/update/" + id);
+                    })
+                }
+            });
+        })
+
+
+       
     },
     getEmployee: async (req, res) => {
         const id = req.params.id;
@@ -651,7 +597,6 @@ module.exports = {
                     psResult
                 });
             } else if (req.user.role === 1) {
-                console.log(deptResult);
                 return res.render("employee/update", {
                     super_admin: true,
                     employee: result.dataValues,
@@ -672,7 +617,6 @@ module.exports = {
                req.flash("error_msg", "An error has been occurred please contact System Admin");
                return res.redirect("/employee");
            }
-           console.log(result);
            req.flash("An employee has been updated");
            return res.redirect("/employee");
         });
@@ -736,7 +680,6 @@ module.exports = {
     },
     uploadFilePathToDB: async (req, res, next) => {
         let emp_id;
-        console.log(req.body.u_pay);
         if(req.params.id) {
             emp_id = req.params.id;
         }

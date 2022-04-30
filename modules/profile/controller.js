@@ -8,6 +8,10 @@ module.exports = {
             res.render("profile/profile", {
                 hr: true
             });
+        } else if (req.user.role === 10) {
+            res.render("profile/profile", {
+                hr: true
+            });
         }
     }
 }

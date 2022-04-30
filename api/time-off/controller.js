@@ -115,7 +115,7 @@ module.exports = {
                 message: "This employee couldn't find please try again or contact System Admin"
             });
         }
-        await fs.access(empPath, fs.constants.F_OK, err => {
+        fs.access(empPath, fs.constants.F_OK, err => {
            if (err) {
                fs.mkdir(empPath, { recursive: true }, (err) => {
                   if (err) {
@@ -141,7 +141,7 @@ module.exports = {
             });
         }
         if(req.fileValidationError) {
-            res.status(400).send({
+            return res.status(400).send({
                 success: false,
                 message: "Please choose correct file format"
             })
@@ -175,7 +175,7 @@ module.exports = {
                         success: false,
                         message: "An unknown error has been occurred"
                     });
-                }
+                } 
                 if(empFileRes === null) {
                     let files = {};
                     files.dayoffform = JSON.stringify(req.file);
@@ -185,13 +185,12 @@ module.exports = {
                     addFileNames(data, (err, result) => {
                         if(err) {
                             console.log(err);
-                            req.flash("error_msg", "An unknown error has been occurred");
                             return res.status(400).send({
                                 success: false,
                                 message: "An unknown error has been occurred"
                             })
                         }
-                        res.send({
+                        return res.send({
                             result
                         })
                     });
@@ -206,9 +205,9 @@ module.exports = {
                             return res.status(400).send({
                                 success: false,
                                 message: "An unknown error has been occurred"
-                            })
+                            });
                         }
-                        res.send({
+                        return res.send({
                             result
                         });
                     });
@@ -242,7 +241,6 @@ module.exports = {
     },
     cancelRequestByHr: (req, res) => {
         let id = req.params.id;
-        console.log(id)
         cancelRequestByHr(id, (err, result) => {
             if (err) {
                 console.log(err);
@@ -258,7 +256,6 @@ module.exports = {
     },
     cancelRequestByDR: (req, res) => {
         let id = req.params.id;
-        console.log(id)
         cancelRequestByDR(id, (err, result) => {
             if (err) {
                 console.log(err);
@@ -274,7 +271,6 @@ module.exports = {
     },
     approveRequestByHr: (req, res) => {
         let id = req.params.id;
-        console.log(id)
         approveRequestByHr(id, (err, result) => {
             if (err) {
                 console.log(err);
@@ -290,7 +286,6 @@ module.exports = {
     },
     approveRequestByDR: (req, res) => {
         let id = req.params.id;
-        console.log(id)
         approveRequestByDR(id, (err, result) => {
             if (err) {
                 console.log(err);

@@ -633,12 +633,15 @@ input[type=number] {
     margin-bottom: 3%;
 }
 
+.update-notification-alert,
 .notification-alert {
     right: 70px;
     bottom: 70px;
     width: 200px;
     height: fit-content;
 }
+
+.update-notification-p,
 .notification-p {
     background-color:rgba(17, 100, 0, 0.733);
     width: 100%;
@@ -646,4 +649,8 @@ input[type=number] {
 
 .t-o-m-request {
     background-color:rgba(0, 0, 0, 0.61);
+}
+
+.update-employee-input {
+    padding: 0 5px;
 }

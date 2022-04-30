@@ -30,7 +30,6 @@ module.exports = {
     },
     addDepartment: (req, res) => {
         const body = req.body;
-        console.log(body);
         const deptData = {};
         if (body.departmentName.length < 1) {
             return res.status(400).send({

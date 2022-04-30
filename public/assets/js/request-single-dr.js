@@ -54,7 +54,7 @@ const renderPage = () => {
             
             rightContHtml = `
                 <div>
-                    <img src="/employees/directs/time-off/form/${result.emp_id}-${result.first_name.toLocaleLowerCase()}-${result.last_name.toLocaleLowerCase()}-${result.father_name.toLocaleLowerCase()}/${filename}" style="width: 300px">
+                    <img src="/employee/files/time-off/form/${result.emp_id}-${result.first_name.toLocaleLowerCase()}-${result.last_name.toLocaleLowerCase()}-${result.father_name.toLocaleLowerCase()}/${filename}" style="width: 300px">
                 </div>
             `
         }
@@ -63,12 +63,12 @@ const renderPage = () => {
 
         document.querySelector("#timeOffCancel").addEventListener("click", () => {
             $.get(`http://localhost:3000/api/time-off/cancel-requests/director/${id}`, (res) => {
-                console.log(res);
+                localhost.href ="/timeoffrequests";
             });
         });
         document.querySelector("#timeOffApprove").addEventListener("click", () => {
             $.get(`http://localhost:3000/api/time-off/approve-request/director/${id}`, (res) => {
-                console.log(res);
+                localhost.href ="/timeoffrequests";
             });
         });
     });

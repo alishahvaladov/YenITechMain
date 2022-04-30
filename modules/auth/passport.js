@@ -29,7 +29,6 @@ module.exports = function (passport) {
                   },
                   logging: false
               }).then((user) => {
-                  // console.log(user.dataValues.active_status);
                   if(!user) {
                       return done(null, false, {
                           message: "Username or password is incorrect"

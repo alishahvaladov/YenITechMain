@@ -24,11 +24,9 @@ module.exports = {
         if(approvedMinute < 0) {
             approvedMinute = 0;
         }
-        console.log(approvedMinute);
         const data = {};
         const deleteData = {};
         const fineData = await getFineDataByID(id);
-        console.log(fineData);
         const totalMinute = fineData[0].minute_total;
         const approvedFines = fineData[0].fine_minute;
         if(parseInt(approvedMinute) > parseInt(totalMinute) - 30 && parseInt(totalMinute) - 30 > 0) {
@@ -44,7 +42,6 @@ module.exports = {
         if (parseInt(totalMinute) - parseInt(approvedMinute) < 0) {
             deleteData.deletedMinute = 0;
         }
-        console.log(data);
         approveEditedFine(data, (err, result) => {
            if(err) {
                console.log(err);
@@ -115,9 +112,7 @@ module.exports = {
     resetApprovedFine: async (req, res) => {
         const data = {};
         const { id } = req.params;
-        console.log(id);
         const fineData = await getFineDataByID(id);
-        console.log(fineData);
         data.id = id;
         const minute_total = fineData[0].minute_total;
         data.minute_total = parseInt(minute_total) + parseInt(fineData[0].fine_minute);

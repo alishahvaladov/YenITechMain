@@ -230,7 +230,6 @@ module.exports = {
         const date = new Date();
         const filename = `${date.getTime()}-salary-by-months.xlsx`;
         let salaryData = await getSalariesByMonth();
-        console.log(salaryData);
         const workbook = new excelJS.Workbook();
         const worksheet = workbook.addWorksheet("Aylıq Maaşlar");
         worksheet.columns= [
@@ -240,7 +239,6 @@ module.exports = {
             {header: "Gross", key: "gross", width: 10},
             {header: "Maaşın verilmə tarixi", key: "salary_date", width: 10},
         ]
-        console.log(salaryData);
         salaryData.forEach(salary => {
             const fPrintDataFromDB = {
                 first_name: salary.first_name,
@@ -255,7 +253,6 @@ module.exports = {
             cell.font = {bold: true};
         });
         const excelPath = path.join((__dirname), `../../public/excels/${filename}`);
-        console.log(excelPath);
         await workbook.xlsx.writeFile(excelPath);
         setTimeout(() => {
            fs.unlink(excelPath, (err) => {

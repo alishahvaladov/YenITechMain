@@ -1,5 +1,7 @@
-const { sequelize } = require("../../db_config/models");
+const { sequelize, Employee } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
+
+
 
 module.exports = {
     getDepartment: async (id) => {
@@ -18,10 +20,11 @@ module.exports = {
         })
     },
     getEmployee: async (id) => {
-        let empRes =  await sequelize.query(`SELECT emp.*, pos.name as posName, proj.name as projName, dept.name as deptName FROM Employees as emp
+        let empRes =  await sequelize.query(`SELECT emp.*, pos.name as posName, proj.name as projName, dept.name as deptName, efd.uploaded_files FROM Employees as emp
                                     LEFT JOIN Positions as pos ON pos.id = emp.position_id
                                     LEFT JOIN Projects as proj ON proj.id = emp.project_id
                                     LEFT JOIN Departments as dept ON dept.id = emp.department
+                                    LEFT JOIN EmployeeFileDirectories as efd ON emp.id = efd.emp_id
                                     WHERE emp.id = :id`, {
            type: QueryTypes.SELECT,
            logging: false,
@@ -252,6 +255,19 @@ module.exports = {
             logging: false,
             type: QueryTypes.SELECT,
             replacements: replacements
+        });
+    },
+    updateEmployee: (data, id, cb) => {
+        console.log(data);
+        Employee.update(data, {
+            where: {
+                id: id
+            },
+            logging: false
+        }).then(res => {
+            cb(null, res);
+        }).catch(err => {
+            cb(err);
         });
     }
 }

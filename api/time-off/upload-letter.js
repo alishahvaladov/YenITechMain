@@ -21,7 +21,6 @@ const fileFilter = (req, file, cb) => {
 let storage = multer.diskStorage({
     destination: async (req, file, cb) => {
         const id = req.params.id;
-        console.log(id);
         let result;
         try {
             result = await getEmployeeData(id);

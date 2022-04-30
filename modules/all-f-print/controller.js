@@ -40,7 +40,6 @@ module.exports = {
             {header: "Barmaq izi(vaxt)", key: "f_print_time", width: 10},
             {header: "Tarix", key: "f_print_date", width: 10},
         ]
-        console.log(fPrintData);
         fPrintData.forEach(fPrint => {
             const fPrintDataFromDB = {
                 first_name: fPrint.name,
@@ -58,7 +57,6 @@ module.exports = {
             cell.font = {bold: true};
         });
         const excelPath = path.join((__dirname), `../../public/excels/${filename}`);
-        console.log(excelPath);
         await workbook.xlsx.writeFile(excelPath);
         setTimeout(() => {
            fs.unlink(excelPath, (err) => {

@@ -211,7 +211,7 @@ module.exports = {
             });
         }else if (req.user.role === 2) {
             res.render("fine/fine", {
-                hr: true
+                admin: true
             });
         }
     },

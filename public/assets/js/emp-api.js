@@ -4,6 +4,7 @@ const empEditModal = document.querySelector(".employee-full-data-modal");
 const empModalCloseBtn = document.querySelector(".empModalCloseBtn");
 const exportToExcelBtn = document.querySelector("#exportToExcel");
 const empEditCancelBtn = document.querySelector("#empEditCancelBtn");
+const profilePicture = document.querySelector("#profilePicture");
 
 const empName = document.querySelector("#name");
 const empMName = document.querySelector("#midName");
@@ -21,11 +22,15 @@ const shiftStart = document.querySelector("#shiftStart");
 const inpShiftEnd = document.querySelector("#shiftEnd");
 const jStartDate = document.querySelector("#jStartDate");
 const dayOffDays = document.querySelector("#dayOffDays");
+const fullDay = document.querySelector("#full_day");
 const workingDays = document.querySelector("#workingDays");
 let inpProject = document.querySelector("#project");
 let inpDepartment = document.querySelector("#department");
 let inpPosition = document.querySelector("#position");
 let limit = document.querySelector("#limitCount");
+const hiddenEmployeeId = document.querySelector("#employeeId");
+const empEditApplyBtn = document.querySelector("#empEditApplyBtn");
+const empUpdateInputs = document.querySelectorAll(".update-employee-input");
 
 
 let empInpName = $("#empName");
@@ -98,6 +103,9 @@ const empRemModule = () => {
 }
 const empEditModule = () => { 
    const editBtns = document.querySelectorAll(".empEditBtn");
+   const projSelector = $("#project");
+   const deptSelector = $("#department");
+   const posSelector = $("#position");
    editBtns.forEach(item => {
       item.addEventListener("click", () => {
          empEditModal.classList.remove('d-none');
@@ -106,10 +114,6 @@ const empEditModule = () => {
            emp_id: id
          }, (res) => {
             const empRes = res.result.empRes[0];
-            const projRes = res.result.projRes;
-            const deptRes = res.result.deptRes;
-            const posRes = res.result.posRes;
-            // const result = res.result[0];
             empName.value = empRes.first_name;
             empMName.value = empRes.middle_name;
             inpSurname.value = empRes.last_name;
@@ -125,36 +129,107 @@ const empEditModule = () => {
             inpShiftEnd.value = empRes.shift_end_t;
             jStartDate.value = empRes.j_start_date;
             dayOffDays.value = empRes.dayoff_days_total;
-            workingDays.value = empRes.working_days;
+            hiddenEmployeeId.value = id;
+
+            if (empRes.working_days === "full_day") {
+               fullDay.checked = true;
+               workingDays.value = "Tam iş günləri";
+               workingDays.disabled = true;
+            } else {
+               workingDays.value = empRes.working_days;
+            }
+            fullDay.addEventListener("change", () => {
+               if (fullDay.checked === false) {
+                  workingDays.value = "";
+                  workingDays.type = "number";
+                  workingDays.disabled = false;
+               } else {
+                  workingDays.type = "text";
+                  workingDays.value = "Tam iş günləri";
+                  workingDays.disabled = true;
+               }
+            });
+            
+
             let projOptions = '';
-            for (let i = 0; i < projRes.length; i++) {
-               projOptions += `
-                  <option value="${projRes[i].id}">${projRes[i].name}</option>
-               `
-            }
+            $.get(`http://localhost:3000/api/project/allProjects/`, (projRes) => {
+               for (let i = 0; i < projRes.project.length; i++) {
+                  if (empRes.project_id === projRes.project[i].id) {
+                     projOptions += `
+                        <option value="${projRes.project[i].id}" selected>${projRes.project[i].name}</option>
+                     `   
+                  } else {
+                     projOptions += `
+                        <option value="${projRes.project[i].id}">${projRes.project[i].name}</option>
+                     `
+                  }
+               }
+               inpProject.innerHTML = projOptions;
+            });
+            
             let deptOptions = '';
-            for (let i = 0; i < deptRes.length; i++) {
-               deptOptions += `
-                  <option value="${deptRes[i].id}">${deptRes[i].name}</option>
-               `
-            }
+            $.get(`http://localhost:3000/api/department/by-project/${empRes.project_id}`, (res) => {
+               const deptRes = res.result;
+               for (let i = 0; i < deptRes.length; i++) {
+                  if (deptRes[i].id === empRes.department) {
+                     deptOptions += `
+                        <option value="${deptRes[i].id}" selected>${deptRes[i].name}</option>
+                     `   
+                  } else {
+                     deptOptions += `
+                        <option value="${deptRes[i].id}">${deptRes[i].name}</option>
+                     `
+                  }
+               }
+               inpDepartment.innerHTML = deptOptions;
+            });
+            
             let posOptions = '';
-            for (let i = 0; i < posRes.length; i++) {
-               posOptions += `
-                  <option value="${posRes[i].id}">${posRes[i].name}</option>
-               `
-            }
-            inpProject.innerHTML = projOptions;
-            inpDepartment.innerHTML = deptOptions;
-            inpPosition.innerHTML = posOptions;
+            $.get(`http://localhost:3000/api/position/by-department/${empRes.department}`, (res) => {
+               const posRes = res.result;
+               for (let i = 0; i < posRes.length; i++) {
+                  if (posRes[i].id === empRes.position_id) {
+                     posOptions += `
+                        <option value="${posRes[i].id}" selected>${posRes[i].name}</option>
+                     `   
+                  } else {
+                     posOptions += `
+                        <option value="${posRes[i].id}">${posRes[i].name}</option>
+                     `
+                  }
+               }
+               inpPosition.innerHTML = posOptions;
+            });
+            
+            profilePicture.src = `employee/files/recruitment/${empRes.id}-${empRes.first_name.toLowerCase()}-${empRes.last_name.toLowerCase()}-${empRes.father_name.toLowerCase()}/${empRes.filename}`
 
-            inpProject = document.querySelector("#project");
-            inpDepartment = document.querySelector("#department");
-            inpPosition = document.querySelector("#position");
+            projSelector.change(() => {
+               let id = projSelector.val();
+               $.get(`http://localhost:3000/api/department/by-project/${id}`, (res) => {
+                   const result = res.result;
+                   deptSelector.text(" ");
+                   deptSelector.append(`<option value="" hidden>Seçin</option>`)
+                   for (let i = 0; i < result.length; i++) {
+                       deptSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
+                   }
+                   posSelector.html(" ");
+                   console.log(result);
+               });
+            });
+           
+           deptSelector.change(() => {
+               let deptID = deptSelector.val();
+               $.get(`http://localhost:3000/api/position/by-department/${deptID}`, (res) => {
+                   const result = res.result;
+                   posSelector.text(" ");
+                   posSelector.append(`<option value="" hidden>Seçin</option>`)
+                   for (let i = 0; i < result.length; i++) {
+                       posSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
+                   }
+                   console.log(result);
+               });
+           });
 
-            inpProject.value = empRes.project_id;
-            inpDepartment.value = empRes.department;
-            inpPosition.value = empRes.position_id;
          });
       });
    });
@@ -270,6 +345,7 @@ const pageFuncs = () => {
                      trs +=
                          `
                        <tr>
+                           <td></td>
                            <td>${emps[i].first_name + " " + emps[i].last_name + " " + emps[i].father_name}</td>
                            <td>${emps[i].phone_number}</td>
                            <td>${emps[i].deptName}</td>
@@ -333,7 +409,7 @@ const renderPage = () => {
 
             html += `
          <tr>
-            <td></td>
+             <td></td>
              <td>${result[i].first_name + " " + result[i].last_name + " " + result[i].father_name}</td>
              <td>${result[i].phone_number}</td>
              <td>${result[i].deptName}</td>
@@ -398,6 +474,7 @@ const renderPage = () => {
 
             html += `
          <tr>
+             <td></td>
              <td>${result[i].first_name + " " + result[i].last_name + " " + result[i].father_name}</td>
              <td>${result[i].phone_number}</td>
              <td>${result[i].deptName}</td>
@@ -451,6 +528,31 @@ const renderPage = () => {
       empEditModal.classList.add('d-none');
    });
 }
+
+empEditApplyBtn.addEventListener("click", () => {
+   const data = {};
+   empUpdateInputs.forEach(item => {
+      data[item.name] = item.value;
+   });
+   $.post('http://localhost:3000/api/update-employee', {
+      data
+   }, (updateResult) => {
+      console.log(updateResult);
+      empEditModal.classList.add('d-none');
+      loading.classList.remove('d-none');
+      setTimeout(() => {
+         renderPage();
+         const updateNotification = document.querySelector('.update-notification-alert');
+         const updateNotificationP = document.querySelector('.update-notification-p');
+         updateNotification.classList.remove('d-none');
+         updateNotificationP.innerHTML = updateResult.message;
+         setTimeout(() => {
+            updateNotification.classList.add('d-none');
+         }, 1500)
+      }, 1000);
+   });
+});
+
 const exportToExcel = () => {
    getEmpInps();
    const method = "post";

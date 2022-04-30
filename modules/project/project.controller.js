@@ -12,8 +12,6 @@ module.exports = {
         if(!data.parent_id) {
             data.parent_id = null;
         }
-        console.log(data);
-
         Project.findOne({
             where: {
                 name: data.name
@@ -51,7 +49,6 @@ module.exports = {
                 req.flash("error_msg","An unknown error occurred please contact System Admin");
                 return res.redirect("/projects");
             }
-            console.log(result);
             if(req.user.role === 5) {
                 res.render('project/projects', {
                     projects: result,
@@ -73,7 +70,6 @@ module.exports = {
                 req.flash("error_msg", "This project doesn't exist please try again");
                 return res.redirect("/projects");
             }
-            console.log(result);
             if(req.user.role === 5) {
                 return res.render("project/update", {
                     project: result.dataValues,
@@ -133,7 +129,6 @@ module.exports = {
                 req.flash("error_msg", "An unknown error occurred please contact System Admin");
                 return res.redirect("/projects");
             }
-            console.log(result);
             req.flash("success_msg", "This project has been deleted");
             return res.redirect("/projects");
         })

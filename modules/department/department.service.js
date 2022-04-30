@@ -6,7 +6,6 @@ module.exports = {
             name: data.name,
             user_id: parseInt(data.user_id),
         }).then((results) => {
-            console.log(results);
             cb(null, results);
         }).catch((err) => {
             if (err) throw err;
@@ -19,10 +18,8 @@ module.exports = {
                 id: id
             }
         }).then((dept) => {
-            console.log(dept);
             cb(null, dept);
         }).catch((err) => {
-            console.log(err);
             cb(err);
         })
     },

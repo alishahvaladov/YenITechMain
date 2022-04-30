@@ -18,7 +18,6 @@ module.exports = {
                 WHERE fn.fine_minute > 0
                 ORDER BY fn.createdAt DESC
             `
-            console.log('admin');
         } else {
             query = `
                 SELECT fn.id as fineID, fn.emp_id, fn.minute_total, fn.fine_minute, fn.fine_status, fn.updatedAt, emp.first_name, emp.last_name, emp.father_name FROM Fines as fn
@@ -26,7 +25,6 @@ module.exports = {
                 WHERE (fn.minute_total > 0 OR fn.fine_minute > 0)
                 ORDER BY fn.createdAt DESC
             `
-            console.log('hr');
         }
         return await sequelize.query(query, {
             logging: false,

@@ -40,7 +40,7 @@ app.use('/assets', express.static(path.join(__dirname, './public/assets')));
 app.use('/uploads', express.static(path.join(__dirname, './public/uploads')));
 app.use('/excels-for-delete', express.static(path.join(__dirname, './public/excels')));
 app.use('/salary-xlsx', express.static(path.join(__dirname, './salaries_xlsx')));
-app.use('/employees/directs', express.static(path.join(__dirname, './public/employees')))
+app.use('/employee/files', express.static(path.join(__dirname, './public/employees')))
 
 // Initialize Passport
 
@@ -108,6 +108,7 @@ const userAPI = require("./api/users/api");
 const notificationAPI = require("./api/notifications/api");
 const departmentAPI = require('./api/department/api');
 const positionAPI = require("./api/position/api");
+const projectAPI = require("./api/projects/api");
 
 // Routers
 app.use("/", userRouter);
@@ -134,6 +135,7 @@ app.use("/api/users", userAPI);
 app.use("/api/notification", notificationAPI);
 app.use("/api/department", departmentAPI);
 app.use("/api/position", positionAPI);
+app.use("/api/project", projectAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });

@@ -198,7 +198,6 @@ module.exports = {
         });
     },
     cancelRequestByHr: (id, cb) => {
-        console.log(id);
         TimeOffRequest.update({
             status: 7
         }, {
@@ -212,7 +211,6 @@ module.exports = {
         });
     },
     cancelRequestByDR: (id, cb) => {
-        console.log(id);
         TimeOffRequest.update({
             status: 7
         }, {
@@ -226,7 +224,6 @@ module.exports = {
         });
     },
     approveRequestByHr: (id, cb) => {
-        console.log(id);
         TimeOffRequest.update({
             status: 2
         }, {
@@ -240,7 +237,6 @@ module.exports = {
         });
     },
     approveRequestByDR: (id, cb) => {
-        console.log(id);
         TimeOffRequest.update({
             status: 3
         }, {

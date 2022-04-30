@@ -165,7 +165,7 @@ const renderPage = () => {
                                     projectAddress,
                                     time,
                                     dayOffD,
-                                    directorName,
+                                    directorName: "Mahir Mammadzada",
                                     dateUpRight,
                                     emrNo
                                 }

@@ -21,7 +21,6 @@ const { hr, super_admin, checkRoles } = require("../auth/auth");
 router.get("/add-employee", hr, renderAddEmployee);
 
 
-router.get('/employees')
 router.get('/delete/:id', super_admin, checkRoles, deleteEmployee);
 router.get("/", hr, getEmployees);
 router.get("/update/:id", hr, getEmployee);

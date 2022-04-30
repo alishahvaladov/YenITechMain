@@ -18,5 +18,20 @@ module.exports = {
                 id
             }
         })
+    },
+    getProfilePicture: async (id) => {
+        return await sequelize.query(`
+            SELECT emp.id, emp.first_name, emp.last_name, emp.father_name, efd.uploaded_files FROM Employees as emp
+            LEFT JOIN Users as usr ON emp.id = usr.emp_id
+            LEFT JOIN EmployeeFileDirectories as efd ON emp.id = efd.emp_id
+            WHERE emp.deletedAt IS NULL
+            AND usr.id = :id 
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                id
+            }
+        });
     }
 }

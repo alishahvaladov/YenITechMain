@@ -36,7 +36,6 @@ module.exports = {
             {header: "Çıxış", key: "leave", width: 10},
             {header: "Tarix", key: "f_print_date", width: 10},
         ]
-        console.log(nfPrintData);
         nfPrintData.forEach(nfPrint => {
             const fPrintDataFromDB = {
                 first_name: nfPrint.name,
@@ -55,7 +54,6 @@ module.exports = {
             cell.font = {bold: true};
         });
         const excelPath = path.join((__dirname), `../../public/excels/${filename}`);
-        console.log(excelPath);
         await workbook.xlsx.writeFile(excelPath);
         setTimeout(() => {
            fs.unlink(excelPath, (err) => {
