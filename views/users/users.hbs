@@ -1,5 +1,6 @@
 <div class="department-table">
     {{> messages }}
+    <h1 class="text-center">İstifadəçilər</h1>
     <table class="table table-striped">
         <div class="container">
             <thead>
@@ -17,51 +18,24 @@
             <th></th>
             </thead>
             <tbody>
-            {{#if result}}
-                {{#each result}}
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>{{this.first_name}} {{this.last_name}} {{this.father_name}}</td>
-                        <td>{{this.username}}</td>
-                        <td>{{this.email}}</td>
-                        <td>
-                            {{#compare_if this.role 2}}
-                                Admin
-                            {{/compare_if}}
-                            {{#compare_if this.role 3}}
-                                Financier
-                            {{/compare_if}}
-                            {{#compare_if this.role 4}}
-                                HR Assistance
-                            {{/compare_if}}
-                            {{#compare_if this.role 5}}
-                                HR
-                            {{/compare_if}}
-                            {{#compare_if this.role 6}}
-                                Audit Director
-                            {{/compare_if}}
-                            {{#compare_if this.role 7}}
-                                Audit
-                            {{/compare_if}}
-                            {{#compare_if this.role 8}}
-                                Management
-                            {{/compare_if}}
-                            {{#compare_if this.role 9}}
-                                User
-                            {{/compare_if}}
-                        </td>
-                        <td>
-                            <a class="btn btn-outline-danger btn-sm" href="/delete/{{this.id}}"><i class="bi bi-x-circle"></i></a>
-                            <a class="btn btn-outline-secondary btn-sm" href="/users/update/{{this.id}}"><i class="bi bi-pencil-square"></i></a>
-                        </td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                {{/each}}
-            {{/if}}
+            
             </tbody>
         </div>
     </table>
 </div>
+
+<div class="pagination d-flex justify-content-center">
+        <div class="pagination-container w-50 d-flex justify-content-between">
+            <button class="pagination-item btn btn-outline-dark btn-sm active disabled">1</button>
+        </div>
+    </div>
+
+<div class="loading position-absolute top-0 w-100" style="left: 0; height: 100vh">
+    <div class="loading-container bg-light bg-opacity-25 w-100 h-100 d-flex justify-content-center align-items-center">
+        <img src="/assets/img/loading-3.gif" style="width: 70px">
+    </div>
+</div>
+
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/users.js"></script>

@@ -98,7 +98,6 @@ module.exports = {
                req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
                return res.redirect("/positions");
            }
-           console.log(result);
            if(req.user.role === 5) {
                res.render("position/update", {
                    position: result,

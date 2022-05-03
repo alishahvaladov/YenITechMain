@@ -61,5 +61,32 @@ module.exports = {
                 projectId
             }
         });
+    },
+    getAllDepartments: async (offset) => {
+        const result = {};
+        
+        const departments = await sequelize.query(`
+            SELECT id, name FROM Departments
+            WHERE deletedAt IS NULL
+            LIMIT 15 OFFSET :offset
+        `, {
+            type: QueryTypes.SELECT,
+            logging: false,
+            replacements: {
+                offset
+            }
+        });
+
+        const count = await sequelize.query(`
+            SELECT COUNT(*) as count FROM Departments
+            WHERE deletedAt IS NULL
+        `, {
+            type: QueryTypes.SELECT,
+            logging: false,
+        });
+
+        result.departments = departments;
+        result.count = count;
+        return result;
     }
 }

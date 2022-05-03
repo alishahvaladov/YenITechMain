@@ -19,22 +19,28 @@ module.exports = {
         }
 
 
-        Department.findOne({
-            where: {
-                name: data.name,
-            }
-        }).then((department) => {
-            if(department) {
-                req.flash("error_msg", "This department in this project already exist please try again");
-                return res.redirect("/department/add-department");
-            } else {
-                addDepartment(data, (err, result) => {
-                    if(err) throw err;
-                    req.flash("success_msg", "Department has been uploaded successfully")
-                    return res.redirect("/department");
-                })
-            }
-        });
+        try {
+            Department.findOne({
+                where: {
+                    name: data.name,
+                }
+            }).then((department) => {
+                if(department) {
+                    req.flash("error_msg", "This department in this project already exist please try again");
+                    return res.redirect("/department/add-department");
+                } else {
+                    addDepartment(data, (err, result) => {
+                        if(err) throw err;
+                        req.flash("success_msg", "Department has been uploaded successfully")
+                        return res.redirect("/department");
+                    })
+                }
+            });
+        } catch (err) {
+            console.log(err);
+            req.flash("error_msg", "Something went wrong!");
+            return res.redirect("/department");
+        }
     },
     deleteDepartment: (req, res) => {
         const id = req.params.id;
@@ -51,9 +57,9 @@ module.exports = {
                         req.flash("error_msg", "This department doesn't exist")
                         return res.redirect("/department");
                     }
-                    req.flash("success_msg", "Department has been deleted");
-                    return res.redirect("/department");
                 });
+                req.flash("success_msg", "Department has been deleted");
+                return res.redirect("/department");
             }
             req.flash("error_msg", "This department doesn't exist");
             return res.redirect("/department");

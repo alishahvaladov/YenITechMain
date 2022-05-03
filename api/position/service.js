@@ -61,5 +61,32 @@ module.exports = {
                 deptId
             }
         });
+    },
+    getAllPositions: async (offset) => {
+        const result = {};
+
+        const positions = await sequelize.query(`
+            SELECT id, name FROM Positions
+            WHERE deletedAt IS NULL
+            LIMIT 15 OFFSET :offset
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                offset
+            }
+        });
+
+        const count = await sequelize.query(`
+            SELECT COUNT(*) as count FROM Positions
+            WHERE deletedAt IS NULL
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+        });
+
+        result.positions = positions;
+        result.count = count;
+        return result;
     }
-}
+} 

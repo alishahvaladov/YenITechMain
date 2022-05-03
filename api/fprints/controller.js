@@ -51,11 +51,12 @@ module.exports = {
     renderForgottenFPrints: async (req, res) => {
         try {
             let offset = req.params.offset;
-            offset = parseInt(offset);
+            offset = parseInt(offset) * 15;
             const result = await renderForgottenFPrints(offset);
             return res.status(200).send({
                 success: true,
-                result
+                result: result.forgottenData,
+                count: result.countData
             });
         } catch (err) {
             console.log(err);

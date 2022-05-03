@@ -654,3 +654,7 @@ input[type=number] {
 .update-employee-input {
     padding: 0 5px;
 }
+
+.pagination {
+    margin-bottom: 20px;
+}

@@ -40,10 +40,11 @@ if(fullDay) {
         if(fullDay.checked) {
             workingDayInput.disabled = true;
             workingDayInput.setAttribute("style", "box-shadow: -1px -1px 3px rgb(255 255 255), 2px 2px 6px rgb(0 0 0 / 30%), inset -2px -2px 10px rgb(255 255 255), inset 2px 2px 10px rgb(0 0 0 / 30%); !important");
+            workingDayInput.placeholder = "Tam iş günü";
         } else {
             workingDayInput.disabled = false;
             workingDayInput.setAttribute("style", "-1px -1px 3px rgb(255 255 255 / 10%), 2px 2px 6px rgb(0 0 0 / 30%); !important");
-
+            workingDayInput.placeholder = ""
         }
     });
 }

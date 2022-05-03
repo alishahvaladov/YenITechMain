@@ -1,6 +1,7 @@
 const projectsDiv = document.querySelector(".projects");
 const submitDepartmentBtn = document.querySelector("#submitDepartment");
 const inputPassword4 = document.querySelector("#inputPassword4");
+const body = document.querySelector("body");
 
 
 $.get("http://localhost:3000/api/department", (res) => {
@@ -29,7 +30,10 @@ $.get("http://localhost:3000/api/department", (res) => {
             departmentName: deptName,
             projects: checkedArray
         }, (res) => {
-            console.log(res);
+            body.style.cursor = "progress";
+            setTimeout(() => {
+                location.href = "/department";
+            }, 1000);
         }).catch(e => {
             alert(e.responseJSON.message);
         })

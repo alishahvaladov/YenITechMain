@@ -152,7 +152,8 @@ module.exports = {
         return result;
     },
     renderForgottenFPrints: async (offset) => {
-        return await sequelize.query(`
+        let result = {};
+        const forgottenData = await sequelize.query(`
             SELECT fp.*, emp.first_name, emp.last_name, emp.father_name FROM ForgottenFPrints as fp
             LEFT JOIN Employees as emp ON emp.id = fp.emp_id
             WHERE emp.deletedAt IS NULL
@@ -164,6 +165,22 @@ module.exports = {
                 offset
             }
         });
+
+        const countData = await sequelize.query(`
+            SELECT COUNT(*) as count FROM ForgottenFPrints as fp
+            LEFT JOIN Employees as emp ON emp.id = fp.emp_id
+            WHERE emp.deletedAt IS NULL
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                offset
+            }
+        });
+        result.forgottenData = forgottenData;
+        result.countData = countData;
+
+        return result;
     },
     getForgottenFPrintById: async (id) => {
         return await sequelize.query(`

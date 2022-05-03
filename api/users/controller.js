@@ -1,4 +1,4 @@
-const { getUser, updatePassword } = require("./service");
+const { getUser, updatePassword, getAllUsers } = require("./service");
 const jsonConfig = require("../../config/config.json");
 
 module.exports = {
@@ -50,5 +50,23 @@ module.exports = {
                 message: "Password updated successfully"
             });
         });
+    },
+    getAllUsers: async (req, res) => {
+        try {
+            let offset = req.params.offset;
+            offset = parseInt(offset) * 15;
+            const result = await getAllUsers(offset);
+            return res.status(200).send({
+                success: true,
+                users: result.users,
+                count: result.count
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Something went wrong"
+            });
+        }
     }
 }

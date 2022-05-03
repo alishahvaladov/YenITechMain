@@ -1,4 +1,4 @@
-const { getProjectsForDepartments, addDepartment, addProjDeptRel, checkIfProjectExists, getDepartmentsByProject } = require("./service");
+const { getProjectsForDepartments, addDepartment, addProjDeptRel, checkIfProjectExists, getDepartmentsByProject, getAllDepartments } = require("./service");
 const randomId = (count) => {
     const string = "abcdefghijklmnopqrstuvwxyz123456789";
     let generatedId = "";
@@ -102,6 +102,25 @@ module.exports = {
             return res.status(500).send({
                 success: false,
                 message: "An unkown error has been occurred"
+            });
+        }
+    },
+    getAllDepartments: async (req, res) => {
+        try {
+            let offset = req.params.offset;
+            offset = parseInt(offset) * 15;
+            const result = await getAllDepartments(offset);
+
+            return res.status(200).send({
+                success: true,
+                departments: result.departments,
+                count: result.count
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Something went wrong",
             });
         }
     }

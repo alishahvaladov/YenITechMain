@@ -2,12 +2,15 @@ const { getProjects } = require("./service");
 
 module.exports = {
     getProjects: async (req, res) => {
+        let offset = req.params.offset;
+        offset = parseInt(offset) * 15;
         try {
-            const projectData = await getProjects();
+            const result = await getProjects(offset);
 
             return res.status(200).send({
                 success: true,
-                project: projectData
+                project: result.projects,
+                count: result.count
             });
         } catch (err) {
             console.log(err);
