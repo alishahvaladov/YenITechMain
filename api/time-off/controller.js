@@ -1,4 +1,5 @@
-const { getEmpInfo, 
+const { 
+    getEmpInfo, 
     getTimeOffs, 
     addTimeOff,
     getDirectors,
@@ -15,7 +16,8 @@ const { getEmpInfo,
     approveRequestByDR,
     getEmployeeByUserID,
     getTimeOffByID, 
-    approveTimeOffRequest} = require("./service");
+    approveTimeOffRequest
+} = require("./service");
 const path = require("path");
 const fs = require("fs");
 
@@ -29,26 +31,28 @@ module.exports = {
         })
     },
     getTimeOffs: async (req, res) => {
-        let timeOffs;
+        let result;
         let directorProject;
         let hr_approve = false;
         let director_approve = false;
         let id = req.user.id;
+        let offset = req.query.offset;
+        offset = parseInt(offset) * 15;
         if (req.user.role === 10) {
             directorProject = await getEmployeeByUserID(id);
             directorProject = directorProject[0].project_id;
         }
         if (req.query.hr_approve === "true") {
             hr_approve = true;
-            timeOffs = await getTimeOffs(hr_approve, director_approve);
+            result = await getTimeOffs(hr_approve, director_approve, null, offset);
         } else if (req.query.director_approve === "true") {
             director_approve = true;
-            timeOffs = await getTimeOffs(hr_approve, director_approve, directorProject);
+            result = await getTimeOffs(hr_approve, director_approve, directorProject, offset);
         } else {
-            timeOffs = await getTimeOffs(hr_approve, director_approve);
+            result = await getTimeOffs(hr_approve, director_approve, null, offset);
         }
         res.status(200).send({
-            timeOffs
+            result
         });
     },
     getTimeOffByID: async (req, res) => {
@@ -59,41 +63,49 @@ module.exports = {
         });
     },
     addTimeOff: async (req, res) => {
-        const body = req.body;
-        body.user_id = req.user.id;
-        if (parseInt(body.timeOffType) === 4) {
-            if(body.emp === "" || parseInt(body.emp) === 0 || body.toffTime === "" || body.toffTimeDate === "" || body.timeOffType === "") {
-                return res.status(400).send({
-                    success: false,
-                    message: "Missing requirements"
-                });
+        try {
+            const body = req.body;
+            body.user_id = req.user.id;
+            if (parseInt(body.timeOffType) === 4) {
+                if(body.emp === "" || parseInt(body.emp) === 0 || body.toffTime === "" || body.toffTimeDate === "" || body.timeOffType === "") {
+                    return res.status(400).send({
+                        success: false,
+                        message: "Missing requirements"
+                    });
+                }
+                body.timeOffStartDate = null;
+                body.timeOffEndDate = null;
+                body.wStartDate = null;
+            } else {
+                if(body.emp === "" || parseInt(body.emp) === 0 || body.timeOffStartDate === "" || body.timeOffEndDate === "" || body.timeOffType === "" || body.wStartDate === "") {
+                    return res.status(400).send({
+                        success: false,
+                        message: "Missing requirements"
+                    });
+                }
+                body.toffTime = null;
+                body.toffTimeDate = null;
             }
-            body.timeOffStartDate = null;
-            body.timeOffEndDate = null;
-            body.wStartDate = null;
-        } else {
-            if(body.emp === "" || parseInt(body.emp) === 0 || body.timeOffStartDate === "" || body.timeOffEndDate === "" || body.timeOffType === "" || body.wStartDate === "") {
-                return res.status(400).send({
-                    success: false,
-                    message: "Missing requirements"
-                });
-            }
-            body.toffTime = null;
-            body.toffTimeDate = null;
-        }
 
-        addTimeOff(body, async (err, result) => {
-            if(err) {
-                console.log(err);
-                return res.status(520).send({
-                    success: false,
-                    message: "An unknown error has been occurred"
+            addTimeOff(body, (err, result) => {
+                if(err) {
+                    console.log(err);
+                    return res.status(520).send({
+                        success: false,
+                        message: "An unknown error has been occurred"
+                    });
+                }
+                return res.status(200).send({
+                    success: true
                 });
-            }
-            return res.status(200).send({
-                success: true
             });
-        });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            })
+        }
     },
     getDirectors: async (req, res) => {
         const body = req.body;
@@ -431,4 +443,49 @@ module.exports = {
             });
         });
     },
+    requestTimeOffAsUser: (req, res) => {
+        try {
+            const body = req.body;
+            body.user_id = req.user.id;
+            if (parseInt(body.timeOffType) === 4) {
+                if(body.emp === "" || parseInt(body.emp) === 0 || body.toffTime === "" || body.toffTimeDate === "" || body.timeOffType === "") {
+                    return res.status(400).send({
+                        success: false,
+                        message: "Missing requirements"
+                    });
+                }
+                body.timeOffStartDate = null;
+                body.timeOffEndDate = null;
+                body.wStartDate = null;
+            } else {
+                if(body.emp === "" || parseInt(body.emp) === 0 || body.timeOffStartDate === "" || body.timeOffEndDate === "" || body.timeOffType === "" || body.wStartDate === "") {
+                    return res.status(400).send({
+                        success: false,
+                        message: "Missing requirements"
+                    });
+                }
+                body.toffTime = null;
+                body.toffTimeDate = null;
+            }
+
+            addTimeOff(body, (err, result) => {
+                if(err) {
+                    console.log(err);
+                    return res.status(520).send({
+                        success: false,
+                        message: "An unknown error has been occurred"
+                    });
+                }
+                return res.status(200).send({
+                    success: true
+                });
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups.. Something went wrong!"
+            });
+        }
+    } 
 }

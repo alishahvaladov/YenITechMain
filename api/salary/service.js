@@ -2,16 +2,33 @@ const { Salary, SalaryByMonth, sequelize } = require("../../db_config/models");
 const { QueryTypes } = require("sequelize");
 
 module.exports = {
-    getSalary: async () => {
-        return await sequelize.query(`
+    getSalary: async (offset) => {
+        const result = {};
+        result.salaries = await sequelize.query(`
             SELECT sl.*, emp.working_days, emp.first_name, emp.last_name, emp.father_name FROM Salaries as sl
             LEFT JOIN Employees as emp ON sl.emp_id = emp.id
             WHERE emp.deletedAt IS NULL
             AND emp.j_end_date IS NULL
+            LIMIT 15 OFFSET :offset
         `, {
             logging: false,
-            type: QueryTypes.SELECT
+            type: QueryTypes.SELECT,
+            replacements: {
+                offset
+            }
         });
+
+        result.count = await sequelize.query(`
+            SELECT COUNT(*) as count FROM Salaries as sl
+            LEFT JOIN Employees as emp ON sl.emp_id = emp.id
+            WHERE emp.deletedAt IS NULL
+            AND emp.j_end_date IS NULL
+        `, {
+            type: QueryTypes.SELECT,
+            logging: false,
+        });
+
+        return result;
     },
     getSalaryByMonthByEmpID: async (emp_id) => {
         return await sequelize.query(`
@@ -73,9 +90,24 @@ module.exports = {
             }
         })
     },
-    getSalariesByMonth: async () => {
-        return await sequelize.query(`
+    getSalariesByMonth: async (offset) => {
+        const result = {};
+        result.salaries = await sequelize.query(`
             SELECT sbm.*, emp.first_name, emp.last_name, emp.father_name FROM SalaryByMonths as sbm
+            LEFT JOIN Employees as emp ON emp.id = sbm.emp_id
+            WHERE emp.deletedAt IS NULL
+            AND emp.j_end_date IS NULL
+            LIMIT 15 OFFSET :offset
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                offset
+            }
+        });
+
+        result.count = await sequelize.query(`
+            SELECT COUNT(*) as count FROM SalaryByMonths as sbm
             LEFT JOIN Employees as emp ON emp.id = sbm.emp_id
             WHERE emp.deletedAt IS NULL
             AND emp.j_end_date IS NULL
@@ -83,6 +115,8 @@ module.exports = {
             logging: false,
             type: QueryTypes.SELECT
         });
+
+        return result;
     },
     getMonthlyWorkingDays: async (limit) => {
         return await sequelize.query(`
@@ -197,12 +231,16 @@ module.exports = {
             `
             replacements.max = max;
         }
+        query += `
+            LIMIT 15 OFFSET :offset
+        `;
+        replacements.offset = parseInt(data.offset) * 15;
         result.salaries = await sequelize.query(query, {
             logging: false,
             type: QueryTypes.SELECT,
             replacements
         });
-        result.countSalary = await sequelize.query(countQuery, {
+        result.count = await sequelize.query(countQuery, {
             logging: false,
             type: QueryTypes.SELECT,
             replacements
@@ -299,16 +337,33 @@ module.exports = {
             `
             replacements.max = max;
         }
+
+        query += `
+            LIMIT 15 OFFSET :offset
+        `;
+        replacements.offset = parseInt(data.offset) * 15;
+
         result.salaries = await sequelize.query(query, {
             logging: false,
             type: QueryTypes.SELECT,
             replacements
         });
-        result.countSalary = await sequelize.query(countQuery, {
+        result.count = await sequelize.query(countQuery, {
             logging: false,
             type: QueryTypes.SELECT,
             replacements
         });
         return result;
+    },
+    getSalariesForExport: async () => {
+        return await sequelize.query(`
+            SELECT sbm.*, emp.first_name, emp.last_name, emp.father_name FROM SalaryByMonths as sbm
+            LEFT JOIN Employees as emp ON emp.id = sbm.emp_id
+            WHERE emp.deletedAt IS NULL
+            AND emp.j_end_date IS NULL
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
     }
 }

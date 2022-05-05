@@ -1,4 +1,4 @@
-const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB, search, searchSalaryByMonts } = require("./service");
+const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB, search, searchSalaryByMonts, getSalariesForExport } = require("./service");
 const jsDateF = new Date();
 const month = jsDateF.getMonth();
 const year = jsDateF.getFullYear();
@@ -199,7 +199,9 @@ module.exports = {
     },
     getSalaries: async (req, res) => {
         try {
-            const result = await getSalary();
+            let offset = req.params.offset;
+            offset = parseInt(offset) * 15;
+            const result = await getSalary(offset);
             res.send({
                 result
             });
@@ -213,7 +215,9 @@ module.exports = {
     },
     getSalariesByMonth: async (req, res) => {
         try {
-            const result = await getSalariesByMonth();
+            let offset = req.params.offset;
+            offset = parseInt(offset) * 15;
+            const result = await getSalariesByMonth(offset);
             return res.send({
                 result
             });
@@ -226,10 +230,9 @@ module.exports = {
         }
     },
     exportDataToExcelByMonths: async (req, res) => {
-        const data = req.body;
         const date = new Date();
         const filename = `${date.getTime()}-salary-by-months.xlsx`;
-        let salaryData = await getSalariesByMonth();
+        let salaryData = await getSalariesForExport();
         const workbook = new excelJS.Workbook();
         const worksheet = workbook.addWorksheet("Aylıq Maaşlar");
         worksheet.columns= [

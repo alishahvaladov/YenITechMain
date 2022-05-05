@@ -15,30 +15,55 @@ module.exports = {
             logging: false
         });
     },
-    getTimeOffs: async (hr_approve, director_approve, directorProject = null) => {
+    getTimeOffs: async (hr_approve, director_approve, directorProject = null, offset) => {
+        const result = {};
         let query = `
             SELECT toff.*, emp.first_name, emp.last_name, emp.father_name FROM TimeOffRequests as toff
             LEFT JOIN Employees as emp ON toff.emp_id = emp.id
             WHERE emp.deletedAt IS NULL
             AND emp.id IS NOT NULL
         `;
+        let countQuery = `
+            SELECT COUNT(*) as count FROM TimeOffRequests as toff
+            LEFT JOIN Employees as emp ON toff.emp_id = emp.id
+            WHERE emp.deletedAt IS NULL
+            AND emp.id IS NOT NULL
+        `
         if (hr_approve) {
             query += " AND toff.status = 1"
+            countQuery += " AND toff.status = 1"
         } else if (director_approve) {
             query += " AND toff.status = 2"
+            countQuery += " AND toff.status = 2"
         }
 
         if(directorProject !== null) {
             query += " AND emp.project_id = :directorProject"
+            countQuery += " AND emp.project_id = :directorProject"
         }
 
-        return await sequelize.query(query, {
+        query += `
+            LIMIT 15 OFFSET :offset
+        `;
+
+        result.timeoffs = await sequelize.query(query, {
+            type: QueryTypes.SELECT,
+            logging: false,
+            replacements: {
+                directorProject,
+                offset
+            }
+        });
+
+        result.count = await sequelize.query(countQuery, {
             type: QueryTypes.SELECT,
             logging: false,
             replacements: {
                 directorProject
             }
         });
+
+        return result;
     },
     getTimeOffByID: async (id) => {
         return await sequelize.query(`

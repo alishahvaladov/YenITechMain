@@ -1,4 +1,4 @@
-const { sequelize, Fine } = require("../../db_config/models");
+const { sequelize, Fine, ForgivenFine } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
 const dateObj = new Date("10/1/2021");
 let month = dateObj.getMonth();
@@ -112,6 +112,85 @@ module.exports = {
                 month,
                 year
             }
+        });
+    },
+    insertForgivenData: async (data, cb) => {
+        ForgivenFine.create({
+            fine_id: data.fine_id,
+            user_id: data.user_id,
+            emp_id: data.emp_id,
+            minute_total: data.minute_total,
+            forgiven_minute: data.forgivenData
+        }, {
+            logging: false
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
+    },
+    getAllForgivenData: async (offset) => {
+        const result = {};
+        result.forgiven_fines =  await sequelize.query(`
+            SELECT ff.*, emp.first_name, emp.last_name, emp.father_name FROM ForgivenFines as ff
+            LEFT JOIN Employees as emp ON emp.id = ff.emp_id
+            AND emp.deletedAt IS NULL
+            LIMIT 15 OFFSET :offset
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                offset
+            }
+        });
+
+        result.forgiven_user = await sequelize.query(`
+            SELECT usr.id, emp.first_name, emp.last_name, emp.father_name FROM ForgivenFines as ff
+            LEFT JOIN Users as usr ON usr.id = ff.user_id
+            LEFT JOIN Employees as emp ON usr.emp_id = emp.id
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
+
+        result.forgiven_fines_count = await sequelize.query(`
+            SELECT COUNT(*) as count FROM ForgivenFines as ff
+            LEFT JOIN Employees as emp ON emp.id = ff.emp_id
+            AND emp.deletedAt IS NULL
+            AND emp.j_end_date IS NULL
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
+
+        return result;
+    },
+    getForgivenDataByEmployee: async (id) => {
+        return await sequelize.query(`
+            SELECT ff.*, emp.first_name, emp.last_name, emp.father_name FROM ForgivenFines as ff
+            LEFT JOIN Employees as emp ON emp.id = ff.emp_id
+            WHERE ff.id = :id
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                id
+            }
+        });
+    },
+    updateFine: (data, cb) => {
+        Fine.update({
+            user_id: data.id,
+            minute_total: data.minute_total
+        }, {
+            where: {
+                id: data.id
+            },
+            logging: false
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
         });
     }
 }

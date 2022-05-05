@@ -4,7 +4,8 @@ const { getFPrints,
     addUnknownEmpsToDB,
     getFPrintsByDate,
     addForgottenFPrintsToDB,
-    getEmployeesIDsAndShiftTimes
+    getEmployeesIDsAndShiftTimes,
+    moveFromDraftToOrigin
 } = require("./service");
 const readXlsxFile = require("read-excel-file/node");
 const path = require("path");
@@ -168,7 +169,10 @@ module.exports = {
                     }
                 }
                 if(importExcelValidation) {
-                    setTimeout(next, 1000);
+                    setTimeout(() => {
+                        setTimeout(moveFromDraftToOrigin, 30 * 1000);
+                        next();
+                    }, 1000);
                 } else {
                     req.flash("error_msg", "Xahiş olunur düzgün excel faylını(Logix proqramından export olunmuş) yükləyin.");
                     return res.redirect("/all-fprints");

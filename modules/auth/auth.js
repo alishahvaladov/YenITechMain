@@ -37,6 +37,19 @@ module.exports = {
         next();
         // return res.redirect("/not-found");
     },
+    audit: (req, res, next) => {
+        // req.roleAuthenticated = false;
+        if(req.user.active_status === 0) {
+            req.flash("error_msg", "Please update password");
+            return res.redirect("/update-password");
+        }
+        if(req.isAuthenticated() && req.user.role === 7 || req.isAuthenticated() && req.user.role === 1) {
+            req.roleAuthenticated = true;
+            return next();
+        }
+        next();
+        // return res.redirect("/not-found");
+    },
     deptDirector: (req, res, next) => {
         if(req.user.active_status === 0) {
             req.flash("error_msg", "Please update password");
