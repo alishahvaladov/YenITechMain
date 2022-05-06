@@ -1,17 +1,32 @@
-const { getEmpInfo, getTimeOffs, addTimeOff, getDirectors, checkUploadPath, uploadFilePathToDB,
-    getTimeOffApproveForHR, cancelRequestByHr, approveRequestByHr, getTimeOffApproveForDR, 
-    cancelRequestByDR, approveRequestByDR, getTimeOffByID, uploadLetterFilePathToDB, checkLetterUploadPath} = require("./controller");
+const { 
+    getEmpInfo, 
+    getTimeOffs, 
+    addTimeOff, 
+    getDirectors, 
+    checkUploadPath, 
+    uploadFilePathToDB,
+    getTimeOffApproveForHR, 
+    cancelRequestByHr, 
+    approveRequestByHr, 
+    getTimeOffApproveForDR, 
+    cancelRequestByDR, 
+    approveRequestByDR, 
+    getTimeOffByID, 
+    uploadLetterFilePathToDB, 
+    checkLetterUploadPath,
+    getTimeOffsForDirector
+} = require("./controller");
 const express = require("express");
 const router = express.Router();
 const upload = require("./upload-middleware");
 const letterUpload = require("./upload-letter");
-const { hr, deptDirector} = require("../../modules/auth/auth");
+const { hr, deptDirector, checkRoles} = require("../../modules/auth/auth");
 
 
 router.post("/emp-info", hr, getEmpInfo);
 router.get("/", hr, getTimeOffs);
 router.get("/get-time-off-data/:id", hr, getTimeOffByID);
-router.get("/for-director", deptDirector, getTimeOffs);
+router.get("/for-director", deptDirector, checkRoles, getTimeOffsForDirector);
 router.post('/add', hr, addTimeOff);
 router.post("/get-directors", hr, getDirectors);
 router.post("/upload-form/:id", hr, checkUploadPath, upload.single('file'), uploadFilePathToDB, (req, res) => {

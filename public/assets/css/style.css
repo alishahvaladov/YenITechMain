@@ -229,7 +229,7 @@ span {
 .profile-dropdown-item {
     display: flex;
     justify-content: space-between;
-    width: 120px;
+    width: 200px;
     padding: 5px 1rem;
     clear: both;
     font-weight: 400;
@@ -657,4 +657,8 @@ input[type=number] {
 
 .pagination {
     margin-bottom: 20px;
+}
+
+.loading {
+    position: fixed !important;
 }

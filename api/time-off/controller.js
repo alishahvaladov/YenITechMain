@@ -16,7 +16,9 @@ const {
     approveRequestByDR,
     getEmployeeByUserID,
     getTimeOffByID, 
-    approveTimeOffRequest
+    approveTimeOffRequest,
+    getDirectorDepartment,
+    getTimeOffsForDirector
 } = require("./service");
 const path = require("path");
 const fs = require("fs");
@@ -31,29 +33,37 @@ module.exports = {
         })
     },
     getTimeOffs: async (req, res) => {
-        let result;
-        let directorProject;
-        let hr_approve = false;
-        let director_approve = false;
-        let id = req.user.id;
-        let offset = req.query.offset;
-        offset = parseInt(offset) * 15;
-        if (req.user.role === 10) {
-            directorProject = await getEmployeeByUserID(id);
-            directorProject = directorProject[0].project_id;
+        try {
+            let result;
+            let directorProject;
+            let hr_approve = false;
+            let director_approve = false;
+            let id = req.user.id;
+            let offset = req.query.offset;
+            offset = parseInt(offset) * 15;
+            if (req.user.role === 10) {
+                directorProject = await getEmployeeByUserID(id);
+                directorProject = directorProject[0].project_id;
+            }
+            if (req.query.hr_approve === "true") {
+                hr_approve = true;
+                result = await getTimeOffs(hr_approve, director_approve, null, offset);
+            } else if (req.query.director_approve === "true") {
+                director_approve = true;
+                result = await getTimeOffs(hr_approve, director_approve, directorProject, offset);
+            } else {
+                result = await getTimeOffs(hr_approve, director_approve, null, offset);
+            }
+            res.status(200).send({
+                result
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
         }
-        if (req.query.hr_approve === "true") {
-            hr_approve = true;
-            result = await getTimeOffs(hr_approve, director_approve, null, offset);
-        } else if (req.query.director_approve === "true") {
-            director_approve = true;
-            result = await getTimeOffs(hr_approve, director_approve, directorProject, offset);
-        } else {
-            result = await getTimeOffs(hr_approve, director_approve, null, offset);
-        }
-        res.status(200).send({
-            result
-        });
     },
     getTimeOffByID: async (req, res) => {
         const id = req.params.id;
@@ -487,5 +497,28 @@ module.exports = {
                 message: "Ups.. Something went wrong!"
             });
         }
-    } 
+    },
+    getTimeOffsForDirector: async (req, res) => {
+        try {
+            const user_id = req.user.id;
+            const department = await getDirectorDepartment(user_id);
+            const offset = parseInt(req.query.offset) * 15;
+            let dr_approve = false;
+            if (req.query.director_approve === "true") {
+                dr_approve = true;
+            }
+            const result = await getTimeOffsForDirector(department[0].department, dr_approve, offset);
+
+            return res.status(200).send({
+                success: true,
+                result
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    }
 }

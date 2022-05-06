@@ -1,3 +1,8 @@
+const empDataInput = document.querySelector("#toff-emp");
+const projectInput = document.querySelector("#toff-branch");
+const departmentInput = document.querySelector("#toff-department");
+const positionInput = document.querySelector("#toff-emp-position");
+
 const empSelector = $("#toff-maker");
 const messageDIV = document.querySelector('.messages');
 const toffBranch = $("#toff-branch");
@@ -11,30 +16,6 @@ const toffTimeDiv = document.querySelector(".toff-authorized-time");
 const toffTimeDateDiv = document.querySelector('.timeoff-time-date');
 const wStartDateDiv = document.querySelector('.w-start-date');
 
-empSelector.change(function () {
-    let id = empSelector.val();
-    let department = $("#toff-department");
-    let project = $("#toff-branch");
-    let position = $("#toff-emp-position"); 
-
-    $.post("http://localhost:3000/api/time-off/emp-info", {
-        id: id
-    }, (res) => {
-        department.val(res.result[0].depName);
-        project.val(res.result[0].projName);
-        position.val(res.result[0].posName);
-        $.post("http://localhost:3000/api/time-off/get-directors", {
-            projID: res.result[0].project_id,
-            deptID: res.result[0].department
-        }, (res) => {
-            // console.log(res);
-            // const deptDirector = `${res.result.deptDirector[0].first_name} ${res.result.deptDirector[0].last_name}`;
-            // const director = `${res.result.director[0].first_name} ${res.result.director[0].last_name}`;
-            // deptDirectorInp.val(deptDirector);
-            // directorInp.val(director);
-        });
-    });
-});
 
 const timeOffType = document.querySelector("#time-off-selector");
 const timeOffStartDate = document.querySelector("#toff-start-date");
@@ -48,11 +29,22 @@ const wordBtnContainer = document.querySelector(".word-btn-container");
 const toffTime = document.querySelector("#toff-authorized-time");
 const toffTimeDate = document.querySelector('#timeoff-time-date');
 
+const getUserData = () => {
+    $.get('http://localhost:3000/api/profile/user-data', (res) => {
+        const employee = res.employee[0];
+        empDataInput.value = `${employee.first_name} ${employee.last_name} ${employee.father_name}`;
+        projectInput.value = employee.projName;
+        departmentInput.value = employee.deptName;
+        positionInput.value = employee.posName;
+    });
+}
 
 flatpickr("#w-start-date", {
     dateFormat: "Y-m-d",
     enable: ['']
  });
+
+getUserData();
 
 timeOffEndDate.addEventListener("change", () => {
     let timeOffEndDateValue = new Date(timeOffEndDate.value);
@@ -62,76 +54,6 @@ timeOffEndDate.addEventListener("change", () => {
         dateFormat: "Y-m-d",
         enable: [`${timeOffEndDateValue.getFullYear()}-${timeOffEndDateValue.getMonth() + 1}-${timeOffEndDateValue.getDate()}`, `${dayAfterEndDateValue.getFullYear()}-${dayAfterEndDateValue.getMonth() + 1}-${dayAfterEndDateValue.getDate()}`]
      }); 
-});
-
-const sendTimeOffRequest = () => {
-    let fd = new FormData();
-    let file = uploadDoc.files[0];
-    const id = emp.value;
-    if (file) {
-        fd.append('file', file);
-        $.ajax({
-            url: `http://localhost:3000/api/time-off/upload-form/${id}`,
-            type: "post", 
-            data: fd,
-            enctype: "multipart/form-data",
-            contentType: false,
-            processData: false,
-            success: (res) => {
-                console.log(res);
-                $.post("http://localhost:3000/api/time-off/add", {
-                    timeOffType: timeOffType.value,
-                    timeOffStartDate: timeOffStartDate.value,
-                    timeOffEndDate: timeOffEndDate.value,
-                    wStartDate: wStartDate.value,
-                    toffTime: toffTime.value,
-                    toffTimeDate: toffTimeDate.value,
-                    emp: emp.value
-                }).done((data) => {
-                    let html = `
-                        <div class="alert alert-success alert-dismissible fade show">
-                            Məzuniyyət sorğusu əlavə olundu
-                        </div>
-                    `
-                    $("body").css("cursor", "progress")
-                    messageDIV.innerHTML = html;
-                    setTimeout(() => {
-                        messageDIV.innerHTML = "";
-                        location.href = "/timeoffrequests"
-                    }, 2000);
-                }).fail((err) => {
-                    const message = err.responseJSON.message;
-                    let html = `
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            ${message}
-                        </div>
-                    `
-                    messageDIV.innerHTML = html;
-                    setTimeout(() => {
-                        messageDIV.innerHTML = "";
-                    }, 2000);
-                });
-            }
-        }).catch((err) => {
-            const message = err.responseJSON.message;
-            let html = `
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    ${message}
-                </div>
-            `
-            messageDIV.innerHTML = html;
-            setTimeout(() => {
-                messageDIV.innerHTML = "";
-            }, 2000);
-        })
-    }
-    
-} 
-
-
-
-applyBtn.addEventListener("click", () => {
-    sendTimeOffRequest();
 });
 
 nextBtn.addEventListener("click", () => {
@@ -162,13 +84,7 @@ nextBtn.addEventListener("click", () => {
         dayOffE = `${dayOffE[2]}.${dayOffE[1]}.${dayOffE[0]}`
         let wStartDate = document.querySelector("#w-start-date");
         wStartDate = wStartDate.value;
-        let nameSurnameFather = document.querySelector("#toff-maker");
-        let empOptions = nameSurnameFather.options;
-        for(let i = 0; i < empOptions.length; i++) {
-            if (empOptions[i].value === nameSurnameFather.value) {
-                nameSurnameFather = empOptions[i].text;
-            }
-        }                    
+        let nameSurnameFather = empDataInput.value;               
         let department = document.querySelector("#toff-department");
         department = department.value;
         department = department.replace("şöbə", "")
@@ -238,7 +154,6 @@ nextBtn.addEventListener("click", () => {
 
 
 timeOffType.addEventListener('change', () => {
-    console.log(timeOffType.value);
     if (parseInt(timeOffType.value) === 4) {
         toffStartDiv.classList.add('d-none');
         toffEndDiv.classList.add('d-none');

@@ -43,6 +43,7 @@ module.exports = {
         }
 
         query += `
+            ORDER BY (toff.status <> 0) DESC, toff.status
             LIMIT 15 OFFSET :offset
         `;
 
@@ -301,5 +302,60 @@ module.exports = {
         }).catch((err) => {
             cb(err);
         });
+    },
+    getDirectorDepartment: async (user_id) => {
+        return await sequelize.query(`
+            SELECT emp.department FROM Employees as emp
+            LEFT JOIN Users as usr ON usr.emp_id = emp.id
+            WHERE usr.id = :user_id
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                user_id
+            }
+        });
+    },
+    getTimeOffsForDirector: async (department, dr_approve, offset) => {
+        const result = {};
+        let timeOffQuery = `
+            SELECT tor.*, emp.first_name, emp.last_name, emp.father_name FROM TimeOffRequests as tor
+            LEFT JOIN Employees as emp ON emp.id = tor.emp_id
+            WHERE emp.department = :department
+            AND emp.deletedAt IS NULL
+        `;
+
+        if (dr_approve) {
+            timeOffQuery += ` AND tor.status = 2`;
+        }
+
+        timeOffQuery += `
+            ORDER BY (tor.status <> 0) DESC, tor.status
+            LIMIT 15 OFFSET :offset
+        `;
+
+        result.timeoffs = await sequelize.query(timeOffQuery, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                department,
+                offset
+            }
+        });
+
+        result.count = await sequelize.query(`
+            SELECT COUNT(*) as count FROM TimeOffRequests as tor
+            LEFT JOIN Employees as emp ON emp.id = tor.emp_id
+            WHERE emp.department = :department
+            AND emp.deletedAt IS NULL
+        `, {
+            loggging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                department
+            }
+        });
+
+        return result;
     }
 }

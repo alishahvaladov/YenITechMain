@@ -5,11 +5,11 @@ const dateToAzVersion = (date) => {
     return `${splittedDate[2]}.${splittedDate[1]}.${splittedDate[0]}`
 }
 const renderPage = () => {
-    $.get("http://localhost:3000/api/time-off?hr_approve=true", (res) => {
+    $.get("http://localhost:3000/api/time-off?hr_approve=true&offset=0", (res) => {
         console.log(res);
-        const timeOffs = res.timeOffs;
+        const timeOffs = res.result.timeoffs;
         let html = "";
-        if(res.timeOffs.length < 1) {
+        if(timeOffs.length < 1) {
             tbody.innerHTML = `<p class="text-danger">No Data Found</p>`
         } else {
             timeOffs.forEach(timeOff => {
@@ -35,8 +35,7 @@ const renderPage = () => {
             });
             tbody.innerHTML = html;
         }
-        
-    })
+    });
 }
 
 renderPage();

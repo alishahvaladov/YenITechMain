@@ -34,8 +34,7 @@ module.exports = {
             req.roleAuthenticated = true;
             return next();
         }
-        next();
-        // return res.redirect("/not-found");
+        return res.redirect("/not-found");
     },
     audit: (req, res, next) => {
         // req.roleAuthenticated = false;
@@ -56,6 +55,7 @@ module.exports = {
             return res.redirect("/update-password");
         }
         if(req.isAuthenticated() && req.user.role === 10 || req.isAuthenticated() && req.user.role === 1) {
+            req.roleAuthenticated = true;
             return next();
         } 
         return res.redirect("/not-found");

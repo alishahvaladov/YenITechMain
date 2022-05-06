@@ -34,7 +34,7 @@
                         <input type="number" id="toff-authorized-time">
                     </div>
                     <div class="w-start-date">
-                        <label for="w-start-date">İşə Qayıtma Tarixi: </label>
+                        <label for="w-start-date">İşə başlama tarixi </label>
                         <input type="date" id="w-start-date">
                     </div>
                     <div class="possible-toff-days d-flex align-items-center">
@@ -44,13 +44,8 @@
                 </div>
                 <div class="toff-select-cont-right d-flex flex-column">
                     <div class="toff-maker">
-                        <label for="toff-maker">Təşəbbüsçü:</label>
-                        <select name="emp_id" id="toff-maker">
-                            <option value="0" hidden>Əməkdaş Seçin</option>
-                            {{#each result}}
-                                <option value="{{this.id}}">{{this.first_name}} {{this.last_name}} {{this.father_name}}</option>
-                            {{/each}}
-                        </select>
+                        <label for="toff-emp">Təşəbbüsçü:</label>
+                        <input type="text" name="toff-emp" id="toff-emp" disabled>
                         <input type="hidden" id="empNameForWord">
                     </div>
                     <div class="toff-branch">
@@ -93,4 +88,4 @@
 <script src="/assets/js/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="/assets/js/number-to-azeri-word.js"></script>
-<script src="/assets/js/time-off-api.js"></script>
+<script src="/assets/js/user-request-timeoff.js"></script>
