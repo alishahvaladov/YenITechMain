@@ -5,6 +5,7 @@ const empModalCloseBtn = document.querySelector(".empModalCloseBtn");
 const exportToExcelBtn = document.querySelector("#exportToExcel");
 const empEditCancelBtn = document.querySelector("#empEditCancelBtn");
 const profilePicture = document.querySelector("#profilePicture");
+const pagination = document.querySelector('.pagination');
 
 const empName = document.querySelector("#name");
 const empMName = document.querySelector("#midName");
@@ -242,13 +243,14 @@ const pageFuncs = () => {
    let fTDots = document.querySelector('.fTDots');
    let lTDots = document.querySelector('.lTDots');
    pgItems = Array.from(pgItems);
-
    pgItems.forEach(item => {
       item.addEventListener("click", () => {
          loading.classList.remove('d-none');
          let offset = item.value;
          let activeClass = document.querySelector('.active');
          let index = pgItems.indexOf(activeClass);
+         console.log(index);
+         console.log(pgItems[index]);
          pgItems[index].classList.remove('active');
          item.classList.add('active');
          activeClass = document.querySelector('.active');
@@ -302,17 +304,17 @@ const pageFuncs = () => {
                limit: limitVal
             }, (res) => {
                let tbody = $("tbody");
-               let trs = "";
+               let trs = ``;
                tbody.text("");
                let emps = res.result;
                let role = res.role;
                if(role === "super_admin") {
                   for (let i = 0; i < emps.length; i++) {
                      if (emps[i].j_end_date) {
-                        tdClass = 'text-danger';
+                        tdClass = 'badge bg-danger';
                         tdText = 'İşdən Ayrılıb'
                      } else {
-                        tdClass = 'text-success';
+                        tdClass = 'badge bg-success';
                         tdText = 'İşləyir';
                      }
                      trs +=
@@ -324,7 +326,7 @@ const pageFuncs = () => {
                            <td>${emps[i].deptName}</td>
                            <td>${emps[i].posName}</td>
                            <td>${emps[i].projName}</td>
-                           <td class="${tdClass}">${tdText}</td>
+                           <td><span class="${tdClass}">${tdText}</span></td>
                            <td class="d-flex justify-content-between last-td btn-group" style="position: relative">
                                 <a class="btn btn-outline-danger btn-sm" href="/employee/delete/${emps[i].id}"><i class="bi bi-person-x"></i></a>
                                 <button class="btn btn-outline-danger btn-sm empRmBtn" value="${emps[i].id}"><i class="bi bi-dash-circle"></i></button>
@@ -336,10 +338,10 @@ const pageFuncs = () => {
                } else if (role === "hr") {
                   for (let i = 0; i < emps.length; i++) {
                      if (emps[i].j_end_date) {
-                        tdClass = 'text-danger';
+                        tdClass = 'badge bg-danger';
                         tdText = 'İşdən Ayrılıb'
                      } else {
-                        tdClass = 'text-success';
+                        tdClass = 'badge bg-success';
                         tdText = 'İşləyir';
                      }
                      trs +=
@@ -351,7 +353,7 @@ const pageFuncs = () => {
                            <td>${emps[i].deptName}</td>
                            <td>${emps[i].posName}</td>
                            <td>${emps[i].projName}</td>
-                           <td class="${tdClass}">${tdText}</td>
+                           <td><span class="${tdClass}">${tdText}</span></td>
                            <td class="d-flex justify-content-between last-td btn-group" style="position: relative">
                                 <button class="btn btn-outline-danger btn-sm empRmBtn" value="${emps[i].id}"><i class="bi bi-dash-circle"></i></button>
                                 <button class="btn btn-outline-secondary btn-sm empEditBtn" value="${emps[i].id}" "><i class="bi bi-pencil-square"></i></button>
@@ -399,67 +401,71 @@ const renderPage = () => {
       if(role === "super_admin") {
          for (let i = 0; i < result.length; i++) {
             if (result[i].j_end_date) {
-               tdClass = 'text-danger';
+               tdClass = 'badge bg-danger';
                tdText = 'İşdən Ayrılıb'
             } else {
-               tdClass = 'text-success';
+               tdClass = 'badge bg-success';
                tdText = 'İşləyir';
             }
-
-
             html += `
          <tr>
              <td></td>
              <td>${result[i].first_name + " " + result[i].last_name + " " + result[i].father_name}</td>
-             <td>${result[i].phone_number}</td>
+             <td class="d-none d-xl-table-cell">${result[i].phone_number}</td>
              <td>${result[i].deptName}</td>
-             <td>${result[i].posName}</td>
+             <td class="d-none d-xl-table-cell">${result[i].posName}</td>
              <td>${result[i].projName}</td>
-              <td><span class="${tdClass}">${tdText}</span></td>
-             <td class="d-flex justify-content-between last-td btn-group" style="position: relative">
-                 <a class="btn btn-outline-danger btn-sm" href="/employee/delete/${result[i].id}"><i class="bi bi-person-x"></i></a>
-                 <button class="btn btn-outline-danger btn-sm empRmBtn" value="${result[i].id}"><i class="bi bi-dash-circle"></i></button>
-                 <button class="btn btn-outline-secondary btn-sm empEditBtn" value="${result[i].id}" "><i class="bi bi-pencil-square"></i></button>
+             <td class="d-none d-xl-table-cell"><span class="${tdClass}">${tdText}</span></td>
+             <td class="d-flex justify-content-between last-td d-none d-xl-table-cell" style="position: relative">
+                  <div class="btn-group" role="group" aria-label="First group">
+                     <a type="button" class="btn btn-outline-danger" href="/employee/delete/${result[i].id}"><i class="bi bi-person-x"></i></a>
+                     <button type="button" class="btn btn-outline-danger empRmBtn" value="${result[i].id}"><i class="bi bi-dash-circle"></i></button>
+                     <button type="button" class="btn btn-outline-secondary empEditBtn" value="${result[i].id}" "><i class="bi bi-pencil-square"></i></button>
+                  </div>
              </td>
          </tr>
       `
          }
          tbody.innerHTML = html;
-         for (let i = 1; i <= count; i++) {
-            if (i === 1) {
-               pgHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm active" value="${i}">${i}</button>`
-               if(count > 21) {
-                  pgHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
-               }
-            } if (i > 21 && i < count) {
-               pgHtml += `
-                    <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                `
-            } else if (i !== 1 && i !== count) {
-               pgHtml += `
-                    <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                `
-            }
-            if (i === count) {
-               if (count > 21) {
+         if (count === 1) {
+            pagination.classList.add('d-none');
+            limit.classList.add('d-none');
+         } else {
+            for (let i = 1; i <= count; i++) {
+               if (i === 1) {
+                  pgHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm active" value="${i}">${i}</button>`
+                  if(count > 21) {
+                     pgHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
+                  }
+               } if (i > 21 && i < count) {
                   pgHtml += `
-                    <button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>
-                  `
-               }
-               if (count > 1) {
+                       <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                   `
+               } else if (i !== 1 && i !== count) {
                   pgHtml += `
-                    <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                `
+                       <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                   `
                }
-               
+               if (i === count) {
+                  if (count > 21) {
+                     pgHtml += `
+                       <button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>
+                     `
+                  }
+                  if (count > 1) {
+                     pgHtml += `
+                       <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                   `
+                  }
+                  
+               }
             }
+            pgContainer.innerHTML = pgHtml;
          }
-         pgContainer.innerHTML = pgHtml;
          setTimeout(() => {
             loading.classList.add("d-none");
          }, 200);
          empRemModule();
-         pageFuncs();
          empEditModule();
       } else if (role === "hr") {
          for (let i = 0; i < result.length; i++) {
@@ -510,9 +516,11 @@ const renderPage = () => {
                     <button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>
                   `
                }
-               pgHtml += `
-                    <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                `
+               if (count > 1) {
+                  pgHtml += `
+                     <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                  `
+               }
             }
          }
          pgContainer.innerHTML = pgHtml;
@@ -520,7 +528,6 @@ const renderPage = () => {
             loading.classList.add("d-none");
          }, 200);
          empRemModule();
-         pageFuncs();
          empEditModule();
       }
    });
@@ -602,4 +609,4 @@ empProj.keyup(renderPage);
 empStatus.change(renderPage);
 
 
-setTimeout(renderPage, 2000);
+setTimeout(renderPage, 1000);

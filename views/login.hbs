@@ -1,26 +1,47 @@
-<div class="div text-center">
-    {{>messages}}
-</div>
-<div class="login">
-    <div class="container">
-        <div class="logos">
-            <div class="logo-1 yenitech">
-                <img src="/assets/img/a.png" alt="">
-            </div>
-        </div>
-        <div class="login-form">
-            <form action="" method="post">
-                <div class="form-container">
-                    <input type="text" placeholder="Username" name="username">
-                    <input type="password" placeholder="Password" name="password">
-                    <div class="remember-forgot">
-                        <a href="/forgot-password">Forgot Your Password?</a>
-                    </div>
-                    <div class="sign-button">
-                        <button type="submit" id="signIn">Sign In</button>
+<main class="d-flex w-100">
+    <div class="container d-flex flex-column">
+        <div class="row vh-100">
+            <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
+                <div class="d-table-cell align-middle">
+
+                    <div class="card">
+                        <div class="card-body px-5">
+                            <div class="text-center">
+                                    <img src="/assets/img/a.png" alt="Yenitech"
+                                        class="img-fluid" style="height: 250px !important; width: auto !important;"/>
+                                </div>
+                                <form method="post">
+                                    <div class="mb-3">
+                                        <label class="form-label">Username</label>
+                                        <input class="form-control form-control-lg" type="text" name="username"
+                                            placeholder="Enter your username" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Password</label>
+                                        <input class="form-control form-control-lg" type="password" name="password"
+                                            placeholder="Enter your password" />
+                                        <small>
+                                            <a href="index.html">Forgot password?</a>
+                                        </small>
+                                    </div>
+                                    <div>
+                                        <label class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="remember-me"
+                                                name="remember-me" checked />
+                                            <span class="form-check-label">
+                                                Remember me next time
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        {{!-- <a href="index.html" class="btn btn-lg btn-primary">Sign in</a> --}}
+                                        <button type="submit" class="btn btn-lg btn-primary">Sign in</button>
+                                    </div>
+                                </form>
+                        </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
+</main>

@@ -1,6 +1,7 @@
 const tbody = document.querySelector("tbody");
 const loading = document.querySelector(".loading");
 const pgContatiner = document.querySelector(".pagination-container");
+const pagination = document.querySelector(".pagination");
 
 
 const pageFunctions = () => {
@@ -106,35 +107,39 @@ const renderPage = () => {
         tbody.innerHTML = html;
         loading.classList.add('d-none');
 
-        let countHtml = "";
+        if (count > 1) {
+            let countHtml = "";
 
-        for (let i = 1; i <= count; i++) {
-            if (i === 1) {
-                countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm active" value="${i}">${i}</button>`
-                countHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
-            } 
-            if (i > 21 && i < count) {
-                countHtml += `
-                    <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                `
-            } else if (i !== 1 && i !== count) {
-                countHtml += `
-                    <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                `
-            }
-            if (i === count) {
-                if(count > 21) {
-                    countHtml += `<button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>`
-                }
-                if (count !== 1) {
+            for (let i = 1; i <= count; i++) {
+                if (i === 1) {
+                    countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm active" value="${i}">${i}</button>`
+                    countHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
+                } 
+                if (i > 21 && i < count) {
+                    countHtml += `
+                        <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                    `
+                } else if (i !== 1 && i !== count) {
                     countHtml += `
                         <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
                     `
                 }
+                if (i === count) {
+                    if(count > 21) {
+                        countHtml += `<button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>`
+                    }
+                    if (count !== 1) {
+                        countHtml += `
+                            <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                        `
+                    }
+                }
             }
+            pgContatiner.innerHTML = countHtml;
+            pageFunctions();
+        } else {
+            pagination.classList.add('d-none');
         }
-        pgContatiner.innerHTML = countHtml;
-        pageFunctions();
     });
 }
 

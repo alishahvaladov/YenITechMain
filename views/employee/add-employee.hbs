@@ -1,152 +1,166 @@
-{{> messages }}
-<div class="time-off-form mb-5">
+<div class="form-container">
     <h1 class="text-center">Əməkdaş Qeydiyyat Formu</h1>
-    <form action="" method="post">
-        <div class="toff-partitions toff-active">
-            <div class="time-off-select-container d-flex justify-content-between mt-5">
-                <div class="toff-select-cont-left d-flex flex-column">
-                    <div class="time-off-type">
-                        <label for="empName">İşçinin Adı: </label>
-                        <input type="text" name="first_name" id="empName">
-                    </div>
-                    <div class="time-off-description">
-                        <label for="empSurname">Soyadı: </label>
-                        <input type="text" name="last_name" id="empSurname">
-                    </div>
-                    <div class="time-off-priority">
-                        <label for="father_name">Ata adı: </label>
-                        <input type="text" name="father_name" id="father_name">
-                    </div>
-                    <div class="toff-start-date">
-                        <label for="empMidName">2nci Adı: </label>
-                        <input type="text" name="middle_name" id="empMidName">
-                    </div>
-                    <div class="sex">
-                        <label for="sex">Cinsiyəti Seçin</label>
-                        <select name="sex" id="sex">
-                            <option value="0">Kişi</option>
-                            <option value="1">Qadın</option>
-                        </select>
-                    </div>
-                    <div class="toff-end-date">
-                        <label for="dob">Doğum Tarixi: </label>
-                        <input type="date" id="dob" name="dob">
-                    </div>
-                    <div class="w-start-date">
-                        <label for="ssn">SSN: </label>
-                        <input type="number" name="SSN" id="ssn">
-                    </div>
-                    <div class="possible-toff-days d-flex align-items-center">
-                        <label for="fin">FİN: </label>
-                        <input type="text" name="FIN" id="fin">
-                    </div>
-                    <div class="toff-application-document">
-                        <label for="q_address">Qeydiyatda olduğu ünvan: </label>
-                        <input type="text" id="q_address" name="q_address">
-                    </div>
-                    <div class="toff-maker">
-                        <label for="y_address">Yaşadığı ünvan:</label>
-                        <input type="text" id="y_address" name="y_address">
-                    </div>
-                    <div class="toff-branch">
-                        <label for="phone_number">Telefon Nömrəsi: </label>
-                            <input type="number" name="phone_number" id="phone_number">
-                    </div>
-                    <div class="toff-department">
-                        <label for="home_number">Ev telefonu:</label>
-                        <input type="number" name="home_number" id="home_number">
-                    </div>
+    <div class="card-body">
+        {{> messages }}
+    </div>
+    <form class="row" method="post">
+        <div class="col-12 col-lg-6">
+            <div class="card-body" style="padding-top: 0 !important; padding-bottom: 0 !important;">
+                <div class="mb-3">
+                    <label for="empName" class="form-label">Ad:</label>
+                    <input class="form-control" type="text" name="first_name" id="empName">
                 </div>
-                <div class="emp-select-cont-right d-flex flex-column">
-                    
-                    <div class="toff-branch">
-                        <label for="logix_name">Logix Adı: </label>
-                        <input type="text" name="logix_name" id="logix_name">                           
-                    </div>
-                    <div class="toff-department">
-                        <label for="tabel_no">Logix Tabel No:</label>
-                        <input type="text" name="tabel_no" id="tabel_no">
-                    </div> 
-                    <div class="toff-emp-position time-off-shiftTypeSelect">
-                        <label for="select_shift_type">Ştat Tipi: </label>
-                        <select name="select_shift_type" id="select_shift_type">
-                            <option value="1" selected>Standart</option>
-                            <option value="2">Xüsusi</option>
-                        </select>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <div class="shift-auto d-flex justify-content-between w-100 px-0">
-                            <label for="shift_type">Ştat: </label>
-                            <select name="shift_type" id="shift_type">
-                                <option value="default" hidden>Ştat qrafiki</option>
-                                <option value="1">Tam Ştat</option>
-                                <option value="2">Yarımştat (Günün 1-ci yarısı)</option>
-                                <option value="3">Yarımştat (Günün 2-ci yarısı)</option>
-                            </select>
-                        </div>
-                        <div class="shift-manual d-flex flex-column justify-content-between w-100 p-0 d-none">
-                            <div class="toff-emp-comment d-flex justify-content-between w-100 px-0">
-                                <label for="shift_start_t">İşə gəlmə vaxtı: </label>
-                                <input type="time" name="shift_start_t" id="shift_start_t">
-                            </div>
-                            <div class="toff-emp-comment d-flex justify-content-between w-100 px-0">
-                                <label for="shift_end_t">İşdən çıxma vaxtı: </label>
-                                <input type="time" name="shift_end_t" id="shift_end_t">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="toff-emp-comment">
-                        <label for="job_start_date">İşə başlama tarixi: </label>
-                        <input type="date" name="j_start_date" id="job_start_date">
-                    </div>
-                    <div class="toff-emp-comment">
-                        <label for="dayoff_days_total">Məzuniyyət günlərinin sayı:</label>
-                        <input type="number" name="dayoff_days_total" id="dayoff_days_total">
-                    </div>
-
-                    <div class="toff-emp-comment">
-                        <label for="working_days">İş günlərinin sayı:</label>
-                        <div>
-                            <input style="width: fit-content; height: fit-content" type="checkbox" name="full_day" id="full_day" checked>
-                            <input placeholder="Tam iş günü" style="color: var(--web-text-color); box-shadow: -1px -1px 3px rgb(255 255 255), 2px 2px 6px rgb(0 0 0 / 30%), inset -2px -2px 10px rgb(255 255 255), inset 2px 2px 10px rgb(0 0 0 / 30%) !important;" type="number" name="working_days" id="working_days" disabled>
-                        </div>
-                    </div>
-                    <div class="toff-emp-comment">
-                        <label for="project_id">Proyekt:</label>
-                        <select class="select-width" name="project_id" id="project_id">
-                            <option value="" hidden>Seçin</option>
-                            {{#if pjResult}}
-                                {{#each pjResult}}
-                                    <option value="{{this.id}}">{{this.name}}</option>
-                                {{/each}}
-                            {{/if}}
-                        </select>
-                    </div>
-                    <div class="toff-emp-comment">
-                        <label for="department_id">Departament:</label>
-                        <select class="select-width" name="department" id="department_id">
-                            
-                        </select>
-                    </div>
-                    <div class="toff-emp-comment">
-                        <label for="position_id">Vəzifəsi:</label>
-                        <select class="select-width" name="position_id" id="position_id">
-                            
-                        </select>
-                    </div>
+                <div class="mb-3">
+                    <label for="empSurname" class="form-label">Soyad:</label>
+                    <input class="form-control" type="text" name="last_name" id="empSurname">
+                </div>
+                <div class="mb-3">
+                    <label for="father_name" class="form-label">Ata adı:</label>
+                    <input class="form-control" type="text" name="father_name" id="father_name">
+                </div>
+                <div class="mb-3">
+                    <label for="sex" class="form-label">Cinsiyyət:</label>
+                    <select class="form-select" name="sex" id="sex">
+                        <option value="0">Kişi</option>
+                        <option value="1">Qadın</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="dob" class="form-label">Doğum Tarixi:</label>
+                    <input class="form-control" type="date" id="dob" name="dob" style="background-color: #fff !important;">
+                </div>
+                <div class="mb-3">
+                    <label for="ssn" class="form-label">SSN</label>
+                    <input class="form-control" type="number" name="SSN" id="ssn">
+                </div>
+                <div class="mb-3">
+                    <label for="q_address" class="form-label">Qeydiyyatda olduğu ünvan:</label>
+                    <input class="form-control" type="text" name="q_address" id="q_address">
+                </div>
+                <div class="mb-3">
+                    <label for="y_address" class="form-label">Faktiki ünvan:</label>
+                    <input class="form-control" type="text" name="y_address" id="y_address">
+                </div>
+                <div class="mb-3">
+                    <label for="phone_number" class="form-label">Mobil telefonu:</label>
+                    <input class="form-control" type="number" name="phone_number" id="phone_number">
+                </div>
+                <div class="mb-3">
+                    <label for="home_number" class="form-label">Ev telefonu:</label>
+                    <input class="form-control" type="number" name="home_number" id="home_number">
                 </div>
             </div>
         </div>
-        <div class="note-and-btn d-flex justify-content-between align-items-center">
-            <div class="note">
-                <p class="p-note"><span class="text-danger">Qeyd: </span> <span class="text-danger">Əməkdaşın logix proqram təminatındaki adı və tabel nömrəsi dəqiq qeyd olunmalıdır. Adının və yaxud tabel nömrəsinin
-             dəyişmə halında məlumatları yeniləməyi unutmayınız.</span></p>
+        <div class="col-12 col-lg-6">
+            <div class="card-body" style="padding-top: 0 !important; padding-bottom: 0 !important;">
+                <div class="mb-3">
+                    <label for="logix_name" class="form-label">Logix adı:</label>
+                    <input class="form-control" type="text" name="logix_name" id="logix_name">
+                </div>
+                <div class="mb-3">
+                    <label for="tabel_no" class="form-label">Logix Tabel No:</label>
+                    <input class="form-control" type="text" name="tabel_no" id="tabel_no">
+                </div>
+                <div class="mb-3">
+                    <label for="select_shift_type" class="form-label">Ştat Tipi</label>
+                    <select class="form-select" name="select_shift_type" id="select_shift_type">
+                        <option value="1" selected>Standart</option>
+                        <option value="2">Xüsusi</option>
+                    </select>
+                </div>
+                <div class="mb-3 shift-auto">
+                    <label for="shift_type" class="form-label">Ştat: </label>
+                    <select class="form-select" name="shift_type" id="shift_type">
+                        <option value="default" hidden>Ştat qrafiki</option>
+                        <option value="1">Tam Ştat</option>
+                        <option value="2">Yarımştat (Günün 1-ci yarısı)</option>
+                        <option value="3">Yarımştat (Günün 2-ci yarısı)</option>
+                    </select>
+                </div>
+                <div class="mb-3 shift-manual d-none">
+                    <div class="mb-3">
+                        <label for="shift_start_t" class="form-label">İşə gəlmə vaxtı: </label>
+                        <input class="form-control" type="time" name="shift_start_t" id="shift_start_t" style="background-color: #fff !important;">
+                    </div>
+                    <div>
+                        <label for="shift_end_t" class="form-label">İşdən çıxma vaxtı: </label>
+                        <input class="form-control" type="time" name="shift_end_t" id="shift_end_t" style="background-color: #fff !important;">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="job_start_date" class="form-label">İşə başlama tarixi: </label>
+                    <input class="form-control" type="date" name="j_start_date" id="job_start_date" style="background-color: #fff !important;">
+                </div>
+                <div class="mb-3">
+                    <label for="dayoff_days_total" class="form-label">Məzuniyyət günlərinin sayı:</label>
+                    <input class="form-control" type="number" name="dayoff_days_total" id="dayoff_days_total">
+                </div>
+                <div class="mb-3">
+                    <label for="working_days" class="form-label">İş günlərinin sayı:</label>
+                    <input class="form-check-input mx-2" type="checkbox" name="full_day" id="full_day" checked>
+                    <input class="form-control" placeholder="Tam iş günü" type="number" name="working_days" id="working_days" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="project_id" class="form-label">Proyekt:</label>
+                    <select class="form-select" name="project_id" id="project_id">
+                        <option value="" hidden>Seçin</option>
+                        {{#if pjResult}}
+                            {{#each pjResult}}
+                                <option value="{{this.id}}">{{this.name}}</option>
+                            {{/each}}
+                        {{/if}}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="department_id" class="form-label">Departament:</label>
+                    <select class="form-select" name="department" id="department_id">
+                        
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="position_id" class="form-label">Vəzifəsi:</label>
+                    <select class="form-select" name="position_id" id="position_id">
+                        
+                    </select>
+                </div>
             </div>
-            <div class="toff-submit-btn">
-                <button class="btn" id="empRegApply">Apply</button>
+        </div>
+        <div class="col-12">
+            <div class="card-body" style="padding-top: 0 !important; padding-bottom: 0 !important;">
+                <div class="mb-3">
+                    <label for="fin" class="form-label">FIN</label>
+                    <input class="form-control" type="text" name="FIN" id="fin">
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card-body">
+                <div class="note-and-btn d-flex justify-content-between align-items-center">
+                    <div class="note">
+                        <p class="p-note">
+                            <span class="text-danger">Qeyd: </span>
+                            <span class="text-danger">
+                                Əməkdaşın logix proqram təminatındaki adı və
+                                tabel nömrəsi dəqiq qeyd olunmalıdır.
+                                Adının və yaxud tabel nömrəsinin
+                                dəyişmə halında məlumatları yeniləməyi
+                                unutmayınız.
+                            </span>
+                        </p>
+                    </div>
+                    <div class="">
+                        <button class="btn btn-primary btn-lg" type="submit">Apply</button>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
+</div>
+
+<div class="loading top-0 w-100" style="left: 0; height: 100vh">
+    <div class="loading-container bg-opacity-25 w-100 h-100 d-flex justify-content-center align-items-center">
+        <img src="/assets/img/atom.svg" style="width: 100px">
+    </div>
 </div>
 
 <script src="/assets/js/jquery.min.js"></script>

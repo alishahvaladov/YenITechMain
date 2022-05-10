@@ -1,6 +1,7 @@
 const { sequelize } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
 const date = new Date();
+const dayOfToday = date.toLocaleDateString('zh-Hans-CN');
 let month = date.getMonth();
 month = parseInt(month) + 1;
 let year = date.getFullYear();
@@ -149,48 +150,22 @@ module.exports = {
             nfpLCount += " AND nfp.leave_sign_time like :fTime"
             replacements.fTime = "%" + data.qTime + "%";
         }
-        if(data.qDay !== '' && data.qDay !== '00' && data.qDay !== 'gun') {
-            fpQuery += " AND DAY(fp.f_print_date) = :fDay"
-            nfpEQuery += " AND DAY(nfp.date) = :fDay"
-            nfpLQuery += " AND DAY(nfp.date) = :fDay"
-            fpCount += " AND DAY(fp.f_print_date) = :fDay"
-            nfpECount += " AND DAY(nfp.date) = :fDay"
-            nfpLCount += " AND DAY(nfp.date) = :fDay"
-            replacements.fDay = data.qDay;
-        }
-        if (data.qMonth !== '' && data.qMonth !== "00" && data.qMonth !== 'ay') {
-            fpQuery += " AND MONTH(fp.f_print_date) = :fMonth"
-            nfpEQuery += " AND MONTH(nfp.date) = :fMonth"
-            nfpLQuery += " AND MONTH(nfp.date) = :fMonth"
-            fpCount += " AND MONTH(fp.f_print_date) = :fMonth"
-            nfpECount += " AND MONTH(nfp.date) = :fMonth"
-            nfpLCount += " AND MONTH(nfp.date) = :fMonth"
-            replacements.fMonth = data.qMonth;
-        }  else {
-            fpQuery += " AND MONTH(fp.f_print_date) = :fMonth"
-            nfpEQuery += " AND MONTH(nfp.date) = :fMonth"
-            nfpLQuery += " AND MONTH(nfp.date) = :fMonth"
-            fpCount += " AND MONTH(fp.f_print_date) = :fMonth"
-            nfpECount += " AND MONTH(nfp.date) = :fMonth"
-            nfpLCount += " AND MONTH(nfp.date) = :fMonth"
-            replacements.fMonth = month;
-        }
-        if (data.qYear !== '' && data.qYear !== "00" && data.qYear !== "il") {
-            fpQuery += " AND YEAR(fp.f_print_date) = :fYear"
-            nfpEQuery += " AND YEAR(nfp.date) = :fYear"
-            nfpLQuery += " AND YEAR(nfp.date) = :fYear"
-            fpCount += " AND YEAR(fp.f_print_date) = :fYear"
-            nfpECount += " AND YEAR(nfp.date) = :fYear"
-            nfpLCount += " AND YEAR(nfp.date) = :fYear"
-            replacements.fYear = data.qYear;
+        if(data.qDate !== '' && data.qDate) {
+            fpQuery += " AND fp.f_print_date = :fDate"
+            nfpEQuery += " AND nfp.date = :fDate"
+            nfpLQuery += " AND nfp.date = :fDate"
+            fpCount += " AND fp.f_print_date = :fDate"
+            nfpECount += " AND nfp.date = :fDate"
+            nfpLCount += " AND nfp.date = :fDate"
+            replacements.fDate = data.qDate;
         } else {
-            fpQuery += " AND YEAR(fp.f_print_date) = :fYear"
-            nfpEQuery += " AND YEAR(nfp.date) = :fYear"
-            nfpLQuery += " AND YEAR(nfp.date) = :fYear"
-            fpCount += " AND YEAR(fp.f_print_date) = :fYear"
-            nfpECount += " AND YEAR(nfp.date) = :fYear"
-            nfpLCount += " AND YEAR(nfp.date) = :fYear"
-            replacements.fYear = year;
+            fpQuery += " AND fp.f_print_date = :fDate"
+            nfpEQuery += " AND nfp.date = :fDate"
+            nfpLQuery += " AND nfp.date = :fDate"
+            fpCount += " AND fp.f_print_date = :fDate"
+            nfpECount += " AND nfp.date = :fDate"
+            nfpLCount += " AND nfp.date = :fDate"
+            replacements.fDate = dayOfToday;
         }
         if (data.limit === "all") {
             query += fpQuery + nfpEQuery + nfpLQuery + " ORDER BY date DESC";

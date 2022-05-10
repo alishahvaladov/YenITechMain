@@ -1,7 +1,10 @@
-<div class="department-table">
+<div class="card flex-fill">
+    <div class="card-header">
+        <h5 class="card-title mb-0">İstifadəçilər</h5>
+    </div>
     {{> messages }}
     <h1 class="text-center">İstifadəçilər</h1>
-    <table class="table table-striped">
+    <table class="table table-hover my-0" style="margin: 0 !important;">
         <div class="container">
             <thead>
             <th></th>
@@ -22,20 +25,18 @@
             </tbody>
         </div>
     </table>
-</div>
-
-<div class="pagination d-flex justify-content-center">
+    <div class="pagination d-flex justify-content-center">
         <div class="pagination-container w-50 d-flex justify-content-between">
             <button class="pagination-item btn btn-outline-dark btn-sm active disabled">1</button>
         </div>
     </div>
 
-<div class="loading position-absolute top-0 w-100" style="left: 0; height: 100vh">
-    <div class="loading-container bg-light bg-opacity-25 w-100 h-100 d-flex justify-content-center align-items-center">
-        <img src="/assets/img/loading-3.gif" style="width: 70px">
+    <div class="loading top-0 w-100" style="left: 0; height: 100vh">
+        <div class="loading-container bg-opacity-25 w-100 h-100 d-flex justify-content-center align-items-center">
+            <img src="/assets/img/atom.svg" style="width: 100px">
+        </div>
     </div>
 </div>
-
 
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/users.js"></script>

@@ -1,11 +1,16 @@
-<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>YenITech</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5" />
+    <meta name="author" content="AdminKit" />
+    <meta name="keywords"
+        content="" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="/assets/img/a.png" />
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap-reboot.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/all.min.css">
@@ -13,209 +18,397 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="/assets/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="icon" href="/assets/img/logo.png">
-</head>
-<body>
-<div class="dashboard">
-    <div class="dashboard-left">
-        <div class="left-container">
-            <div class="logo">
-                <a href="/dashboard"><img src="/assets/img/logo.png" alt=""></a>
-            </div>
-            {{#if super_admin}}
-                <nav style="height: 70%">
-                    <ul class="lists">
-                        <li class="list-items">
-                            <a href="/dashboard"><i class="bi bi-house-door"></i> <span class="nav-items">Home</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/employee"><i class="bi bi-person"></i></i> <span class="nav-items">Əməkdaşlar</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/all-fprints"><i class="fas fa-fingerprint"></i> <span class="nav-items">Barmaq İzləri</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/fines"><i class="bi bi-emoji-dizzy"></i><span class="nav-items">Approve Page</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/projects"><i class="bi bi-building"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/department"><i class="bi bi-diagram-2"></i><span class="nav-items">Departament</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/positions"><i class="fas fa-bullseye"></i><span class="nav-items">Vəzifələr</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/users"><i class="fas fa-users"></i><span class="nav-items">İstifadəçilər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/timeoffrequests"><i class="fas fa-suitcase"></i><span class="nav-items">Məzuniyyətlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/salaries"><i class="bi bi-cash-stack"></i><span class="nav-items">Əmək Haqqları</span></a>
-                        </li>
-                    </ul>
-                </nav>
-            {{/if}}
-            {{#if hr}}
-                <nav style="height: 70%">
-                    <ul class="lists">
-                        <li class="list-items">
-                            <a href="/dashboard"><i class="bi bi-house-door"></i> <span class="nav-items">Home</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/employee"><i class="bi bi-person"></i></i> <span class="nav-items">Əməkdaşlar</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/all-fprints"><i class="fas fa-fingerprint"></i> <span class="nav-items">Barmaq İzləri</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/fines"><i class="bi bi-emoji-dizzy"></i><span class="nav-items">Approve Page</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/projects"><i class="bi bi-building"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/positions"><i class="fas fa-bullseye"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/users"><i class="fas fa-users"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/timeoffrequests"><i class="fas fa-suitcase"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/salaries"><i class="bi bi-cash-stack"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                    </ul>
-                </nav>
-            {{/if}}
-            {{#if deptDirector}}
-                <nav style="height: 70%">
-                    <ul class="lists">
-                        <li class="list-items">
-                            <a href="/dashboard"><i class="bi bi-house-door"></i> <span class="nav-items">Home</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/employee"><i class="bi bi-person"></i></i> <span class="nav-items">Əməkdaşlar</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/all-fprints"><i class="fas fa-fingerprint"></i> <span class="nav-items">Barmaq İzləri</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/fines"><i class="bi bi-emoji-dizzy"></i><span class="nav-items">Approve Page</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/projects"><i class="bi bi-building"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/positions"><i class="fas fa-bullseye"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/users"><i class="fas fa-users"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/timeoffrequests/for-director"><i class="fas fa-suitcase"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/salaries"><i class="bi bi-cash-stack"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                    </ul>
-                </nav>
-            {{/if}}
-            {{#if audit}}
-                <nav style="height: 70%">
-                    <ul class="lists">
-                        <li class="list-items">
-                            <a href="/dashboard"><i class="bi bi-house-door"></i> <span class="nav-items">Home</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/employee"><i class="bi bi-person"></i></i> <span class="nav-items">Əməkdaşlar</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/all-fprints"><i class="fas fa-fingerprint"></i> <span class="nav-items">Barmaq İzləri</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/fines"><i class="bi bi-emoji-dizzy"></i><span class="nav-items">Approve Page</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/projects"><i class="bi bi-building"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/positions"><i class="fas fa-bullseye"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/users"><i class="fas fa-users"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/timeoffrequests/for-director"><i class="fas fa-suitcase"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                        <li class="list-items">
-                            <a href="/salaries"><i class="bi bi-cash-stack"></i><span class="nav-items">Proyektlər</span></a>
-                        </li>
-                    </ul>
-                </nav>
-            {{/if}}
-        </div>
-    </div>
-    <div class="dashboard-right">
-        <div class="dashboard-navigation">
-            <div class="date">
-                <span class="date-icon"><i class="far fa-calendar-alt"></i></span>
-                <span class="date-with-text">Tarix: </span>
-                <span id="date" class="date-with-dt"></span>
-            </div>
-            <div class="time">
-                <span class="date-icon"><i class="far fa-clock"></i></span>
-                <span class="date-with-text">Saat: </span>
-                <span id="time" class="date-with-dt"></span>
-            </div>
-            <div class="notification-profile">
-                <div class="notification">
-                    <div class="notification-bell">
-                            <span class="bellBtn">
-                                <i class="far fa-bell"></i>
-                            </span>
-                    </div>
-                </div>
-                <div class="profile-container">
-                    <div class="profile">
-                        <!--                        <span class="userBtn"><i class="far fa-user"></i></span>-->
-                        <img id="mainProfilePicture" src="" alt="">
-                    </div>
-                    <span class="profile-dropdown-icon">
-                        <i class="fas fa-caret-down"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="dropdown-for-profile">
-            <div class="profile-dropdown">
-                <div class="profile-dropdown-item"><a class="profile-dropdown-item-link" href="/profile">Profil <i class="bi bi-person-circle profile-dropdown-item-link"></i></a> </div>
-                <div class="dropdown-divider-profile"></div>
-                <div class="profile-dropdown-item"><a class="profile-dropdown-item-link" href="/profile/request-time-off">Məzuniyyət<i class="fas fa-suitcase profile-dropdown-item-link"></i></a> </div>
-                <div class="dropdown-divider-profile"></div>
-                <div class="profile-dropdown-item"><a class="profile-dropdown-item-link" href="/logout">Çıxış <i class="bi bi-arrow-right-square profile-dropdown-item-link"></i></a> </div>
-            </div>
-        </div>
-        <div class="dashboard-body">
-            <div class="dashboard-container">
-                {{{body}}}
-            </div>
-        </div>
-        <div class="notification-alert text-center d-none position-fixed">
-            <p class="notification-p text-light p-1 border round-5">New Notification</p>
-        </div>
-    </div>
-</div>
+    <link href="/assets/css/app.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
 
-<script src="/assets/js/jquery.min.js"></script>
-<script src="/assets/js/socket.io.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="/assets/js/bootstrap.min.js"></script>
-<script src="/assets/js/all.min.js"></script>
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script src="/assets/js/custom.js"></script>
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <title>Blink-Q</title>
+
+    
+</head>
+
+<body>
+    <div class="wrapper">
+        <nav id="sidebar" class="sidebar js-sidebar">
+            <div class="sidebar-content js-simplebar">
+                <a class="sidebar-brand" href="/dashboard">
+                    <span class="align-middle">Blink-Q</span>
+                </a>
+
+                <ul class="sidebar-nav">
+                    <li class="sidebar-header">
+                        Pages
+                    </li>
+
+                    <li class="sidebar-item dashboard">
+                        <a class="sidebar-link" href="/dashboard">
+                            <i class="align-middle" data-feather="sliders"></i>
+                            <span class="align-middle">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item employees">
+                        <a class="sidebar-link" href="/employee">
+                            <i class="align-middle" data-feather="user"></i>
+                            <span class="align-middle">Employees</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item fprints">
+                        <a class="sidebar-link" href="/all-fprints">
+                            <i class="align-middle fas fa-fingerprint"></i>
+                            <span class="align-middle">Finger Prints</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item fines">
+                        <a class="sidebar-link" href="/fines">
+                            <i class="align-middle" data-feather="alert-triangle"></i>
+                            <span class="align-middle">Fines</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item projects">
+                        <a class="sidebar-link" href="/projects">
+                            <i class="align-middle bi bi-building"></i>
+                            <span class="align-middle">Projects</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item departments">
+                        <a class="sidebar-link" href="/department">
+                            <i class="allign-middle bi bi-diagram-2"></i>
+                            <span class="align-middle">Departments</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item positions">
+                        <a class="sidebar-link" href="/positions">
+                            <i class="align-middle fas fa-bullseye"></i>
+                            <span class="align-middle">Positions</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item users">
+                        <a class="sidebar-link" href="/users">
+                            <i class="align-middle fas fa-users"></i>
+                            <span class="align-middle">Users</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item time-offs">
+                        <a class="sidebar-link" href="/timeoffrequests">
+                            <i class="align-middle fas fa-suitcase"></i>
+                            <span class="align-middle">Time Offs</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item salaries">
+                        <a class="sidebar-link" href="/salaries">
+                            <i class="align-middle bi bi-cash-stack"></i>
+                            <span class="align-middle">Salaries</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+
+        <div class="main">
+            <nav class="navbar navbar-expand navbar-light navbar-bg">
+                <a class="sidebar-toggle js-sidebar-toggle">
+                    <i class="hamburger align-self-center"></i>
+                </a>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav navbar-align">
+                        <li class="nav-item dropdown">
+                            <a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
+                                <div class="position-relative">
+                                    <i class="align-middle" data-feather="bell"></i>
+                                    <span class="indicator">4</span>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0"
+                                aria-labelledby="alertsDropdown">
+                                <div class="dropdown-menu-header">
+                                    4 New Notifications
+                                </div>
+                                <div class="list-group">
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <i class="text-danger" data-feather="alert-circle"></i>
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="text-dark">Update completed</div>
+                                                <div class="text-muted small mt-1">Restart server 12
+                                                    to complete the update.</div>
+                                                <div class="text-muted small mt-1">30m ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <i class="text-warning" data-feather="bell"></i>
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="text-dark">Lorem ipsum</div>
+                                                <div class="text-muted small mt-1">Aliquam ex eros,
+                                                    imperdiet vulputate hendrerit et.</div>
+                                                <div class="text-muted small mt-1">2h ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <i class="text-primary" data-feather="home"></i>
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="text-dark">Login from 192.186.1.8</div>
+                                                <div class="text-muted small mt-1">5h ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <i class="text-success" data-feather="user-plus"></i>
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="text-dark">New connection</div>
+                                                <div class="text-muted small mt-1">Christina accepted
+                                                    your request.</div>
+                                                <div class="text-muted small mt-1">14h ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="dropdown-menu-footer">
+                                    <a href="#" class="text-muted">Show all notifications</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown"
+                                data-bs-toggle="dropdown">
+                                <div class="position-relative">
+                                    <i class="align-middle" data-feather="message-square"></i>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0"
+                                aria-labelledby="messagesDropdown">
+                                <div class="dropdown-menu-header">
+                                    <div class="position-relative">
+                                        4 New Messages
+                                    </div>
+                                </div>
+                                <div class="list-group">
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <img src=""
+                                                    class="avatar img-fluid rounded-circle" alt="Vanessa Tucker" />
+                                            </div>
+                                            <div class="col-10 ps-2">
+                                                <div class="text-dark">Vanessa Tucker</div>
+                                                <div class="text-muted small mt-1">Nam pretium turpis
+                                                    et arcu. Duis arcu tortor.</div>
+                                                <div class="text-muted small mt-1">15m ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <img src=""
+                                                    class="avatar img-fluid rounded-circle" alt="William Harris" />
+                                            </div>
+                                            <div class="col-10 ps-2">
+                                                <div class="text-dark">William Harris</div>
+                                                <div class="text-muted small mt-1">Curabitur ligula
+                                                    sapien euismod vitae.</div>
+                                                <div class="text-muted small mt-1">2h ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <img src=""
+                                                    class="avatar img-fluid rounded-circle" alt="Christina Mason" />
+                                            </div>
+                                            <div class="col-10 ps-2">
+                                                <div class="text-dark">Christina Mason</div>
+                                                <div class="text-muted small mt-1">Pellentesque auctor
+                                                    neque nec urna.</div>
+                                                <div class="text-muted small mt-1">4h ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <img src=""
+                                                    class="avatar img-fluid rounded-circle" alt="Sharon Lessman" />
+                                            </div>
+                                            <div class="col-10 ps-2">
+                                                <div class="text-dark">Sharon Lessman</div>
+                                                <div class="text-muted small mt-1">Aenean tellus
+                                                    metus, bibendum sed, posuere ac, mattis non.</div>
+                                                <div class="text-muted small mt-1">5h ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="dropdown-menu-footer">
+                                    <a href="#" class="text-muted">Show all messages</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#"
+                                data-bs-toggle="dropdown">
+                                <i class="align-middle" data-feather="settings"></i>
+                            </a>
+
+                            <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#"
+                                data-bs-toggle="dropdown">
+                                <img src="" class="avatar img-fluid rounded-circle me-1"
+                                    alt="Charles Hall" />
+                                <span class="text-dark">Charles Hall</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1"
+                                        data-feather="user"></i>
+                                    Profile</a>
+                                <a class="dropdown-item" href="#"><i class="align-middle me-1"
+                                        data-feather="pie-chart"></i>
+                                    Analytics</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="index.html"><i class="align-middle me-1"
+                                        data-feather="settings"></i>
+                                    Settings & Privacy</a>
+                                <a class="dropdown-item" href="#"><i class="align-middle me-1"
+                                        data-feather="help-circle"></i>
+                                    Help Center</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/logout">Log out</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="content">
+                <div class="container-fluid">
+                    {{{body}}}
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row text-muted">
+                        <div class="col-6 text-start">
+                            <p class="mb-0">
+                                <a class="text-muted" href="/dashboard"
+                                    target="_blank"><strong>Blink-Q</strong></a>
+                                &copy;
+                            </p>
+                        </div>
+                        <div class="col-6 text-end">
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/all.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="/assets/js/custom.js"></script>
+    <script src="/assets/js/app.js"></script>
+
+    <script>
+        const sideBarItems = document.querySelectorAll('.sidebar-item');
+
+        window.onload = () => {
+            const path = window.location.pathname;
+            console.log(path);
+            if (path.includes('/dashboard')) {
+                sideBarItems.forEach(item => {
+                    item.classList.remove('active');
+                })
+                document.querySelector(".dashboard").classList.add('active');
+            } else if (path.includes('/employee')) {
+                sideBarItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector('.employees').classList.add('active');
+            } else if (path.includes('/all-fprints')) {
+                sideBarItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector('.fprints').classList.add('active');
+            } else if (path.includes('/fines')) {
+                sideBarItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector('.fines').classList.add('active');
+            } else if (path.includes('/projects')) {
+                sideBarItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector('.projects').classList.add('active');
+            } else if (path.includes('/department')) {
+                sideBarItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector('.departments').classList.add('active');
+            } else if (path.includes('/positions')) {
+                sideBarItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector('.positions').classList.add('active');
+            } else if (path.includes('/users')) {
+                sideBarItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector('.users').classList.add('active');
+            } else if (path.includes('/timeoffrequests')) {
+                sideBarItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector('.time-offs').classList.add('active');
+            } else if (path.includes('/salaries')) {
+                sideBarItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector('.salaries').classList.add('active');
+            }
+        }
+    </script>
 </body>
+
 </html>

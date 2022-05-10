@@ -33,362 +33,368 @@ let errors = [];
 let validationError = {};
 
 const validateEmployee = async (data, cb) => {
-        let fName, lName, fatherName, j_start_date;
-        let fNameError = [];
-        let lNameError = [];
-        let fatherNameError = [];
-        let midNameError = [];
-        let ssnError = [];
-        let dobError = [];
-        let finError = [];
-        let phoneNumberError = [];
-        let homeNumberError = [];
-        let shiftTypeError = [];
-        if (data.first_name === '') {
-            fName = false;
-        } else {
-            fName = data.first_name.split('');
-        }
-        if (data.last_name === '') {
-            lName = false;
-        } else {
-            lName = data.last_name.split('');
-        }
-        const midName = data.middle_name.split('');
-        if (data.father_name === '') {
-            fatherName = false;
-        } else {
-            fatherName = data.father_name.split('');
-        }
-
-        const tabelNo = data.tabel_no;
-        const dob = data.dob;
-        const SSN = data.SSN;
-        const FIN = data.FIN;
-        const phoneNumber = data.phone_number;
-        let homeNumber = data.home_number;
-        const shiftType = data.shift_type;
-        const q_address = data.q_address.split('');
-        let y_address;
-        if(data.y_address === '') {
-            y_address = null;
-        } else {
-            y_address = data.y_address;
-        }
-        const dayOffDays = data.dayoff_days_total;
-        const wDays = data.working_days;
-        const fDay = data.full_day;
-        if(data.j_start_date === '') {
-            j_start_date = false;
-        } else {
-            j_start_date = data.j_start_date.split("-");
-        }
-        const department = data.department;
-        const position = data.position_id;
-        const project = data.project_id;
-        const date = new Date();
-        const sex = data.sex;
-        const selectedShiftType = data.select_shift_type;
-
-        if(fName) {
-            for (let i = 0; i < fName.length; i++) {
-                if(!isNaN(parseInt(fName[i]))) {
-                    console.log("First name cannot contain number");
-                    fNameError.push = "First name cannot contain number";
-                    validationError.fName = fNameError;
-                    return cb(true, validationError);
-                }
-
-                if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(fName[i]) === false) {
-                    console.log("First name cannot contain symbol");
-                    fNameError.push("First name cannot contain symbol");
-                    validationError.fName = fNameError;
-                    return cb(true, validationError);
-                }
+        try {
+            let fName, lName, fatherName, j_start_date;
+            let fNameError = [];
+            let lNameError = [];
+            let fatherNameError = [];
+            let midNameError = [];
+            let ssnError = [];
+            let dobError = [];
+            let finError = [];
+            let phoneNumberError = [];
+            let homeNumberError = [];
+            let shiftTypeError = [];
+            if (data.first_name === '') {
+                fName = false;
+            } else {
+                fName = data.first_name.split('');
             }
-        } else {
-            console.log("Please enter Employee's First Name");
-            fNameError.push("Please enter Employee's First Name");
-            validationError.fName = fNameError;
-            return cb(true, validationError);
-        }
-
-        if(lName) {
-            for (let i = 0; i < lName.length; i++) {
-                if(!isNaN(parseInt(lName[i]))) {
-                    console.log("Last name cannot contain number");
-                    lNameError.push("Last name cannot contain number")
-                    validationError.lName = lNameError;
-                    return cb(true, validationError);
-                }
-                if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(lName[i]) === false) {
-                    console.log("Last name cannot contain symbol");
-                    lNameError.push("Last name cannot contain symbol")
-                    validationError.lName = lNameError;
-                    return cb(true, validationError);
-                }
+            if (data.last_name === '') {
+                lName = false;
+            } else {
+                lName = data.last_name.split('');
             }
-        } else {
-            console.log("Please enter Employee's Last Name");
-            lNameError.push("Please enter Employee's Last Name");
-            validationError.lName = lNameError;
-            return cb(true, validationError);
-        }
-
-
-        if(fatherName) {
-            for (let i = 0; i < fatherName.length; i++) {
-                if(!isNaN(parseInt(fatherName[i]))) {
-                    console.log("Father name cannot contain number");
-                    fatherNameError.push("Father name cannot contain number")
-                    validationError.fatherName = fatherNameError;
-                    return false;
-                }
-                if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(fatherName[i]) === false) {
-                    console.log("Father name cannot contain symbol");
-                    fatherNameError.push("Father name cannot contain symbol")
-                    validationError.fatherName = fatherNameError;
-                    return false;
-                }
+            const midName = data.middle_name.split('');
+            if (data.father_name === '') {
+                fatherName = false;
+            } else {
+                fatherName = data.father_name.split('');
             }
-        } else {
-            console.log("Please enter Employee's Father Name");
-            fatherNameError.push("Please enter Employee's Father Name");
-            validationError.fatherName = fatherNameError;
-            return false;
-        }
 
-        if(midName) {
-            for (let i = 0; i < midName.length; i++) {
-                if(!isNaN(parseInt(midName[i]))) {
-                    console.log("Middle name cannot contain number");
-                    midNameError.push("Middle name cannot contain number")
-                    validationError.midName = midNameError;
-                    return cb(true, validationError);
-                }
-                if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(midName[i]) === false) {
-                    console.log("Middle name cannot contain symbol");
-                    midNameError.push("Middle name cannot contain symbol")
-                    validationError.midName = midNameError;
-                    return cb(true, validationError);
-                }
+            const tabelNo = data.tabel_no;
+            const dob = data.dob;
+            const SSN = data.SSN;
+            const FIN = data.FIN;
+            const phoneNumber = data.phone_number;
+            let homeNumber = data.home_number;
+            const shiftType = data.shift_type;
+            const q_address = data.q_address.split('');
+            let y_address;
+            if(data.y_address === '') {
+                y_address = null;
+            } else {
+                y_address = data.y_address;
             }
-        }
+            const dayOffDays = data.dayoff_days_total;
+            const wDays = data.working_days;
+            const fDay = data.full_day;
+            if(data.j_start_date === '') {
+                j_start_date = false;
+            } else {
+                j_start_date = data.j_start_date.split("-");
+            }
+            const department = data.department;
+            const position = data.position_id;
+            const project = data.project_id;
+            const date = new Date();
+            const sex = data.sex;
+            const selectedShiftType = data.select_shift_type;
 
+            if(fName) {
+                for (let i = 0; i < fName.length; i++) {
+                    if(!isNaN(parseInt(fName[i]))) {
+                        console.log("First name cannot contain number");
+                        fNameError.push = "First name cannot contain number";
+                        validationError.fName = fNameError;
+                        return cb(true, validationError);
+                    }
 
-        if(sex == 0 || sex == 1) {
-            console.log("Gender verified");
-        } else {
-            console.log("Html interruption for sex: " + sex + "UserID" + req.user.id);
-            validationError.sex("Please enter valid gender");
-            return cb(true, validationError);
-        }
-
-        if (dob) {
-            const sDOB = dob.split("-");
-            if(isNaN(parseInt(sDOB[0])) === true || isNaN(parseInt(sDOB[1])) === true || isNaN(parseInt(sDOB[2])) === true) {
-                dobError.push("Please enter valid date for date of birth");
-                validationError.dob = dobError;
+                    if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(fName[i]) === false) {
+                        console.log("First name cannot contain symbol");
+                        fNameError.push("First name cannot contain symbol");
+                        validationError.fName = fNameError;
+                        return cb(true, validationError);
+                    }
+                }
+            } else {
+                console.log("Please enter Employee's First Name");
+                fNameError.push("Please enter Employee's First Name");
+                validationError.fName = fNameError;
                 return cb(true, validationError);
             }
-            if(parseInt(sDOB[0]) > date.getFullYear() - 16) {
-                dobError.push("This person's age is not enough to work. Please contact with Audit department to approve this person");
-                validationError.dob = dobError;
+
+            if(lName) {
+                for (let i = 0; i < lName.length; i++) {
+                    if(!isNaN(parseInt(lName[i]))) {
+                        console.log("Last name cannot contain number");
+                        lNameError.push("Last name cannot contain number")
+                        validationError.lName = lNameError;
+                        return cb(true, validationError);
+                    }
+                    if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(lName[i]) === false) {
+                        console.log("Last name cannot contain symbol");
+                        lNameError.push("Last name cannot contain symbol")
+                        validationError.lName = lNameError;
+                        return cb(true, validationError);
+                    }
+                }
+            } else {
+                console.log("Please enter Employee's Last Name");
+                lNameError.push("Please enter Employee's Last Name");
+                validationError.lName = lNameError;
                 return cb(true, validationError);
             }
-        }
 
-        const seperatedSSN = SSN.split('');
-        if(seperatedSSN.length !== 13) {
-            console.log("SSN must be 13 numbers");
-            ssnError.push("SSN must be 13 numbers")
-            validationError.ssn = ssnError;
-            return cb(true, validationError);
-        }
-        for (let i = 0; i < seperatedSSN.length; i++) {
-            if((/[0-9]/).test(seperatedSSN[i]) === false) {
-                console.log("SSN cannot contain letter or symbol");
-                ssnError.push("SSN cannot contain letter or symbol")
+
+            if(fatherName) {
+                for (let i = 0; i < fatherName.length; i++) {
+                    if(!isNaN(parseInt(fatherName[i]))) {
+                        console.log("Father name cannot contain number");
+                        fatherNameError.push("Father name cannot contain number")
+                        validationError.fatherName = fatherNameError;
+                        return false;
+                    }
+                    if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(fatherName[i]) === false) {
+                        console.log("Father name cannot contain symbol");
+                        fatherNameError.push("Father name cannot contain symbol")
+                        validationError.fatherName = fatherNameError;
+                        return false;
+                    }
+                }
+            } else {
+                console.log("Please enter Employee's Father Name");
+                fatherNameError.push("Please enter Employee's Father Name");
+                validationError.fatherName = fatherNameError;
+                return false;
+            }
+
+            if(midName) {
+                for (let i = 0; i < midName.length; i++) {
+                    if(!isNaN(parseInt(midName[i]))) {
+                        console.log("Middle name cannot contain number");
+                        midNameError.push("Middle name cannot contain number")
+                        validationError.midName = midNameError;
+                        return cb(true, validationError);
+                    }
+                    if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(midName[i]) === false) {
+                        console.log("Middle name cannot contain symbol");
+                        midNameError.push("Middle name cannot contain symbol")
+                        validationError.midName = midNameError;
+                        return cb(true, validationError);
+                    }
+                }
+            }
+
+
+            if(sex == 0 || sex == 1) {
+                console.log("Gender verified");
+            } else {
+                console.log("Html interruption for sex: " + sex + "UserID" + req.user.id);
+                validationError.sex("Please enter valid gender");
+                return cb(true, validationError);
+            }
+
+            if (dob) {
+                const sDOB = dob.split("-");
+                if(isNaN(parseInt(sDOB[0])) === true || isNaN(parseInt(sDOB[1])) === true || isNaN(parseInt(sDOB[2])) === true) {
+                    dobError.push("Please enter valid date for date of birth");
+                    validationError.dob = dobError;
+                    return cb(true, validationError);
+                }
+                if(parseInt(sDOB[0]) > date.getFullYear() - 16) {
+                    dobError.push("This person's age is not enough to work. Please contact with Audit department to approve this person");
+                    validationError.dob = dobError;
+                    return cb(true, validationError);
+                }
+            }
+
+            const seperatedSSN = SSN.split('');
+            if(seperatedSSN.length !== 13) {
+                console.log("SSN must be 13 numbers");
+                ssnError.push("SSN must be 13 numbers")
                 validationError.ssn = ssnError;
                 return cb(true, validationError);
             }
-        }
-
-        if(FIN) {
-            if(FIN.length !== 7) {
-                console.log("FIN must be 7 length long");
-                finError.push("FIN must be 7 length long")
-                validationError.fin = finError;
-                return cb(true, validationError);
+            for (let i = 0; i < seperatedSSN.length; i++) {
+                if((/[0-9]/).test(seperatedSSN[i]) === false) {
+                    console.log("SSN cannot contain letter or symbol");
+                    ssnError.push("SSN cannot contain letter or symbol")
+                    validationError.ssn = ssnError;
+                    return cb(true, validationError);
+                }
             }
-            for (let i = 0; i < FIN.length; i++) {
-                if((/[a-zA-Z0-9]/).test(FIN[i]) === false) {
-                    console.log("FIN cannot contain symbol");
-                    finError.push("FIN cannot contain symbol")
+
+            if(FIN) {
+                if(FIN.length !== 7) {
+                    console.log("FIN must be 7 length long");
+                    finError.push("FIN must be 7 length long")
                     validationError.fin = finError;
                     return cb(true, validationError);
                 }
+                for (let i = 0; i < FIN.length; i++) {
+                    if((/[a-zA-Z0-9]/).test(FIN[i]) === false) {
+                        console.log("FIN cannot contain symbol");
+                        finError.push("FIN cannot contain symbol")
+                        validationError.fin = finError;
+                        return cb(true, validationError);
+                    }
+                }
             }
-        }
 
-        if(q_address) {
-            if(q_address.length < 10) {
-                console.log("Q Address must be greater than 10 characters");
-                validationError.q_address = "Q Address must be greater than 10 characters";
-                return cb(true, validationError);
-            }
-        }
-
-        if(y_address !== null) {
-            if(y_address.length < 10) {
-                console.log("Y Address must be greater than 10 characters");
-                validationError.q_address = "Y Address must be greater than 10 characters";
-                return cb(true, validationError);
-            }
-        }
-
-
-
-        if(phoneNumber.length === 10 && phoneNumber.length === 12) {
-            const seperatedP = phoneNumber.replace(" ", "").split("");
-            for (let i = 0; i < seperatedP.length; i++) {
-                if(isNaN(parseInt(seperatedP[i]))) {
-                    console.log("Phone number should be only numbers!");
-                    phoneNumberError.push("Phone number should be only numbers!");
-                    validationError.phoneNumber = phoneNumberError;
+            if(q_address) {
+                if(q_address.length < 10) {
+                    console.log("Q Address must be greater than 10 characters");
+                    validationError.q_address = "Q Address must be greater than 10 characters";
                     return cb(true, validationError);
                 }
             }
-        } else {
-            console.log("Phone number should be 10 or 12 characters!");
-            phoneNumberError.push("Phone number should be 10 or 12 characters!");
-            validationError.phoneNumber = phoneNumberError;
-            return cb(true, validationError);
-        }
 
-        data.phone_number = phoneNumber.toString();
-
-        let seperatedH;
-
-        if (homeNumber !== '' && homeNumber !== null) {
-            seperatedH = homeNumber.replace(" ", "").split("");
-        }
-
-        if (homeNumber === '' || homeNumber === null) {
-            homeNumber = null;
-        } else if(homeNumber.length === 7 || homeNumber.length === 12) {
-            for (let i = 0; i < seperatedH.length; i++) {
-                if(isNaN(parseInt(seperatedH[i]))) {
-                    console.log("Home number should be only numbers!");
-                    homeNumberError.push("Home number should be only numbers!");
-                    validationError.homeNumber = homeNumberError;
+            if(y_address !== null) {
+                if(y_address.length < 10) {
+                    console.log("Y Address must be greater than 10 characters");
+                    validationError.q_address = "Y Address must be greater than 10 characters";
                     return cb(true, validationError);
                 }
-            } 
-        } else {
-            console.log("Home number should be 10 or 12 characters!");
-            homeNumberError.push("Home number should be 10 or 12 characters!");
-            validationError.homeNumber = homeNumberError;
-            return cb(true, validationError);
-        }
+            }
 
-        if(parseInt(selectedShiftType) === 1) {
-            if(parseInt(shiftType) === 1 || parseInt(shiftType) === 2 || parseInt(shiftType) === 3) {
-                if(parseInt(shiftType) === 1) {
-                    data.shift_start_t = '10:00';
-                    data.shift_end_t = '19:00';
-                } else if (parseInt(shiftType) === 2) {
-                    data.shift_start_t = '10:00';
-                    data.shift_end_t = '14:00';
-                } else if (parseInt(shiftType) === 3) {
-                    data.shift_start_t = '14:00';
-                    data.shift_end_t = '19:00';
+
+
+            if(phoneNumber.length === 10 && phoneNumber.length === 12) {
+                const seperatedP = phoneNumber.replace(" ", "").split("");
+                for (let i = 0; i < seperatedP.length; i++) {
+                    if(isNaN(parseInt(seperatedP[i]))) {
+                        console.log("Phone number should be only numbers!");
+                        phoneNumberError.push("Phone number should be only numbers!");
+                        validationError.phoneNumber = phoneNumberError;
+                        return cb(true, validationError);
+                    }
                 }
             } else {
-                validationError.shift = "Wrong shift type selected please try again";
+                console.log("Phone number should be 10 or 12 characters!");
+                phoneNumberError.push("Phone number should be 10 or 12 characters!");
+                validationError.phoneNumber = phoneNumberError;
                 return cb(true, validationError);
             }
-        } else if(parseInt(selectedShiftType) === 2) {
-            const splittedShiftStart = data.shift_start_t.split(":");
-            const splittedShiftEnd = data.shift_end_t.split(":");
-            if (parseInt(splittedShiftStart[0]) - parseInt(splittedShiftEnd[0]) > 0) {
-                validationError.shift = "Please choose valid shift times";
+
+            data.phone_number = phoneNumber.toString();
+
+            let seperatedH;
+
+            if (homeNumber !== '' && homeNumber !== null) {
+                seperatedH = homeNumber.replace(" ", "").split("");
+            }
+
+            if (homeNumber === '' || homeNumber === null) {
+                homeNumber = null;
+            } else if(homeNumber.length === 7 || homeNumber.length === 12) {
+                for (let i = 0; i < seperatedH.length; i++) {
+                    if(isNaN(parseInt(seperatedH[i]))) {
+                        console.log("Home number should be only numbers!");
+                        homeNumberError.push("Home number should be only numbers!");
+                        validationError.homeNumber = homeNumberError;
+                        return cb(true, validationError);
+                    }
+                }
+            } else {
+                console.log("Home number should be 10 or 12 characters!");
+                homeNumberError.push("Home number should be 10 or 12 characters!");
+                validationError.homeNumber = homeNumberError;
                 return cb(true, validationError);
             }
-            const shiftStartT = data.shift_start_t;
-            const shiftEndT = data.shift_end_t;
-            if(shiftStartT === "" || shiftStartT === null || shiftEndT === "" || shiftEndT === null) {
-                validationError.shift = "Please fill shift times";
+
+            if(parseInt(selectedShiftType) === 1) {
+                if(parseInt(shiftType) === 1 || parseInt(shiftType) === 2 || parseInt(shiftType) === 3) {
+                    if(parseInt(shiftType) === 1) {
+                        data.shift_start_t = '10:00';
+                        data.shift_end_t = '19:00';
+                    } else if (parseInt(shiftType) === 2) {
+                        data.shift_start_t = '10:00';
+                        data.shift_end_t = '14:00';
+                    } else if (parseInt(shiftType) === 3) {
+                        data.shift_start_t = '14:00';
+                        data.shift_end_t = '19:00';
+                    }
+                } else {
+                    validationError.shift = "Wrong shift type selected please try again";
+                    return cb(true, validationError);
+                }
+            } else if(parseInt(selectedShiftType) === 2) {
+                const splittedShiftStart = data.shift_start_t.split(":");
+                const splittedShiftEnd = data.shift_end_t.split(":");
+                if (parseInt(splittedShiftStart[0]) - parseInt(splittedShiftEnd[0]) > 0) {
+                    validationError.shift = "Please choose valid shift times";
+                    return cb(true, validationError);
+                }
+                const shiftStartT = data.shift_start_t;
+                const shiftEndT = data.shift_end_t;
+                if(shiftStartT === "" || shiftStartT === null || shiftEndT === "" || shiftEndT === null) {
+                    validationError.shift = "Please fill shift times";
+                    return cb(true, validationError);
+                }
+            } else {
+                validationError.shift = "Please choose shift type";
                 return cb(true, validationError);
             }
-        } else {
-            validationError.shift = "Please choose shift type";
-            return cb(true, validationError);
-        }
 
-        if(j_start_date) {
-            if(parseInt(j_start_date[0]) <= year && parseInt(j_start_date[1]) < month) {
-                console.log("Maximum range for Job Start Date is 1 month");
-                validationError.jStartDate = "Maximum range for Job Start Date is 1 month";
+            if(j_start_date) {
+                if(parseInt(j_start_date[0]) <= year && parseInt(j_start_date[1]) < month) {
+                    console.log("Maximum range for Job Start Date is 1 month");
+                    validationError.jStartDate = "Maximum range for Job Start Date is 1 month";
+                    return cb(true, validationError);
+                }
+                if (parseInt(j_start_date[0]) >= year && parseInt(j_start_date[1]) >= month + 1 && parseInt(j_start_date[2]) > day) {
+                    console.log("You cannot add employee (a day/days) after from today!");
+                    validationError.jStartDate = "You cannot add employee (a day/days) after from today!";
+                    return cb(true, validationError);
+                }
+            } else {
+                console.log("Please enter Job Start Date!");
+                validationError.jStartDate = "Please enter Job Start Date!";
                 return cb(true, validationError);
             }
-            if (parseInt(j_start_date[0]) >= year && parseInt(j_start_date[1]) >= month + 1 && parseInt(j_start_date[2]) > day) {
-                console.log("You cannot add employee (a day/days) after from today!");
-                validationError.jStartDate = "You cannot add employee (a day/days) after from today!";
+
+            if(isNaN(parseInt(dayOffDays))) {
+                console.log("Please enter valid day off dates");
+                validationError.dayOffDays = "Please enter valid day off dates";
                 return cb(true, validationError);
             }
-        } else {
-            console.log("Please enter Job Start Date!");
-            validationError.jStartDate = "Please enter Job Start Date!";
-            return cb(true, validationError);
-        }
 
-        if(isNaN(parseInt(dayOffDays))) {
-            console.log("Please enter valid day off dates");
-            validationError.dayOffDays = "Please enter valid day off dates";
-            return cb(true, validationError);
-        }
-
-        if(fDay === 'on') {
-            data.working_days = 77;
-        } else if (parseInt(wDays) > 26) {
-            validationError.wDay = "Working days cannot be greater than maximum working day limit";
-            return cb(true, validationError);
-        } else if(isNaN(parseInt(wDays))) {
-            validationError.wDay = "Please enter valid working days";
-            return cb(true, validationError);
-        }
-
-        if(isNaN(parseInt(department))) {
-            console.log("Please enter valid department");
-            validationError.department = "Please enter valid department";
-            return cb(true, validationError);
-        }
-
-        if(isNaN(parseInt(position))) {
-            console.log("Please enter valid position");
-            validationError.position = "Please enter valid position";
-            return cb(true, validationError);
-        }
-
-        if(isNaN(parseInt(project))) {
-            console.log("Please enter valid project");
-            validationError.project = "Please enter valid project";
-            return cb(true, validationError);
-        }
-
-        if(tabelNo === "" || tabelNo === null) {
-            validationError.tabelNo = "Please enter tabel no";
-            return cb(true, validationError);
-        } else {
-            let checkTabel = await checkIfTabelNoExists(data.tabel_no);
-            if (checkTabel.length > 0) {
-                validationError.tabelNo = "This tabel no already in use. Please write another one";
+            if(fDay === 'on') {
+                data.working_days = 77;
+            } else if (parseInt(wDays) > 26) {
+                validationError.wDay = "Working days cannot be greater than maximum working day limit";
                 return cb(true, validationError);
-            } 
-        }
+            } else if(isNaN(parseInt(wDays))) {
+                validationError.wDay = "Please enter valid working days";
+                return cb(true, validationError);
+            }
 
-        return cb(null, null, data);
+            if(isNaN(parseInt(department))) {
+                console.log("Please enter valid department");
+                validationError.department = "Please enter valid department";
+                return cb(true, validationError);
+            }
+
+            if(isNaN(parseInt(position))) {
+                console.log("Please enter valid position");
+                validationError.position = "Please enter valid position";
+                return cb(true, validationError);
+            }
+
+            if(isNaN(parseInt(project))) {
+                console.log("Please enter valid project");
+                validationError.project = "Please enter valid project";
+                return cb(true, validationError);
+            }
+
+            if(tabelNo === "" || tabelNo === null) {
+                validationError.tabelNo = "Please enter tabel no";
+                return cb(true, validationError);
+            } else {
+                let checkTabel = await checkIfTabelNoExists(data.tabel_no);
+                if (checkTabel.length > 0) {
+                    validationError.tabelNo = "This tabel no already in use. Please write another one";
+                    return cb(true, validationError);
+                } 
+            }
+
+            return cb(null, null, data);
+        } catch (err) {
+            console.log(err);
+            validationError.error = "Ups... Something went wrong!";
+            return cb(true, validationError);
+        }
 }
 
 module.exports = {

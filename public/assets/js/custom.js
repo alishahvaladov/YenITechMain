@@ -30,7 +30,7 @@ const day = date.getDate();
 const monthWN = date.getMonth();
 const month = monthsAz[monthWN];
 let timeElem = document.querySelector("#time");
-const mainProfilePicture = document.querySelector("#mainProfilePicture");
+const avatars = document.querySelectorAll(".avatar");
 
 let getTime = () => {
    const dateTime = new Date();
@@ -42,10 +42,10 @@ let getTime = () => {
    let seconds = dateTime.getSeconds();
    timeElem.innerHTML = `${hours}:${minutes}:${seconds}`;
 }
-setInterval(getTime, 1000);
-getTime();
-let dateElem = document.querySelector("#date");
-dateElem.innerHTML = `${day} ${month}`;
+// setInterval(getTime, 1000);
+// getTime();
+// let dateElem = document.querySelector("#date");
+// dateElem.innerHTML = `${day} ${month}`;
 
 
 const fpUploadBtn = document.querySelector("#fpUploadBtn");
@@ -70,8 +70,9 @@ $.get('http://localhost:3000/api/notification', (res) => {
 
 $.get('http://localhost:3000/api/profile/profile-picture', (res) => {
    const filename = res.filename;
-   mainProfilePicture.src = filename;
-   console.log(filename);
+   avatars.forEach(item => {
+      item.src = filename;
+   })
 });
 
 // setInterval(() => {

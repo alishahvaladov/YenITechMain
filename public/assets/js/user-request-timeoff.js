@@ -114,7 +114,7 @@ nextBtn.addEventListener("click", () => {
             sedrName: "Mahir Mammadzada",
             directorName: "Mehdi Mammadzada",
         }
-
+ 
         $.ajax({
             method: "post",
             url: "http://localhost:5000/day-off/form/validate",

@@ -1,7 +1,7 @@
 const tbody = document.querySelector("tbody");
 const loading = document.querySelector(".loading");
 const pgContatiner = document.querySelector(".pagination-container");
-
+const pagination = document.querySelector('.pagination');
 
 const pageFunctions = () => {
     let pgItems = document.querySelectorAll('.pagination-item');
@@ -105,9 +105,11 @@ const renderPage = () => {
                     <td>${project.address}</td>
                     <td>${project.first_name} ${project.last_name} ${project.father_name}</td>
                     <td class="d-flex justify-content-between">
-                        <a class="btn btn-outline-danger btn-sm" href="/projects/delete/${project.id}"><i class="bi bi-x-circle"></i></a>
-                        <a class="btn btn-outline-secondary btn-sm" href="/projects/update/${project.id}"><i class="bi bi-pencil-square"></i></a>
-                        <a class="btn btn-outline-primary btn-sm" href="/projects/project/${project.id}"><i class="bi bi-diagram-3"></i></a>
+                        <div class="btn-group">
+                            <a class="btn btn-outline-danger" href="/projects/delete/${project.id}"><i class="bi bi-x-circle"></i></a>
+                            <a class="btn btn-outline-secondary" href="/projects/update/${project.id}"><i class="bi bi-pencil-square"></i></a>
+                            <a class="btn btn-outline-primary" href="/projects/project/${project.id}"><i class="bi bi-diagram-3"></i></a>
+                        </div>
                     </td>
                     <td></td>
                     <td></td>
@@ -118,35 +120,39 @@ const renderPage = () => {
         tbody.innerHTML = html;
         loading.classList.add('d-none');
 
-        let countHtml = "";
+        if (count > 1) {
+            let countHtml = "";
 
-        for (let i = 1; i <= count; i++) {
-            if (i === 1) {
-                countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm active" value="${i}">${i}</button>`
-                countHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
-            } 
-            if (i > 21 && i < count) {
-                countHtml += `
-                    <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                `
-            } else if (i !== 1 && i !== count) {
-                countHtml += `
-                    <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                `
-            }
-            if (i === count) {
-                if(count > 21) {
-                    countHtml += `<button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>`
+            for (let i = 1; i <= count; i++) {
+                if (i === 1) {
+                    countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm active" value="${i}">${i}</button>`
+                    countHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
                 }
-                if (count !== 1) {
+                if (i > 21 && i < count) {
+                    countHtml += `
+                        <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                    `
+                } else if (i !== 1 && i !== count) {
                     countHtml += `
                         <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
                     `
                 }
+                if (i === count) {
+                    if(count > 21) {
+                        countHtml += `<button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>`
+                    }
+                    if (count !== 1) {
+                        countHtml += `
+                            <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                        `
+                    }
+                }
             }
+            pgContatiner.innerHTML = countHtml;
+            pageFunctions();
+        } else {
+            pagination.classList.add('d-none');
         }
-        pgContatiner.innerHTML = countHtml;
-        pageFunctions();
     });
 }
 

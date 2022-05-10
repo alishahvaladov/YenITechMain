@@ -656,9 +656,50 @@ input[type=number] {
 }
 
 .pagination {
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
 .loading {
     position: fixed !important;
+}
+
+.loading-container {
+    background: rgba(34, 46, 60, .7);
+}
+
+.avatar {
+    object-fit: cover;
+    object-position: top;
+}
+
+table thead input {
+    width: 100% !important;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid rgba(34, 46, 60, 1);;
+    background: rgba(39, 76, 119, 0.1);
+    border-radius: 5px;
+    padding: 5px 10px;
+    outline: none;
+}
+
+.form-container {
+    background-color: rgba(34, 46, 60, 0.1);
+    padding: 50px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 4px rgba(39, 76, 119, 1);;
+}
+
+.form-check-input:checked {
+    background-color: #222e3c !important;
+    border-color: #222e3c !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.form-check-input {
+    box-shadow: 1px 1px 8px #222e3c !important;
+    border-color: #222e3c !important;
 }

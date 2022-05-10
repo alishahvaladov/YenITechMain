@@ -12,7 +12,7 @@ router.get("/", hr, (req, res) => {
         res.render("all-fprints", {
             hr: true
         });
-    } 
+    }
 });
 router.post("/api", hr, getAllFPrints);
 router.post("/api/excel-report", hr, exportDataToExcel);

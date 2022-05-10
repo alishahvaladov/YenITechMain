@@ -1,21 +1,23 @@
-{{> messages }}
-<h2 class="text-center py-2">Əməkdaşlar</h2>
-<div class="department-table">
-    <table class="table table-striped">
-        <div class="container">
-            <thead>
+<div class="card flex-fill">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Əməkdaşlar</h5>
+    </div>
+    <table class="table table-hover my-0" style="margin: 0 !important;">
+        <thead>
+            <tr> 
                 <th></th>
                 <th>İşçi</th>
-                <th>Telefon Nömrəsi</th>
+                <th class="d-none d-xl-table-cell">Telefon Nömrəsi</th>
                 <th>Departament</th>
-                <th>Vəzifəsi</th>
+                <th class="d-none d-xl-table-cell">Vəzifəsi</th>
                 <th>Proyekt</th>
-                <th>Status</th>
-                <th>
-                    <a class="btn btn-outline-success btn-sm w-100" href="/employee/add-employee">Əlavə <i class="bi bi-person-plus"></i></a>
+                <th class="d-none d-xl-table-cell">Status</th>
+                <th class="d-none d-md-table-cell">
+                    <a class="btn btn-outline-success btn-sm w-100" href="/employee/add-employee">Əlavə <i
+                            class="bi bi-person-plus"></i></a>
                 </th>
-            </thead> 
-            <thead>
+            </tr>
+            <tr>
                 <th>
                     <select id="limitCount">
                         <option value="10">10</option>
@@ -26,34 +28,62 @@
                     </select>
                 </th>
                 <th><input type="text" name="empName" id="empName"></th>
-                <th><input type="text" name="empPhoneNumb" id="empPhoneNumb"></th>
+                <th class="d-none d-xl-table-cell"><input type="text" name="empPhoneNumb" id="empPhoneNumb"></th>
                 <th><input type="text" name="empDept" id="empDept"></th>
-                <th><input type="text" name="empPos" id="empPos"></th>
+                <th class="d-none d-xl-table-cell"><input type="text" name="empPos" id="empPos"></th>
                 <th><input type="text" name="empProj" id="empProj"></th>
-                <th>
+                <th class="d-none d-xl-table-cell">
                     <select name="empStatus" id="empStatus">
                         <option value="0">All</option>
                         <option value="1">İşləyir</option>
                         <option value="2">İşdən Ayrılıb</option>
                     </select>
                 </th>
+                <th class="d-none d-xl-table-cell">
+                    <button class="btn btn-success w-100" id="exportToExcel"><i
+                            class="bi bi-file-earmark-excel-fill"></i> Export</button>
+                </th>
+            </tr>
+        </thead>
+        {{!-- <thead>
             <th>
-                <button class="btn btn-success btn-sm w-100" id="exportToExcel"><i class="bi bi-file-earmark-excel-fill"></i> Export</button>
+                <select id="limitCount">
+                    <option value="10">10</option>
+                    <option value="15" selected>15</option>
+                    <option value="30">30</option>
+                    <option value="50">50</option>
+                    <option value="all">ALL</option>
+                </select>
             </th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                </tr>
-            </tbody>
-        </div>
+            <th><input type="text" name="empName" id="empName"></th>
+            <th class="d-none d-xl-table-cell"><input type="text" name="empPhoneNumb" id="empPhoneNumb"></th>
+            <th><input type="text" name="empDept" id="empDept"></th>
+            <th class="d-none d-xl-table-cell"><input type="text" name="empPos" id="empPos"></th>
+            <th><input type="text" name="empProj" id="empProj"></th>
+            <th class="d-none d-xl-table-cell">
+                <select name="empStatus" id="empStatus">
+                    <option value="0">All</option>
+                    <option value="1">İşləyir</option>
+                    <option value="2">İşdən Ayrılıb</option>
+                </select>
+            </th>
+            <th class="d-none d-xl-table-cell">
+                <button class="btn btn-success btn-sm w-100" id="exportToExcel"><i
+                        class="bi bi-file-earmark-excel-fill"></i> Export</button>
+            </th>
+        </thead> --}}
+        <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="font-weight: bolder;">Waiting</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
     </table>
     <div class="pagination d-flex justify-content-center">
         <div class="pagination-container w-50 d-flex justify-content-between">
@@ -62,214 +92,223 @@
     </div>
 </div>
 <div class="modal-remove">
-    <div class="modal-container d-flex p-5 justify-content-between">
-        <div class="emp-data d-flex flex-column justify-content-between">
-            <div class="">
-                <h4>Adı:</h4>
-                <input id="empName" type="text" disabled value="">
-            </div>
-            <div class="">
-                <h4>Soyadı:</h4>
-                <input id="empSName" type="text" disabled value="">
-            </div>
-            <div class="">
-                <h4>Ata Adı:</h4>
-                <input id="empFName" type="text" disabled value="">
-            </div>
-            <div class="">
-                <h4>Telefon Nömrəsi:</h4>
-                <input id="empPNumber" type="text" disabled value="">
-            </div>
-            <div class="">
-                <h4>Departament:</h4>
-                <input id="empDeptName" type="text" disabled value="">
-            </div>
-            <div class="">
-                <h4>Vəzifə:</h4>
-                <input id="empPosName" type="text" disabled value="">
-            </div>
-            <div class="">
-                <h4>Proyekt:</h4>
-                <input id="empProjName" type="text" disabled value="">
-            </div>
+<div class="modal-container d-flex p-5 justify-content-between">
+    <div class="emp-data d-flex flex-column justify-content-between">
+        <div class="">
+            <h4>Adı:</h4>
+            <input id="empName" type="text" disabled value="">
         </div>
-        <form id="remove-form" class="d-flex flex-column justify-content-between" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="id" value="">
-            <div class="select-emp-rm-time d-flex justify-content-between">
-                <label for="">İşdən ayrılma vaxtı</label>
-                <input class="w-50" type="date" name="j_end_date">
-            </div>
-            <div class="select-emp-rm-form-1 d-flex justify-content-between">
-                <label for="">Ərizə Skan</label>
-                <div class="">
-                    <label class="btn btn-outline-dark btn-sm" for="application-form-1">Faylı Yükləyin</label>
-                    <span class="d-none">
-                        <i class="bi bi-check-circle-fill text-success"></i>
-                    </span>
-                    <p class="text-black-50"></p>
-                </div>
-                <input class="d-none resignation-inputs" type="file" name="application-form" id="application-form-1">
-            </div>
-            <div class="select-emp-rm-form-2 d-flex justify-content-between">
-                <label for="">Əmr Skan</label>
-                <div class="">
-                    <label class="btn btn-outline-dark btn-sm" for="application-form-2">Faylı Yükləyin</label>
-                    <span class="d-none">
-                        <i class="bi bi-check-circle-fill text-success"></i>
-                    </span>
-                    <p class="text-black-50"></p>
-                </div>
-                <input class="d-none resignation-inputs" type="file" name="injunction" id="application-form-2">
-            </div>
-            <div class="select-emp-rm-work-book d-flex justify-content-between">
-                <label for="">Əmək Kitabçası Skan</label>
-                <div class="">
-                    <label class="btn btn-outline-dark btn-sm" for="application-work-book">Faylı Yükləyin</label>
-                    <span class="d-none">
-                        <i class="bi bi-check-circle-fill text-success"></i>
-                    </span>
-                    <p class="text-black-50"></p>
-                </div>
-                <input class="d-none resignation-inputs" type="file" name="work-book" id="application-work-book">
-            </div>
-            <div class="emp-rm-buttons d-flex justify-content-between">
-                <span class="btn btn-outline-danger btn-sm empModalCancelBtn">Ləğv Et</span>
-                <button class="btn btn-outline-secondary btn-sm" type="submit">Yadda Saxla</button>
-            </div>
-        </form>
+        <div class="">
+            <h4>Soyadı:</h4>
+            <input id="empSName" type="text" disabled value="">
+        </div>
+        <div class="">
+            <h4>Ata Adı:</h4>
+            <input id="empFName" type="text" disabled value="">
+        </div>
+        <div class="">
+            <h4>Telefon Nömrəsi:</h4>
+            <input id="empPNumber" type="text" disabled value="">
+        </div>
+        <div class="">
+            <h4>Departament:</h4>
+            <input id="empDeptName" type="text" disabled value="">
+        </div>
+        <div class="">
+            <h4>Vəzifə:</h4>
+            <input id="empPosName" type="text" disabled value="">
+        </div>
+        <div class="">
+            <h4>Proyekt:</h4>
+            <input id="empProjName" type="text" disabled value="">
+        </div>
     </div>
-</div>
-
-<div class="d-none employee-full-data-modal position-fixed w-100 bg-dark bg-opacity-50 top-0" style="height: 100vh; left: 0">
-    <div class="emp-modal-container w-100 h-100 d-flex justify-content-center align-items-center">
-        <div class="emp-modal-bg-light position-relative bg-light d-flex flex-wrap justify-content-between p-4" style="width: 40%; height: 80vh; overflow-y: hidden;">
-            <h2 class="bold position-absolute w-100 text-center text-black py-2" style="left: 0; top: 15px; pointer-events: none">Əməkdaş Məlumatı</h2>
-            <div class="close-emp-modal w-100">
-                <span class="btn float-end empModalCloseBtn">
-                    <i class="bi bi-x-square-fill"></i>
+    <form id="remove-form" class="d-flex flex-column justify-content-between" method="post"
+        enctype="multipart/form-data">
+        <input type="hidden" name="id" value="">
+        <div class="select-emp-rm-time d-flex justify-content-between">
+            <label for="">İşdən ayrılma vaxtı</label>
+            <input class="w-50" type="date" name="j_end_date">
+        </div>
+        <div class="select-emp-rm-form-1 d-flex justify-content-between">
+            <label for="">Ərizə Skan</label>
+            <div class="">
+                <label class="btn btn-outline-dark btn-sm" for="application-form-1">Faylı Yükləyin</label>
+                <span class="d-none">
+                    <i class="bi bi-check-circle-fill text-success"></i>
                 </span>
+                <p class="text-black-50"></p>
             </div>
-            <div class="emp-infos d-flex flex-column mt-5 py-3">
-                <div class="w-100 d-flex justify-content-between" style="height: 20%">
-                    <div class="profile-picture" style="width: 25%; height: 100%;">
-                        <img id="profilePicture" src="" style="border: 1px solid #000; box-shadow: 2px 2px 5px #000; height: 100%; width: 100%; object-fit: cover; object-position: top;">
+            <input class="d-none resignation-inputs" type="file" name="application-form"
+                id="application-form-1">
+        </div>
+        <div class="select-emp-rm-form-2 d-flex justify-content-between">
+            <label for="">Əmr Skan</label>
+            <div class="">
+                <label class="btn btn-outline-dark btn-sm" for="application-form-2">Faylı Yükləyin</label>
+                <span class="d-none">
+                    <i class="bi bi-check-circle-fill text-success"></i>
+                </span>
+                <p class="text-black-50"></p>
+            </div>
+            <input class="d-none resignation-inputs" type="file" name="injunction" id="application-form-2">
+        </div>
+        <div class="select-emp-rm-work-book d-flex justify-content-between">
+            <label for="">Əmək Kitabçası Skan</label>
+            <div class="">
+                <label class="btn btn-outline-dark btn-sm" for="application-work-book">Faylı Yükləyin</label>
+                <span class="d-none">
+                    <i class="bi bi-check-circle-fill text-success"></i>
+                </span>
+                <p class="text-black-50"></p>
+            </div>
+            <input class="d-none resignation-inputs" type="file" name="work-book" id="application-work-book">
+        </div>
+        <div class="emp-rm-buttons d-flex justify-content-between">
+            <span class="btn btn-outline-danger btn-sm empModalCancelBtn">Ləğv Et</span>
+            <button class="btn btn-outline-secondary btn-sm" type="submit">Yadda Saxla</button>
+        </div>
+    </form>
+</div>
+</div>
+
+<div class="d-none employee-full-data-modal position-fixed w-100 bg-dark bg-opacity-50 top-0"
+style="height: 100vh; left: 0">
+<div class="emp-modal-container w-100 h-100 d-flex justify-content-center align-items-center">
+    <div class="emp-modal-bg-light position-relative bg-light d-flex flex-wrap justify-content-between p-4"
+        style="width: 40%; height: 80vh; overflow-y: hidden;">
+        <h2 class="bold position-absolute w-100 text-center text-black py-2"
+            style="left: 0; top: 15px; pointer-events: none">Əməkdaş Məlumatı</h2>
+        <div class="close-emp-modal w-100">
+            <span class="btn float-end empModalCloseBtn">
+                <i class="bi bi-x-square-fill"></i>
+            </span>
+        </div>
+        <div class="emp-infos d-flex flex-column mt-5 py-3">
+            <div class="w-100 d-flex justify-content-between" style="height: 20%">
+                <div class="profile-picture" style="width: 25%; height: 100%;">
+                    <img id="profilePicture" src=""
+                        style="border: 1px solid #000; box-shadow: 2px 2px 5px #000; height: 100%; width: 100%; object-fit: cover; object-position: top;">
+                </div>
+                <div class="d-flex flex-column justify-content-between align-items-center"
+                    style="width: 60%; height: 100%">
+                    <input class="update-employee-input" type="hidden" name="employeeId" id="employeeId">
+                    <div class="d-flex justify-content-between w-100 px-4">
+                        <label class="bold" for="">Adı</label>
+                        <input class="update-employee-input" type="text" name="employeeName" id="name">
                     </div>
-                    <div class="d-flex flex-column justify-content-between align-items-center" style="width: 60%; height: 100%">
-                        <input class="update-employee-input" type="hidden" name="employeeId" id="employeeId">
-                        <div class="d-flex justify-content-between w-100 px-4">
-                            <label class="bold" for="">Adı</label>
-                            <input class="update-employee-input" type="text" name="employeeName" id="name">
-                        </div>
-                        <div class="d-flex justify-content-between w-100 px-4">
-                            <label class="bold" for="">Orta Adı</label>
-                            <input class="update-employee-input" type="text" name="middle_name" id="midName">
-                        </div>
-                        <div class="d-flex justify-content-between w-100 px-4">
-                            <label class="bold" for="">Soyadı</label>
-                            <input class="update-employee-input" type="text" name="employeeLastName" id="surname">
-                        </div>
-                        <div class="d-flex justify-content-between w-100 px-4">
-                            <label class="bold" for="">Ata Adı</label>
-                            <input class="update-employee-input" type="text" name="employeeFatherName" id="fatherName">
-                        </div>
+                    <div class="d-flex justify-content-between w-100 px-4">
+                        <label class="bold" for="">Orta Adı</label>
+                        <input class="update-employee-input" type="text" name="middle_name" id="midName">
+                    </div>
+                    <div class="d-flex justify-content-between w-100 px-4">
+                        <label class="bold" for="">Soyadı</label>
+                        <input class="update-employee-input" type="text" name="employeeLastName" id="surname">
+                    </div>
+                    <div class="d-flex justify-content-between w-100 px-4">
+                        <label class="bold" for="">Ata Adı</label>
+                        <input class="update-employee-input" type="text" name="employeeFatherName"
+                            id="fatherName">
                     </div>
                 </div>
-                <div class="d-flex flex-wrap justify-content-between mt-4" style="overflow-y: scroll; height: 30%">
-                    <div class="gender my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">Cinnsiyyəti</label>
-                        <select class="update-employee-input" name="sex" id="sex">
-                            <option value="0">Kişi</option>
-                            <option value="1">Qadın</option>
-                        </select>
-                    </div>
-                    <div class="dob my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">Doğum Günü</label>
-                        <input class="update-employee-input" type="date" name="dob" id="dob">
-                    </div>
-                    <div class="q-address my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">Qeydiyatda olduğu Ünvan</label>
-                        <input class="update-employee-input" type="text" name="q_address" id="qAddress">
-                    </div>
-                    <div class="y-address my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">Yaşadığı ünvan</label>
-                        <input class="update-employee-input" type="text" name="y_address" id="yAddress">
-                    </div>
-                    <div class="SSN my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">SSN</label>
-                        <input class="update-employee-input" type="text" name="SSN" id="SSN">
-                    </div>
-                    <div class="FIN my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">FIN</label>
-                        <input class="update-employee-input" type="text" name="FIN" id="FIN">
-                    </div>
-                    <div class="phone-numb my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">Telefon nömrəsi</label>
-                        <input class="update-employee-input" type="text" name="phoneNumber" id="phoneNumber">
-                    </div>
-                    <div class="home-numb my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">Ev telefonu nömrəsi</label>
-                        <input class="update-employee-input" type="text" name="homeNumber" id="homeNumber">
-                    </div>
-                    <div class="shift-start my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">İşə gəlmə vaxtı</label>
-                        <input class="update-employee-input" type="time" name="shift_start_t" id="shiftStart">
-                    </div>
-                    <div class="shift-end my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">İşdən çıxma vaxtı</label>
-                        <input class="update-employee-input" type="time" name="shift_end_t" id="shiftEnd">
-                    </div>
-                    <div class="job-start-date my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">İşə başlama tarixi</label>
-                        <input class="update-employee-input" type="date" name="j_start_d" id="jStartDate">
-                    </div>
-                    <div class="dayoff-days my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">Məzuniyyət günləri</label>
-                        <input class="update-employee-input" type="text" name="dayOffDays" id="dayOffDays">
-                    </div>
-                    <div class="working-days my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">İşə gəlmə günlərinin sayı</label>
-                        <div class="d-flex align-items-center">
-                            <input class="mx-2 update-employee-input" type="checkbox" name="full_day" id="full_day" style="width: fit-content !important;">
-                            <input class="update-employee-input" type="text" name="workingDays" id="workingDays">
-                        </div>
-                    </div>
-                    <div class="project my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">Proyekt</label>
-                        <select class="update-employee-input" name="project" id="project">
-
-                        </select>
-                    </div>
-                    <div class="department my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">Departament</label>
-                        <select class="update-employee-input" name="department" id="department">
-
-                        </select>
-                    </div>
-                    <div class="position my-2 d-flex w-100 justify-content-between">
-                        <label class="bold" for="">Vəzifə</label>
-                        <select class="update-employee-input" name="position" id="position">
-
-                        </select>
+            </div>
+            <div class="d-flex flex-wrap justify-content-between mt-4" style="overflow-y: scroll; height: 30%">
+                <div class="gender my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">Cinnsiyyəti</label>
+                    <select class="update-employee-input" name="sex" id="sex">
+                        <option value="0">Kişi</option>
+                        <option value="1">Qadın</option>
+                    </select>
+                </div>
+                <div class="dob my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">Doğum Günü</label>
+                    <input class="update-employee-input" type="date" name="dob" id="dob">
+                </div>
+                <div class="q-address my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">Qeydiyatda olduğu Ünvan</label>
+                    <input class="update-employee-input" type="text" name="q_address" id="qAddress">
+                </div>
+                <div class="y-address my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">Yaşadığı ünvan</label>
+                    <input class="update-employee-input" type="text" name="y_address" id="yAddress">
+                </div>
+                <div class="SSN my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">SSN</label>
+                    <input class="update-employee-input" type="text" name="SSN" id="SSN">
+                </div>
+                <div class="FIN my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">FIN</label>
+                    <input class="update-employee-input" type="text" name="FIN" id="FIN">
+                </div>
+                <div class="phone-numb my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">Telefon nömrəsi</label>
+                    <input class="update-employee-input" type="text" name="phoneNumber" id="phoneNumber">
+                </div>
+                <div class="home-numb my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">Ev telefonu nömrəsi</label>
+                    <input class="update-employee-input" type="text" name="homeNumber" id="homeNumber">
+                </div>
+                <div class="shift-start my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">İşə gəlmə vaxtı</label>
+                    <input class="update-employee-input" type="time" name="shift_start_t" id="shiftStart">
+                </div>
+                <div class="shift-end my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">İşdən çıxma vaxtı</label>
+                    <input class="update-employee-input" type="time" name="shift_end_t" id="shiftEnd">
+                </div>
+                <div class="job-start-date my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">İşə başlama tarixi</label>
+                    <input class="update-employee-input" type="date" name="j_start_d" id="jStartDate">
+                </div>
+                <div class="dayoff-days my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">Məzuniyyət günləri</label>
+                    <input class="update-employee-input" type="text" name="dayOffDays" id="dayOffDays">
+                </div>
+                <div class="working-days my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">İşə gəlmə günlərinin sayı</label>
+                    <div class="d-flex align-items-center">
+                        <input class="mx-2 update-employee-input" type="checkbox" name="full_day" id="full_day"
+                            style="width: fit-content !important;">
+                        <input class="update-employee-input" type="text" name="workingDays" id="workingDays">
                     </div>
                 </div>
-                <div class="emp-edit-buttons d-flex justify-content-between align-items-center mt-3">
-                    <button class="btn btn-outline-danger" id="empEditCancelBtn">Ləğv Et</button>
-                    <button class="btn btn-outline-success" id="empEditApplyBtn">Təsdiqlə</button>
+                <div class="project my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">Proyekt</label>
+                    <select class="update-employee-input" name="project" id="project">
+
+                    </select>
                 </div>
+                <div class="department my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">Departament</label>
+                    <select class="update-employee-input" name="department" id="department">
+
+                    </select>
+                </div>
+                <div class="position my-2 d-flex w-100 justify-content-between">
+                    <label class="bold" for="">Vəzifə</label>
+                    <select class="update-employee-input" name="position" id="position">
+
+                    </select>
+                </div>
+            </div>
+            <div class="emp-edit-buttons d-flex justify-content-between align-items-center mt-3">
+                <button class="btn btn-outline-danger" id="empEditCancelBtn">Ləğv Et</button>
+                <button class="btn btn-outline-success" id="empEditApplyBtn">Təsdiqlə</button>
             </div>
         </div>
     </div>
 </div>
+</div>
 
-<div class="loading position-absolute top-0 w-100" style="left: 0; height: 100vh">
-    <div class="loading-container bg-light bg-opacity-25 w-100 h-100 d-flex justify-content-center align-items-center">
-        <img src="/assets/img/loading-3.gif" style="width: 70px">
-    </div>
+<div class="loading top-0 w-100" style="left: 0; height: 100vh">
+<div class="loading-container bg-opacity-25 w-100 h-100 d-flex justify-content-center align-items-center">
+    <img src="/assets/img/atom.svg" style="width: 100px">
+</div>
 </div>
 
 
 <div class="update-notification-alert text-center d-none position-fixed">
-    <p class="update-notification-p text-light p-1 border round-5"></p>
+<p class="update-notification-p text-light p-1 border round-5"></p>
 </div>
 
 <script src="/assets/js/jquery.min.js"></script>
