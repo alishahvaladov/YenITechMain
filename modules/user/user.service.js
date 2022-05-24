@@ -30,26 +30,34 @@ module.exports = {
             return cb(err);
         });
     },
-    deleteUser: (id, cb) => {
-        console.log("User ID is: " + id);
-        User.destroy({
+    deleteUser: (data, cb) => {
+        User.update({
+            deleted_by: data.deleted_by
+        }, {
             where: {
-                id: id,
-                role: {
-                    [Op.ne]: 1
-                }
-            },
-            logging: false
-        }).then((user) => {
-            console.log("User: " + user);
-            cb(null, user);
+                id: data.id
+            }
+        }).then((result) => {
+            User.destroy({
+                where: {
+                    id: data.id,
+                    role: {
+                        [Op.ne]: 1
+                    }
+                },
+                logging: false
+            }).then((user) => {
+                cb(null, user);
+            }).catch((err) => {
+                return cb(err);
+            });
         }).catch((err) => {
             cb(err);
         })
     },
     getUsers: async () => {
         return await sequelize.query(`SELECT usr.*, emp.first_name, emp.last_name, emp.father_name 
-                                    FROM Users as usr 
+                                    FROM Users as usr
                                     LEFT JOIN Employees as emp ON usr.emp_id = emp.id
                                     WHERE usr.deletedAt IS NULL AND usr.role != 1`, {
             type: QueryTypes.SELECT,

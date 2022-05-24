@@ -40,7 +40,8 @@ app.use('/assets', express.static(path.join(__dirname, './public/assets')));
 app.use('/uploads', express.static(path.join(__dirname, './public/uploads')));
 app.use('/excels-for-delete', express.static(path.join(__dirname, './public/excels')));
 app.use('/salary-xlsx', express.static(path.join(__dirname, './salaries_xlsx')));
-app.use('/employee/files', express.static(path.join(__dirname, './public/employees')))
+app.use('/employee/files', express.static(path.join(__dirname, './public/employees')));
+// app.use('/src', express.static(path.join(__dirname, './public/src')));
 
 // Initialize Passport
 
@@ -109,6 +110,8 @@ const notificationAPI = require("./api/notifications/api");
 const departmentAPI = require('./api/department/api');
 const positionAPI = require("./api/position/api");
 const projectAPI = require("./api/projects/api");
+const workingHoursAPI = require('./api/working-hours/router');
+const workingHoursRouter = require('./modules/working-hours/router');
 
 // Routers
 app.use("/", userRouter);
@@ -124,6 +127,7 @@ app.use("/all-fprints", selectFPrint);
 app.use("/fprints", fprints);
 app.use("/fines", fine);
 app.use("/profile", profile);
+app.use("/working-hours", workingHoursRouter);
 app.use("/api", empAPI);
 app.use("/api/time-off", timeOffAPI)
 app.use("/api/fprints", fPrintAPI);
@@ -136,6 +140,7 @@ app.use("/api/notification", notificationAPI);
 app.use("/api/department", departmentAPI);
 app.use("/api/position", positionAPI);
 app.use("/api/project", projectAPI);
+app.use('/api/working-hours', workingHoursAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });

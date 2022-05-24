@@ -40,5 +40,12 @@ module.exports = {
             req.flash("error_msg", "Something went wrong!");
             return res.redirect('/profile');
         }
+    },
+    renderSalariesPage: (req, res) => {
+        res.render('profile/salaries', {
+            hr: true,
+            super_admin: true,
+            deptDirector: true
+        });
     }
 }

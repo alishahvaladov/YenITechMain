@@ -1,4 +1,4 @@
-const { sequelize, Employee } = require("../../db_config/models");
+const { sequelize, Employee, EmployeeShift } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
 
 
@@ -20,10 +20,11 @@ module.exports = {
         })
     },
     getEmployee: async (id) => {
-        let empRes =  await sequelize.query(`SELECT emp.*, pos.name as posName, proj.name as projName, dept.name as deptName, efd.uploaded_files FROM Employees as emp
+        let empRes =  await sequelize.query(`SELECT emp.*, pos.name as posName, proj.name as projName, dept.name as deptName, efd.uploaded_files, es.* FROM Employees as emp
                                     LEFT JOIN Positions as pos ON pos.id = emp.position_id
                                     LEFT JOIN Projects as proj ON proj.id = emp.project_id
                                     LEFT JOIN Departments as dept ON dept.id = emp.department
+                                    LEFT JOIN EmployeeShifts as es ON emp.id = es.emp_id
                                     LEFT JOIN EmployeeFileDirectories as efd ON emp.id = efd.emp_id
                                     WHERE emp.id = :id`, {
            type: QueryTypes.SELECT,
@@ -257,14 +258,21 @@ module.exports = {
             replacements: replacements
         });
     },
-    updateEmployee: (data, id, cb) => {
+    updateEmployee: (data, shiftData, cb) => {
         console.log(data);
         Employee.update(data, {
             where: {
-                id: id
+                id: data.id
             },
             logging: false
         }).then(res => {
+            EmployeeShift.update(shiftData, {
+                where: {
+                    emp_id: data.emp_id
+                }
+            }).catch(err => {
+                return cb(err);
+            });
             cb(null, res);
         }).catch(err => {
             cb(err);

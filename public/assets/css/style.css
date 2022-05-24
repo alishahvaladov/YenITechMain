@@ -633,18 +633,24 @@ input[type=number] {
     margin-bottom: 3%;
 }
 
-.update-notification-alert,
 .notification-alert {
     right: 70px;
     bottom: 70px;
-    width: 200px;
+    width: fit-content;
     height: fit-content;
+    color: #fff;
+    /* background-color: #222e3c; */
+    background-color: #3b7ddd;
+    border-radius: 5px;
+}
+.opacity-hide {
+    opacity: 0;
+    transition: opacity 1000ms;
 }
 
-.update-notification-p,
-.notification-p {
-    background-color:rgba(17, 100, 0, 0.733);
-    width: 100%;
+.opacity-show {
+    opacity: 1;
+    transition: opacity 1000ms;
 }
 
 .t-o-m-request {
@@ -652,6 +658,7 @@ input[type=number] {
 }
 
 .update-employee-input {
+    width: 100%;
     padding: 0 5px;
 }
 
@@ -702,4 +709,22 @@ table thead input {
 .form-check-input {
     box-shadow: 1px 1px 8px #222e3c !important;
     border-color: #222e3c !important;
+}
+
+.pagination-active {
+    background-color: #212529 !important;
+    border-color: #212529 !important;
+    color: #fff !important;
+}
+
+.dropdown-text {
+    text-align: left !important;
+}
+
+.background-for-unseen-notification {
+    background: #222e3c15 !important;
+}
+
+.form-control[readonly] {
+    background-color: #fff !important;
 }

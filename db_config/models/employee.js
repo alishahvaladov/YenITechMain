@@ -72,14 +72,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
-    shift_start_t: {
-      type: DataTypes.TIME,
-      allowNull: false
-    },
-    shift_end_t: {
-      type: DataTypes.TIME,
-      allowNull: false
-    },
     j_start_date: {
       type: DataTypes.DATEONLY,
       allowNull: false

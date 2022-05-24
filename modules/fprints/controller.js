@@ -5,8 +5,9 @@ const { getFPrints,
     getFPrintsByDate,
     addForgottenFPrintsToDB,
     getEmployeesIDsAndShiftTimes,
-    moveFromDraftToOrigin
+    moveFromDraftToOrigin,
 } = require("./service");
+const { addNotification } = require("../../notification/service");
 const readXlsxFile = require("read-excel-file/node");
 const path = require("path");
 const date = new Date();
@@ -34,11 +35,13 @@ module.exports = {
         }
     },
     checkIfFPrintForgotten: async (req, res, next) => {
+        const notificationData = {};
         const empIDsAndShiftTimes = await getEmployeesIDsAndShiftTimes();
         let fPrintData = {};
+        let fPrintDataHasValue = false;
         for (let i = 1; i <= lastDayOfMonth; i++) {
             for (let j = 0; j < empIDsAndShiftTimes.length; j++) {
-                let fPrintDataHasValue = false;
+                fPrintDataHasValue = false;
                 fPrintData = {};
                 const result = await getFPrintsByDate(empIDsAndShiftTimes[j].id, i);
                 const splitShiftStart = parseInt(empIDsAndShiftTimes[j].shift_start_t.split(":")[0]);
@@ -112,7 +115,22 @@ module.exports = {
                 }
             }
         }
-        req.flash("success_msg", "Finger print information have been uploaded successfully. Please check for forgotten finger prints");
+        if (fPrintDataHasValue) {
+            notificationData.header = "Unudulmuş Barmaq İzləri";
+            notificationData.description = "Unudulmuş barmaq izlərini yoxlayın";
+            notificationData.belongs_to_role = 5;
+            notificationData.belongs_to_table = "FPrints";
+            notificationData.url = "/all-fprints?inappropriate-data=true";
+            notificationData.importance = 1;
+            addNotification(notificationData, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    req.flash("error_msg", "Ups... Something went wrong!");
+                    return res.redirect('/all-fprints');
+                }
+            });
+        }
+        req.flash("success_msg", "Finger print information have been uploaded successfully.");
         return res.redirect("/all-fprints");
     },
     addFPrintToDB: async (req, res, next) => {

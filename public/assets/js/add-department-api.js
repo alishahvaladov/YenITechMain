@@ -1,4 +1,4 @@
-const projectsDiv = document.querySelector(".projects");
+const projectsDiv = document.querySelector(".projects-checkbox");
 const submitDepartmentBtn = document.querySelector("#submitDepartment");
 const inputPassword4 = document.querySelector("#inputPassword4");
 const body = document.querySelector("body");
@@ -38,4 +38,4 @@ $.get("http://localhost:3000/api/department", (res) => {
             alert(e.responseJSON.message);
         })
     });
-})
+});

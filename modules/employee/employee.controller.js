@@ -38,13 +38,12 @@ const validateEmployee = async (data, cb) => {
             let fNameError = [];
             let lNameError = [];
             let fatherNameError = [];
-            let midNameError = [];
             let ssnError = [];
             let dobError = [];
             let finError = [];
             let phoneNumberError = [];
             let homeNumberError = [];
-            let shiftTypeError = [];
+            const shiftData = {};
             if (data.first_name === '') {
                 fName = false;
             } else {
@@ -55,7 +54,6 @@ const validateEmployee = async (data, cb) => {
             } else {
                 lName = data.last_name.split('');
             }
-            const midName = data.middle_name.split('');
             if (data.father_name === '') {
                 fatherName = false;
             } else {
@@ -159,23 +157,6 @@ const validateEmployee = async (data, cb) => {
                 return false;
             }
 
-            if(midName) {
-                for (let i = 0; i < midName.length; i++) {
-                    if(!isNaN(parseInt(midName[i]))) {
-                        console.log("Middle name cannot contain number");
-                        midNameError.push("Middle name cannot contain number")
-                        validationError.midName = midNameError;
-                        return cb(true, validationError);
-                    }
-                    if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(midName[i]) === false) {
-                        console.log("Middle name cannot contain symbol");
-                        midNameError.push("Middle name cannot contain symbol")
-                        validationError.midName = midNameError;
-                        return cb(true, validationError);
-                    }
-                }
-            }
-
 
             if(sex == 0 || sex == 1) {
                 console.log("Gender verified");
@@ -249,8 +230,7 @@ const validateEmployee = async (data, cb) => {
             }
 
 
-
-            if(phoneNumber.length === 10 && phoneNumber.length === 12) {
+            if(phoneNumber.length === 10 || phoneNumber.length === 12) {
                 const seperatedP = phoneNumber.replace(" ", "").split("");
                 for (let i = 0; i < seperatedP.length; i++) {
                     if(isNaN(parseInt(seperatedP[i]))) {
@@ -295,16 +275,9 @@ const validateEmployee = async (data, cb) => {
 
             if(parseInt(selectedShiftType) === 1) {
                 if(parseInt(shiftType) === 1 || parseInt(shiftType) === 2 || parseInt(shiftType) === 3) {
-                    if(parseInt(shiftType) === 1) {
-                        data.shift_start_t = '10:00';
-                        data.shift_end_t = '19:00';
-                    } else if (parseInt(shiftType) === 2) {
-                        data.shift_start_t = '10:00';
-                        data.shift_end_t = '14:00';
-                    } else if (parseInt(shiftType) === 3) {
-                        data.shift_start_t = '14:00';
-                        data.shift_end_t = '19:00';
-                    }
+                    shiftData.shift_type = parseInt(shiftType);
+                    shiftData.shift_start = null;
+                    shiftData.shift_end = null;
                 } else {
                     validationError.shift = "Wrong shift type selected please try again";
                     return cb(true, validationError);
@@ -318,6 +291,9 @@ const validateEmployee = async (data, cb) => {
                 }
                 const shiftStartT = data.shift_start_t;
                 const shiftEndT = data.shift_end_t;
+                shiftData.shift_type = null;
+                shiftData.shift_start = data.shift_start_t;
+                shiftData.shift_end = data.shift_end_t;
                 if(shiftStartT === "" || shiftStartT === null || shiftEndT === "" || shiftEndT === null) {
                     validationError.shift = "Please fill shift times";
                     return cb(true, validationError);
@@ -389,7 +365,7 @@ const validateEmployee = async (data, cb) => {
                 } 
             }
 
-            return cb(null, null, data);
+            return cb(null, null, data, shiftData);
         } catch (err) {
             console.log(err);
             validationError.error = "Ups... Something went wrong!";
@@ -401,7 +377,7 @@ module.exports = {
     addEmployee: async (req, res) => {
         errors = [];
         const data = req.body;
-        await validateEmployee(data, (err, message, result) => {
+        await validateEmployee(data, (err, message, result, shiftData) => {
             if (err) {
                 for (const [key, value] of Object.entries(message)) {
                     console.log(`Error of ${key} is ${value}`);
@@ -436,7 +412,7 @@ module.exports = {
                     return res.redirect("/employee/add-employee");
                 }
                 if (errors.length === 0) {
-                    addEmployee(result, (err, results) => {
+                    addEmployee(result, shiftData, (err, results) => {
                         if(err) {
                             console.log("Error" + err.message);
                             req.flash("error_msg", "An unknown error has been occurred please contact System Admin");

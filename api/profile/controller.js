@@ -1,9 +1,11 @@
 const config = require('../../config/config.json');
 const { 
-    renderProfile, 
-    getProfilePicture, 
-    getUserDataAsEmployee, 
-    addTimeOff 
+    renderProfile,
+    getProfilePicture,
+    getUserDataAsEmployee,
+    addTimeOff,
+    getUsername,
+    getSalaryByMonthsForUser
 } = require("./service");
 
 module.exports = {
@@ -25,13 +27,15 @@ module.exports = {
     getProfilePicture: async (req, res) => {
         const id = req.user.id;
         try {
+            const username = await getUsername(id);
             const result = await getProfilePicture(id);
             let uploadedFiles = result[0].uploaded_files;
             uploadedFiles = JSON.parse(uploadedFiles);
             uploadedFiles = JSON.parse(uploadedFiles.recruitment);
             const filename = `/employee/files/recruitment/${result[0].id}-${result[0].first_name.toLowerCase()}-${result[0].last_name.toLowerCase()}-${result[0].father_name.toLowerCase()}/${uploadedFiles.profilePicture[0].filename}`;
             return res.status(200).send({
-                filename
+                filename,
+                username
             });
         } catch (err) {
             console.log(err);
@@ -56,7 +60,7 @@ module.exports = {
                 success: false,
                 message: "This employee couldn't find please contact system admin!"
             });
-        }   
+        }
     },
     addTimeOff: async (req, res) => {
         try {
@@ -90,12 +94,14 @@ module.exports = {
                 } else {
                     body.toffTime = null;
                     body.toffTimeDate = null;
-                    for (const [key, value] in Object.entries(timeOffTypes)) {
+                    for (const [key, value] of Object.entries(timeOffTypes)) {
                         if(parseInt(body.timeOffType) === parseInt(key)) {
-                            return timeOffTypeValidation = true;
-                        } 
+                            timeOffTypeValidation = true;
+                            break;
+                        }
                     }
                 }
+
                 if (!timeOffTypeValidation) {
                     return res.status(400).send({
                         success: false,
@@ -149,7 +155,7 @@ module.exports = {
             const user_id = req.user.id;
             const employee = await getUserDataAsEmployee(user_id);
             body.user_id = user_id;
-            body.emp_id = employee.id;
+            body.emp_id = employee[0].id;
 
             addTimeOff(body, (err, result) => {
                 if (err) {
@@ -159,15 +165,41 @@ module.exports = {
                         message: "Ups.. Something went wrong!"
                     });
                 }
-                return res.status(204);
+                console.log(result);
+                return res.status(200).send({
+                    success: true,
+                    message: "Time off request added"
+                });
             });
-
-
         } catch (err) {
             console.log(err);
             return res.status(500).send({
                 success: false,
                 message: "Ups.. Something went wrong!"
+            });
+        }
+    },
+    getSalaryByMonthsForUser: async (req, res) => {
+        try {
+            const data = {};
+            const user_id = req.user.id;
+            const offset = parseInt(req.params.offset);
+            const employee = await getUserDataAsEmployee(user_id);
+            const emp_id = employee[0].id;
+            data.emp_id = emp_id;
+            data.offset = offset;
+            const result = await getSalaryByMonthsForUser(data);
+
+            return res.status(200).send({
+                success: true,
+                salaries: result.salaries,
+                count: result.count
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
             });
         }
     }

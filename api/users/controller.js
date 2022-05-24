@@ -1,4 +1,4 @@
-const { getUser, updatePassword, getAllUsers } = require("./service");
+const { getUser, updatePassword, getAllUsers, getDeletedUsers, getDeleterUser } = require("./service");
 const jsonConfig = require("../../config/config.json");
 
 module.exports = {
@@ -68,5 +68,60 @@ module.exports = {
                 message: "Something went wrong"
             });
         }
+    },
+    getDeletedUsers: async (req, res) => {
+        try {
+            const deletedUserData = {};
+            const qEmp = req.body.qEmp;
+            const qUsername = req.body.qUsername;
+            const qEmail = req.body.qEmail;
+            const qRole = req.body.qRole;
+            const limit = req.body.limit;
+            const offset = req.body.offset;
+            const roles = jsonConfig.roles;
+            
+            if (qRole !== "" && isNaN(parseInt(qRole))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Role must be number"
+                });
+            }
+
+            if (isNaN(parseInt(limit)) || isNaN(parseInt(offset))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Limit or offset must be a number"
+                });
+            }
+            
+            deletedUserData.qEmp = qEmp;
+            deletedUserData.qUsername = qUsername;
+            deletedUserData.qEmail = qEmail;
+            deletedUserData.qRole = qRole;
+            deletedUserData.limit = parseInt(limit);
+            deletedUserData.offset = parseInt(limit) * parseInt(offset);
+
+            const result = await getDeletedUsers(deletedUserData);
+            const deletedUsers = result.deletedUsers;
+            let deletedBy;
+            for (let i = 0; i < deletedUsers.length; i++) {
+                deletedBy = await getDeleterUser(deletedUsers[i].deleted_by);
+                deletedUsers[i].deleted_by = `${deletedBy[0].first_name} ${deletedBy[0].last_name} ${deletedBy[0].father_name}`;
+                deletedUsers[i].role = roles[deletedUsers[i].role.toString()];
+            }
+
+            return res.status(200).send({
+                success: true,
+                deletedUsers,
+                count: result.deletedUsersCount,
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong"
+            });
+        }
     }
+    
 }

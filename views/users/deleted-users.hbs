@@ -1,0 +1,41 @@
+<div class="card flex-fill">
+    <div class="card-header">
+        <h5 class="card-title mb-0">İstifadəçilər</h5>
+    </div>
+    {{> messages }}
+    <h1 class="text-center">Silinən İstifadəçilər</h1>
+    <table class="table table-hover my-0" style="margin: 0 !important;">
+        <div class="container">
+            <thead>
+                <tr>
+                    <th>Əməkdaş</th>
+                    <th>İstifadəçi adı</th>
+                    <th>Silən İstifadəçi</th>
+                    <th>Email</th>
+                    <th>İstifadəçi rolu</th>
+                </tr>
+                <tr>
+                    <th><input class="form-control" type="text" id="qEmp"></th>
+                    <th><input class="form-control" type="text" id="qUsername"></th>
+                    <th><input class="form-control" type="text" disabled></th>
+                    <th><input class="form-control" type="text" id="qEmail"></th>
+                    <th><select class="form-select" id="qRole">
+                        <option value="" hidden>Select Role</option>
+                        <option value="2">Admin</option>
+                    </select></th>
+                </tr>
+            </thead>
+            <tbody>
+            
+            </tbody>
+        </div>
+    </table>
+    <div class="pagination d-flex justify-content-center">
+        <div class="pagination-container w-50 d-flex justify-content-between">
+            <button class="pagination-item btn btn-outline-dark btn-sm active disabled">1</button>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/deleted-users.js"></script>

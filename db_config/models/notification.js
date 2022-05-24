@@ -22,9 +22,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    created_by: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     belongs_to_role: {
       type: DataTypes.INTEGER,
-      allowNull: false 
+      allowNull: false
     },
     seen: {
       type: DataTypes.INTEGER,

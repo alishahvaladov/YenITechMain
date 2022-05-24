@@ -1,6 +1,7 @@
 const { getDepartment, getPosition, getEmployee, empRenderPage, getEmpCount, empRenderByPage, updateEmployee } = require("./service");
 const excelJS = require("exceljs");
 const path = require("path");
+const standardShiftTypes = require("../../config/config.json").shift_types[1].types;
 const fs = require("fs");
 const validateEmployee = (data, cb) => {
     const dbData = {};
@@ -14,6 +15,7 @@ const validateEmployee = (data, cb) => {
     let ssnError = [];
     const selectedShiftType = data.select_shift_type;
     const shiftType = data.shift_type;
+    const shiftData = {};
 
     if (data.employeeName !== "" && data.employeeName !== undefined && data.employeeName !== null) {
         fName = data.employeeName;
@@ -182,16 +184,9 @@ const validateEmployee = (data, cb) => {
     }
     if(parseInt(selectedShiftType) === 1) {
         if(parseInt(shiftType) === 1 || parseInt(shiftType) === 2 || parseInt(shiftType) === 3) {
-            if(parseInt(shiftType) === 1) {
-                dbData.shift_start_t = '10:00';
-                dbData.shift_end_t = '19:00';
-            } else if (parseInt(shiftType) === 2) {
-                dbData.shift_start_t = '10:00';
-                dbData.shift_end_t = '14:00';
-            } else if (parseInt(shiftType) === 3) {
-                dbData.shift_start_t = '14:00';
-                dbData.shift_end_t = '19:00';
-            }
+                shiftData.shift_type = shiftType;
+                shiftData.shift_start = null;
+                shiftData.shift_end = null;
         } else {
             validationError.shift = "Wrong shift type selected please try again";
             return cb(true, validationError);
@@ -211,11 +206,12 @@ const validateEmployee = (data, cb) => {
                 validationError.shift = "Shift start cannot be greater than shift end";
                 return cb(true, validationError);
             }
-            dbData.shift_start_t = shiftStartT;
-            dbData.shift_end_t = shiftEndT;
+            shiftData.shift_type = null;
+            shiftData.shift_start = shiftStartT;
+            shiftData.shift_end = shiftEndT;
         } catch (err) {
             console.log(err);
-            validationError.shift = "Please choose correct shift time type please";
+            validationError.shift = "Please choose correct shift time type.";
             return cb(true, validationError);
         }
     }
@@ -296,7 +292,7 @@ const validateEmployee = (data, cb) => {
         dbData.project_id = project;
     }
 
-    return cb(null, null, dbData);
+    return cb(null, null, dbData, shiftData);
 }
 
 module.exports = {
@@ -321,21 +317,36 @@ module.exports = {
         const id = req.body.emp_id;
         try {
             let result = await getEmployee(id);
+            const shiftType = result.empRes[0].shift_type;
+            if (parseInt(shiftType) === 1) {
+                result.empRes[0].shift_start = standardShiftTypes[0].shift_start;
+                result.empRes[0].shift_end = standardShiftTypes[0].shift_end;
+            } else if (parseInt(shiftType) === 2) {
+                result.empRes[0].shift_start = standardShiftTypes[1].shift_start;
+                result.empRes[0].shift_end = standardShiftTypes[1].shift_end;
+            } else if (parseInt(shiftType) === 3) {
+                result.empRes[0].shift_start = standardShiftTypes[2].shift_start;
+                result.empRes[0].shift_end = standardShiftTypes[3].shift_end;
+            }
             let uploadedFiles = result.empRes[0].uploaded_files;
             if (result.empRes[0].working_days === 77) {
                 result.empRes[0].working_days = "full_day";
             }
             result.empRes[0].uplaoded_files = {};
             uploadedFiles = JSON.parse(uploadedFiles);
-            uploadedFiles = JSON.parse(uploadedFiles.recruitment);
-            result.empRes[0].filename = uploadedFiles.profilePicture[0].filename;
+            if (uploadedFiles) {
+                uploadedFiles = JSON.parse(uploadedFiles.recruitment);
+                result.empRes[0].filename = uploadedFiles.profilePicture[0].filename;
+            }
             res.send({
                 result: result
             });
         } catch (err) {
             console.log(err);
-            req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
-            return res.redirect("/employee");
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
         }
     },
     empRenderPage: async (req, res) => {
@@ -461,7 +472,7 @@ module.exports = {
     updateEmployee: (req, res) => {
         const body = req.body.data;
         const user_id = req.user.id;
-        validateEmployee(body, (err, message, empData) => {
+        validateEmployee(body, (err, message, empData, shiftData) => {
             if (err) {
                 for (const [key, value] of Object.entries(message)) {
                     console.log(`Error of ${key} is ${value}`);
@@ -472,7 +483,9 @@ module.exports = {
                 }
             }
             empData.user_id = user_id;
-            updateEmployee(empData, body.employeeId, (err, result) => {
+            empData.id = body.employeeId;
+            shiftData.emp_id = body.employeeId;
+            updateEmployee(empData, shiftData, (err, result) => {
                 if (err) {
                     console.log(err);
                     return res.status(500).send({

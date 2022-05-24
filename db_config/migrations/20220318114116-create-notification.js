@@ -16,9 +16,13 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      created_by: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       belongs_to_role: {
         type: Sequelize.INTEGER,
-        allowNull: false 
+        allowNull: false
       },
       seen: {
         type: Sequelize.INTEGER,

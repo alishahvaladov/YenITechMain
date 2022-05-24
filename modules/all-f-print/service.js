@@ -15,7 +15,7 @@ module.exports = {
         //Select Query
         let fpQuery = `
             SELECT fp.id, fp.emp_id, fp.f_print_date as date, fp.f_print_time as time, emp.first_name as name, emp.last_name as surname, emp.father_name as fname,
-            pos.name as posName, dept.name as deptName, proj.name as projName FROM FPrints as fp 
+            pos.name as posName, dept.name as deptName, proj.name as projName FROM FPrints as fp
             LEFT JOIN Employees as emp ON fp.emp_id = emp.id
             LEFT JOIN Positions as pos ON emp.position_id = pos.id
             LEFT JOIN Departments as dept ON dept.id = emp.department
@@ -25,7 +25,7 @@ module.exports = {
         let nfpEQuery = `
             UNION
             SELECT nfp.id, nfp.emp_id, nfp.date as date, nfp.enter_sign_time as time, emp.first_name as name, emp.last_name as surname, emp.father_name fname,
-            pos.name as posName, dept.name as deptName, proj.name as projName FROM NoFPrints as nfp 
+            pos.name as posName, dept.name as deptName, proj.name as projName FROM NoFPrints as nfp
             LEFT JOIN Employees as emp ON nfp.emp_id = emp.id
             LEFT JOIN Positions as pos ON emp.position_id = pos.id
             LEFT JOIN Departments as dept ON dept.id = emp.department
@@ -35,7 +35,7 @@ module.exports = {
         let nfpLQuery = `
             UNION
             SELECT nfp.id, nfp.emp_id, nfp.date as date, nfp.leave_sign_time as time, emp.first_name as name, emp.last_name as surname, emp.father_name as fname,
-            pos.name as posName, dept.name as deptName, proj.name as projName FROM NoFPrints as nfp 
+            pos.name as posName, dept.name as deptName, proj.name as projName FROM NoFPrints as nfp
             LEFT JOIN Employees as emp ON nfp.emp_id = emp.id
             LEFT JOIN Positions as pos ON emp.position_id = pos.id
             LEFT JOIN Departments as dept ON dept.id = emp.department
@@ -47,7 +47,7 @@ module.exports = {
         let countStart = ("SELECT (");
         let fpCount = `
             (
-                SELECT COUNT(*) FROM FPrints as fp 
+                SELECT COUNT(*) FROM FPrints as fp
                 LEFT JOIN Employees as emp ON fp.emp_id = emp.id
                 LEFT JOIN Positions as pos ON emp.position_id = pos.id
                 LEFT JOIN Departments as dept ON dept.id = emp.department
@@ -56,7 +56,7 @@ module.exports = {
         `
         let nfpECount = `
             (
-                SELECT COUNT(*) FROM NoFPrints as nfp 
+                SELECT COUNT(*) FROM NoFPrints as nfp
                 LEFT JOIN Employees as emp ON nfp.emp_id = emp.id
                 LEFT JOIN Positions as pos ON emp.position_id = pos.id
                 LEFT JOIN Departments as dept ON dept.id = emp.department
@@ -65,7 +65,7 @@ module.exports = {
         `
         let nfpLCount = `
             (
-                SELECT COUNT(*) FROM NoFPrints as nfp 
+                SELECT COUNT(*) FROM NoFPrints as nfp
                 LEFT JOIN Employees as emp ON nfp.emp_id = emp.id
                 LEFT JOIN Positions as pos ON emp.position_id = pos.id
                 LEFT JOIN Departments as dept ON dept.id = emp.department

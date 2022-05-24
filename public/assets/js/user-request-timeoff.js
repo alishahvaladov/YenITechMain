@@ -29,6 +29,10 @@ const wordBtnContainer = document.querySelector(".word-btn-container");
 const toffTime = document.querySelector("#toff-authorized-time");
 const toffTimeDate = document.querySelector('#timeoff-time-date');
 
+
+const timeOffNonHourDiv = document.querySelector('.toff-non-hour-types');
+const timeOffHourDiv = document.querySelector('.toff-hour-type');
+
 const getUserData = () => {
     $.get('http://localhost:3000/api/profile/user-data', (res) => {
         const employee = res.employee[0];
@@ -42,7 +46,7 @@ const getUserData = () => {
 flatpickr("#w-start-date", {
     dateFormat: "Y-m-d",
     enable: ['']
- });
+});
 
 getUserData();
 
@@ -53,7 +57,7 @@ timeOffEndDate.addEventListener("change", () => {
     flatpickr("#w-start-date", {
         dateFormat: "Y-m-d",
         enable: [`${timeOffEndDateValue.getFullYear()}-${timeOffEndDateValue.getMonth() + 1}-${timeOffEndDateValue.getDate()}`, `${dayAfterEndDateValue.getFullYear()}-${dayAfterEndDateValue.getMonth() + 1}-${dayAfterEndDateValue.getDate()}`]
-     }); 
+    });
 });
 
 nextBtn.addEventListener("click", () => {
@@ -84,7 +88,7 @@ nextBtn.addEventListener("click", () => {
         dayOffE = `${dayOffE[2]}.${dayOffE[1]}.${dayOffE[0]}`
         let wStartDate = document.querySelector("#w-start-date");
         wStartDate = wStartDate.value;
-        let nameSurnameFather = empDataInput.value;               
+        let nameSurnameFather = empDataInput.value;
         let department = document.querySelector("#toff-department");
         department = department.value;
         department = department.replace("şöbə", "")
@@ -114,7 +118,7 @@ nextBtn.addEventListener("click", () => {
             sedrName: "Mahir Mammadzada",
             directorName: "Mehdi Mammadzada",
         }
- 
+
         $.ajax({
             method: "post",
             url: "http://localhost:5000/day-off/form/validate",
@@ -149,7 +153,33 @@ nextBtn.addEventListener("click", () => {
                 console.log(err);
             }
         });
-    }); 
+    });
+});
+
+timeOffType.addEventListener("change", () => {
+    if (parseInt(timeOffType.value) === 4) {
+        timeOffHourDiv.classList.remove('d-none');
+        timeOffNonHourDiv.classList.add('d-none');
+    } else {
+        timeOffHourDiv.classList.add('d-none');
+        timeOffNonHourDiv.classList.remove('d-none');
+    }
+})
+
+applyBtn.addEventListener('click', () => {
+    $.post('http://localhost:3000/api/profile/request-time-off', {
+        timeOffType: timeOffType.value,
+        toffTime: toffTime.value,
+        timeOffStartDate: timeOffStartDate.value,
+        timeOffEndDate: timeOffEndDate.value,
+        wStartDate: wStartDate.value,
+        toffTimeDate: toffTimeDate.value
+    }, (res) => {
+        console.log(res.success === true);
+        if (res.success === true) {
+            window.location = '/profile';
+        }
+    });
 });
 
 

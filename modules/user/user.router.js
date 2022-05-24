@@ -8,11 +8,12 @@ const { register,
     renderRegister,
     activate,
     activateUser,
-    forgotPassword
+    forgotPassword,
+    renderDeletedUsers
 } = require("./user.controller");
 const express = require("express");
 const router = express.Router();
-const { forwardAuthenticated, ensureAuthenticated, admin, ensureActivated, checkRoles } = require("../auth/auth");
+const { forwardAuthenticated, ensureAuthenticated, admin, ensureActivated, checkRoles, audit } = require("../auth/auth");
 
 router.get('/register', admin, ensureActivated, renderRegister);
 router.get('/login', forwardAuthenticated, (req, res) => {
@@ -37,6 +38,10 @@ router.get("/dashboard",  ensureActivated, ensureAuthenticated, (req, res) => {
         res.render('dashboard', {
             deptDirector: true
         })
+    } else if (req.user.role === 7) {
+        res.render('dashboard', {
+            hr: true
+        })
     }
 });
 router.get("/users", admin, checkRoles, getUsers);
@@ -54,6 +59,7 @@ router.get("/forgot-password", forwardAuthenticated, (req, res) => {
 });
 router.post("/forgot-password", forwardAuthenticated, forgotPassword);
 router.get('/update-password', ensureAuthenticated, activate);
+router.get('/users/deleted-users', admin, audit, checkRoles, renderDeletedUsers);
 
 
 module.exports = router;

@@ -1,10 +1,9 @@
 const pgContainer = document.querySelector('.pagination-container');
 const loading = document.querySelector(".loading");
-const empEditModal = document.querySelector(".employee-full-data-modal");
+const empEditModal = document.querySelector(".employee-data-modal");
 const empModalCloseBtn = document.querySelector(".empModalCloseBtn");
 const exportToExcelBtn = document.querySelector("#exportToExcel");
 const empEditCancelBtn = document.querySelector("#empEditCancelBtn");
-const profilePicture = document.querySelector("#profilePicture");
 const pagination = document.querySelector('.pagination');
 
 const empName = document.querySelector("#name");
@@ -19,6 +18,8 @@ const inpSSN = document.querySelector("#SSN");
 const inpFIN = document.querySelector("#FIN");
 const pNumber = document.querySelector("#phoneNumber");
 const hNumber = document.querySelector("#homeNumber");
+const selectShiftTypeOptions = document.querySelector("#select_shift_type").options;
+const shiftTypeOptions = document.querySelector("#shift_type").options;
 const shiftStart = document.querySelector("#shiftStart");
 const inpShiftEnd = document.querySelector("#shiftEnd");
 const jStartDate = document.querySelector("#jStartDate");
@@ -77,9 +78,9 @@ const empRemModule = () => {
          const id = $(this).val();
          $.post("http://localhost:3000/api/employee-data", {
             emp_id: id
-         }, (res) => {
+         }, (empResult) => {
             const form = $("#remove-form");
-            const inpResult = res.result.empRes[0];
+            const inpResult = empResult.result.empRes[0];
             const eName = $("#empName");
             const eSName = $("#empSName");
             const eFName = $("#empFName");
@@ -101,7 +102,7 @@ const empRemModule = () => {
          });
       });
    });
-}
+} 
 const empEditModule = () => { 
    const editBtns = document.querySelectorAll(".empEditBtn");
    const projSelector = $("#project");
@@ -113,10 +114,11 @@ const empEditModule = () => {
          let id = item.value;
          $.post("http://localhost:3000/api/employee-data", {
            emp_id: id
-         }, (res) => {
-            const empRes = res.result.empRes[0];
+         }, (empResult) => {
+            console.log(empResult);
+            const empRes = empResult.result.empRes[0];
             empName.value = empRes.first_name;
-            empMName.value = empRes.middle_name;
+            // empMName.value = empRes.middle_name;
             inpSurname.value = empRes.last_name;
             fatherName.value = empRes.father_name;
             inpDob.value = empRes.dob;
@@ -126,11 +128,17 @@ const empEditModule = () => {
             inpFIN.value = empRes.FIN;
             pNumber.value = empRes.phone_number;
             hNumber.value = empRes.home_number;
-            shiftStart.value = empRes.shift_start_t;
-            inpShiftEnd.value = empRes.shift_end_t;
+            shiftStart.value = empRes.shift_start;
+            inpShiftEnd.value = empRes.shift_end;
             jStartDate.value = empRes.j_start_date;
             dayOffDays.value = empRes.dayoff_days_total;
             hiddenEmployeeId.value = id;
+
+            if (empRes.shift_type !== null) {
+               selectShiftTypeOptions[1].selected = true;
+            } else {
+               selectShiftTypeOptions[0].selected = true;
+            }
 
             if (empRes.working_days === "full_day") {
                fullDay.checked = true;
@@ -153,7 +161,7 @@ const empEditModule = () => {
             
 
             let projOptions = '';
-            $.get(`http://localhost:3000/api/project/allProjects/`, (projRes) => {
+            $.get(`http://localhost:3000/api/project/getProject/${id}`, (projRes) => {
                for (let i = 0; i < projRes.project.length; i++) {
                   if (empRes.project_id === projRes.project[i].id) {
                      projOptions += `
@@ -202,8 +210,6 @@ const empEditModule = () => {
                inpPosition.innerHTML = posOptions;
             });
             
-            profilePicture.src = `employee/files/recruitment/${empRes.id}-${empRes.first_name.toLowerCase()}-${empRes.last_name.toLowerCase()}-${empRes.father_name.toLowerCase()}/${empRes.filename}`
-
             projSelector.change(() => {
                let id = projSelector.val();
                $.get(`http://localhost:3000/api/department/by-project/${id}`, (res) => {
@@ -247,13 +253,13 @@ const pageFuncs = () => {
       item.addEventListener("click", () => {
          loading.classList.remove('d-none');
          let offset = item.value;
-         let activeClass = document.querySelector('.active');
+         let activeClass = document.querySelector('.pagination-active');
          let index = pgItems.indexOf(activeClass);
          console.log(index);
          console.log(pgItems[index]);
-         pgItems[index].classList.remove('active');
-         item.classList.add('active');
-         activeClass = document.querySelector('.active');
+         pgItems[index].classList.remove('pagination-active');
+         item.classList.add('pagination-active');
+         activeClass = document.querySelector('.pagination-active');
          index = pgItems.indexOf(activeClass);
          if(pgItems.length > 10) {
             if(index > 9 && index < pgItems.length - 10) {

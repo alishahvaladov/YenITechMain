@@ -56,14 +56,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
-      shift_start_t: {
-        type: Sequelize.TIME,
-        allowNull: false
-      },
-      shift_end_t: {
-        type: Sequelize.TIME,
-        allowNull: false
-      },
       j_start_date: {
         type: Sequelize.DATEONLY,
         allowNull: false

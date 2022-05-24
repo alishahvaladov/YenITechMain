@@ -23,9 +23,9 @@ router.get("/add-employee", hr, renderAddEmployee);
 
 router.get('/delete/:id', super_admin, checkRoles, deleteEmployee);
 router.get("/", hr, getEmployees);
-router.get("/update/:id", hr, getEmployee);
+// router.get("/update/:id", hr, getEmployee);
 router.post("/add-employee", hr, checkRoles, addEmployee);
-router.post("/update/:id", hr, updateEmployee);
+// router.post("/update/:id", hr, updateEmployee);
 router.get("/emp-files/:id", hr, renderEmpDirAddPage);
 router.post("/remove/:id", hr, checkUploadPath, upload.fields([
     {name: "application-form"},

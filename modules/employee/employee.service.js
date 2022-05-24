@@ -1,4 +1,4 @@
-const { Employee, EmployeeFileDirectory, LogixDB } = require("../../db_config/models");
+const { Employee, EmployeeFileDirectory, LogixDB, EmployeeShift } = require("../../db_config/models");
 const {Op, QueryTypes} = require("sequelize");
 const {sequelize} = require("../../db_config/models/index");
 const date = new Date();
@@ -11,7 +11,7 @@ arr.push(month + 1);
 arr.push(day);
 
 module.exports = {
-    addEmployee: (data, cb) => {
+    addEmployee: (data, shiftData, cb) => {
         Employee.create({
             user_id: data.user_id,
             first_name: data.first_name,
@@ -36,9 +36,17 @@ module.exports = {
         }, {
             logging: false
         }).then((result) => {
+            EmployeeShift.create({
+                emp_id: result.id,
+                shift_type: shiftData.shift_type,
+                shift_start: shiftData.shift_start,
+                shift_end: shiftData.shift_end
+            }).catch((err) => {
+                return cb(err);
+            })
             cb(null, result);
         }).catch((err) => {
-            cb(err); 
+            cb(err);
         })
     },
     addLogixDataToLogixDB: (data, cb) => {

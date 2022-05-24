@@ -29,15 +29,21 @@
 </head>
 
 <body>
+    <div class="loading top-0 w-100" style="left: 0; height: 100vh; z-index: 11111;">
+        <div class="loading-container w-100 h-100 d-flex justify-content-center align-items-center">
+            <img src="/assets/img/atom.svg" style="width: 70px">
+        </div>
+    </div>
+
     <div class="wrapper">
         <nav id="sidebar" class="sidebar js-sidebar">
             <div class="sidebar-content js-simplebar">
-                <a class="sidebar-brand" href="/dashboard">
-                    <span class="align-middle">Blink-Q</span>
+                <a href="/dashboard">
+                    <img src="/assets/img/a.png" alt="" style="filter: invert(1); height: 150px;">
                 </a>
 
                 <ul class="sidebar-nav">
-                    <li class="sidebar-header">
+                    <li class="sidebar-header" style="padding-top: 0px !important;">
                         Pages
                     </li>
 
@@ -111,6 +117,13 @@
                         </a>
                     </li>
 
+                    <li class="sidebar-item dashboard">
+                        <a class="sidebar-link" href="/working-hours">
+                            <i class="align-middle" data-feather="clock"></i>
+                            <span class="align-middle">Working Hours</span>
+                        </a>
+                    </li>
+
                 </ul>
             </div>
         </nav>
@@ -122,77 +135,53 @@
                 </a>
 
                 <div class="navbar-collapse collapse">
-                    <ul class="navbar-nav navbar-align">
+                    <ul class="navbar-nav navbar-align align-items-center">
                         <li class="nav-item dropdown">
                             <a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
                                 <div class="position-relative">
                                     <i class="align-middle" data-feather="bell"></i>
-                                    <span class="indicator">4</span>
+                                    <span class="indicator d-none"></span>
                                 </div>
                             </a>
                             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0"
                                 aria-labelledby="alertsDropdown">
                                 <div class="dropdown-menu-header">
-                                    4 New Notifications
+                                    Notifications
                                 </div>
                                 <div class="list-group">
-                                    <a href="#" class="list-group-item">
+                                    {{!-- <button class="list-group-item">
                                         <div class="row g-0 align-items-center">
                                             <div class="col-2">
                                                 <i class="text-danger" data-feather="alert-circle"></i>
                                             </div>
                                             <div class="col-10">
-                                                <div class="text-dark">Update completed</div>
-                                                <div class="text-muted small mt-1">Restart server 12
+                                                <div class="text-dark dropdown-text">Update completed</div>
+                                                <div class="text-muted small mt-1 dropdown-text">Restart server 12
                                                     to complete the update.</div>
-                                                <div class="text-muted small mt-1">30m ago</div>
+                                                <div class="text-muted small mt-1 dropdown-text">30m ago</div>
                                             </div>
                                         </div>
-                                    </a>
-                                    <a href="#" class="list-group-item">
+                                    </button>
+                                    <button class="list-group-item">
                                         <div class="row g-0 align-items-center">
                                             <div class="col-2">
                                                 <i class="text-warning" data-feather="bell"></i>
                                             </div>
                                             <div class="col-10">
-                                                <div class="text-dark">Lorem ipsum</div>
-                                                <div class="text-muted small mt-1">Aliquam ex eros,
+                                                <div class="text-dark dropdown-text">Lorem ipsum</div>
+                                                <div class="text-muted small mt-1 dropdown-text">Aliquam ex eros,
                                                     imperdiet vulputate hendrerit et.</div>
-                                                <div class="text-muted small mt-1">2h ago</div>
+                                                <div class="text-muted small mt-1 dropdown-text">2h ago</div>
                                             </div>
                                         </div>
-                                    </a>
-                                    <a href="#" class="list-group-item">
-                                        <div class="row g-0 align-items-center">
-                                            <div class="col-2">
-                                                <i class="text-primary" data-feather="home"></i>
-                                            </div>
-                                            <div class="col-10">
-                                                <div class="text-dark">Login from 192.186.1.8</div>
-                                                <div class="text-muted small mt-1">5h ago</div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="list-group-item">
-                                        <div class="row g-0 align-items-center">
-                                            <div class="col-2">
-                                                <i class="text-success" data-feather="user-plus"></i>
-                                            </div>
-                                            <div class="col-10">
-                                                <div class="text-dark">New connection</div>
-                                                <div class="text-muted small mt-1">Christina accepted
-                                                    your request.</div>
-                                                <div class="text-muted small mt-1">14h ago</div>
-                                            </div>
-                                        </div>
-                                    </a>
+                                    </button> --}}
                                 </div>
                                 <div class="dropdown-menu-footer">
                                     <a href="#" class="text-muted">Show all notifications</a>
                                 </div>
                             </div>
                         </li>
-                        <li class="nav-item dropdown">
+                        {{!-- <li class="nav-item dropdown">
                             <a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown"
                                 data-bs-toggle="dropdown">
                                 <div class="position-relative">
@@ -268,7 +257,7 @@
                                     <a href="#" class="text-muted">Show all messages</a>
                                 </div>
                             </div>
-                        </li>
+                        </li> --}}
                         <li class="nav-item dropdown">
                             <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#"
                                 data-bs-toggle="dropdown">
@@ -277,24 +266,23 @@
 
                             <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#"
                                 data-bs-toggle="dropdown">
-                                <img src="" class="avatar img-fluid rounded-circle me-1"
-                                    alt="Charles Hall" />
-                                <span class="text-dark">Charles Hall</span>
+                                <img src="" class="avatar img-fluid rounded-circle me-1"/>
+                                <span class="text-dark" id="dropdown-username"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1"
-                                        data-feather="user"></i>
-                                    Profile</a>
-                                <a class="dropdown-item" href="#"><i class="align-middle me-1"
-                                        data-feather="pie-chart"></i>
-                                    Analytics</a>
+                                <a class="dropdown-item" href="/profile">
+                                <i class="align-middle me-1" data-feather="user"></i>
+                                    Profile
+                                </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="index.html"><i class="align-middle me-1"
-                                        data-feather="settings"></i>
-                                    Settings & Privacy</a>
-                                <a class="dropdown-item" href="#"><i class="align-middle me-1"
-                                        data-feather="help-circle"></i>
-                                    Help Center</a>
+                                <a class="dropdown-item" href="/profile/request-time-off">
+                                    <i class="align-middle me-1" data-feather="briefcase"></i>
+                                    Məzuniyyət sorğusu
+                                </a>
+                                <a class="dropdown-item" href="/profile/salaries">
+                                    <i class="align-middle me-1" data-feather="dollar-sign"></i>
+                                    Alınan Maaşlar
+                                </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/logout">Log out</a>
                             </div>
@@ -312,41 +300,33 @@
             <footer class="footer">
                 <div class="container-fluid">
                     <div class="row text-muted">
-                        <div class="col-6 text-start">
+                        <div class="col-12 text-center">
                             <p class="mb-0">
-                                <a class="text-muted" href="/dashboard"
-                                    target="_blank"><strong>Blink-Q</strong></a>
-                                &copy;
+                                <a class="text-muted" href="/dashboard"><strong>Blink-Q</strong></a>
+                                &copy; | All rights reserved
                             </p>
-                        </div>
-                        <div class="col-6 text-end">
-                            <ul class="list-inline">
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
-                                </li>
-                            </ul>
+                            <p>
+                                <a href="/ali-shahvaladov">Ali Shahvaladov</a> & <a href="/mehdi-mammadzada">Mehdi Mammadzada</a>
+                            </p>
                         </div>
                     </div>
                 </div>
             </footer>
+            <div class="notification-alert position-fixed d-none p-4 opacity-hide">
+                <div class="d-flex justify-content-between align-items-center">
+                    <i class="align-middle" data-feather="bell"></i>
+                    <div class="mx-1"></div>
+                    <p>New Notification!</p>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="/assets/js/jquery.min.js"></script>
     <script src="/assets/js/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
+    {{!-- <script src="/assets/js/bootstrap.min.js"></script> --}}
     <script src="/assets/js/all.min.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="/assets/js/custom.js"></script>
     <script src="/assets/js/app.js"></script>
 

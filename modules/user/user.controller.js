@@ -1,5 +1,6 @@
 const { registerUser, deleteUser, getUsers, getUser, updateUser, renderRegister, activateUser, forgotPassword, updatePassword} = require("./user.service");
 const { User, sequelize } = require("../../db_config/models");
+const { addNotification } = require("../../notification/service");
 const passport = require("passport");
 const {QueryTypes} = require("sequelize");
 const jsonConfig = require("../../config/config.json");
@@ -215,24 +216,44 @@ module.exports = {
         return res.redirect("/login");
     },
     userDelete: (req, res) => {
+        const deleteData = {};
         const id = req.params.id;
+        const deleted_by = req.user.id;
+        deleteData.id = id;
+        deleteData.deleted_by = deleted_by;
         User.findOne({
             where: {
                 id: id
             }
         }).then((result) => {
+            const notificationData = {};
             if(result.dataValues.role === 1) {
                 req.flash("error_msg", "This user doesn't exist");
                 return res.redirect("/users");
             }
-            deleteUser(id, (err, result) => {
+            deleteUser(deleteData, (err, deleteResult) => {
                 if (err) {
                     console.log(err);
                     req.flash("error_msg", "This user doesn't exist");
                     return res.redirect("/users");
                 };
-                req.flash("success_msg", "This user has been deleted");
-                return res.redirect("/users");
+                notificationData.header = "İstifadəçi silindi";
+                notificationData.description = `${result.dataValues.username} istifadəçisinin hesabı ${req.user.username} tərəfindən silindi`;
+                notificationData.created_by = req.user.id;
+                notificationData.belongs_to_role = 7;
+                notificationData.belongs_to_table = "Users";
+                notificationData.url = "/users/deleted-users";
+                notificationData.importance = 2;
+
+                addNotification(notificationData, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        req.flash('error_msg', "Ups... Something went wrong!");
+                        return res.redirect("/users");
+                    }
+                    req.flash("success_msg", "This user has been deleted");
+                    return res.redirect("/users");
+                });
             });
         }).catch((err) => {
             if (err) {
@@ -419,5 +440,33 @@ module.exports = {
             return res.redirect("/login");
         })
     },
-    
+    renderDeletedUsers: (req, res) => {
+        try {
+            if (req.user.role === 1) {
+                return res.render("users/deleted-users", {
+                    super_admin: true
+                });
+            } else if (req.user.role === 2) {
+                return res.render("users/deleted-users", {
+                    admin: true
+                });
+            } else if (req.user.role === 5) {
+                return res.render("users/deleted-users", {
+                    hr: true
+                });
+            } else if (req.user.role === 7) {
+                return res.render("users/deleted-users", {
+                    deptDirector: true
+                });
+            } else if (req.user.role === 10) {
+                return res.render("users/deleted-users", {
+                    deptDirector: true
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            req.flasht("error_msg", "Error has been occurred while loading page. Please contact system admin");
+            return res.redirect("/dashboard");
+        }
+    }
 }

@@ -17,25 +17,29 @@
                             {{/if}}
                         </select>
                     </div>
-                    <div class="toff-start-date">
-                        <label for="toff-start-date">Başlanğıc Tarixi: </label>
-                        <input type="date" id="toff-start-date">
+                    <div class="toff-non-hour-types d-flex flex-column">
+                        <div class="toff-start-date">
+                            <label for="toff-start-date">Başlanğıc Tarixi: </label>
+                            <input type="date" id="toff-start-date">
+                        </div>
+                        <div class="toff-end-date">
+                            <label for="toff-end-date">Bitmə Tarixi: </label>
+                            <input type="date" id="toff-end-date">
+                        </div>
+                        <div class="w-start-date">
+                            <label for="w-start-date">İşə başlama tarixi </label>
+                            <input type="date" id="w-start-date">
+                        </div>
                     </div>
-                    <div class="toff-end-date">
-                        <label for="toff-end-date">Bitmə Tarixi: </label>
-                        <input type="date" id="toff-end-date">
-                    </div>
-                    <div class="timeoff-time-date d-none">
-                        <label for="timeoff-time-date">İcazə Tarixi</label>
-                        <input type="date" id="timeoff-time-date">
-                    </div>
-                    <div class="toff-authorized-time d-none">
-                        <label for="toff-authorized-time">İcazə Saatı</label>
-                        <input type="number" id="toff-authorized-time">
-                    </div>
-                    <div class="w-start-date">
-                        <label for="w-start-date">İşə başlama tarixi </label>
-                        <input type="date" id="w-start-date">
+                    <div class="toff-hour-type d-flex flex-column d-none">
+                        <div class="timeoff-time-date">
+                            <label for="timeoff-time-date">İcazə Tarixi</label>
+                            <input type="date" id="timeoff-time-date">
+                        </div>
+                        <div class="toff-authorized-time">
+                            <label for="toff-authorized-time">İcazə Saatı</label>
+                            <input type="number" id="toff-authorized-time">
+                        </div>
                     </div>
                     <div class="possible-toff-days d-flex align-items-center">
                         <label for="toff-possible-days">Mümkün məzuniyyət günlərinin sayı: </label>

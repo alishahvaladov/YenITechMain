@@ -13,11 +13,11 @@ const pageFunctions = () => {
         item.addEventListener("click", () => {
             loading.classList.remove('d-none');
             let offset = parseInt(item.value) - 1;
-            let activeClass = document.querySelector('.active');
+            let activeClass = document.querySelector('.pagination-active');
             let index = pgItems.indexOf(activeClass);
-            pgItems[index].classList.remove('active');
-            item.classList.add('active');
-            activeClass = document.querySelector('.active');
+            pgItems[index].classList.remove('pagination-active');
+            item.classList.add('pagination-active');
+            activeClass = document.querySelector('.pagination-active');
             index = pgItems.indexOf(activeClass);
             if(pgItems.length > 21) {
                 if(index > 9 && index < pgItems.length - 10) {
@@ -470,7 +470,7 @@ const renderPage = () => {
 
         for (let i = 1; i <= count; i++) {
             if (i === 1) {
-                countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm active" value="${i}">${i}</button>`
+                countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
                 countHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
             } 
             if (i > 21 && i < count) {

@@ -55,7 +55,7 @@ module.exports = {
     },
     addTimeOff: (data, cb) => {
         TimeOffRequest.create({
-            emp_id: data.emp,
+            emp_id: data.emp_id,
             user_id: data.user_id,
             timeoff_type: data.timeOffType,
             timeoff_start_date: data.timeOffStartDate,
@@ -71,5 +71,48 @@ module.exports = {
         }).catch((err) => {
             cb(err);
         })
+    },
+    getUsername: async (id) => {
+        return await sequelize.query(`
+            SELECT username FROM Users
+            WHERE id = :id
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                id
+            }
+        });
+    },
+    getSalaryByMonthsForUser: async (data) => {
+        const result = {};
+        let query = `
+            SELECT * FROM SalaryByMonths
+            WHERE emp_id = :emp_id
+        `;
+        let countQuery = `
+            SELECT COUNT(*) as count FROM SalaryByMonths
+            WHERE emp_id = :emp_id
+        `;
+        query += "LIMIT 15 OFFSET :offset";
+
+        result.salaries = await sequelize.query(query, {
+            type: QueryTypes.SELECT,
+            logging: false,
+            replacements: {
+                emp_id: data.emp_id,
+                offset: data.offset
+            }
+        });
+
+        result.count = await sequelize.query(countQuery, {
+            type: QueryTypes.SELECT,
+            replacements: {
+                emp_id: data.emp_id,
+            }
+        });
+
+        return result;
+        
     }
-} 
+}
