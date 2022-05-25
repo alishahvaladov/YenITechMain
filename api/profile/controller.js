@@ -5,8 +5,12 @@ const {
     getUserDataAsEmployee,
     addTimeOff,
     getUsername,
-    getSalaryByMonthsForUser
+    getSalaryByMonthsForUser,
+    getUserTimeOffs,
+    getUserPassword,
+    changePassword
 } = require("./service");
+const bcrypt = require("bcryptjs");
 
 module.exports = {
     renderProfile: async (req, res) => {
@@ -194,6 +198,92 @@ module.exports = {
                 success: true,
                 salaries: result.salaries,
                 count: result.count
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    getUserTimeOffs: async (req, res) => {
+        try {
+            const query = req.query;
+            const user_id = req.user.id;
+
+            let limit, offset;
+
+            if (query.limit && !isNaN(parseInt(query.limit))) {
+                limit =  parseInt(query.limit);
+            } else {
+                limit = 15
+            }
+
+            if (query.offset && !isNaN(parseInt(query.offset))) {
+                offset = parseInt(query.offset);
+            } else {
+                offset = 0;
+            }
+
+            offset = offset * limit;
+            
+            const timeOffData = await getUserTimeOffs(user_id, limit, offset);
+
+            return res.status(200).send({
+                success: true,
+                myTimeOffs: timeOffData.myTimeOffs,
+                myTimeOffsCount: timeOffData.myTimeOffsCount
+            });
+            
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    changePassword: async (req, res) => {
+        try {
+            const user_id = req.user.id;
+            const password = await getUserPassword(user_id);
+            const body = req.body;
+            const oldPassword = body.oldPassword;
+            const newPassword = body.password;
+            const confirmPassword = body.confirmPassword;
+            const userData = {};
+            userData.user_id = user_id;
+
+            bcrypt.compare(oldPassword, password[0].password, (err, isMatch) => {
+                if (err) {
+                    return res.status(400).send({
+                        success: false,
+                        message: "Old password is not correct. Please try again!"
+                    });
+                }
+                if (isMatch) {
+                    if (newPassword !== confirmPassword) {
+                        return res.status(400).send({
+                            success: false,
+                            message: "Passwords should match."
+                        });
+                    } else {
+                        userData.password = password;
+                        changePassword(userData, (err, result) => {
+                            if (err) {
+                                console.log(err);
+                                return res.status(500).send({
+                                    success: "Ups... Something went wrong!"
+                                });
+                            }
+                            return res.status(201).send({
+                                success: true,
+                                message: "Password has been changed please log in again"
+                            });
+                        })
+                    }
+                }
             });
         } catch (err) {
             console.log(err);

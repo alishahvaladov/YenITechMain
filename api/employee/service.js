@@ -268,14 +268,137 @@ module.exports = {
         }).then(res => {
             EmployeeShift.update(shiftData, {
                 where: {
-                    emp_id: data.emp_id
+                    emp_id: shiftData.emp_id
                 }
-            }).catch(err => {
+            }).catch((err) => {
                 return cb(err);
             });
             cb(null, res);
         }).catch(err => {
             cb(err);
         });
+    },
+    getUserName: async (user_id) => {
+        return await sequelize.query(`
+            SELECT username FROM Users
+            WHERE id = :user_id;
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                user_id
+            }
+        });
+    },
+    getDeletedEmployees: async (data) => {
+        const result = {};
+        const replacements = {};
+        let query = `
+            SELECT emp.*, pos.name as posName, proj.name as projName, dept.name as deptName, es.shift_type, es.shift_start, es.shift_end
+            FROM Employees as emp
+            LEFT JOIN Departments as dept ON emp.department = dept.id
+            LEFT JOIN Positions as pos ON emp.position_id = pos.id
+            LEFT JOIN Projects as proj ON emp.project_id = proj.id
+            LEFT JOIN EmployeeShifts as es ON emp.id = es.emp_id
+            WHERE emp.deletedAt IS NOT NULL
+        `;
+        let countQuery = `
+            SELECT COUNT(*) as count FROM Employees as emp
+            LEFT JOIN Departments as dept ON emp.department = dept.id
+            LEFT JOIN Positions as pos ON emp.position_id = pos.id
+            LEFT JOIN Projects as proj ON emp.project_id = proj.id
+            LEFT JOIN EmployeeShifts as es ON emp.id = es.emp_id
+            WHERE emp.deletedAt IS NOT NULL
+        `
+
+        if (data.qName !== "" && data.qName) {
+            let splittedQName = data.qName.split(" ");
+            if (splittedQName.length === 1) {
+                query += `
+                    AND (emp.first_name like :qName OR emp.last_name like :qName OR emp.father_name like :qName)
+                `
+                countQuery += `
+                    AND (emp.first_name like :qName OR emp.last_name like :qName OR emp.father_name like :qName)
+                `
+                replacements.qName = `%${splittedQName[0]}%`;
+            }else if (splittedQName.length === 2) {
+                query += `
+                    AND ((emp.first_name like :qName AND emp.last_name like :qName2)
+                    OR (emp.first_name like :qName AND emp.father_name like :qName2)
+                    OR (emp.last_name like :qName AND emp.father_name like :qName2))
+                `;
+                countQuery += `
+                    AND ((emp.first_name like :qName AND emp.last_name like :qName2)
+                    OR (emp.first_name like :qName AND emp.father_name like :qName2)
+                    OR (emp.last_name like :qName AND emp.father_name like :qName2))
+                `;
+                replacements.qName = `%${splittedQName[0]}%`;
+                replacements.qName2 = `%${splittedQName[1]}%`;
+            } else if (splittedQName.length > 2) {
+                query += `
+                    AND (emp.first_name like :qName AND emp.last_name like :qName2 AND emp.father_name like :qName3)
+                `
+                countQuery += `
+                    AND (emp.first_name like :qName AND emp.last_name like :qName2 AND emp.father_name like :qName3)
+                `
+                replacements.qName = `%${splittedQName[0]}%`;
+                replacements.qName2 = `%${splittedQName[1]}%`;
+                replacements.qName3 = `%${splittedQName[2]}%`;
+            }
+        }
+
+        if (data.qPhoneNumber !== "" && data.qPhoneNumber) {
+            query += `
+                AND emp.phone_number like :qPhoneNumber
+            `
+            countQuery += `
+                AND emp.phone_number like :qPhoneNumber
+            `
+            replacements.qPhoneNumber = data.qPhoneNumber;
+        }
+
+        if (data.qDepartment !== "" && data.qDepartment) {
+            query += `
+                AND dept.name like :qDepartment
+            `;
+            countQuery += `
+                AND dept.name like :qDepartment
+            `;
+            replacements.qDepartment = data.qDepartment;
+        }
+
+        if (data.qPosition !== "" && data.qPosition) {
+            query += `
+                AND pos.name like :qPosition
+            `;
+            countQuery += `
+                AND pos.name like :qPosition
+            `;
+            replacements.qPosition = data.qPosition
+        }
+
+        if (data.qProject !== "" && data.qProject) {
+            query += `
+                AND proj.name like :qProject
+            `;
+            countQuery += `
+                AND proj.name like :qProject
+            `;
+            replacements.qProject = data.qProject;
+        }
+
+
+
+        result.deletedEmployees = await sequelize.query(query, {
+            loggin: false,
+            type: QueryTypes.SELECT,
+            replacements
+        });
+        result.deletedEmployeesCount = await sequelize.query(countQuery, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
+        });
+        return result;
     }
 }

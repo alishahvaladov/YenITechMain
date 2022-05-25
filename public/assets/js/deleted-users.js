@@ -24,7 +24,8 @@ const renderPage = () => {
         offset: 0
     }, (searchResult) => {
       console.log(searchResult);
-      const count = searchResult.count[0].count;
+      let count = searchResult.count[0].count;
+      count = Math.ceil(parseInt(count) / 15);
       const deletedUsers = searchResult.deletedUsers;
       let html = "";
 
@@ -71,7 +72,6 @@ const renderPage = () => {
                   <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
                `
                }
-               
             }
          }
          pgContainer.innerHTML = pgHtml;

@@ -47,5 +47,18 @@ module.exports = {
             super_admin: true,
             deptDirector: true
         });
+    },
+    renderUserTimeOffPage: (req, res) => {
+        try {
+            res.render('profile/time-offs', {
+                hr: true,
+                super_admin: true,
+                deptDirector: true
+            })
+        } catch (err) {
+            console.log(err);
+            req.flash('error_msg', "Something went wrong while loading page. Please contact system admin.");
+            return res.redirect('/dashboard');
+        }
     }
 }

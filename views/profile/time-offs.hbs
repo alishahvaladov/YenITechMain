@@ -1,0 +1,59 @@
+<div class="card flex-fill">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Məzuniyyətlərim</h5>
+    </div>
+    {{> messages }}
+    <table class="table table-hover my-0" style="margin: 0 !important;">
+        <div class="container">
+            <h1 class="text-center my-5">Məzuniyyətlərim</h1>
+            <thead>
+            <th>Əməkdaş</th>
+            <th>Məzuniyyətin Tipi</th>
+            <th>Başlama Tarixi</th>
+            <th>Bitmə Tarixi</th>
+            <th>İşə qayıtma tarixi</th>
+            <th>Status</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="bold">Waiting</td>
+                    <td class="bold">Waiting</td>
+                    <td class="bold">Waiting</td>
+                    <td class="bold">Waiting</td>
+                    <td class="bold">Waiting</td>
+                    <td class="bold">Waiting</td>
+                    <td class="bold">Waiting</td>
+                </tr>
+            </tbody>
+        </div>
+    </table>
+
+    <div class="pagination d-flex justify-content-center">
+        <div class="pagination-container w-50 d-flex justify-content-between">
+            <button class="pagination-item btn btn-outline-dark btn-sm pagination-active disabled">1</button>
+        </div>
+    </div>
+</div>
+
+<div class="time-off-modal d-none t-o-m-request position-fixed" style="left: 0; top: 0; height: 100vh; width: 100vw; z-index: 1111111">
+    <div class="time-off-form-container d-flex justify-content-center align-items-center" style="height: 100%; width: 100%;">
+        <div class="time-off-form mb-5" style="height: fit-content; background-color: #fff">
+            <h1 class="text-center">Əmr təsdiqləmə</h1>
+            <div class="messages mt-5">
+            </div>
+            <label for="">Əmr №</label>
+            <input class="" type="text" id="emrNo">
+            <div class="time-off-select-container d-flex justify-content-center w-100">
+                <div class="time-off-select-container d-flex word-btn-container justify-content-between w-100 mt-5">
+                    <button class="btn btn-primary" id="downloadDoc"><i class="bi bi-file-earmark-word"></i> Əmri Yüklə</button>
+                    <label for="uploadDoc" class="btn btn-info mx-4"> <i class="bi bi-upload"></i> Əmri əlavə et</label>
+                    <input class="d-none" type="file" id="uploadDoc" disabled>
+                    <button class="btn btn-success" id="submitUploadBtn">Təsdiqlə</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/user-time-offs.js"></script>

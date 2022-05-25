@@ -20,12 +20,17 @@ const pNumber = document.querySelector("#phoneNumber");
 const hNumber = document.querySelector("#homeNumber");
 const selectShiftTypeOptions = document.querySelector("#select_shift_type").options;
 const shiftTypeOptions = document.querySelector("#shift_type").options;
+const selectShiftType = document.querySelector("#select_shift_type");
+const shiftType = document.querySelector("#shift_type");
 const shiftStart = document.querySelector("#shiftStart");
 const inpShiftEnd = document.querySelector("#shiftEnd");
 const jStartDate = document.querySelector("#jStartDate");
 const dayOffDays = document.querySelector("#dayOffDays");
 const fullDay = document.querySelector("#full_day");
 const workingDays = document.querySelector("#workingDays");
+const shiftAuto = document.querySelector(".shift-auto");
+const shiftManual = document.querySelector(".shift-manual");
+const employeeIdInput = document.querySelector("#employeeId");
 let inpProject = document.querySelector("#project");
 let inpDepartment = document.querySelector("#department");
 let inpPosition = document.querySelector("#position");
@@ -102,8 +107,8 @@ const empRemModule = () => {
          });
       });
    });
-} 
-const empEditModule = () => { 
+}
+const empEditModule = () => {
    const editBtns = document.querySelectorAll(".empEditBtn");
    const projSelector = $("#project");
    const deptSelector = $("#department");
@@ -128,23 +133,52 @@ const empEditModule = () => {
             inpFIN.value = empRes.FIN;
             pNumber.value = empRes.phone_number;
             hNumber.value = empRes.home_number;
-            shiftStart.value = empRes.shift_start;
-            inpShiftEnd.value = empRes.shift_end;
+            employeeIdInput.value = id;
+            
+            let splittedShiftStart = empRes.shift_start.split(":");
+            if (splittedShiftStart.length === 2) {
+               splittedShiftStart = empRes.shift_start;
+            } else if (splittedShiftStart.length > 2) {
+               splittedShiftStart = `${splittedShiftStart[0]}:${splittedShiftStart[1]}`;
+            }
+
+            let splittedShiftEnd = empRes.shift_end.split(":");
+            if (splittedShiftEnd.length === 2) {
+               splittedShiftEnd = empRes.shift_end;
+            } else if (splittedShiftEnd.length > 2) {
+               splittedShiftEnd = `${splittedShiftEnd[0]}:${splittedShiftEnd[1]}`;
+            }
+
+            shiftStart.value = splittedShiftStart;
+            inpShiftEnd.value = splittedShiftEnd;
             jStartDate.value = empRes.j_start_date;
             dayOffDays.value = empRes.dayoff_days_total;
             hiddenEmployeeId.value = id;
-
-            if (empRes.shift_type !== null) {
+            if (empRes.shift_type === null) {
                selectShiftTypeOptions[1].selected = true;
+               shiftAuto.classList.add('d-none');
+               shiftManual.classList.remove('d-none');
             } else {
+               shiftAuto.classList.remove('d-none');
+               shiftManual.classList.add('d-none');
                selectShiftTypeOptions[0].selected = true;
+               if(parseInt(empRes.shift_type) === 1) {
+                  shiftTypeOptions[0].selected = true;
+               } else if (parseInt(empRes.shift_type) === 2) {
+                  shiftTypeOptions[1].selected = true;
+               } else if (parseInt(empRes.shift_type) === 3) {
+                  shiftTypeOptions[2].selected = true;
+               }
             }
 
             if (empRes.working_days === "full_day") {
                fullDay.checked = true;
-               workingDays.value = "Tam iş günləri";
+               workingDays.type = "text";
                workingDays.disabled = true;
+               workingDays.value = "Tam iş günləri";
             } else {
+               workingDays.type = "number";
+               workingDays.disabled = false;
                workingDays.value = empRes.working_days;
             }
             fullDay.addEventListener("change", () => {
@@ -166,7 +200,7 @@ const empEditModule = () => {
                   if (empRes.project_id === projRes.project[i].id) {
                      projOptions += `
                         <option value="${projRes.project[i].id}" selected>${projRes.project[i].name}</option>
-                     `   
+                     `
                   } else {
                      projOptions += `
                         <option value="${projRes.project[i].id}">${projRes.project[i].name}</option>
@@ -183,11 +217,11 @@ const empEditModule = () => {
                   if (deptRes[i].id === empRes.department) {
                      deptOptions += `
                         <option value="${deptRes[i].id}" selected>${deptRes[i].name}</option>
-                     `   
+                     `;
                   } else {
                      deptOptions += `
                         <option value="${deptRes[i].id}">${deptRes[i].name}</option>
-                     `
+                     `;
                   }
                }
                inpDepartment.innerHTML = deptOptions;
@@ -200,11 +234,11 @@ const empEditModule = () => {
                   if (posRes[i].id === empRes.position_id) {
                      posOptions += `
                         <option value="${posRes[i].id}" selected>${posRes[i].name}</option>
-                     `   
+                     `;
                   } else {
                      posOptions += `
                         <option value="${posRes[i].id}">${posRes[i].name}</option>
-                     `
+                     `;
                   }
                }
                inpPosition.innerHTML = posOptions;
@@ -239,6 +273,16 @@ const empEditModule = () => {
 
          });
       });
+   });
+   selectShiftType.addEventListener('change', () => {
+      const value = selectShiftType.value;
+      if (parseInt(value) === 1) {
+         shiftAuto.classList.remove('d-none');
+         shiftManual.classList.add('d-none');
+      } else {
+         shiftAuto.classList.add('d-none');
+         shiftManual.classList.remove('d-none');
+      }
    });
    empModalCloseBtn.addEventListener('click', () => {
       empEditModal.classList.add("d-none");
@@ -604,7 +648,7 @@ limit.addEventListener("change", () => {
    setTimeout(() => {
       renderPage();
    }, 2000);
-}); 
+});
 
 
 empInpName.keyup(renderPage);

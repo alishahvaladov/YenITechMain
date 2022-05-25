@@ -8,13 +8,15 @@ const {
     renderAddEmployee,
     checkUploadPath,
     uploadFilePathToDB,
-    renderEmpDirAddPage, exportEmployeesToExcel
+    renderEmpDirAddPage,
+    exportEmployeesToExcel,
+    renderDeletedEmployees
 } = require("./employee.controller");
 const upload = require("./uplod-file-middleware");
 const addEmpUpload = require("./emp-upload-middleware");
 const express = require("express");
 const router = express.Router();
-const { hr, super_admin, checkRoles } = require("../auth/auth");
+const { hr, super_admin, checkRoles, audit } = require("../auth/auth");
 
 
 
@@ -42,6 +44,6 @@ router.post("/emp-files/:id", hr, checkUploadPath, addEmpUpload.fields([
     {name: "lcScan"},
     {name: "profilePicture"}
 ]), uploadFilePathToDB);
-
+router.get("/deleted-employees", hr, audit, checkRoles, renderDeletedEmployees);
 
 module.exports = router;

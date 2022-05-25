@@ -803,4 +803,33 @@ module.exports = {
             });
         });
     },
+    renderDeletedEmployees: (req, res) => {
+        try {
+            if (req.user.role === 1) {
+                return res.render('employee/deleted-employees', {
+                    super_admin: true
+                });
+            } else if (req.user.role === 2) {
+                return res.render('employee/deleted-employees', {
+                    admin: true
+                });
+            } else if (req.user.role === 5) {
+                return res.render('employee/deleted-employees', {
+                    hr: true
+                });
+            }else if (req.user.role === 7) {
+                return res.render('employee/deleted-employees', {
+                    audit: true
+                });
+            } else if (req.user.role === 10) {
+                return res.render('employee/deleted-employees', {
+                    deptDirector: true
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            req.flash("error_msg", "Error occurred while rendering page. Please contact system admin");
+            return res.redirect('/dashboard');
+        }
+    }
 }

@@ -1,4 +1,4 @@
-const { sequelize, TimeOffRequest } = require("../../db_config/models");
+const { sequelize, TimeOffRequest, User } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
 
 module.exports = {
@@ -114,5 +114,66 @@ module.exports = {
 
         return result;
         
+    },
+    getUserTimeOffs: async (user_id, limit, offset) => {
+        const result = {};
+        let query = `
+            SELECT toff.*, emp.first_name, emp.last_name, emp.father_name FROM TimeOffRequests AS toff
+            LEFT JOIN Employees AS emp ON emp.id = toff.emp_id
+            LEFT JOIN Users AS usr ON emp.id = usr.emp_id
+            WHERE usr.id = :user_id
+            LIMIT :limit OFFSET :offset
+        `;
+        let countQuery = `
+            SELECT COUNT(*) AS count FROM TimeOffRequests AS toff
+            LEFT JOIN Employees AS emp ON emp.id = toff.emp_id
+            LEFT JOIN Users AS usr ON emp.id = usr.emp_id
+            WHERE usr.id = :user_id
+        `;
+
+        result.myTimeOffs = await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                user_id,
+                limit,
+                offset
+            }
+        });
+        result.myTimeOffsCount = await sequelize.query(countQuery, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                user_id
+            }
+        });
+
+        return result;
+    },
+    changePassword: (data, cb) => {
+        User.update({
+            password: data.password
+        }, {
+            where: {
+                id: data.user_id
+            },
+            logging: false
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
+    },
+    getUserPassword: async (user_id) => {
+        return await sequelize.query(`
+            SELECT password FROM Users
+            WHERE id = :user_id
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                user_id
+            }
+        });
     }
 }

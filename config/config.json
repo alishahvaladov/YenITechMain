@@ -1,1 +1,52 @@
-{"roles":{"1":"Super Admin","2":"Admin","3":"Financier","4":"HR Assistance","5":"HR","6":"Audit Director","7":"Audit","8":"Management","9":"User","10":"Department Director"},"tax":{"dsmf":10,"h_insurance":1,"unemployment":0.5,"dsmf_lt_200":3,"dsmf_limit":200},"day_offs":{"1":"Öz hesabına məzuniyyət","2":"Əmək məzuniyyəti","3":"Sağlamlıq Məzuniyyəti","4":"Saatlıq icazə"},"shift_types":{"1":{"name":"Standard","types":[{"name":"Tam ştat","shift_start":"09:00","shift_end":"19:00"},{"name":"Yarımştat(Günün birinci yarısı)","shift_start":"09:00","shift_end":"14:00"},{"name":"Yarımştat(Günün ikinci yarısı)","shift_start":"14:00","shift_end":"18:00"}]},"2":{"name":"Xüsusi"}}}
+{
+    "roles": {
+        "1": "Super Admin",
+        "2": "Admin",
+        "3": "Financier",
+        "4": "HR Assistance",
+        "5": "HR",
+        "6": "Audit Director",
+        "7": "Audit",
+        "8": "Management",
+        "9": "User",
+        "10": "Department Director"
+    },
+    "tax": {
+        "dsmf": 10,
+        "h_insurance": 1,
+        "unemployment": 0.5,
+        "dsmf_lt_200": 3,
+        "dsmf_limit": 200
+    },
+    "day_offs": {
+        "1": "Öz hesabına məzuniyyət",
+        "2": "Əmək məzuniyyəti",
+        "3": "Sağlamlıq Məzuniyyəti",
+        "4": "Saatlıq icazə"
+    },
+    "shift_types": {
+        "1": {
+            "name": "Standard",
+            "types": [
+                {
+                    "name": "Tam ştat",
+                    "shift_start": "10:00",
+                    "shift_end": "19:00"
+                },
+                {
+                    "name": "Yarımştat(Günün birinci yarısı)",
+                    "shift_start": "10:00",
+                    "shift_end": "15:00"
+                },
+                {
+                    "name": "Yarımştat(Günün ikinci yarısı)",
+                    "shift_start": "15:00",
+                    "shift_end": "19:00"
+                }
+            ]
+        },
+        "2": {
+            "name": "Xüsusi"
+        }
+    }
+}

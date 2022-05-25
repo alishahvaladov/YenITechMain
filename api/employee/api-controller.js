@@ -1,4 +1,5 @@
-const { getDepartment, getPosition, getEmployee, empRenderPage, getEmpCount, empRenderByPage, updateEmployee } = require("./service");
+const { getDepartment, getPosition, getEmployee, empRenderPage, getEmpCount, empRenderByPage, updateEmployee, getUserName, getDeletedEmployees } = require("./service");
+const { addNotification } = require("../../notification/service");
 const excelJS = require("exceljs");
 const path = require("path");
 const standardShiftTypes = require("../../config/config.json").shift_types[1].types;
@@ -118,7 +119,7 @@ const validateEmployee = (data, cb) => {
                 return cb(true, validationError);
             }
         }
-        dbData.ssn = SSN;
+        dbData.SSN = SSN;
     }
     if (data.FIN !== "" && data.FIN !== undefined && data.FIN !== null) {
         const FIN = data.FIN;
@@ -218,21 +219,21 @@ const validateEmployee = (data, cb) => {
 
     if (data.j_start_date !== "" && data.j_start_date !== undefined && data.j_start_date !== null) {
         try {
-            const j_start_date = data.j_start_date.split("-");
-            if(parseInt(j_start_date[0]) <= year && parseInt(j_start_date[1]) < month) {
-                console.log("Maximum range for Job Start Date is 1 month");
-                validationError.jStartDate = "Maximum range for Job Start Date is 1 month";
-                return cb(true, validationError);
-            }
-            if (parseInt(j_start_date[0]) >= year && parseInt(j_start_date[1]) >= month + 1 && parseInt(j_start_date[2]) > day) {
-                console.log("You cannot add employee (a day/days) after from today!");
-                validationError.jStartDate = "You cannot add employee (a day/days) after from today!";
-                return cb(true, validationError);
-            }
+            // const j_start_date = data.j_start_date.split("-");
+            // if(parseInt(j_start_date[0]) <= year && parseInt(j_start_date[1]) < month) {
+            //     console.log("Maximum range for Job Start Date is 1 month");
+            //     validationError.jStartDate = "Maximum range for Job Start Date is 1 month";
+            //     return cb(true, validationError);
+            // }
+            // if (parseInt(j_start_date[0]) >= year && parseInt(j_start_date[1]) >= month + 1 && parseInt(j_start_date[2]) > day) {
+            //     console.log("You cannot add employee (a day/days) after from today!");
+            //     validationError.jStartDate = "You cannot add employee (a day/days) after from today!";
+            //     return cb(true, validationError);
+            // }
             dbData.j_start_date = data.j_start_date;
         } catch (error) {
             console.log(error);
-            validationError.jStartDate = "Please choose correct day";
+            validationError.jStartDate = "Please choose correct job start date";
             return cb(true, validationError);
         }
     }
@@ -249,7 +250,7 @@ const validateEmployee = (data, cb) => {
     if (data.full_day !== "" && data.full_day !== undefined && data.full_day !== null) {
         if (data.workingDays !== "" && data.workingDays !== undefined && data.workingDays !== null) {
             const fDay = data.full_day;
-            const wDays = data.workingDays; 
+            const wDays = data.workingDays;
             if(fDay === 'on') {
                 dbData.working_days = 77;
             } else if (parseInt(wDays) > 26) {
@@ -259,7 +260,7 @@ const validateEmployee = (data, cb) => {
                 validationError.wDay = "Please enter valid working days";
                 return cb(true, validationError);
             } else {
-                dbData.working_days = parseInt(wDays); 
+                dbData.working_days = parseInt(wDays);
             }
         }
     }
@@ -470,35 +471,76 @@ module.exports = {
         res.download(excelPath, "Əməkdaşlar.xlsx");
     },
     updateEmployee: (req, res) => {
-        const body = req.body.data;
-        const user_id = req.user.id;
-        validateEmployee(body, (err, message, empData, shiftData) => {
-            if (err) {
-                for (const [key, value] of Object.entries(message)) {
-                    console.log(`Error of ${key} is ${value}`);
-                    return res.status(400).send({
-                        success: false,
-                        message: value
-                    });
-                }
-            }
-            empData.user_id = user_id;
-            empData.id = body.employeeId;
-            shiftData.emp_id = body.employeeId;
-            updateEmployee(empData, shiftData, (err, result) => {
+        try {
+            const body = req.body.data;
+            const user_id = req.user.id;
+            const notificationData = {};
+            validateEmployee(body, (err, message, empData, shiftData) => {
                 if (err) {
-                    console.log(err);
-                    return res.status(500).send({
-                        success: false,
-                        message: "Internal server error has been occurred. Please contact system admin"
-                    });
+                    for (const [key, value] of Object.entries(message)) {
+                        console.log(`Error of ${key} is ${value}`);
+                        return res.status(400).send({
+                            success: false,
+                            message: value
+                        });
+                    }
                 }
-                console.log(result);
-                return res.status(200).send({
-                    success: true,
-                    message: "Employee has been updated successfully"
+                empData.user_id = user_id;
+                empData.id = body.employeeId;
+                shiftData.emp_id = body.employeeId;
+                updateEmployee(empData, shiftData, async (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        return res.status(500).send({
+                            success: false,
+                            message: "Internal server error has been occurred. Please contact system admin"
+                        });
+                    }
+                    const username = await getUserName(user_id);
+                    notificationData.header = "Əməkdaş məlumatlarında düzəliş olundu";
+                    notificationData.description = `${empData.first_name} ${empData.last_name} ${empData.father_name} adlı əməkdaşın məlumatlarında ${username[0].username} dəyişiklik etdi.`;
+                    notificationData.created_by = user_id;
+                    notificationData.belongs_to_role = 7;
+                    notificationData.belongs_to_table = "Employees";
+                    notificationData.url = "/employee";
+                    notificationData.importance = 1;
+                    addNotification(notificationData, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                            return res.status(500).send({
+                                success: false,
+                                message: "Ups... Something went wrong!"
+                            });
+                        }
+                        return res.status(200).send({
+                            success: true,
+                            message: "Employee has been updated successfully"
+                        });
+                    });
                 });
             });
-        });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    getDeletedEmployees: async (req, res) => {
+        try {
+            const body = req.body;
+            const result = await getDeletedEmployees(body);
+            return res.status(200).send({
+                success: true,
+                result
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong"
+            });
+        }
     }
 }
