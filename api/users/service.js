@@ -56,6 +56,7 @@ module.exports = {
             WHERE emp.deletedAt IS NULL
             AND usr.deletedAt IS NULL
             AND emp.j_end_date IS NULL
+            AND usr.role != 1
         `, {
             logging: false,
             type: QueryTypes.SELECT

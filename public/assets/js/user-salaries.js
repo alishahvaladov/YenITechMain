@@ -1,6 +1,10 @@
 const loading = document.querySelector(".loading");
 const tbody = document.querySelector("tbody");
 const pgContainer = document.querySelector(".pagination-container");
+const exportToExcelBtn = document.querySelector("#exportToExcel");
+let qSalaryMin = document.querySelector("#qSalaryMin");
+let qSalaryMax = document.querySelector("#qSalaryMax");
+let qSalaryDate = document.querySelector("#qSalaryDate");
 
 const pageFunctions = () => {
     let pgItems = document.querySelectorAll('.pagination-item');
@@ -54,7 +58,11 @@ const pageFunctions = () => {
                 }
             }
             setTimeout(() => {
-                $.get(`http://localhost:3000/api/profile/salaries/${offset}`,(res) => {
+                $.post(`http://localhost:3000/api/profile/salaries/${offset}`, {
+                    qMin: qSalaryMin.value,
+                    qMax: qSalaryMax.value,
+                    qDate: qSalaryDate.value
+                }, (res) => {
                     let up = "";
                     let html = "";
                     const salaries = res.salaries;
@@ -67,6 +75,7 @@ const pageFunctions = () => {
                                 <td>
                                     ${item.salary_date}
                                 </td>
+                                <td></td>
                             </tr>
                         `
                     });
@@ -78,8 +87,12 @@ const pageFunctions = () => {
     });
 }
 
-const renderPage = () => {
-    $.get(`http://localhost:3000/api/profile/salaries/0`, (res) => {
+const search = () => {
+    $.post(`http://localhost:3000/api/profile/salaries/0`, {
+        qMin: qSalaryMin.value,
+        qMax: qSalaryMax.value,
+        qDate: qSalaryDate.value
+    }, (res) => {
         const salaries = res.salaries;
         let count = res.count[0].count;
         count = Math.ceil(count / 15);
@@ -93,6 +106,7 @@ const renderPage = () => {
                     <td>
                         ${item.salary_date}
                     </td>
+                    <td></td>
                 </tr>
             `
         });
@@ -104,7 +118,65 @@ const renderPage = () => {
             if (i === 1) {
                 countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
                 countHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
-            } 
+            }
+            if (i > 21 && i < count) {
+                countHtml += `
+                    <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                `
+            } else if (i !== 1 && i !== count) {
+                countHtml += `
+                    <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                `
+            }
+            if (i === count) {
+                if(count > 21) {
+                    countHtml += `<button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>`
+                }
+                if (count !== 1) {
+                    countHtml += `
+                        <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                    `
+                }
+            }
+        }
+        pgContainer.innerHTML = countHtml;
+
+        pageFunctions();
+    });
+}
+
+const renderPage = () => {
+    $.post(`http://localhost:3000/api/profile/salaries/0`, {
+        qMin: "",
+        qMax: "",
+        qDate: ""
+    }, (res) => {
+        const salaries = res.salaries;
+        let count = res.count[0].count;
+        count = Math.ceil(count / 15);
+        let html = "";
+        salaries.forEach(item => {
+            html += `
+                <tr>
+                    <td>
+                        ${item.salary_cost}
+                    </td>
+                    <td>
+                        ${item.salary_date}
+                    </td>
+                    <td></td>
+                </tr>
+            `
+        });
+        tbody.innerHTML = html;
+
+        let countHtml = "";
+
+        for (let i = 1; i <= count; i++) {
+            if (i === 1) {
+                countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
+                countHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
+            }
             if (i > 21 && i < count) {
                 countHtml += `
                     <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
@@ -131,4 +203,37 @@ const renderPage = () => {
     });
 }
 
+const exportToExcel = () => {
+    const method = "post";
+    const params = {
+        qMin: qSalaryMin.value,
+        qMax: qSalaryMax.value,
+        qDate: qSalaryDate.value
+    }
+    let form = document.createElement('form');
+    form.setAttribute("method", method);
+    form.setAttribute("action", "http://localhost:3000/api/profile/export/salary");
+
+    for (let key in params) {
+        if (params.hasOwnProperty(key)) {
+            const hiddenField = document.createElement("input");
+            hiddenField.setAttribute('type', 'hidden');
+            hiddenField.setAttribute('name', key);
+            hiddenField.setAttribute('value', params[key]);
+            form.appendChild(hiddenField);
+        }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
+
+
+exportToExcelBtn.addEventListener("click", exportToExcel);
+
 setTimeout(renderPage, 1000);
+
+qSalaryMin.addEventListener("keyup", search);
+qSalaryMax.addEventListener("keyup", search);
+qSalaryDate.addEventListener("change", search);

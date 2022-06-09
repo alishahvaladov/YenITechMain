@@ -22,6 +22,5 @@ router.get("/delete/:id", super_admin, deleteDepartment);
 router.get("/", super_admin, getDepartments);
 
 router.get("/update/:id", super_admin, getDepartment)
-router.post("/update/:id", super_admin, updateDepartment);
 
 module.exports = router;

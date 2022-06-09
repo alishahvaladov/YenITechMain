@@ -18,6 +18,7 @@ module.exports = {
             password: data.password,
             email: data.email,
             role: data.role,
+            deleted_by: null,
             active_status: 0,
             createdAt: Date.now(),
             updatedAt: Date.now()

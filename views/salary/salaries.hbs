@@ -8,22 +8,28 @@
         <div class="container">
             <thead>
                 <tr>
-                    <th>Employee</th>
+                    <th>salary</th>
                     <th>Unofficial Pay</th>
                     <th>Gross</th>
                     <th class="text-center"><a class="btn btn-outline-info" href="/salaries/salary-by-months">Aylıq alınan maaşlar</a></th>
                 </tr>
                 <tr>
-                    <th><input type="text" id="emp"></th>
+                    <th><input class="form-control" type="text" id="emp"></th>
                     <th>
-                        <select class="p2" id="u_pay">
+                        <select class="form-select" class="p2" id="u_pay">
                             <option hidden>Seçin</option>
                             <option value="0">Hamısı</option>
                             <option value="1">Olanlar</option>
                             <option value="2">Olmayanlar</option>
                         </select>
                     </th>
-                    <th><input class="px-2" type="number" id="min" placeholder="min"> <input class="px-2" type="number" id="max" placeholder="max"> </th>
+                    <th>
+                        <div class="d-flex">
+                            <input class="form-control px-2" type="number" id="min" placeholder="min">
+                            <div class="mx-1"></div>
+                            <input class="form-control px-2" type="number" id="max" placeholder="max">
+                        </div>
+                    </th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -40,7 +46,67 @@
     
     <div class="pagination d-flex justify-content-center">
         <div class="pagination-container w-50 d-flex justify-content-between">
-            <button class="pagination-item btn btn-outline-dark btn-sm active disabled">1</button>
+            <button class="pagination-item btn btn-outline-dark btn-sm pagination-active disabled">1</button>
+        </div>
+    </div>
+</div>
+
+<div class="salary-data-modal bg-dark bg-opacity-50 position-fixed d-flex justify-content-center align-items-center d-none" style="height: 100vh; width: 100vw; top: 0; left: 0;">
+    <div class="card">
+        <div class="salary-modal-header d-flex justify-content-between align-items-center">
+            <div class="card-header">
+                <h5 class="card-title mb-0 px-4">Əməkhaqqı Məlumatları</h5>
+            </div>
+            <div class="">
+                <button class="btn card-title mb-0 px-4 salaryModalCloseBtn" style="outline: none; box-shadow: none;">
+                    <i class="align-middle" data-feather="x"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-divider" style="border-bottom: 1px solid #41414141;"></div>
+
+        <div class="card-profile-picture d-flex justify-content-center py-3">
+            <img class="img-fluid rounded-circle" src="/assets/img/john.jpg" style="height: 100px; width: 100px; object-fit: cover; object-position: top;">
+        </div>
+
+        <div class="card-divider" style="border-bottom: 1px solid #41414141;"></div>
+
+        <div class="card-container px-4 py-2">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-body" style="padding-top: 0 !important; padding-bottom: 0 !important;">
+                        <div class="row">
+                            <div class="col-12 col-lg-6">
+                                <div class="mb-3">
+                                    <label for="fin" class="form-label">Unofficial Pay</label>
+                                    <input class="form-control update-salary-input" type="number" name="u_pay" id="uPay">
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <div class="mb-3">
+                                    <label for="fin" class="form-label">Gross</label>
+                                    <input class="form-control update-salary-input" type="number" name="gross" id="gross">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="salaryId">
+            </div>
+        </div>
+
+        <div class="px-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-body">
+                        <div class="buttons d-flex justify-content-between">
+                            <button class="btn btn-danger" id="salaryEditCancelBtn">Ləğv Et</button>
+                            <button class="btn btn-primary" id="salaryEditApplyBtn">Təsdiqlə</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -1,0 +1,61 @@
+{{> messages }}
+<div class="card flex-fill">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Barmaq İzləri</h5>
+    </div>
+    <h2 class="text-center">Barmaq İzləri</h2>
+    <select class="form-select" id="fPrintType">
+        <option value="0" selected>Bütün</option>
+        <option value="1">Barmaq izi tutanlar</option>
+        <option value="2">Barmaq izi tutmayanlar</option>
+        <option value="3">Uyğunsuzluqlar</option>
+    </select>
+    <table class="table table-hover my-0">
+        <div class="container">
+            <thead class="headers">
+                <tr>
+                    <th>Əməkdaş</th>
+                    <th>Barmaq izi tarixi</th>
+                    <th>Giriş</th>
+                    <th>Çıxış</th>
+                </tr>
+                <tr>
+                    <th><input class="form-control" type="text" name="qProject" id="qProject"></th>
+                    <th>
+                        <input class="form-control" type="date" name="qDate" id="qDate">
+                    </th>
+                    <th><input class="form-control" type="text" name="qDepartment" id="qDepartment"></th>
+                    <th><input class="form-control" type="text" name="qPosition" id="qPosition"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
+                </tr>
+            </tbody>
+        </div>
+    </table>
+    <div class="pagination d-flex justify-content-center">
+        <div class="pagination-container w-50 d-flex justify-content-between">
+
+        </div>
+    </div>
+</div>
+
+<div class="add-time-modal d-none position-fixed justify-content-center align-items-center">
+    <div class="add-time-modal-container">
+        <div class="time-input my-2">
+            <input type="time" id="timeInput">
+        </div>
+        <div class="add-time-btns btn-group d-flex justify-content-between my-2">
+            <button class="btn btn-outline-danger" id="timeInputCancel">Ləğv Et</button>
+            <button class="btn btn-outline-success" id="timeInputSubmit">Təsdiqlə</button>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/jquery.min.js" defer></script>
+<script src="/assets/js/inappropriate-fprint-api.js" defer></script>

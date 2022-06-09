@@ -1,4 +1,4 @@
-const { sequelize } = require("../../db_config/models");
+const { sequelize, Project } = require("../../db_config/models");
 const { QueryTypes } = require("sequelize");
 
 module.exports = {
@@ -42,6 +42,58 @@ module.exports = {
             replacements: {
                 emp_id
             }
+        });
+    },
+    getProjectManagersAndParentProjects: async () => {
+        const result = {};
+
+        result.projectManagers = await sequelize.query(`
+            SELECT id, first_name, last_name, father_name FROM Employees
+            WHERE deletedAt IS NULL
+        `, {
+            logging :false,
+            type: QueryTypes.SELECT
+        });
+
+        result.parentProjects = await sequelize.query(`
+            SELECT id, name FROM Projects
+            WHERE parent_id IS NULL
+            AND deletedAt IS NULL
+        `, {
+            logging :false,
+            type: QueryTypes.SELECT
+        });
+
+        return result;
+    },
+    getProjectById: async (project_id) => {
+        return await sequelize.query(`
+            SELECT * FROM Projects
+            WHERE id = :project_id
+            AND deletedAt IS NULL
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                project_id
+            }
+        });
+    },
+    updateProject: (data, cb) => {
+        Project.update({
+            user_id: data.user_id,
+            name: data.name,
+            address: data.address,
+            project_manager_id: data.project_manager_id,
+            parent_id: data.parent_id
+        }, {
+            where: {
+                id: data.project_id
+            }
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
         });
     }
 }

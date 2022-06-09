@@ -1,36 +1,57 @@
-<div class="add-project">
-    {{#if project}}
-        {{> messages}}
-        <form action="/projects/update/{{project.id}}" method="post">
-            <div class="form-row d-flex justify-content-between my-4">
-                <div class="form-group col-sm-12 col-md-6 px-2">
-                    <label for="inputEmail4">Project Name</label>
-                    <input type="text" class="form-control" id="inputEmail4" placeholder="Project Name" name="name" value="{{project.name}}">
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Layihə əlavə formu</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Layihə adı</label>
+                                <input class="form-control" type="text" id="projectName" name="name">
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Layihə adresi</label>
+                                <input class="form-control" type="text" id="projectAddress" name="address">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group col-sm-12 col-md-6 px-2">
-                    <label for="inputPassword4">Project Address</label>
-                    <input type="text" class="form-control" id="inputPassword4" placeholder="Project Address" name="address" value="{{project.address}}">
+            </div>
+            <div class="col-12">
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Layihə meneceri</label>
+                                <select class="form-select" id="projectManagers" name="project_manager_id" id="">
+                                    <option value="" hidden>Layihə meneceri seçin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Üst proyekt</label>
+                                <select class="form-select" id="parentProjects" name="parent_id" id="">
+                                    <option value="">Əsas Layihə</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="form-group my-4 px-2">
-                <label for="inputAddress">Project Manager</label>
-                    <select id="inputState" class="form-control" name="project_manager_id">
-                        <option disabled hidden>Choose</option>
-                        <option  value="{{project.project_manager_id}}"selected> asdasdsad</option>
-                        <option value="12">Ali Shahvaladov</option>
-                        <option value="13">Tural Hasanov</option>
-                    </select>
+            <div class="col-12">
+                <div class="submit-button">
+                    <button id="saveBtn" class="btn btn-primary" style="float: right;">Yadda Saxla</button>
+                </div>
             </div>
-            <div class="form-group my-4 px-2">
-                <label for="inputAddress">Parent Project</label>
-                    <select id="inputState" class="form-control" name="parent_id">
-                        <option disabled hidden>Choose</option>
-                        <option value="{{project.parent_id}}" selected>asdsad</option>
-                        <option value="13">GH</option>
-                        <option value="15">YH</option>
-                    </select>
-            </div>
-            <button type="submit" class="btn btn-primary d-flex float-end mt-2">Update Project</button>
-        </form>
-    {{/if}}
+        </div>
+    </div>
 </div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/update-project.js"></script>

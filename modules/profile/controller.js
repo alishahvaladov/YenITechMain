@@ -60,5 +60,22 @@ module.exports = {
             req.flash('error_msg', "Something went wrong while loading page. Please contact system admin.");
             return res.redirect('/dashboard');
         }
+    },
+    renderChangePassword: (req, res) => {
+        try {
+            if (req.user.role === 1) {
+                return res.render("profile/change-password", {
+                    super_admin: true
+                });
+            } else if (req.user.role === 5) {
+                return res.render("profile/change-password", {
+                    hr: true
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            req.flash("error_msg", "Ups... Something went wrong!");
+            return res.redirect("/dashboard");
+        }
     }
 }

@@ -16,14 +16,14 @@
             </thead>
             
             <thead>
-            <th><input type="text" name="qEmployee" id="qEmployee"></th>
-            <th><input type="text" name="qProject" id="qProject"></th>
-            <th><input type="text" name="qDepartment" id="qDepartment"></th>
-            <th><input type="text" name="qPosition" id="qPosition"></th>
-            <th><input type="text" name="qTime" id="qTime"></th>
+            <th><input class="form-control" type="text" name="qEmployee" id="qEmployee"></th>
+            <th><input class="form-control" type="text" name="qProject" id="qProject"></th>
+            <th><input class="form-control" type="text" name="qDepartment" id="qDepartment"></th>
+            <th><input class="form-control" type="text" name="qPosition" id="qPosition"></th>
+            <th><input class="form-control" type="text" name="qTime" id="qTime"></th>
             <th class="d-flex justify-content-between">
             <span>
-                 <select id="day" name="day">
+                 <select class="form-select" id="day" name="day">
                      <option value="gun" hidden>Gün</option>
                      <option value="00">Bütün</option>
                      <option value="01">1</option>
@@ -60,7 +60,7 @@
                  </select>
             </span>
             <span>
-                <select id="month" name="month">
+                <select class="form-control" id="month" name="month">
                     <option value="ay" hidden>Ay</option>
                     <option value="00">Bütün</option>
                     <option value="01">Yanvar</option>
@@ -78,7 +78,7 @@
                 </select>
             </span>
             <span>
-                 <select id="year" name="year">
+                 <select class="form-control" id="year" name="year">
                      <option value="il" hidden>İl</option>
                      <option value="00">Bütün</option>
                      <option value="2021">2021</option>
@@ -239,12 +239,6 @@
                 </div>
             </div>
         </form>
-    </div>
-</div>
-
-<div class="loading position-absolute top-0 w-100" style="left: 0; height: 100vh">
-    <div class="loading-container bg-light bg-opacity-25 w-100 h-100 d-flex justify-content-center align-items-center">
-        <img src="/assets/img/loading-3.gif" style="width: 70px">
     </div>
 </div>
 

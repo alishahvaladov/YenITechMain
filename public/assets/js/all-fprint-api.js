@@ -252,7 +252,7 @@ const inputThForFPrintsAndAllFPrints = `
 const inputThForInappropriateFPrints = `
             <th><input type="text" name="qProject" id="qProject"></th>
             <th>
-                <input type="date" name="qDate" id="qDate"> 
+                <input type="date" name="qDate" id="qDate">
             </th>
             <th><input type="text" name="qDepartment" id="qDepartment"></th>
             <th><input type="text" name="qPosition" id="qPosition"></th>

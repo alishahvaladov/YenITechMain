@@ -2,8 +2,8 @@ const { getDepartment, getPosition, getEmployee, empRenderPage, getEmpCount, emp
 const { addNotification } = require("../../notification/service");
 const excelJS = require("exceljs");
 const path = require("path");
-const standardShiftTypes = require("../../config/config.json").shift_types[1].types;
 const fs = require("fs");
+const standardShiftTypes = require("../../config/config.json").shift_types[1].types;
 const validateEmployee = (data, cb) => {
     const dbData = {};
     const validationError = {};
@@ -174,7 +174,7 @@ const validateEmployee = (data, cb) => {
                     validationError.homeNumber = homeNumberError;
                     return cb(true, validationError);
                 }
-            }   
+            }
         } else {
             console.log("Home number should be 10 or 12 characters!");
             homeNumberError.push("Home number should be 10 or 12 characters!");
@@ -237,8 +237,8 @@ const validateEmployee = (data, cb) => {
             return cb(true, validationError);
         }
     }
-    if (data.dayOffDays !== "" && data.dayoffDays !== undefined && data.dayoffDays !== null) {
-        const dayOffDays = data.dayoffDays;
+    if (data.dayoff_days_total !== "" && data.dayoff_days_total !== undefined && data.dayoff_days_total !== null) {
+        const dayOffDays = data.dayoff_days_total;
         if(isNaN(parseInt(dayOffDays))) {
             console.log("Please enter valid day off dates");
             validationError.dayOffDays = "Please enter valid day off dates";
@@ -362,7 +362,7 @@ module.exports = {
             }
             return res.send({
                 result: result.result,
-                count: result.count, 
+                count: result.count,
                 role
             });
         } catch (err) {
@@ -457,7 +457,7 @@ module.exports = {
         const excelPath = path.join((__dirname), `../../public/excels/${filename}`);
         await workbook.xlsx.writeFile(excelPath);
         setTimeout(() => {
-           fs.unlink(excelPath, (err) => {
+            fs.unlink(excelPath, (err) => {
                 if(err) {
                     console.log(err);
                     res.status(400).json({
@@ -465,7 +465,7 @@ module.exports = {
                         message: "Unknown error has been occurred"
                     });
                 }
-           });
+            });
         }, 10000);
         res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         res.download(excelPath, "Əməkdaşlar.xlsx");

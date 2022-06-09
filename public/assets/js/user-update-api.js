@@ -10,6 +10,7 @@ const passwordUpdateSubmitBtn = document.querySelector("#passwordUpdateSubmit");
 const passwordInput = document.querySelector("#password");
 const retypePasswordInput = document.querySelector("#retypePassword");
 const message = document.querySelector(".message");
+const loading = document.querySelector(".loading");
 
 const renderPage = () => {
     const splittedURL = window.location.href.split("/");
@@ -34,6 +35,7 @@ const renderPage = () => {
             }
         }
         roleSelect.innerHTML = options;
+        loading.classList.add("d-none");
     });
     updatePassword.addEventListener("click", () => {
         updatePasswordModal.classList.remove('d-none');
@@ -70,4 +72,4 @@ const renderPage = () => {
     });
 }
 
-renderPage();
+setTimeout(renderPage, 1000);

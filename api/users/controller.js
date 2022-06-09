@@ -55,6 +55,9 @@ module.exports = {
         try {
             let offset = req.params.offset;
             offset = parseInt(offset) * 15;
+            console.log(offset);
+            
+            console.log(offset);
             const result = await getAllUsers(offset);
             return res.status(200).send({
                 success: true,

@@ -365,5 +365,32 @@ module.exports = {
             logging: false,
             type: QueryTypes.SELECT
         });
+    },
+    getSalaryByID: async (id) => {
+        return await sequelize.query(`
+            SELECT * FROM Salaries
+            WHERE id = :id
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                id
+            }
+        });
+    },
+    updateSalary: (data, cb) => {
+        Salary.update({
+            gross: data.gross,
+            unofficial_pay: data.unofficial_pay
+        }, {
+            where: {
+                id: data.id
+            },
+            logging: false
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
     }
 }

@@ -1,10 +1,19 @@
-<div class="add-department">
-    {{#if department}}
-        <form action="/department/update/{{department.id}}" method="post">
-            Department Name <input type="text" name="name" value="{{department.name}}">
-            <button type="submit">Update Department</button>
-
-            {{> messages}}
-        </form>
-    {{/if}}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Department update form</h5>
+    </div>
+    <div class="card-body">
+        <div class="form-group d-flex justify-content-between">
+            <input type="text" class="form-control w-75" id="deptName" placeholder="Departament adı" name="name">
+            <div class="mx-1"></div>
+            <button type="submit" class="btn btn-primary w-25" id="saveDepartment">Yadda Saxla</button>
+        </div>
+        <div class="projects-header my-3">
+            <h3 class="text-center">Zəhmət olmasa aid olduğu layihələri və ya layihəni seçin</h3>
+        </div>
+        <div class="card-body projects-checkbox d-flex justify-content-between flex-wrap">
+            
+        </div>    </div>
 </div>
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/update-department-api.js"></script>

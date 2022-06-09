@@ -9,11 +9,19 @@ if (date !== 1) {
 }
 
 module.exports = {
-    getFineData: async (role) => {
-        let query;
+    getFineData: async (role, limit, offset) => {
+        let query, countQuery;
+        const result = {};
         if (role === 2) {
             query = `
                 SELECT fn.id as fineID, fn.emp_id, fn.minute_total, fn.fine_minute, fn.fine_status, fn.updatedAt, emp.first_name, emp.last_name, emp.father_name FROM Fines as fn
+                LEFT JOIN Employees as emp ON fn.emp_id = emp.id
+                WHERE fn.fine_minute > 0
+                ORDER BY fn.createdAt DESC
+                LIMIT :limit OFFSET :offset
+            `;
+            countQuery = `
+                SELECT COUNT(*) as count FROM Fines as fn
                 LEFT JOIN Employees as emp ON fn.emp_id = emp.id
                 WHERE fn.fine_minute > 0
                 ORDER BY fn.createdAt DESC
@@ -24,12 +32,30 @@ module.exports = {
                 LEFT JOIN Employees as emp ON fn.emp_id = emp.id
                 WHERE (fn.minute_total > 0 OR fn.fine_minute > 0)
                 ORDER BY fn.createdAt DESC
+                LIMIT :limit OFFSET :offset
+            `;
+            countQuery = `
+                SELECT COUNT(*) as count FROM Fines as fn
+                LEFT JOIN Employees as emp ON fn.emp_id = emp.id
+                WHERE (fn.minute_total > 0 OR fn.fine_minute > 0)
+                ORDER BY fn.createdAt DESC
             `
         }
-        return await sequelize.query(query, {
+        result.fineData = await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                limit,
+                offset
+            }
+        });
+
+        result.fineCount = await sequelize.query(countQuery, {
             logging: false,
             type: QueryTypes.SELECT
         });
+
+        return result;
     },
     getFineDataByID: async (id) => {
         return await sequelize.query(`

@@ -1,4 +1,4 @@
-const { getDepartmentsForPoisiton, addPosition, addDeptPostRel, checkIfDeptExists, getPositionsByDepartment, getAllPositions } = require("./service");
+const { getDepartmentsForPoisiton, addPosition, addDeptPostRel, checkIfDeptExists, getPositionsByDepartment, getAllPositions, getPositionByID, updatePositionName, getDepartmentForPositions, deleteDepartmentForPosition, insertDepartmentForPosition } = require("./service");
 const randomId = (count) => {
     const string = "abcdefghijklmnopqrstuvwxyz123456789";
     let generatedId = "";
@@ -127,6 +127,126 @@ module.exports = {
             return res.status(500).send({
                 success: false,
                 message: "Something went wrong!"
+            });
+        }
+    },
+    getPositionByID: async (req, res) => {
+        try {
+            const id = req.params.id;
+
+            const result = await getPositionByID(id);
+
+            return res.status(200).send({
+                success: true,
+                name: result.name,
+                departments: result.departments,
+                dept_pos: result.dept_pos
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    updatePositionName: (req, res) => {
+        try {
+            const id = req.params.id;
+            const name = req.query.name;
+            const data = {};
+
+            if (name === "" || !name) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Some missing data"
+                });
+            }
+            data.id = id;
+            data.name = name;
+            
+            updatePositionName(data, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(400).send({
+                        success: false,
+                        message: "An unknown error has been occurred. Please contact system admin"
+                    });
+                }
+                return res.status(200).send({
+                    success: true,
+                    message: "Position has been updated"
+                });
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong"
+            });
+        }
+    },
+    updateDeptPosRels: async (req, res) => {
+        try {
+            let position_id = req.query.position_id;
+            let department_id =req.query.department_id;
+            const data = {};
+
+            if (isNaN(parseInt(position_id))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Position ID must be a number"
+                });
+            }
+
+            if(isNaN(parseInt(department_id))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Department ID must be a number"
+                });
+            }
+
+            data.position_id = parseInt(position_id);
+            data.department_id = parseInt(department_id);
+
+            const result = await getDepartmentForPositions(data);
+
+            if (result.length > 0) {
+                deleteDepartmentForPosition(data, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        return res.status(400).send({
+                            success: false,
+                            message: "An unknown error has been occured"
+                        });
+                    }
+                    return res.status(201).send({
+                        success: false,
+                        message: "Position has been deleted"
+                    });
+                });
+            } else {
+                insertDepartmentForPosition(data, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        return res.status(400).send({
+                            success: false,
+                            message: "Position has been inserted"
+                        });
+                    }
+                    return res.status(201).send({
+                        success: false,
+                        message: "Position has been inserted"
+                    });
+                });
+            }
+
+
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
             });
         }
     }

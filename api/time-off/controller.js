@@ -93,6 +93,15 @@ module.exports = {
                         message: "Missing requirements"
                     });
                 }
+                const timeOffStartDate = new Date(body.timeOffStartDate);
+                const timeOffEndDate = new Date(body.timeOffEndDate);
+
+                if (timeOffStartDate.getTime() > timeOffEndDate.getTime()) {
+                    return res.status(400).send({
+                        success: false,
+                        message: "Please choose valid time off dates"
+                    });
+                }
                 body.toffTime = null;
                 body.toffTimeDate = null;
             }
@@ -236,181 +245,231 @@ module.exports = {
                 }
             });
         });
-    }, 
+    },
     getTimeOffApproveForHR: async (req, res) => {
-        const id = req.params.id;
-        const result = await getTimeOffApproveForHR(id);
-        const uploaded_files = JSON.parse(result[0].uploaded_files);
-        const dayOffForm = JSON.parse(uploaded_files.dayoffform);
-        const fileName = dayOffForm.filename;
-        result[0].uploaded_files = null
-        return res.status(200).send({
-            result,
-            fileName
-        });
-    },
-    getTimeOffApproveForDR: async (req, res) => {
-        const id = req.params.id;
-        const result = await getTimeOffApproveForDR(id);
-        const uploaded_files = JSON.parse(result[0].uploaded_files);
-        const dayOffForm = JSON.parse(uploaded_files.dayoffform);
-        const fileName = dayOffForm.filename;
-        result[0].uploaded_files = null
-        return res.status(200).send({
-            result,
-            fileName
-        });
-    },
-    cancelRequestByHr: (req, res) => {
-        let id = req.params.id;
-        cancelRequestByHr(id, (err, result) => {
-            if (err) {
-                console.log(err);
-                return res.send({
-                    success: false,
-                    message: "An unknown error has been occurred"
-                });
-            }
-            res.send({
-                message: "Canceled"
-            })
-        })
-    },
-    cancelRequestByDR: (req, res) => {
-        let id = req.params.id;
-        cancelRequestByDR(id, (err, result) => {
-            if (err) {
-                console.log(err);
-                return res.send({
-                    success: false,
-                    message: "An unknown error has been occurred"
-                });
-            }
-            res.send({
-                message: "Canceled"
-            })
-        })
-    },
-    approveRequestByHr: (req, res) => {
-        let id = req.params.id;
-        approveRequestByHr(id, (err, result) => {
-            if (err) {
-                console.log(err);
-                return res.send({
-                    success: false,
-                    message: "An unknown error has been occurred"
-                });
-            }
-            res.send({
-                message: "Approved"
-            })
-        })
-    },
-    approveRequestByDR: (req, res) => {
-        let id = req.params.id;
-        approveRequestByDR(id, (err, result) => {
-            if (err) {
-                console.log(err);
-                return res.send({
-                    success: false,
-                    message: "An unknown error has been occurred"
-                });
-            }
-            res.send({
-                message: "Approved"
-            })
-        })
-    },
-    checkLetterUploadPath: async (req, res, next) => {
-        let empPath = "";
-        const id = parseInt(req.params.id);
         try {
-            const result = await getEmployeeData(id);
-            empPath = path.join(__dirname, "../../public/employees/time-off/letter/" + result[0].id.toString() + "-" + result[0].first_name.toLocaleLowerCase() + "-" + result[0].last_name.toLocaleLowerCase() + "-" + result[0].father_name.toLocaleLowerCase());
+            const id = req.params.id;
+            const result = await getTimeOffApproveForHR(id);
+            const uploaded_files = JSON.parse(result[0].uploaded_files);
+            console.log(uploaded_files);
+            const dayOffForm = JSON.parse(uploaded_files.dayoffform);
+            const fileName = dayOffForm.filename;
+            result[0].uploaded_files = null
+            return res.status(200).send({
+                result,
+                fileName
+            });
         } catch (err) {
             console.log(err);
-            return res.status(404).send({
+            return res.status(500).send({
                 success: false,
-                message: "This employee couldn't find please try again or contact System Admin"
+                message: "Ups... Something went wrong!"
             });
         }
-        await fs.access(empPath, fs.constants.F_OK, err => {
-           if (err) {
-               fs.mkdir(empPath, { recursive: true }, (err) => {
-                  if (err) {
-                      console.log(err);
-                      return res.status(400).send({
-                          success: false,
-                          message: "An unknown error has been occurred please contact System Admin"
-                      });
-                  } 
-               });
-           }
-           next();
-        });
+    },
+    getTimeOffApproveForDR: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const result = await getTimeOffApproveForDR(id);
+            const uploaded_files = JSON.parse(result[0].uploaded_files);
+            const dayOffForm = JSON.parse(uploaded_files.dayoffform);
+            const fileName = dayOffForm.filename;
+            result[0].uploaded_files = null
+            return res.status(200).send({
+                result,
+                fileName
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    cancelRequestByHr: (req, res) => {
+        try {
+            let id = req.params.id;
+            cancelRequestByHr(id, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return res.send({
+                        success: false,
+                        message: "An unknown error has been occurred"
+                    });
+                }
+                res.send({
+                    message: "Canceled"
+                })
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    cancelRequestByDR: (req, res) => {
+        try {
+            let id = req.params.id;
+            cancelRequestByDR(id, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return res.send({
+                        success: false,
+                        message: "An unknown error has been occurred"
+                    });
+                }
+                res.send({
+                    message: "Canceled"
+                })
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    approveRequestByHr: (req, res) => {
+        try {
+            let id = req.params.id;
+            approveRequestByHr(id, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return res.send({
+                        success: false,
+                        message: "An unknown error has been occurred"
+                    });
+                }
+                res.send({
+                    message: "Approved"
+                })
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    approveRequestByDR: (req, res) => {
+        try {
+            let id = req.params.id;
+            approveRequestByDR(id, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return res.send({
+                        success: false,
+                        message: "An unknown error has been occurred"
+                    });
+                }
+                res.send({
+                    message: "Approved"
+                })
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    checkLetterUploadPath: async (req, res, next) => {
+        try {
+            let empPath = "";
+            const id = parseInt(req.params.id);
+            try {
+                const result = await getEmployeeData(id);
+                empPath = path.join(__dirname, "../../public/employees/time-off/letter/" + result[0].id.toString() + "-" + result[0].first_name.toLocaleLowerCase() + "-" + result[0].last_name.toLocaleLowerCase() + "-" + result[0].father_name.toLocaleLowerCase());
+            } catch (err) {
+                console.log(err);
+                return res.status(404).send({
+                    success: false,
+                    message: "This employee couldn't find please try again or contact System Admin"
+                });
+            }
+            await fs.access(empPath, fs.constants.F_OK, err => {
+            if (err) {
+                fs.mkdir(empPath, { recursive: true }, (err) => {
+                    if (err) {
+                        console.log(err);
+                        return res.status(400).send({
+                            success: false,
+                            message: "An unknown error has been occurred please contact System Admin"
+                        });
+                    }
+                });
+            }
+            next();
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
     },
     uploadLetterFilePathToDB: async (req, res, next) => {
-        let emp_id;
-        const id = parseInt(req.body.id);
-        if(req.params.id) {
-            emp_id = parseInt(req.params.id);
-        } else {
-            return res.status(400).send({
-                success: false,
-                message: "Please select employee"
-            });
-        }
-        if(req.fileValidationError) {
-            return res.status(400).send({
-                success: false,
-                message: "Please choose correct file format"
-            })
-        }
-        if(req.fileUploadError) {
-            return res.status(400).send({
-                success: false,
-                message: "An unknown error has been occurred"
-            })
-        }
-        let data = {};
-
-        checkIfEmpExists(emp_id, (err, empRes) => {
-            if(err) {
-                console.log(err);
+        try {
+            let emp_id;
+            const id = parseInt(req.body.id);
+            if(req.params.id) {
+                emp_id = parseInt(req.params.id);
+            } else {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please select employee"
+                });
+            }
+            if(req.fileValidationError) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please choose correct file format"
+                })
+            }
+            if(req.fileUploadError) {
                 return res.status(400).send({
                     success: false,
                     message: "An unknown error has been occurred"
                 })
             }
-            if(empRes === null) {
-                return res.status(400).send({
-                    success: false,
-                    message: "This employee does not exists"
-                })
-            }
-            checkIfEmpFileExists(emp_id, (err, empFileRes) => {
+            let data = {};
+
+            checkIfEmpExists(emp_id, (err, empRes) => {
                 if(err) {
                     console.log(err);
                     return res.status(400).send({
                         success: false,
                         message: "An unknown error has been occurred"
-                    });
+                    })
                 }
-                if(empFileRes === null) {
-                    let files = {};
-                    files.letter = JSON.stringify(req.file);
-                    data.files = JSON.stringify(files);
-                    data.user_id = req.user.id;
-                    data.emp_id = emp_id;
-                    addFileNames(data, (err, result) => {
-                        if(err) {
-                            console.log(err);
-                            return res.status(400).send({
-                                success: false,
-                                message: "An unknown error has been occurred"
-                            });
-                        }
-                        approveTimeOffRequest(id, (err, result) => {
+                if(empRes === null) {
+                    return res.status(400).send({
+                        success: false,
+                        message: "This employee does not exists"
+                    })
+                }
+                checkIfEmpFileExists(emp_id, (err, empFileRes) => {
+                    if(err) {
+                        console.log(err);
+                        return res.status(400).send({
+                            success: false,
+                            message: "An unknown error has been occurred"
+                        });
+                    }
+                    if(empFileRes === null) {
+                        let files = {};
+                        files.letter = JSON.stringify(req.file);
+                        data.files = JSON.stringify(files);
+                        data.user_id = req.user.id;
+                        data.emp_id = emp_id;
+                        addFileNames(data, (err, result) => {
                             if(err) {
                                 console.log(err);
                                 return res.status(400).send({
@@ -418,40 +477,55 @@ module.exports = {
                                     message: "An unknown error has been occurred"
                                 });
                             }
-                        });
-                        return res.send({
-                            result
-                        })
-                    });
-                } else {
-                    const empData = JSON.parse(empFileRes.dataValues.uploaded_files);
-                    empData.letter = JSON.stringify(req.file);
-                    data.user_id = req.user.id;
-                    data.emp_id = emp_id;
-                    data.files = JSON.stringify(empData);
-                    updateFileNames(data, (err, result) => {
-                        if(err) {
-                            return res.status(400).send({
-                                success: false,
-                                message: "An unknown error has been occurred"
+                            approveTimeOffRequest(id, (err, result) => {
+                                if(err) {
+                                    console.log(err);
+                                    return res.status(400).send({
+                                        success: false,
+                                        message: "An unknown error has been occurred"
+                                    });
+                                }
                             });
-                        }
-                        approveTimeOffRequest(id, (err, result) => {
+                            return res.send({
+                                result
+                            })
+                        });
+                    } else {
+                        const empData = JSON.parse(empFileRes.dataValues.uploaded_files);
+                        empData.letter = JSON.stringify(req.file);
+                        data.user_id = req.user.id;
+                        data.emp_id = emp_id;
+                        data.files = JSON.stringify(empData);
+                        updateFileNames(data, (err, result) => {
                             if(err) {
-                                console.log(err);
                                 return res.status(400).send({
                                     success: false,
                                     message: "An unknown error has been occurred"
                                 });
                             }
+                            approveTimeOffRequest(id, (err, result) => {
+                                if(err) {
+                                    console.log(err);
+                                    return res.status(400).send({
+                                        success: false,
+                                        message: "An unknown error has been occurred"
+                                    });
+                                }
+                            });
+                            return res.send({
+                                result
+                            });
                         });
-                        return res.send({
-                            result
-                        });
-                    });
-                }
+                    }
+                });
             });
-        });
+        } catch (err) {
+            console.log(rrr);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
     },
     requestTimeOffAsUser: (req, res) => {
         try {

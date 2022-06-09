@@ -10,12 +10,14 @@ const toffEndDiv = document.querySelector('.toff-end-date');
 const toffTimeDiv = document.querySelector(".toff-authorized-time");
 const toffTimeDateDiv = document.querySelector('.timeoff-time-date');
 const wStartDateDiv = document.querySelector('.w-start-date');
+const loading = document.querySelector(".loading");
+const toffPrevBtn = document.querySelector("#toffPrevBtn");
 
 empSelector.change(function () {
     let id = empSelector.val();
     let department = $("#toff-department");
     let project = $("#toff-branch");
-    let position = $("#toff-emp-position"); 
+    let position = $("#toff-emp-position");
 
     $.post("http://localhost:3000/api/time-off/emp-info", {
         id: id
@@ -140,6 +142,7 @@ nextBtn.addEventListener("click", () => {
     wordBtnContainer.classList.add("d-flex");
     wordBtnContainer.classList.remove("d-none");
     nextBtn.classList.add("d-none");
+    toffPrevBtn.classList.remove('d-none');
     applyBtn.classList.remove("d-none");
     const downloadDoc = document.querySelector("#downloadDoc");
     downloadDoc.addEventListener("click", () => {
@@ -253,3 +256,18 @@ timeOffType.addEventListener('change', () => {
         toffTimeDateDiv.classList.add('d-none');
     }
 });
+
+toffPrevBtn.addEventListener("click", () => {
+    timeOffSelectContainer.classList.remove("d-none");
+    timeOffSelectContainer.classList.add("d-flex");
+    wordBtnContainer.classList.remove("d-flex");
+    wordBtnContainer.classList.add("d-none");
+    nextBtn.classList.remove("d-none");
+    toffPrevBtn.classList.add('d-none');
+    applyBtn.classList.add("d-none");
+});
+
+
+setTimeout(() => {
+    loading.classList.add("d-none");
+}, 1000);

@@ -204,7 +204,7 @@ module.exports = {
     },
     renderForgottenFPrints: (req, res) => {
         if(req.user.role === 1) {
-            res.render("fprint/forgotten-fprint", {
+            res.render("fprint/inappropriate-fprints", {
                 super_admin: true
             });
         } else if (req.user.role === 5) {

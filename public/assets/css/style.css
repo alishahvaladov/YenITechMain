@@ -41,9 +41,6 @@ h5,
 h6 {
     color: var(--web-text-color);
 }
-span {
-    color: var(--web-main-color);
-}
 .main-color {
     color: var(--web-main-color) !important;
 }
@@ -616,15 +613,9 @@ input[type=number] {
 }
 
 #fPrintType {
-    padding: 5px;
-    outline: none;
     width: fit-content;
-    color: var(--web-text-color);
-    background-color: var(--web-right-bg-color);
-    box-shadow: 2px 2px 5px var(--web-main-color);
     border-radius: 5px;
     margin-left: 10px;
-    border: none;
 }
 
 .user-info-list {
@@ -727,4 +718,14 @@ table thead input {
 
 .form-control[readonly] {
     background-color: #fff !important;
+}
+
+.success-alert-notification {
+    position: fixed;
+    bottom: 8vh;
+    right: 3vw;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    background: #090;
 }

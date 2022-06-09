@@ -15,6 +15,10 @@ const express = require("express");
 const router = express.Router();
 const { forwardAuthenticated, ensureAuthenticated, admin, ensureActivated, checkRoles, audit } = require("../auth/auth");
 
+
+router.get('/', (req, res) => {
+    return res.redirect("/login");
+});
 router.get('/register', admin, ensureActivated, renderRegister);
 router.get('/login', forwardAuthenticated, (req, res) => {
     res.render('login', {

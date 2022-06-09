@@ -13,11 +13,11 @@ const pageFunctions = () => {
         item.addEventListener("click", () => {
             loading.classList.remove('d-none');
             let offset = parseInt(item.value) - 1;
-            let activeClass = document.querySelector('.active');
+            let activeClass = document.querySelector('.pagination-active');
             let index = pgItems.indexOf(activeClass);
-            pgItems[index].classList.remove('active');
-            item.classList.add('active');
-            activeClass = document.querySelector('.active');
+            pgItems[index].classList.remove('pagination-active');
+            item.classList.add('pagination-active');
+            activeClass = document.querySelector('.pagination-active');
             index = pgItems.indexOf(activeClass);
             if(pgItems.length > 21) {
                 if(index > 9 && index < pgItems.length - 10) {
@@ -63,20 +63,16 @@ const pageFunctions = () => {
                     projects.forEach(project => {
                         html += `
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
                                 <td>${project.name}</td>
                                 <td>${project.address}</td>
                                 <td>${project.first_name} ${project.last_name} ${project.father_name}</td>
-                                <td class="d-flex justify-content-between">
-                                    <a class="btn btn-outline-danger btn-sm" href="/projects/delete/${project.id}"><i class="bi bi-x-circle"></i></a>
-                                    <a class="btn btn-outline-secondary btn-sm" href="/projects/update/${project.id}"><i class="bi bi-pencil-square"></i></a>
-                                    <a class="btn btn-outline-primary btn-sm" href="/projects/project/${project.id}"><i class="bi bi-diagram-3"></i></a>
+                                <td class="d-flex">
+                                    <div class="btn-group">
+                                        <a class="btn btn-outline-danger" href="/projects/delete/${project.id}"><i class="bi bi-x-circle"></i></a>
+                                        <a class="btn btn-outline-secondary" href="/projects/update/${project.id}"><i class="bi bi-pencil-square"></i></a>
+                                        <a class="btn btn-outline-primary" href="/projects/project/${project.id}"><i class="bi bi-diagram-3"></i></a>
+                                    </div>
                                 </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
                             </tr>
                         `
                     });
@@ -98,22 +94,16 @@ const renderPage = () => {
         projects.forEach(project => {
             html += `
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
                     <td>${project.name}</td>
                     <td>${project.address}</td>
                     <td>${project.first_name} ${project.last_name} ${project.father_name}</td>
-                    <td class="d-flex justify-content-between">
+                    <td class="d-flex">
                         <div class="btn-group">
                             <a class="btn btn-outline-danger" href="/projects/delete/${project.id}"><i class="bi bi-x-circle"></i></a>
                             <a class="btn btn-outline-secondary" href="/projects/update/${project.id}"><i class="bi bi-pencil-square"></i></a>
                             <a class="btn btn-outline-primary" href="/projects/project/${project.id}"><i class="bi bi-diagram-3"></i></a>
                         </div>
                     </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
                 </tr>
             `
         });
@@ -125,7 +115,7 @@ const renderPage = () => {
 
             for (let i = 1; i <= count; i++) {
                 if (i === 1) {
-                    countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm active" value="${i}">${i}</button>`
+                    countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
                     countHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
                 }
                 if (i > 21 && i < count) {

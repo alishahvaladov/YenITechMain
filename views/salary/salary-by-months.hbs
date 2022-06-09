@@ -9,14 +9,21 @@
                 <th><button class="btn btn-success" id="export"><i class="bi bi-file-earmark-excel"></i> Export</button></th>
             </thead>
             <thead>
-                <th><input class="py-1 px-2" type="text" id="emp"></th>
-                <th><input class="py-1 px-2" type="number" id="min" placeholder="min"> <input class="py-1 px-2" type="number" id="max" placeholder="max"> </th>
+                <th><input class="form-control" type="text" id="emp"></th>
+                <th>
+                    <div class="d-flex justify-content-between">
+                        <input class="form-control" type="number" id="min" placeholder="min">
+                        <div class="mx-1"></div>
+                        <input class="form-control" type="number" id="max" placeholder="max">
+                    </div>
+                </th>
                 <th>
                     <div class="d-flex">
-                        <select class="py-1 px-2 mx-1" id="month">
+                        <select class="form-select" id="month">
                             
                         </select>
-                        <select class="py-1 px-2 mx-1" id="year">
+                        <div class="mx-1"></div>
+                        <select class="form-select" id="year">
                         </select>
                         <div class="mx-1" id="resetDate">
                             <span class="btn btn-outline-primary d-flex justify-content-center align-items-center">
@@ -44,12 +51,5 @@
         <button class="pagination-item btn btn-outline-dark btn-sm active disabled">1</button>
     </div>
 </div>
-
-<div class="loading position-absolute top-0 w-100" style="left: 0; height: 100vh">
-    <div class="loading-container bg-light bg-opacity-25 w-100 h-100 d-flex justify-content-center align-items-center">
-        <img src="/assets/img/loading-3.gif" style="width: 70px">
-    </div>
-</div>
-
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/salary-by-months-api.js"></script>

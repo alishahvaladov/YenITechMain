@@ -9,16 +9,15 @@ const pageFunctions = () => {
     let fTDots = document.querySelector('.fTDots');
     let lTDots = document.querySelector('.lTDots');
     pgItems = Array.from(pgItems);
-    console.log(pgItems);
     pgItems.forEach(item => {
         item.addEventListener("click", () => {
             loading.classList.remove('d-none');
             let offset = parseInt(item.value) - 1;
-            let activeClass = document.querySelector('.active');
+            let activeClass = document.querySelector('.pagination-active');
             let index = pgItems.indexOf(activeClass);
-            pgItems[index].classList.remove('active');
-            item.classList.add('active');
-            activeClass = document.querySelector('.active');
+            pgItems[index].classList.remove('pagination-active');
+            item.classList.add('pagination-active');
+            activeClass = document.querySelector('.pagination-active');
             index = pgItems.indexOf(activeClass);
             if(pgItems.length > 21) {
                 if(index > 9 && index < pgItems.length - 10) {
@@ -95,8 +94,10 @@ const pageFunctions = () => {
                                 ${roleTD}
                             </td>
                             <td>
-                                <a class="btn btn-outline-danger btn-sm" href="/delete/${user.id}"><i class="bi bi-x-circle"></i></a>
-                                <a class="btn btn-outline-secondary btn-sm" href="/users/update/${user.id}"><i class="bi bi-pencil-square"></i></a>
+                                <div class="btn-group">
+                                    <a class="btn btn-outline-danger" href="/delete/${user.id}"><i class="bi bi-x-circle"></i></a>
+                                    <a class="btn btn-outline-secondary" href="/users/update/${user.id}"><i class="bi bi-pencil-square"></i></a>
+                                </div>
                             </td>
                             <td></td>
                             <td></td>
@@ -139,6 +140,8 @@ const renderPage = () => {
                 roleTD = `User`;
             } else if (user.role === 10) {
                 roleTD = `Department Director`;
+            } else if (user.role === 11) {
+                roleTD = `Project Manager`;
             }
             html += `
                 <tr>
@@ -152,8 +155,10 @@ const renderPage = () => {
                         ${roleTD}
                     </td>
                     <td>
-                        <a class="btn btn-outline-danger btn-sm" href="/delete/${user.id}"><i class="bi bi-x-circle"></i></a>
-                        <a class="btn btn-outline-secondary btn-sm" href="/users/update/${user.id}"><i class="bi bi-pencil-square"></i></a>
+                    <div class="btn-group">
+                        <a class="btn btn-outline-danger" href="/delete/${user.id}"><i class="bi bi-x-circle"></i></a>
+                        <a class="btn btn-outline-secondary" href="/users/update/${user.id}"><i class="bi bi-pencil-square"></i></a>
+                    </div>
                     </td>
                     <td></td>
                     <td></td>
@@ -168,7 +173,7 @@ const renderPage = () => {
 
             for (let i = 1; i <= count; i++) {
                 if (i === 1) {
-                    countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm active" value="${i}">${i}</button>`
+                    countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
                     countHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
                 }
                 if (i > 21 && i < count) {

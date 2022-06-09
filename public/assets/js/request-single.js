@@ -1,5 +1,6 @@
 const leftContainer = document.querySelector(".toff-select-cont-left");
 const rightContainer = document.querySelector(".toff-select-cont-right");
+const loading = document.querySelector(".loading");
 const dateToAzVersion = (date) => {
     const splittedDate = date.split("-");
 
@@ -25,6 +26,8 @@ const renderPage = () => {
             dOffType = "Əmək məzuniyyəti";
         } else if (result.timeoff_type === 3) {
             dOffType = "Sağlamlıq məzuniyyəti";
+        } else if (result.timeoff_type === 4) {
+            dOffType = "Saatlıq icazə";
         }
         let leftContHtml = `
             <div class="toff-branch d-flex justify-content-between">
@@ -72,7 +75,8 @@ const renderPage = () => {
             });
         });
     });
+    loading.classList.add("d-none");
 }
 
 
-renderPage();
+setTimeout(renderPage, 1000);

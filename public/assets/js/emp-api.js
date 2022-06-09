@@ -120,7 +120,6 @@ const empEditModule = () => {
          $.post("http://localhost:3000/api/employee-data", {
            emp_id: id
          }, (empResult) => {
-            console.log(empResult);
             const empRes = empResult.result.empRes[0];
             empName.value = empRes.first_name;
             // empMName.value = empRes.middle_name;
@@ -134,19 +133,24 @@ const empEditModule = () => {
             pNumber.value = empRes.phone_number;
             hNumber.value = empRes.home_number;
             employeeIdInput.value = id;
-            
-            let splittedShiftStart = empRes.shift_start.split(":");
-            if (splittedShiftStart.length === 2) {
-               splittedShiftStart = empRes.shift_start;
-            } else if (splittedShiftStart.length > 2) {
-               splittedShiftStart = `${splittedShiftStart[0]}:${splittedShiftStart[1]}`;
+            let splittedShiftStart;
+            if (empRes.shift_start && empRes.shift_start !== "") {
+               splittedShiftStart = empRes.shift_start.split(":");
+               if (splittedShiftStart.length === 2) {
+                  splittedShiftStart = empRes.shift_start;
+               } else if (splittedShiftStart.length > 2) {
+                  splittedShiftStart = `${splittedShiftStart[0]}:${splittedShiftStart[1]}`;
+               }
             }
 
-            let splittedShiftEnd = empRes.shift_end.split(":");
-            if (splittedShiftEnd.length === 2) {
-               splittedShiftEnd = empRes.shift_end;
-            } else if (splittedShiftEnd.length > 2) {
-               splittedShiftEnd = `${splittedShiftEnd[0]}:${splittedShiftEnd[1]}`;
+            let splittedShiftEnd;
+            if (empRes.shift_end && empRes.shift_end !== "") {
+               splittedShiftEnd = empRes.shift_end.split(":");
+               if (splittedShiftEnd.length === 2) {
+                  splittedShiftEnd = empRes.shift_end;
+               } else if (splittedShiftEnd.length > 2) {
+                  splittedShiftEnd = `${splittedShiftEnd[0]}:${splittedShiftEnd[1]}`;
+               }
             }
 
             shiftStart.value = splittedShiftStart;
@@ -254,7 +258,6 @@ const empEditModule = () => {
                        deptSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
                    }
                    posSelector.html(" ");
-                   console.log(result);
                });
             });
            
@@ -267,7 +270,6 @@ const empEditModule = () => {
                    for (let i = 0; i < result.length; i++) {
                        posSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
                    }
-                   console.log(result);
                });
            });
 
@@ -299,14 +301,12 @@ const pageFuncs = () => {
          let offset = item.value;
          let activeClass = document.querySelector('.pagination-active');
          let index = pgItems.indexOf(activeClass);
-         console.log(index);
-         console.log(pgItems[index]);
          pgItems[index].classList.remove('pagination-active');
          item.classList.add('pagination-active');
          activeClass = document.querySelector('.pagination-active');
          index = pgItems.indexOf(activeClass);
-         if(pgItems.length > 10) {
-            if(index > 9 && index < pgItems.length - 10) {
+         if(pgItems.length > 14) {
+            if(index > 9 && index < pgItems.length - 14) {
                fTDots.classList.remove('d-none');
                lTDots.classList.remove('d-none');
                for(let i = 1; i < pgItems.length - 1; i++) {
@@ -360,9 +360,17 @@ const pageFuncs = () => {
                let role = res.role;
                if(role === "super_admin") {
                   for (let i = 0; i < emps.length; i++) {
+                     let adminBtns = `
+                        <div class="btn-group">
+                           <a class="btn btn-outline-danger" href="/employee/delete/${emps[i].id}"><i class="bi bi-person-x"></i></a>
+                           <button class="btn btn-outline-danger empRmBtn" value="${emps[i].id}"><i class="bi bi-dash-circle"></i></button>
+                           <button class="btn btn-outline-secondary empEditBtn" value="${emps[i].id}" "><i class="bi bi-pencil-square"></i></button>
+                        </div>
+                     `;
                      if (emps[i].j_end_date) {
                         tdClass = 'badge bg-danger';
                         tdText = 'İşdən Ayrılıb'
+                        adminBtns = "";
                      } else {
                         tdClass = 'badge bg-success';
                         tdText = 'İşləyir';
@@ -377,19 +385,24 @@ const pageFuncs = () => {
                            <td>${emps[i].posName}</td>
                            <td>${emps[i].projName}</td>
                            <td><span class="${tdClass}">${tdText}</span></td>
-                           <td class="d-flex justify-content-between last-td btn-group" style="position: relative">
-                                <a class="btn btn-outline-danger btn-sm" href="/employee/delete/${emps[i].id}"><i class="bi bi-person-x"></i></a>
-                                <button class="btn btn-outline-danger btn-sm empRmBtn" value="${emps[i].id}"><i class="bi bi-dash-circle"></i></button>
-                                <button class="btn btn-outline-secondary btn-sm empEditBtn" value="${emps[i].id}" "><i class="bi bi-pencil-square"></i></button>
+                           <td>
+                              ${adminBtns}
                             </td>
                        </tr>
                    `
                   }
                } else if (role === "hr") {
                   for (let i = 0; i < emps.length; i++) {
+                     let hrBtns = `
+                        <div class="btn-group">
+                           <button class="btn btn-outline-danger btn-sm empRmBtn" value="${emps[i].id}"><i class="bi bi-dash-circle"></i></button>
+                           <button class="btn btn-outline-secondary btn-sm empEditBtn" value="${emps[i].id}" "><i class="bi bi-pencil-square"></i></button>
+                        </div>
+                     `
                      if (emps[i].j_end_date) {
                         tdClass = 'badge bg-danger';
-                        tdText = 'İşdən Ayrılıb'
+                        tdText = 'İşdən Ayrılıb';
+                        hrBtns = "";
                      } else {
                         tdClass = 'badge bg-success';
                         tdText = 'İşləyir';
@@ -405,8 +418,7 @@ const pageFuncs = () => {
                            <td>${emps[i].projName}</td>
                            <td><span class="${tdClass}">${tdText}</span></td>
                            <td class="d-flex justify-content-between last-td btn-group" style="position: relative">
-                                <button class="btn btn-outline-danger btn-sm empRmBtn" value="${emps[i].id}"><i class="bi bi-dash-circle"></i></button>
-                                <button class="btn btn-outline-secondary btn-sm empEditBtn" value="${emps[i].id}" "><i class="bi bi-pencil-square"></i></button>
+                                ${hrBtns}
                             </td>
                        </tr>
                    `
@@ -450,9 +462,17 @@ const renderPage = () => {
 
       if(role === "super_admin") {
          for (let i = 0; i < result.length; i++) {
+            let adminBtns = `
+               <div class="btn-group" role="group" aria-label="First group">
+                  <a type="button" class="btn btn-outline-danger" href="/employee/delete/${result[i].id}"><i class="bi bi-person-x"></i></a>
+                  <button type="button" class="btn btn-outline-danger empRmBtn" value="${result[i].id}"><i class="bi bi-dash-circle"></i></button>
+                  <button type="button" class="btn btn-outline-secondary empEditBtn" value="${result[i].id}" "><i class="bi bi-pencil-square"></i></button>
+               </div>
+            `
             if (result[i].j_end_date) {
                tdClass = 'badge bg-danger';
-               tdText = 'İşdən Ayrılıb'
+               tdText = 'İşdən Ayrılıb';
+               adminBtns = "";
             } else {
                tdClass = 'badge bg-success';
                tdText = 'İşləyir';
@@ -467,11 +487,7 @@ const renderPage = () => {
              <td>${result[i].projName}</td>
              <td class="d-none d-xl-table-cell"><span class="${tdClass}">${tdText}</span></td>
              <td class="d-flex justify-content-between last-td d-none d-xl-table-cell" style="position: relative">
-                  <div class="btn-group" role="group" aria-label="First group">
-                     <a type="button" class="btn btn-outline-danger" href="/employee/delete/${result[i].id}"><i class="bi bi-person-x"></i></a>
-                     <button type="button" class="btn btn-outline-danger empRmBtn" value="${result[i].id}"><i class="bi bi-dash-circle"></i></button>
-                     <button type="button" class="btn btn-outline-secondary empEditBtn" value="${result[i].id}" "><i class="bi bi-pencil-square"></i></button>
-                  </div>
+                  ${adminBtns}
              </td>
          </tr>
       `
@@ -483,7 +499,7 @@ const renderPage = () => {
          } else {
             for (let i = 1; i <= count; i++) {
                if (i === 1) {
-                  pgHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm active" value="${i}">${i}</button>`
+                  pgHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
                   if(count > 21) {
                      pgHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
                   }
@@ -510,6 +526,7 @@ const renderPage = () => {
                   
                }
             }
+            pagination.classList.remove('d-none');
             pgContainer.innerHTML = pgHtml;
          }
          setTimeout(() => {
@@ -517,11 +534,19 @@ const renderPage = () => {
          }, 200);
          empRemModule();
          empEditModule();
+         pageFuncs();
       } else if (role === "hr") {
          for (let i = 0; i < result.length; i++) {
+            let hrBtns = `
+               <div class="btn-group">
+                  <button class="btn btn-outline-danger btn-sm empRmBtn" value="${result[i].id}"><i class="bi bi-dash-circle"></i></button>
+                  <button class="btn btn-outline-secondary btn-sm empEditBtn" value="${result[i].id}" "><i class="bi bi-pencil-square"></i></button>
+               </div>
+            `
             if (result[i].j_end_date) {
                tdClass = 'text-danger';
                tdText = 'İşdən Ayrılıb'
+               hrBtns = "";
             } else {
                tdClass = 'text-success';
                tdText = 'İşləyir';
@@ -538,8 +563,7 @@ const renderPage = () => {
              <td>${result[i].projName}</td>
               <td><span class="${tdClass}">${tdText}</span></td>
              <td class="d-flex justify-content-between last-td btn-group" style="position: relative">
-                 <button class="btn btn-outline-danger btn-sm empRmBtn" value="${result[i].id}"><i class="bi bi-dash-circle"></i></button>
-                 <button class="btn btn-outline-secondary btn-sm empEditBtn" value="${result[i].id}" "><i class="bi bi-pencil-square"></i></button>
+                 ${hrBtns}
              </td>
          </tr>
       `
@@ -547,7 +571,7 @@ const renderPage = () => {
          tbody.innerHTML = html;
          for (let i = 1; i <= count; i++) {
             if (i === 1) {
-               pgHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm active" value="${i}">${i}</button>`
+               pgHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
                if(count > 21) {
                   pgHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
                }
@@ -579,6 +603,7 @@ const renderPage = () => {
          }, 200);
          empRemModule();
          empEditModule();
+         pageFuncs();
       }
    });
    empEditCancelBtn.addEventListener("click", () => {
@@ -594,7 +619,6 @@ empEditApplyBtn.addEventListener("click", () => {
    $.post('http://localhost:3000/api/update-employee', {
       data
    }, (updateResult) => {
-      console.log(updateResult);
       empEditModal.classList.add('d-none');
       loading.classList.remove('d-none');
       setTimeout(() => {

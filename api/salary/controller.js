@@ -1,4 +1,4 @@
-const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB, search, searchSalaryByMonts, getSalariesForExport } = require("./service");
+const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB, search, searchSalaryByMonts, getSalariesForExport, getSalaryByID, updateSalary } = require("./service");
 const jsDateF = new Date();
 const month = jsDateF.getMonth();
 const year = jsDateF.getFullYear();
@@ -298,6 +298,66 @@ module.exports = {
             return res.status(404).json({
                 success: false,
                 message: "An unkown error has been occurred"
+            });
+        }
+    },
+    getSalaryByID: async (req, res) => {
+        try {
+            const id = parseInt(req.params.id);
+            const salary = await getSalaryByID(id);
+            
+            if (salary.length < 1) {
+                return res.status(404).send({
+                    success: false,
+                    message: "This salary could not found"
+                });
+            }
+
+            return res.status(200).send({
+                success: true,
+                salary
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    updateSalary: (req, res) => {
+        try {
+            const data = {};
+            const id = req.params.id;
+            const body = req.body;
+            if (isNaN(parseInt(body.uPay)) || isNaN(parseInt(body.gross))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Missing requirements!"
+                });
+            }
+            data.id = id;
+            data.unofficial_pay = body.uPay;
+            data.gross = body.gross;
+            
+            updateSalary(data, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(400).send({
+                        success: false,
+                        message: "An unknown error has been occurred. Please contact system admin"
+                    });
+                }
+                return res.status(201).send({
+                    success: true,
+                    message: "Salary has been updated"
+                });
+            })
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
             });
         }
     }

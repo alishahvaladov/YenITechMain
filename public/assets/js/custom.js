@@ -161,7 +161,6 @@ setTimeout(() => {
 
 
 $.get('http://localhost:3000/api/profile/profile-picture', (res) => {
-   console.log(res);
    const filename = res.filename;
    dropdownUsername.innerHTML = res.username[0].username;
    avatars.forEach(item => {

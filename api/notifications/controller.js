@@ -1,4 +1,8 @@
-const { sendNotification, updateNotificationSeen, getLastFourNotification } = require('./service');
+const { sendNotification,
+    updateNotificationSeen,
+    getLastFourNotification,
+    getAllNotifications
+} = require('./service');
 
 module.exports = {
     sendNotification: async (req, res) => {
@@ -76,6 +80,44 @@ module.exports = {
             return res.status(200).send({
                 success: true,
                 result
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    getAllNotifications: async (req, res) => {
+        try {
+            const user_role = req.user.role;
+            let limit = req.query.limit;
+            let offset = req.query.offset;
+            
+            if (isNaN(parseInt(limit))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Limit cannot be a string"
+                });
+            } else {
+                limit = parseInt(limit);
+            }
+
+            if (isNaN(parseInt(offset))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Offset cannot be a string"
+                });
+            } else {
+                offset = parseInt(offset);
+            }
+
+            const result = await getAllNotifications(user_role, limit, offset);
+            return res.status(200).send({
+                success: true,
+                notifications: result.notifications,
+                count: result.count
             });
         } catch (err) {
             console.log(err);

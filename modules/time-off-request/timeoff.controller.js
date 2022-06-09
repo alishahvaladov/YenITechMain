@@ -57,22 +57,37 @@ module.exports = {
         });
     },
     addTimeOffNonUser: (req, res) => {
-        const data = req.body;
-        const timeOffType = data.timeoff_type;
-        if (parseInt(timeOffType) === 4) {
-            data.timeoff_start_date = null;
-            data.timeoff_end_date = null;
-        }
-        addTimeOffNonUser(data, (err, result) => {
-            if(err) {
-                console.log(err);
-                req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
-                return res.redirect("/timeoffrequests/add-toff-non-user");
+        try {
+            const data = req.body;
+            const timeOffType = data.timeoff_type;
+            if (parseInt(timeOffType) === 4) {
+                data.timeoff_start_date = null;
+                data.timeoff_end_date = null;
+            } else {
+                const timeOffStartDate = new Date(data.timeoff_start_date);
+                const timeOffEndDate = new Date(data.timeoff_end_date);
+                console.log(timeOffStartDate);
+                console.log(timeOffEndDate);
+                if (timeOffStartDate.getTime() > timeOffEndDate.getTime()) {
+                    req.flash("error_msg", "Please choose valid time off dates");
+                    return res.redirect("/timeoffrequests/add-toff-non-user");
+                };
             }
-            console.log(result);
-            req.flash("success_msg", "Time off request has been added");
-            return res.redirect("/timeoffrequests");
-        })
+            addTimeOffNonUser(data, (err, result) => {
+                if(err) {
+                    console.log(err);
+                    req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
+                    return res.redirect("/timeoffrequests/add-toff-non-user");
+                }
+                console.log(result);
+                req.flash("success_msg", "Time off request has been added");
+                return res.redirect("/timeoffrequests");
+            });
+        } catch (err) {
+            console.log(err);
+            req.flash("error_msg", "Ups... Something went wrong");
+            return res.redirect("/timeoffrequests/add-toff-non-user");
+        }
     },
     getTimeOffNonUser: async (req, res) => {
         errors = [];

@@ -55,5 +55,37 @@ module.exports = {
         });
 
         return result;
+    },
+    getAllNotifications: async (user_role, limit, offset) => {
+        const result = {};
+
+        result.notifications = await sequelize.query(`
+            SELECT description, header, id, importance, seen, url, createdAt FROM Notifications
+            WHERE belongs_to_role = :user_role
+            OR :user_role = 1
+            LIMIT :limit OFFSET :offset
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                user_role,
+                limit,
+                offset
+            }
+        });
+
+        result.count = await sequelize.query(`
+            SELECT COUNT(*) AS count FROM Notifications
+            WHERE belongs_to_role = :user_role
+            OR :user_role = 1
+        `, {
+            type: QueryTypes.SELECT,
+            logging: false,
+            replacements: {
+                user_role
+            }
+        });
+
+        return result;
     }
 }

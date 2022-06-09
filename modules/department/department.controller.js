@@ -117,23 +117,14 @@ module.exports = {
         });
     },
     getDepartment: (req, res) => {
-        const id = req.params.id;
-        getDepartment(id, (err, result) => {
-            if(err) {
-                req.flash("error_msg", "This department couldn't find please try again");
-                return res.redirect("/department");
-            }
-            if (req.user.role === 5) {
-                return res.render("department/update-department", {
-                    department: result.dataValues,
-                    hr: true
-                });
-            } else if (req.user.role === 1) {
-                return res.render("department/update-department", {
-                    department: result.dataValues,
-                    super_admin: true
-                });
-            }
-        });
+        if (req.user.role === 5) {
+            return res.render("department/update-department", {
+                hr: true
+            });
+        } else if (req.user.role === 1) {
+            return res.render("department/update-department", {
+                super_admin: true
+            });
+        }
     }
 }

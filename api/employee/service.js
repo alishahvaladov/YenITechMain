@@ -259,7 +259,6 @@ module.exports = {
         });
     },
     updateEmployee: (data, shiftData, cb) => {
-        console.log(data);
         Employee.update(data, {
             where: {
                 id: data.id

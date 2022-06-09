@@ -16,15 +16,48 @@ module.exports = {
     getFineData: async (req, res, next) => {
         const role = req.user.role;
         try {
-            const fineData = await getFineData(role);
-            const result = {};
-            result.result = fineData;
+            let limit = req.query.limit;
+            let offset = req.query.offset;
+
+
+            if (isNaN(parseInt(limit))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Limit must be a number"
+                });
+            }
+
+            if (isNaN(parseInt(offset))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Offset must be a number"
+                });
+            }
+
+            if (limit === "" || !limit) {
+                limit = 15;
+            } else {
+                limit = parseInt(limit);
+            }
+
+            if (offset === "" || !offset || parseInt(offset) === 0) {
+                offset = 0;
+            } else {
+                offset = parseInt(limit) * (parseInt(offset) - 1);
+            }
+
+
+            const result = await getFineData(role, limit, offset);
             if (req.user.role === 2) {
                 result.role = "admin";
             } else {
                 result.role = "hr";
             }
-            return res.send(result);
+            return res.status(200).send({
+                success: true,
+                fineData: result.fineData,
+                fineCount: result.fineCount
+            });
         } catch (err) {
             req.flash("error_msg", "An unknown error has been occurred");
         }
@@ -126,11 +159,6 @@ module.exports = {
         const fineData = await getFineDataByID(id);
         const fineMinute = fineData[0].fine_minute;
         let minuteTotal = parseInt(fineData[0].minute_total);
-        if(minuteTotal - 30 < 0) {
-            minuteTotal = 0
-        } else {
-            minuteTotal -= 30;
-        }
         data.id = id;
         data.fine_minute = minuteTotal + parseInt(fineMinute);
         approveFine(data, (err, result) => {

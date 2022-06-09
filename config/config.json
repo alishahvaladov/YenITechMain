@@ -9,7 +9,8 @@
         "7": "Audit",
         "8": "Management",
         "9": "User",
-        "10": "Department Director"
+        "10": "Department Director",
+        "11": "Project Manager"
     },
     "tax": {
         "dsmf": 10,

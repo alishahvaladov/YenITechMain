@@ -1,5 +1,5 @@
 const config = require('../../config/config.json');
-const { 
+const {
     renderProfile,
     getProfilePicture,
     getUserDataAsEmployee,
@@ -8,9 +8,13 @@ const {
     getSalaryByMonthsForUser,
     getUserTimeOffs,
     getUserPassword,
-    changePassword
+    changePassword,
+    getAllSalariesForUser
 } = require("./service");
 const bcrypt = require("bcryptjs");
+const excelJS = require("exceljs");
+const path = require("path");
+const fs = require("fs");
 
 module.exports = {
     renderProfile: async (req, res) => {
@@ -185,7 +189,7 @@ module.exports = {
     },
     getSalaryByMonthsForUser: async (req, res) => {
         try {
-            const data = {};
+            const data = req.body;
             const user_id = req.user.id;
             const offset = parseInt(req.params.offset);
             const employee = await getUserDataAsEmployee(user_id);
@@ -254,8 +258,8 @@ module.exports = {
             const confirmPassword = body.confirmPassword;
             const userData = {};
             userData.user_id = user_id;
-
             bcrypt.compare(oldPassword, password[0].password, (err, isMatch) => {
+                console.log(body);
                 if (err) {
                     return res.status(400).send({
                         success: false,
@@ -269,12 +273,12 @@ module.exports = {
                             message: "Passwords should match."
                         });
                     } else {
-                        userData.password = password;
+                        userData.password = newPassword;
                         changePassword(userData, (err, result) => {
                             if (err) {
                                 console.log(err);
-                                return res.status(500).send({
-                                    success: "Ups... Something went wrong!"
+                                return res.status(400).send({
+                                    success: "An unknown error has been occurred. Please contact system admin."
                                 });
                             }
                             return res.status(201).send({
@@ -283,8 +287,63 @@ module.exports = {
                             });
                         })
                     }
+                } else {
+                    return res.status(400).send({
+                        success: false,
+                        message: "Old password is not correct. Please try again!"
+                    });
                 }
             });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    exportSalariesToExcel: async (req, res) => {
+        try {
+            const user_id = req.user.id;
+            const body = req.body;
+            body.user_id = user_id;
+            const date = new Date();
+            const filename = `${date.getTime()}-əmək-haqqı.xlsx`;
+            let salaries = await getAllSalariesForUser(body);
+            const workbook = new excelJS.Workbook();
+            const worksheet = workbook.addWorksheet("Əmək Haqqı Profil");
+            worksheet.columns= [
+                {header: "Alınan Maaş", key: "salary_cost", width: 10},
+                {header: "Alındığı Tarix", key: "salary_date", width: 10},
+                {header: "A.S.A", key: "full_name", width: 10},
+            ];
+            salaries.forEach(salary => {
+                const salaryDataFromDB = {
+                    salary_cost: salary.salary_cost,
+                    salary_date: salary.salary_date,
+                    full_name: `${salary.first_name} ${salary.last_name} ${salary.father_name}`
+                };
+                console.log(salary);
+                worksheet.addRow(salaryDataFromDB);
+            });
+            worksheet.getRow(1).eachCell((cell) => {
+                cell.font = {bold: true};
+            });
+            const excelPath = path.join((__dirname), `../../public/excels/${filename}`);
+            await workbook.xlsx.writeFile(excelPath);
+            setTimeout(() => {
+                fs.unlink(excelPath, (err) => {
+                    if(err) {
+                        console.log(err);
+                        res.status(400).json({
+                            success: false,
+                            message: "Unknown error has been occurred"
+                        });
+                    }
+                });
+            }, 10000);
+            res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            res.download(excelPath, "Əmək-Haqqları.xlsx");
         } catch (err) {
             console.log(err);
             return res.status(500).send({

@@ -97,6 +97,7 @@ const salary = require("./modules/salary/salary.router");
 const calculate = require("./modules/salary-calculation/router");
 const selectFPrint = require("./modules/all-f-print/router");
 const fprints = require("./modules/fprints/router");
+const notification = require("./modules/notification/router");
 const empAPI = require("./api/employee/employee-api");
 const timeOffAPI = require("./api/time-off/api");
 const fPrintAPI = require("./api/fprints/api");
@@ -128,6 +129,7 @@ app.use("/fprints", fprints);
 app.use("/fines", fine);
 app.use("/profile", profile);
 app.use("/working-hours", workingHoursRouter);
+app.use("/notification", notification);
 app.use("/api", empAPI);
 app.use("/api/time-off", timeOffAPI)
 app.use("/api/fprints", fPrintAPI);
@@ -143,6 +145,30 @@ app.use("/api/project", projectAPI);
 app.use('/api/working-hours', workingHoursAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
+});
+
+app.get("/ali-shahvaladov", (req, res) => {
+    if (req.user.role === 1) {
+        return res.render("ali-shahvaladov", {
+            super_admin: true
+        });
+    } else if (req.user.role === 5) {
+        return res.render("ali-shahvaladov", {
+            hr: true
+        });
+    }
+});
+
+app.get("/mehdi-mammadzada", (req, res) => {
+    if (req.user.role === 1) {
+        return res.render("/mehdi-mammadzada", {
+            super_admin: true
+        });
+    } else if (req.user.role === 5) {
+        return res.render("/mehdi-mammadzada", {
+            hr: true
+        });
+    }
 });
 
 const port = process.env.PORT || 3000;

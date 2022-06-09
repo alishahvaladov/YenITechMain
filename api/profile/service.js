@@ -86,6 +86,8 @@ module.exports = {
     },
     getSalaryByMonthsForUser: async (data) => {
         const result = {};
+        const replacements = {};
+
         let query = `
             SELECT * FROM SalaryByMonths
             WHERE emp_id = :emp_id
@@ -94,22 +96,49 @@ module.exports = {
             SELECT COUNT(*) as count FROM SalaryByMonths
             WHERE emp_id = :emp_id
         `;
+
+        if (data.qMin !== "" && data.qMin) {
+            query += `
+                AND salary_cost > :qMin
+            `;
+            countQuery += `
+                AND salary_cost > :qMin
+            `;
+            replacements.qMin = data.qMin;
+        }
+
+        if (data.qMax !== "" && data.qMax) {
+            query += `
+                AND salary_cost < :qMax
+            `;
+            countQuery += `
+                AND salary_cost < :qMax
+            `;
+            replacements.qMax = data.qMax;
+        }
+
+        if (data.qDate !== "" && data.qDate) {
+            query += `
+                AND salary_date = :qDate
+            `;
+            countQuery += `
+                AND salary_date = :qDate
+            `;
+            replacements.qDate = data.qDate;
+        }
+        replacements.emp_id = data.emp_id;
+        replacements.offset = data.offset;
         query += "LIMIT 15 OFFSET :offset";
 
         result.salaries = await sequelize.query(query, {
             type: QueryTypes.SELECT,
             logging: false,
-            replacements: {
-                emp_id: data.emp_id,
-                offset: data.offset
-            }
+            replacements
         });
 
         result.count = await sequelize.query(countQuery, {
             type: QueryTypes.SELECT,
-            replacements: {
-                emp_id: data.emp_id,
-            }
+            replacements
         });
 
         return result;
@@ -174,6 +203,43 @@ module.exports = {
             replacements: {
                 user_id
             }
+        });
+    },
+    getAllSalariesForUser: async (data) => {
+        const replacements = {};
+
+        let query = `
+            SELECT sal.*, emp.first_name, emp.last_name, emp.father_name FROM SalaryByMonths as sal
+            LEFT JOIN Employees AS emp ON emp.id = sal.emp_id
+            LEFT JOIN Users AS usr ON usr.emp_id = emp.id
+            WHERE usr.id = :user_id
+        `;
+
+        if (data.qMin !== "" && data.qMin) {
+            query += `
+                AND sal.salary_cost > :qMin
+            `;
+            replacements.qMin = data.qMin;
+        }
+
+        if (data.qMax !== "" && data.qMax) {
+            query += `
+                AND sal.salary_cost < :qMax
+            `;
+            replacements.qMax = data.qMax;
+        }
+
+        if (data.qDate !== "" && data.qDate) {
+            query += `
+                AND sal.salary_date = :qDate
+            `;
+            replacements.qDate = data.qDate;
+        }
+        replacements.user_id = data.user_id;
+        return await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
         });
     }
 }

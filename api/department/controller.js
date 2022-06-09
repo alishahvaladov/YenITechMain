@@ -1,4 +1,4 @@
-const { getProjectsForDepartments, addDepartment, addProjDeptRel, checkIfProjectExists, getDepartmentsByProject, getAllDepartments } = require("./service");
+const { getProjectsForDepartments, addDepartment, addProjDeptRel, checkIfProjectExists, getDepartmentsByProject, getAllDepartments, getDepartmentByID, updateDepartmentName, getProjDeptRel, deleteProjeDeptRel, insertProjDeptRel } = require("./service");
 const randomId = (count) => {
     const string = "abcdefghijklmnopqrstuvwxyz123456789";
     let generatedId = "";
@@ -121,6 +121,132 @@ module.exports = {
             return res.status(500).send({
                 success: false,
                 message: "Something went wrong",
+            });
+        }
+    },
+    getDepartmentByID: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const result = await getDepartmentByID(id);
+            result.projects.forEach(project => {
+                const generatedId = randomId(15);
+                project.generatedId = generatedId;
+            });
+            return res.status(200).send({
+                success: true,
+                name: result.departmentName,
+                projects: result.projects,
+                proj_dept: result.projectsForDepartment
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    updateDepartmentName: (req, res) => {
+        try {
+            const id = req.params.department_id;
+            const name = req.query.name;
+            const data = {};
+
+            if (name === "" || !name) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Department name should be added"
+                });
+            }
+
+            data.id = id;
+            data.name = name;
+
+            updateDepartmentName(data, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(400).send({
+                        success: false,
+                        message: "Some data missing."
+                    });
+                }
+
+                return res.status(201).send({
+                    success: true,
+                    message: "Deprtment has been updated"
+                });
+            })
+
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong"
+            });
+        }
+    },
+    updateProjDeptRel: async (req, res) => {
+        try {
+            const project_id = req.query.project_id;
+            const department_id = req.params.department_id;
+
+            const data = {};
+
+            if (project_id === "" || !project_id) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Project should be selected"
+                });
+            }
+
+            if (department_id === "" || !department_id) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Department should be selected"
+                });
+            }
+
+            data.project_id = project_id;
+            data.department_id = department_id;
+
+            const projDeptRel = await getProjDeptRel(data);
+            console.log(projDeptRel.length);
+
+            if (projDeptRel.length > 0) {
+                deleteProjeDeptRel(data, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        return res.status(400).send({
+                            success: false,
+                            message: "An unknown error has been occurred. Please contact system admin"
+                        });
+                    }
+                    console.log(result);
+                    return res.status(200).send({
+                        success: true,
+                        message: "Department has been deleted"
+                    });
+                });
+            } else {
+                insertProjDeptRel(data, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        return res.status(400).send({
+                            success: false,
+                            message: "An unknown error has been occurred. Please contact system admin."
+                        });
+                    }
+                    return res.status(200).send({
+                        success: true,
+                        message: "Department has been updated"
+                    });
+                });
+            }
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong"
             });
         }
     }

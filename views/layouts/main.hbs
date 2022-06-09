@@ -34,6 +34,12 @@
             <img src="/assets/img/atom.svg" style="width: 70px">
         </div>
     </div>
+    <div class="success-alert-notification d-none opacity-hide">
+        <div class="success-message">
+            <i class="align-middle me-2" data-feather="check-circle"></i>
+            <span id="successAlertMessage"></span>
+        </div>
+    </div>
 
     <div class="wrapper">
         <nav id="sidebar" class="sidebar js-sidebar">
@@ -42,7 +48,7 @@
                     <img src="/assets/img/a.png" alt="" style="filter: invert(1); height: 150px;">
                 </a>
 
-                <ul class="sidebar-nav">
+                <ul class="sidebar-nav" id="nav_accordion">
                     <li class="sidebar-header" style="padding-top: 0px !important;">
                         Pages
                     </li>
@@ -61,11 +67,38 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-item fprints">
-                        <a class="sidebar-link" href="/all-fprints">
+                    <li class="sidebar-item has-submenu">
+                        <a class="collapsed sidebar-link" href="#" data-bs-target="fPrintDropdown" aria-expanded="false">
                             <i class="align-middle fas fa-fingerprint"></i>
                             <span class="align-middle">Finger Prints</span>
+                            <i class="align-middle" data-feather="chevron-down"></i>
                         </a>
+                        <ul id="fPrintDropdown" class="submenu collapse" data-bs-parent="#nav_accordion">
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="/all-fprints">
+                                    <i class="align-middle" data-feather="disc"></i>
+                                    <span class="align-middle">Bütün</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="/fprints">
+                                    <i class="align-middle" data-feather="disc"></i>
+                                    <span class="align-middle">Aktiv</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="/nofprint">
+                                    <i class="align-middle" data-feather="disc"></i>
+                                    <span class="align-middle">İnaktiv</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="/fprints/inappropriate-fprints">
+                                    <i class="align-middle" data-feather="disc"></i>
+                                    <span class="align-middle">Uyğunsuzluqlar</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
 
                     <li class="sidebar-item fines">
@@ -96,11 +129,26 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-item users">
-                        <a class="sidebar-link" href="/users">
+                    <li class="sidebar-item has-submenu">
+                        <a class="collapsed sidebar-link" href="#" data-bs-target="userDropdown" aria-expanded="false">
                             <i class="align-middle fas fa-users"></i>
                             <span class="align-middle">Users</span>
+                            <i class="align-middle" data-feather="chevron-down"></i>
                         </a>
+                        <ul id="userDropdown" class="submenu collapse" data-bs-parent="#nav_accordion">
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="/users">
+                                    <i class="align-middle" data-feather="disc"></i>
+                                    <span class="align-middle">Bütün</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="/users/deleted-users">
+                                    <i class="align-middle" data-feather="disc"></i>
+                                    <span class="align-middle">Silinmiş istifadəçilər</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
 
                     <li class="sidebar-item time-offs">
@@ -121,6 +169,13 @@
                         <a class="sidebar-link" href="/working-hours">
                             <i class="align-middle" data-feather="clock"></i>
                             <span class="align-middle">Working Hours</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item dashboard">
+                        <a class="sidebar-link" href="/holidays">
+                            <i class="align-middle" data-feather="clock"></i>
+                            <span class="align-middle">Holidays</span>
                         </a>
                     </li>
 
@@ -271,8 +326,12 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <a class="dropdown-item" href="/profile">
-                                <i class="align-middle me-1" data-feather="user"></i>
+                                    <i class="align-middle me-1" data-feather="user"></i>
                                     Profile
+                                </a>
+                                <a class="dropdown-item" href="/profile/change-password">
+                                    <i class="align-middle me-1 bi bi-key"></i>
+                                    Change Password
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/profile/request-time-off">
@@ -339,7 +398,6 @@
 
         window.onload = () => {
             const path = window.location.pathname;
-            console.log(path);
             if (path.includes('/dashboard')) {
                 sideBarItems.forEach(item => {
                     item.classList.remove('active');
@@ -392,6 +450,33 @@
                 document.querySelector('.salaries').classList.add('active');
             }
         }
+        document.addEventListener("DOMContentLoaded", function(){
+            document.querySelectorAll('.sidebar .sidebar-link').forEach(function(element){
+                
+                element.addEventListener('click', function (e) {
+
+                let nextEl = element.nextElementSibling;
+                let parentEl  = element.parentElement
+
+                    if(nextEl) {
+                        e.preventDefault();
+                        let mycollapse = new bootstrap.Collapse(nextEl);
+                        
+                        if(nextEl.classList.contains('show')){
+                        mycollapse.hide();
+                        } else {
+                            mycollapse.show();
+                            // find other submenus with class=show
+                            var opened_submenu = parentEl.parentElement.querySelector('.submenu.show');
+                            // if it exists, then close all of them
+                            if(opened_submenu){
+                            new bootstrap.Collapse(opened_submenu);
+                            }
+                        }
+                    }
+                }); // addEventListener
+            }) // forEach
+        });
     </script>
 </body>
 
