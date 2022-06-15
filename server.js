@@ -113,6 +113,8 @@ const positionAPI = require("./api/position/api");
 const projectAPI = require("./api/projects/api");
 const workingHoursAPI = require('./api/working-hours/router');
 const workingHoursRouter = require('./modules/working-hours/router');
+const holidayRouter = require("./modules/holidays/router");
+const holidayAPI = require("./api/holidays/api");
 
 // Routers
 app.use("/", userRouter);
@@ -130,6 +132,7 @@ app.use("/fines", fine);
 app.use("/profile", profile);
 app.use("/working-hours", workingHoursRouter);
 app.use("/notification", notification);
+app.use("/holidays", holidayRouter);
 app.use("/api", empAPI);
 app.use("/api/time-off", timeOffAPI)
 app.use("/api/fprints", fPrintAPI);
@@ -143,6 +146,7 @@ app.use("/api/department", departmentAPI);
 app.use("/api/position", positionAPI);
 app.use("/api/project", projectAPI);
 app.use('/api/working-hours', workingHoursAPI);
+app.use('/api/holidays', holidayAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });

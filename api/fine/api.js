@@ -4,11 +4,11 @@ const router = express.Router();
 const { hr, admin, checkRoles, audit } = require("../../modules/auth/auth");
 
 router.get("/", hr, admin, checkRoles, getFineData);
-router.get("/approve-edited-fine", hr, approveEditedFine);
-router.get("/reset-fine", hr, resetFine);
-router.get("/approve-fine", hr, checkRoles, approveFine);
+router.get("/approve-edited-fine", hr, admin, checkRoles, approveEditedFine);
+router.get("/reset-fine", hr, admin, checkRoles, resetFine);
+router.get("/approve-fine", hr, admin, checkRoles, approveFine);
 router.get('/reset-approved-fine/:id', admin, checkRoles, resetApprovedFine);
-router.get('/cumilative/:id', hr, checkRoles, getFinedData);
-router.get('/forgiven-fine/:offset', audit, checkRoles, getAllForgivenData);
+router.get('/cumilative/:id', hr, admin, checkRoles, getFinedData);
+router.get('/forgiven-fine/:offset', audit, admin, checkRoles, getAllForgivenData);
  
 module.exports = router;

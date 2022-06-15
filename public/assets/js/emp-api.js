@@ -395,8 +395,8 @@ const pageFuncs = () => {
                   for (let i = 0; i < emps.length; i++) {
                      let hrBtns = `
                         <div class="btn-group">
-                           <button class="btn btn-outline-danger btn-sm empRmBtn" value="${emps[i].id}"><i class="bi bi-dash-circle"></i></button>
-                           <button class="btn btn-outline-secondary btn-sm empEditBtn" value="${emps[i].id}" "><i class="bi bi-pencil-square"></i></button>
+                           <button class="btn btn-outline-danger empRmBtn" value="${emps[i].id}"><i class="bi bi-dash-circle"></i></button>
+                           <button class="btn btn-outline-secondary empEditBtn" value="${emps[i].id}" "><i class="bi bi-pencil-square"></i></button>
                         </div>
                      `
                      if (emps[i].j_end_date) {
@@ -417,7 +417,7 @@ const pageFuncs = () => {
                            <td>${emps[i].posName}</td>
                            <td>${emps[i].projName}</td>
                            <td><span class="${tdClass}">${tdText}</span></td>
-                           <td class="d-flex justify-content-between last-td btn-group" style="position: relative">
+                           <td class="d-flex justify-content-between last-td" style="position: relative">
                                 ${hrBtns}
                             </td>
                        </tr>
@@ -539,8 +539,8 @@ const renderPage = () => {
          for (let i = 0; i < result.length; i++) {
             let hrBtns = `
                <div class="btn-group">
-                  <button class="btn btn-outline-danger btn-sm empRmBtn" value="${result[i].id}"><i class="bi bi-dash-circle"></i></button>
-                  <button class="btn btn-outline-secondary btn-sm empEditBtn" value="${result[i].id}" "><i class="bi bi-pencil-square"></i></button>
+                  <button class="btn btn-outline-danger empRmBtn" value="${result[i].id}"><i class="bi bi-dash-circle"></i></button>
+                  <button class="btn btn-outline-secondary empEditBtn" value="${result[i].id}" "><i class="bi bi-pencil-square"></i></button>
                </div>
             `
             if (result[i].j_end_date) {
@@ -562,7 +562,7 @@ const renderPage = () => {
              <td>${result[i].posName}</td>
              <td>${result[i].projName}</td>
               <td><span class="${tdClass}">${tdText}</span></td>
-             <td class="d-flex justify-content-between last-td btn-group" style="position: relative">
+             <td>
                  ${hrBtns}
              </td>
          </tr>

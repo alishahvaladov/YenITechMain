@@ -335,7 +335,7 @@ module.exports = {
             }
             result.empRes[0].uplaoded_files = {};
             uploadedFiles = JSON.parse(uploadedFiles);
-            if (uploadedFiles) {
+            if (uploadedFiles.recruitment) {
                 uploadedFiles = JSON.parse(uploadedFiles.recruitment);
                 result.empRes[0].filename = uploadedFiles.profilePicture[0].filename;
             }

@@ -1,0 +1,70 @@
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            Bayram Günləri
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <div class="mb-3">
+                    <label class="form-label">Bayaram Günü</label>
+                    <select class="form-select" id="holidaySelect" type="text">
+                        <option value="" hidden>Bayram Gününü Seçin</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label">Başlanğıc Tarixini Seçin</label>
+                            <input class="form-control" id="holidayStartDate" type="date">
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label">Bitiş Tarixini Seçin</label>
+                            <input class="form-control" id="holidayEndDate" type="date">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="btn-group mt-3 float-end">
+                    <button class="btn btn-primary" id="submitBtn">Əlavə Et</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            Tabel
+        </h5>
+    </div>
+    <table class="table table-hover my-0" style="margin: 0 !important;">
+        <thead>
+            <tr>
+                <th>Bayram günü</th>
+                <th>Bayram Tarixləri</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Waiting</td>
+                <td>Waiting</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="pagination d-flex justify-content-center">
+        <div class="pagination-container w-50 d-flex justify-content-between">
+            <button class="pagination-item btn btn-outline-dark btn-sm pagination-active disabled">1</button>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/holidays.js"></script>

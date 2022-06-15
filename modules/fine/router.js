@@ -5,7 +5,7 @@ const { hr, admin, checkRoles, audit } = require("../auth/auth")
 
 router.get("/", hr, admin, checkRoles, renderFinePage);
 router.get("/fine-calculation", calculateFine);
-router.get('/cumilative/:id', hr, checkRoles, renderCumilativeFPrints);
+router.get('/cumilative/:id', hr, admin, checkRoles, renderCumilativeFPrints);
 router.get('/forgiven-fine', audit, checkRoles, (req, res) => {
     res.render('fine/forgiven-fine', {
         audit: true

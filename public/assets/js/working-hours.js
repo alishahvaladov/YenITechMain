@@ -11,6 +11,7 @@ const hideLoading = () => {
 const renderPage = () => {
     $.get('http://localhost:3000/api/working-hours', (res) => {
         const types = res.types;
+        const workDateWeekly = res.workDateWeekly;
         let html = "";
         types.forEach(type => {
             let inpIDShiftStart = "";
@@ -47,6 +48,39 @@ const renderPage = () => {
                 </div>
             `;
         });
+        html += `
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Həftəlik İş Günləri</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+        `;
+
+        for (const [key, value] of Object.entries(workDateWeekly)) {
+            if (value) {
+                html += `
+                    <div class="col-12 col-lg-6">
+                        <input type="radio" class="form-check-input" id="weekDates" value="${key}" name="weekDates" checked="checked">
+                        <label class="form-check-label" for="">${key}</label>
+                    </div>
+                `
+            } else {
+                html += `
+                    <div class="col-12 col-lg-6">
+                        <input type="radio" class="form-check-input" id="weekDates" value="${key}" name="weekDates">
+                        <label class="form-check-label" for="">${key}</label>
+                    </div>
+                `
+            }
+        }
+
+        html += `
+                    </div>
+                </div>
+            </div>
+        `
         workingHoursRow.innerHTML = html;
         hideLoading();
         flatpickr("input[type='time']", {
@@ -54,6 +88,23 @@ const renderPage = () => {
             noCalendar: true,
             dateFormat: 'H:i',
             time_24hr: true
+        });
+        const weekDates = document.getElementsByName("weekDates");
+        weekDates.forEach(item => {
+            item.addEventListener("change", () => {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:3000/api/working-hours/update/work-dates",
+                    data: {
+                        workDate: item.value
+                    },
+                    success: ((res) => {
+                        console.log(res);
+                    })
+                }).catch((err) => {
+                    console.log(err);
+                });
+            });
         });
     });
 }

@@ -49,5 +49,9 @@
         "2": {
             "name": "Xüsusi"
         }
+    },
+    "work_date_in_week": {
+        "5 Gün": false,
+        "6 Gün": true
     }
 }

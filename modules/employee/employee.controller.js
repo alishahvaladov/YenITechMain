@@ -831,5 +831,30 @@ module.exports = {
             req.flash("error_msg", "Error occurred while rendering page. Please contact system admin");
             return res.redirect('/dashboard');
         }
+    },
+    renderSingleEmployeePage: (req, res) => {
+        try {
+            if (req.user.role === 1) {
+                return res.render("employee/employee-single", {
+                    super_admin: true
+                });
+            } else if (req.user.role === 5) {
+                return res.render("employee/employee-single", {
+                    hr: true
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            req.flash("error_msg", "Ups... Something went wrong1");
+            if (req.user.role === 1) {
+                return res.render("employee/employee-single", {
+                    super_admin: true
+                });
+            } else if (req.user.role === 5) {
+                return res.render("employee/employee-single", {
+                    hr: true
+                });
+            }
+        }
     }
 }

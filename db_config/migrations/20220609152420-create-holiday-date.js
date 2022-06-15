@@ -1,15 +1,19 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Holidays', {
+    await queryInterface.createTable('HolidayDates', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING,
+      holiday_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      holiday_date: {
+        type: Sequelize.DATEONLY,
         allowNull: false
       },
       createdAt: {
@@ -23,6 +27,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Holidays');
+    await queryInterface.dropTable('HolidayDates');
   }
 };

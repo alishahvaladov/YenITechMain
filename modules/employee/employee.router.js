@@ -10,7 +10,8 @@ const {
     uploadFilePathToDB,
     renderEmpDirAddPage,
     exportEmployeesToExcel,
-    renderDeletedEmployees
+    renderDeletedEmployees,
+    renderSingleEmployeePage
 } = require("./employee.controller");
 const upload = require("./uplod-file-middleware");
 const addEmpUpload = require("./emp-upload-middleware");
@@ -45,5 +46,6 @@ router.post("/emp-files/:id", hr, checkUploadPath, addEmpUpload.fields([
     {name: "profilePicture"}
 ]), uploadFilePathToDB);
 router.get("/deleted-employees", hr, audit, checkRoles, renderDeletedEmployees);
+router.get("/single/:id", hr, audit, checkRoles, renderSingleEmployeePage);
 
 module.exports = router;
