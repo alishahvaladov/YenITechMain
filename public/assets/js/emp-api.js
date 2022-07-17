@@ -360,6 +360,13 @@ const pageFuncs = () => {
                let role = res.role;
                if(role === "super_admin") {
                   for (let i = 0; i < emps.length; i++) {
+                     const email = emps[i].email;
+                     let emailTD = "";
+                     if (!email) {
+                        emailTD = "Yoxdur";
+                     } else {
+                        emailTD = email;
+                     }
                      let adminBtns = `
                         <div class="btn-group">
                            <a class="btn btn-outline-danger" href="/employee/delete/${emps[i].id}"><i class="bi bi-person-x"></i></a>
@@ -380,6 +387,7 @@ const pageFuncs = () => {
                        <tr>
                            <td></td>
                            <td>${emps[i].first_name + " " + emps[i].last_name + " " + emps[i].father_name}</td>
+                           <td>${emailTD}</td>
                            <td>${emps[i].phone_number}</td>
                            <td>${emps[i].deptName}</td>
                            <td>${emps[i].posName}</td>
@@ -393,6 +401,13 @@ const pageFuncs = () => {
                   }
                } else if (role === "hr") {
                   for (let i = 0; i < emps.length; i++) {
+                     const email = emps[i].email;
+                     let emailTD = "";
+                     if (!email) {
+                        emailTD = "Yoxdur";
+                     } else {
+                        emailTD = email;
+                     }
                      let hrBtns = `
                         <div class="btn-group">
                            <button class="btn btn-outline-danger empRmBtn" value="${emps[i].id}"><i class="bi bi-dash-circle"></i></button>
@@ -412,6 +427,7 @@ const pageFuncs = () => {
                        <tr>
                            <td></td>
                            <td>${emps[i].first_name + " " + emps[i].last_name + " " + emps[i].father_name}</td>
+                           <td>${emailTD}</td>
                            <td>${emps[i].phone_number}</td>
                            <td>${emps[i].deptName}</td>
                            <td>${emps[i].posName}</td>
@@ -423,6 +439,39 @@ const pageFuncs = () => {
                        </tr>
                    `
                   }
+               } else {
+                  for (let i = 0; i < emps.length; i++) {
+                     let email = emps[i].email;
+                     let emailTD = "";
+                     if (!email) {
+                        emailTD = "Yoxdur"
+                     } else {
+                        emailTD = email;
+                     }
+                     if (emps[i].j_end_date) {
+                        tdClass = 'text-danger';
+                        tdText = 'İşdən Ayrılıb'
+                     } else {
+                        tdClass = 'text-success';
+                        tdText = 'İşləyir';
+                     }
+         
+         
+                     trs += `
+                        <tr>
+                           <td></td>
+                           <td>${emps[i].first_name + " " + emps[i].last_name + " " + emps[i].father_name}</td>
+                           <td>${emailTD}</td>
+                           <td>${emps[i].phone_number}</td>
+                           <td>${emps[i].deptName}</td>
+                           <td>${emps[i].posName}</td>
+                           <td>${emps[i].projName}</td>
+                           <td><span class="${tdClass}">${tdText}</span></td>
+                           <td><td>
+                        </tr>
+                     `
+                  }
+                  tbody.innerHTML = trs;
                }
                if(trs.length !== 0) {
                   tbody.html(trs);
@@ -450,6 +499,7 @@ const renderPage = () => {
       empStatusVal,
       limit: limitVal
    }, (res) => {
+      console.log(res);
       let tbody = document.querySelector('tbody');
       let result = res.result;
       let role = res.role;
@@ -462,6 +512,13 @@ const renderPage = () => {
 
       if(role === "super_admin") {
          for (let i = 0; i < result.length; i++) {
+            let email = result[i].email;
+            let emailTD = "";
+            if (!email) {
+               emailTD = "Yoxdur"
+            } else {
+               emailTD = email;
+            }
             let adminBtns = `
                <div class="btn-group" role="group" aria-label="First group">
                   <a type="button" class="btn btn-outline-danger" href="/employee/delete/${result[i].id}"><i class="bi bi-person-x"></i></a>
@@ -481,6 +538,7 @@ const renderPage = () => {
          <tr>
              <td></td>
              <td>${result[i].first_name + " " + result[i].last_name + " " + result[i].father_name}</td>
+             <td>${emailTD}</td>
              <td class="d-none d-xl-table-cell">${result[i].phone_number}</td>
              <td>${result[i].deptName}</td>
              <td class="d-none d-xl-table-cell">${result[i].posName}</td>
@@ -537,6 +595,13 @@ const renderPage = () => {
          pageFuncs();
       } else if (role === "hr") {
          for (let i = 0; i < result.length; i++) {
+            let email = result[i].email;
+            let emailTD = "";
+            if (!email) {
+               emailTD = "Yoxdur"
+            } else {
+               emailTD = email;
+            }
             let hrBtns = `
                <div class="btn-group">
                   <button class="btn btn-outline-danger empRmBtn" value="${result[i].id}"><i class="bi bi-dash-circle"></i></button>
@@ -557,6 +622,7 @@ const renderPage = () => {
          <tr>
              <td></td>
              <td>${result[i].first_name + " " + result[i].last_name + " " + result[i].father_name}</td>
+             <td>${emailTD}</td>
              <td>${result[i].phone_number}</td>
              <td>${result[i].deptName}</td>
              <td>${result[i].posName}</td>
@@ -603,6 +669,72 @@ const renderPage = () => {
          }, 200);
          empRemModule();
          empEditModule();
+         pageFuncs();
+      } else {
+         for (let i = 0; i < result.length; i++) {
+            let email = result[i].email;
+            let emailTD = "";
+            if (!email) {
+               emailTD = "Yoxdur"
+            } else {
+               emailTD = email;
+            }
+            if (result[i].j_end_date) {
+               tdClass = 'text-danger';
+               tdText = 'İşdən Ayrılıb'
+            } else {
+               tdClass = 'text-success';
+               tdText = 'İşləyir';
+            }
+
+
+            html += `
+               <tr>
+                  <td></td>
+                  <td>${result[i].first_name + " " + result[i].last_name + " " + result[i].father_name}</td>
+                  <td>${emailTD}</td>
+                  <td>${result[i].phone_number}</td>
+                  <td>${result[i].deptName}</td>
+                  <td>${result[i].posName}</td>
+                  <td>${result[i].projName}</td>
+                  <td><span class="${tdClass}">${tdText}</span></td>
+                  <td><td>
+               </tr>
+            `
+         }
+         tbody.innerHTML = html;
+         for (let i = 1; i <= count; i++) {
+            if (i === 1) {
+               pgHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
+               if(count > 21) {
+                  pgHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
+               }
+            } if (i > 21 && i < count) {
+               pgHtml += `
+                    <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                `
+            } else if (i !== 1 && i !== count) {
+               pgHtml += `
+                    <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                `
+            }
+            if (i === count) {
+               if (count > 21) {
+                  pgHtml += `
+                    <button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>
+                  `
+               }
+               if (count > 1) {
+                  pgHtml += `
+                     <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                  `
+               }
+            }
+         }
+         pgContainer.innerHTML = pgHtml;
+         setTimeout(() => {
+            loading.classList.add("d-none");
+         }, 200);
          pageFuncs();
       }
    });

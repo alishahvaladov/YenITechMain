@@ -1,4 +1,4 @@
-const { searchFPrint, renderForgottenFPrints, updateForgottenFPrints, getForgottenFPrintById, createFPrintForForgottenFPrint } = require("./service");
+const { searchFPrint, renderForgottenFPrints, updateForgottenFPrints, getForgottenFPrintById, createFPrintForForgottenFPrint, getFPrintsForDeptDirectors } = require("./service");
 const excelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
@@ -186,5 +186,30 @@ module.exports = {
         }, 10000);
         res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         res.download(excelPath, "Barmaq İzləri(All).xlsx");
+    },
+    getFPrintsForDeptDirectors: async (req, res) => {
+        try {
+            const body = req.body;
+            body.user_id = req.user.id;
+            const limit = parseInt(body.limit);
+            const offset = parseInt(body.offset);
+
+            body.limit = limit;
+            body.offset = offset * limit;
+
+            const result = await getFPrintsForDeptDirectors(body);
+
+            return res.status(200).send({
+                success: true,
+                fprints: result.fprints,
+                count: result.count
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
     }
 }

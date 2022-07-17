@@ -9,6 +9,7 @@ module.exports = {
         let holidayDateQuery = `
             SELECT hd.*, hl.name FROM HolidayDates AS hd
             LEFT JOIN Holidays AS hl ON hl.id = hd.holiday_id
+            ORDER BY createdAt DESC
             LIMIT 10 OFFSET :offset
         `;
         let holidayDateCountQuery = `
@@ -38,8 +39,8 @@ module.exports = {
 
         return result;
     },
-    addHolidayDate: (data, cb) => {
-        HolidayDate.create({
+    addHolidayDate: async (data, cb) => {
+        await HolidayDate.create({
             holiday_id: data.holiday_id,
             holiday_date: data.holiday_date
         }, {
@@ -48,6 +49,6 @@ module.exports = {
             cb(null, res);
         }).catch((err) => {
             cb(err);
-        })
+        });
     }
 }

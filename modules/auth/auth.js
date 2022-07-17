@@ -7,9 +7,10 @@ module.exports = {
             return res.redirect("/update-password");
         }
         if(req.isAuthenticated() && req.user.role === 1) {
+            req.roleAuthenticated = true;
             return next();
         }
-        return res.redirect("/not-found");
+        return next();
     },
     admin: (req, res, next) => {
             // req.roleAuthenticated = false;
@@ -34,7 +35,7 @@ module.exports = {
             req.roleAuthenticated = true;
             return next();
         }
-        return res.redirect("/not-found");
+        next();
     },
     audit: (req, res, next) => {
         // req.roleAuthenticated = false;
@@ -47,21 +48,21 @@ module.exports = {
             return next();
         }
         next();
-        // return res.redirect("/not-found");
     },
     deptDirector: (req, res, next) => {
         if(req.user.active_status === 0) {
             req.flash("error_msg", "Please update password");
             return res.redirect("/update-password");
         }
-        if(req.isAuthenticated() && req.user.role === 10 || req.isAuthenticated() && req.user.role === 1) {
+        if(req.isAuthenticated() && req.user.role === 9 || req.isAuthenticated() && req.user.role === 1) {
             req.roleAuthenticated = true;
             return next();
-        } 
-        return res.redirect("/not-found");
+        }
+        return next();
     },
     ensureActivated: (req, res, next) => {
         if(req.isAuthenticated() && req.user.active_status === 1) {
+            req.roleAuthenticated = true;
             return next();
         } else {
             req.flash("error_msg", "Please update password");
@@ -70,6 +71,7 @@ module.exports = {
     },
     ensureAuthenticated: (req, res, next) => {
         if(req.isAuthenticated()) {
+            req.roleAuthenticated = true;
             return next();
         }
         req.flash("error_msg", "Please Log In");
@@ -86,5 +88,15 @@ module.exports = {
             return next();
         }
         return res.redirect("/not-found");
+    },
+    checkRolesForAPI: (req, res, next) => {
+        if (req.isAuthenticated() && req.roleAuthenticated === true) {
+            return next();
+        }
+        console.log(req);
+        return res.status(403).send({
+            success: false,
+            message: "Forbidden URL!"
+        });
     }
 }

@@ -220,6 +220,158 @@ module.exports = {
         }).catch((err) => {
             cb(err);
         })
+    },
+    getFPrintsForDeptDirectors: async (data) => {
+        let query = `
+            SELECT fp.*, emp.first_name, emp.last_name, emp.father_name, pos.name AS posName, proj.name AS projName, dept.name as deptName FROM FPrints as fp
+            LEFT JOIN Employees AS emp ON emp.id = fp.emp_id
+            LEFT JOIN Positions AS pos ON pos.id = emp.position_id
+            LEFT JOIN Projects AS proj ON proj.id = emp.project_id
+            LEFT JOIN Departments AS dept on dept.id = emp.department
+            LEFT JOIN Users AS usr ON usr.emp_id = emp.id
+            WHERE emp.deletedAt IS NULL
+            AND emp.j_end_date IS NULL
+            AND emp.department = (
+                SELECT emp.department FROM Users AS usr
+                LEFT JOIN Employees AS emp ON emp.id = usr.emp_id
+                WHERE emp.deletedAt IS NULL
+                AND usr.id = :user_id
+            )
+            AND emp.project_id = (
+                SELECT emp.project_id FROM Users AS usr
+                LEFT JOIN Employees AS emp ON emp.id = usr.emp_id
+                WHERE emp.deletedAt IS NULL
+                AND usr.id = :user_id
+            )
+        `;
+        let countQuery = `
+            SELECT COUNT(*) AS count FROM FPrints as fp
+            LEFT JOIN Employees AS emp ON emp.id = fp.emp_id
+            LEFT JOIN Positions AS pos ON pos.id = emp.position_id
+            LEFT JOIN Projects AS proj ON proj.id = emp.project_id
+            LEFT JOIN Departments AS dept on dept.id = emp.department
+            LEFT JOIN Users AS usr ON usr.emp_id = emp.id
+            WHERE emp.deletedAt IS NULL
+            AND emp.j_end_date IS NULL
+            AND emp.department = (
+                SELECT emp.department FROM Users AS usr
+                LEFT JOIN Employees AS emp ON emp.id = usr.emp_id
+                WHERE emp.deletedAt IS NULL
+                AND usr.id = :user_id
+            )
+            AND emp.project_id = (
+                SELECT emp.project_id FROM Users AS usr
+                LEFT JOIN Employees AS emp ON emp.id = usr.emp_id
+                WHERE emp.deletedAt IS NULL
+                AND usr.id = :user_id
+            )
+        `;
+
+        const replacements = {};
+        replacements.user_id = data.user_id;
+
+        const result = {};
+
+        if (data.qEmployee !== "" && data.qEmployee) {
+            let splittedEmployee = data.qEmployee.split(" ");
+            if (splittedEmployee.length === 1) {
+                query += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee);
+                `;
+                countQuery += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee);
+                `;
+                replacements.qEmployee = `%${splittedEmployee[0]}%`;
+            }
+            if (splittedEmployee.length === 2) {
+                query += `
+                    AND ((emp.first_name like :qEmployee OR emp.last_name like :qEmployee1) OR (emp.first_name like :qEmployee OR emp.father_name like :qEmployee1) OR (emp.last_name like :qEmployee OR emp.father_name like :qEmployee1));
+                `;
+                countQuery += `
+                    AND ((emp.first_name like :qEmployee OR emp.last_name like :qEmployee1) OR (emp.first_name like :qEmployee OR emp.father_name like :qEmployee1) OR (emp.last_name like :qEmployee OR emp.father_name like :qEmployee1));
+                `;
+                replacements.qEmployee = `%${splittedEmployee[0]}%`;
+                replacements.qEmployee1 = `%${splittedEmployee[1]}%`;
+            }
+            if (splittedEmployee.length === 3) {
+                query += `
+                    AND (emp.fisrt_name like :qEmployee AND emp.last_name like :qEmployee1 AND emp.father_name like :qEmployee2)
+                `;
+                countQuery += `
+                    AND (emp.fisrt_name like :qEmployee AND emp.last_name like :qEmployee1 AND emp.father_name like :qEmployee2)
+                `;
+                replacements.qEmployee = `%${splittedEmployee[0]}%`;
+                replacements.qEmployee1 = `%${splittedEmployee[1]}%`;
+                replacements.qEmployee2 = `%${splittedEmployee[2]}%`;
+            }
+        }
+
+        if (data.qProject !== "" && data.qProject) {
+            query += `
+                AND proj.name like :qProject
+            `;
+            countQuery += `
+                AND proj.name like :qProject
+            `;
+            replacements.qProject = `%${data.qProject}%`;
+        }
+
+        if (data.qDepartment !== "" && data.qDepartment) {
+            query += `
+                AND dept.name like :qDepartment
+            `;
+            countQuery += `
+                AND dept.name like :qDepartment
+            `;
+            replacements.qDepartment = `%${data.qDepartment}%`;
+        }
+
+        if (data.qPosition !== "" && data.qPosition) {
+            query += `
+                AND pos.name like :qPosition
+            `;
+            countQuery += `
+                AND pos.name like :qPosition
+            `;
+            replacements.qPosition = `%${data.qPosition}%`;
+        }
+        if (data.qTime !== "" && data.qTime) {
+            query += `
+                AND fp.f_print_time like :qTime
+            `;
+            countQuery += `
+                AND fp.f_print_time like :qTime
+            `;
+            replacements.qTime = data.qTime;
+        }
+        if (data.qDate !== "" && data.qDate) {
+            query += `
+                AND fp.f_print_date like :qDate
+            `;
+            countQuery += `
+                AND fp.f_print_date like :qDate
+            `;
+            replacements.qDate = `%${data.qDate}%`;
+        }
+
+        query += `
+            LIMIT :limit OFFSET :offset
+        `;
+        replacements.limit = data.limit;
+        replacements.offset = data.offset;
+
+        result.fprints = await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
+        });
+        result.count = await sequelize.query(countQuery, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
+        });
+
+        return result;
     }
 }
 

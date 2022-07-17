@@ -53,11 +53,65 @@ module.exports = {
 
         return result;
     },
-    getEmpCount: async () => {
-      return await sequelize.query('SELECT COUNT(*) as empCount FROM Employees', {
-          logging: false,
-          type: QueryTypes.SELECT
-      });
+    getSSN: async (ssn) => {
+        return await sequelize.query(`
+            SELECT ssn FROM Employees
+            WHERE ssn = :ssn
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                ssn
+            }
+        });
+    },
+    getFIN: async (fin) => {
+        return await sequelize.query(`
+            SELECT fin FROM Employees
+            WHERE fin = :fin
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                fin
+            }
+        });
+    },
+    getLogixName: async (logixName) => {
+        return await sequelize.query(`
+            SELECT name FROM LogixDBs
+            WHERE name = :logixName
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                logixName
+            }
+        });
+    },
+    getLogixTabelNo: async (tabel_no) => {
+        return await sequelize.query(`
+            SELECT tabel_no FROM LogixDBs
+            WHERE tabel_no = :tabel_no
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                tabel_no
+            }
+        });
+    },
+    getPhoneNumber: async (phoneNumber) => {
+        return await sequelize.query(`
+            SELECT phone_number FROM Employees
+            WHERE phone_number = :phoneNumber
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                phoneNumber
+            }
+        });
     },
     empRenderPage: async (data) => {
         const empName = data.empInpNameVal;
@@ -66,12 +120,14 @@ module.exports = {
         const empPos = data.empPosVal;
         const empProj = data.empProjVal;
         const empStatus = data.empStatusVal;
+        const empMail = data.empMail;
 
         let query = `
-            SELECT emp.*, pos.name as posName, dept.name as deptName, proj.name as projName FROM Employees as emp
+            SELECT emp.*, pos.name as posName, dept.name as deptName, proj.name as projName, usr.email FROM Employees as emp
             LEFT JOIN Positions as pos ON emp.position_id = pos.id
             LEFT JOIN Departments as dept ON emp.department = dept.id
             LEFT JOIN Projects as proj ON emp.project_id = proj.id
+            LEFT JOIN Users AS usr ON usr.emp_id = emp.id
             WHERE emp.deletedAt IS NULL
         `
         let countQuery = `
@@ -79,6 +135,7 @@ module.exports = {
             LEFT JOIN Positions as pos ON emp.position_id = pos.id
             LEFT JOIN Departments as dept ON emp.department = dept.id
             LEFT JOIN Projects as proj ON emp.project_id = proj.id
+            LEFT JOIN Users AS usr ON usr.emp_id = emp.id
             WHERE emp.deletedAt IS NULL
         `
         let replacements = {};
@@ -143,6 +200,11 @@ module.exports = {
                 query += " AND emp.j_end_date IS NOT NULL";
                 countQuery += " AND emp.j_end_date IS NOT NULL";
             }
+        }
+        if(empMail !== '' && empMail) {
+            query += " AND usr.email like :email";
+            countQuery += " AND usr.email like :email";
+            replacements.email = empMail;
         }
         if (data.limit === "all") {
             query += `
@@ -399,5 +461,21 @@ module.exports = {
             replacements
         });
         return result;
+    },
+    addEmploye: (data, shiftData, cb) => {
+        Employee.create(data, {
+            logging: false
+        }).then((res) => {
+            shiftData.emp_id = res.id;
+            EmployeeShift.create(shiftData, {
+                logging: false
+            }).then((shiftRes) => {
+                return cb(null , res);
+            }).catch((err) => {
+                return cb(err);
+            });
+        }).catch((err) => {
+            cb(err);
+        });
     }
 }

@@ -1,10 +1,25 @@
-const { getDepartment, getPosition, getEmployee, empRenderPage, getEmpCount, empRenderByPage, updateEmployee, getUserName, getDeletedEmployees } = require("./service");
+const {
+    getDepartment,
+    getPosition,
+    getEmployee,
+    empRenderPage,
+    empRenderByPage,
+    updateEmployee,
+    getUserName,
+    getDeletedEmployees,
+    addEmploye,
+    getSSN,
+    getFIN,
+    getLogixName,
+    getLogixTabelNo,
+    getPhoneNumber
+} = require("./service");
 const { addNotification } = require("../../notification/service");
 const excelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
 const standardShiftTypes = require("../../config/config.json").shift_types[1].types;
-const validateEmployee = (data, cb) => {
+const validateEmployee = async (data, cb) => {
     const dbData = {};
     const validationError = {};
     let fName;
@@ -23,57 +38,60 @@ const validateEmployee = (data, cb) => {
         for (let i = 0; i < fName.length; i++) {
             if(!isNaN(parseInt(fName[i]))) {
                 console.log("First name cannot contain number");
-                fNameError.push = "First name cannot contain number";
-                validationError.fName = fNameError;
+                validationError.employeeName = "First name cannot contain number";
                 return cb(true, validationError);
             }
 
             if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(fName[i]) === false) {
                 console.log("First name cannot contain symbol");
-                fNameError.push("First name cannot contain symbol");
-                validationError.fName = fNameError;
+                validationError.employeeName = "First name cannot contain symbol";
                 return cb(true, validationError);
             }
         }
         dbData.first_name = fName;
+    } else {
+        validationError.employeeName = "Please fill first name";
+        return cb(true, validationError);
     }
     if (data.employeeLastName !== "" && data.employeeLastName !== undefined && data.employeeLastName !== null) {
         lName = data.employeeLastName;
         for (let i = 0; i < lName.length; i++) {
             if(!isNaN(parseInt(lName[i]))) {
                 console.log("First name cannot contain number");
-                lNameError.push = "First name cannot contain number";
-                validationError.lName = lNameError;
+                validationError.employeeLastName = "First name cannot contain number";
                 return cb(true, validationError);
             }
 
             if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(lName[i]) === false) {
                 console.log("First name cannot contain symbol");
-                lNameError.push("First name cannot contain symbol");
-                validationError.lName = lNameError;
+                validationError.lName = "First name cannot contain symbol";
                 return cb(true, validationError);
             }
         }
         dbData.last_name = lName;
+    } else {
+        validationError.employeeLastName = "Please fill last name";
+        return cb(true, validationError);
     }
     if (data.employeeFatherName !== "" && data.employeeFatherName !== undefined && data.employeeFatherName !== null) {
         fatherName = data.employeeFatherName;
         for (let i = 0; i < fatherName.length; i++) {
             if(!isNaN(parseInt(fatherName[i]))) {
                 console.log("First name cannot contain number");
-                fatherNameError.push = "First name cannot contain number";
-                validationError.fatherName = fatherNameError;
+                validationError.employeeFatherName = "First name cannot contain number";
                 return cb(true, validationError);
             }
 
             if((/[a-zA-ZşŞəƏüÜöÖğĞçÇıI]/).test(fatherName[i]) === false) {
                 console.log("First name cannot contain symbol");
-                lNameError.push("First name cannot contain symbol");
-                validationError.fatherName = fatherNameError;
+                validationError.employeeFatherName = "First name cannot contain symbol";
                 return cb(true, validationError);
             }
         }
         dbData.father_name = fatherName;
+    } else {
+        validationError.employeeFatherName = "Please fill father name";
+        return cb(true, validationError);
     }
     if (data.sex !== "" && data.sex !== undefined && data.sex !== null) {
         if (parseInt(data.sex) === 0 || parseInt(data.sex) === 1) {
@@ -82,9 +100,15 @@ const validateEmployee = (data, cb) => {
             validationError.sex = "Chosen gender is not allowed";
             return cb(true, validationError);
         }
+    } else {
+        validationError.sex = "Please choose gender";
+        return cb(true, validationError);
     }
     if (data.dob !== "" && data.dob !== undefined && data.dob !== null) {
         dbData.dob = data.dob;
+    } else {
+        validationError.dob = "Please choose date of birth";
+        return cb(true, validationError);
     }
     if (data.q_address !== "" && data.q_address !== undefined && data.q_address !== null) {
         if (data.q_address.length < 10) {
@@ -92,6 +116,9 @@ const validateEmployee = (data, cb) => {
             return cb(true, validationError);
         }
         dbData.q_address = data.q_address;
+    } else {
+        validationError.q_address = "Please fill q_address";
+        return cb(true, validationError);
     }
     if (data.y_address !== "" && data.y_address !== undefined && data.y_address !== null) {
         if (data.y_address !== "" && data.y_address !== undefined && data.y_address !== null) {
@@ -101,65 +128,85 @@ const validateEmployee = (data, cb) => {
             }
             dbData.y_address = data.y_address;
         }
+    } else {
+        dbData.y_address = data.q_address;
     }
     if (data.SSN !== "" && data.SSN !== undefined && data.SSN !== null) {
         let SSN = data.SSN;
         const seperatedSSN = SSN.split('');
         if(seperatedSSN.length !== 13) {
             console.log("SSN must be 13 numbers");
-            ssnError.push("SSN must be 13 numbers")
-            validationError.ssn = ssnError;
+            validationError.SSN = "SSN must be 13 numbers";
             return cb(true, validationError);
         }
         for (let i = 0; i < seperatedSSN.length; i++) {
             if((/[0-9]/).test(seperatedSSN[i]) === false) {
                 console.log("SSN cannot contain letter or symbol");
-                ssnError.push("SSN cannot contain letter or symbol")
-                validationError.ssn = ssnError;
+                validationError.SSN = "SSN cannot contain letter or symbol";
                 return cb(true, validationError);
             }
         }
+        const dbSSN = await getSSN(SSN);
+        if (dbSSN.length > 0) {
+            validationError.SSN = "Bu SSN bazada mövcuddur";
+            return cb(true, validationError);
+        }
         dbData.SSN = SSN;
+    } else {
+        validationError.SSN = "Please fill SSN";
+        return cb(true, validationError);
     }
     if (data.FIN !== "" && data.FIN !== undefined && data.FIN !== null) {
         const FIN = data.FIN;
         const finError = [];
         if(FIN.length !== 7) {
             console.log("FIN must be 7 length long");
-            finError.push("FIN must be 7 length long")
-            validationError.fin = finError;
+            validationError.FIN = "FIN must be 7 length long";
             return cb(true, validationError);
         }
         for (let i = 0; i < FIN.length; i++) {
             if((/[a-zA-Z0-9]/).test(FIN[i]) === false) {
                 console.log("FIN cannot contain symbol");
-                finError.push("FIN cannot contain symbol")
-                validationError.fin = finError;
+                validationError.FIN = "FIN cannot contain symbol";
                 return cb(true, validationError);
             }
         }
+        const dbFIN = await getFIN(FIN);
+        if (dbFIN.length > 0) {
+            validationError.FIN = "Bu FIN bazada mövcuddur";
+            return cb(true, validationError);
+        }
         dbData.FIN = FIN;
+    } else {
+        validationError.FIN = "Please fill FIN";
+        return cb(true, validationError);
     }
     if (data.phoneNumber !== "" && data.phoneNumber !== undefined && data.phoneNumber !== null) {
-        const phoneNumber = data.phoneNumber;
-        const phoneNumberError = [];
-        if(phoneNumber.length === 10 || phoneNumber.length === 12) {
-            const seperatedP = phoneNumber.replace(" ", "").split("");
+        let phoneNumber = data.phoneNumber.replaceAll(" ", "");
+        phoneNumber = phoneNumber.replaceAll("(", "");
+        phoneNumber = phoneNumber.replaceAll(")", "");
+        if(phoneNumber.length === 9) {
+            const seperatedP = phoneNumber.split("");
             for (let i = 0; i < seperatedP.length; i++) {
                 if(isNaN(parseInt(seperatedP[i]))) {
                     console.log("Phone number should be only numbers!");
-                    phoneNumberError.push("Phone number should be only numbers!");
-                    validationError.phoneNumber = phoneNumberError;
+                    validationError.phoneNumber = "Phone number should be only numbers!";
                     return cb(true, validationError);
                 }
             }
+            const phone_number = await getPhoneNumber(phoneNumber);
+            if (phone_number.length > 0) {
+                validationError.phoneNumber = "Bu nömrə artıq mövcuddur";
+                return cb(true, validationError);
+            }
         } else {
-            console.log("Phone number should be 10 or 12 characters!");
-            phoneNumberError.push("Phone number should be 10 or 12 characters!");
-            validationError.phoneNumber = phoneNumberError;
+            validationError.phoneNumber = "Phone number should be 9 characters!";
             return cb(true, validationError);
         }
         dbData.phone_number = phoneNumber.toString();
+    } else {
+        validationError.phoneNumber = "Please fill phone number";
+        return cb(true, validationError);
     }
     if (data.homeNumber !== "" && data.homeNumber !== undefined && data.homeNumber !== null) {
         const homeNumber = data.homeNumber;
@@ -170,33 +217,60 @@ const validateEmployee = (data, cb) => {
             for (let i = 0; i < seperatedH.length; i++) {
                 if(isNaN(parseInt(seperatedH[i]))) {
                     console.log("Home number should be only numbers!");
-                    homeNumberError.push("Home number should be only numbers!");
-                    validationError.homeNumber = homeNumberError;
+                    validationError.homeNumber = "Home number should be only numbers!";
                     return cb(true, validationError);
                 }
             }
         } else {
             console.log("Home number should be 10 or 12 characters!");
-            homeNumberError.push("Home number should be 10 or 12 characters!");
-            validationError.homeNumber = homeNumberError;
+            validationError.homeNumber = "Home number should be 10 or 12 characters!";
             return cb(true, validationError);
         }
         dbData.homeNumber = homeNumber;
     }
+
+    if (data.logix_name !== "" && data.logix_name) {
+        dbData.logix_name = data.logix_name;
+        const logixName = getLogixName(data.logix_name);
+        if (logixName.length > 0) {
+            validationError.logix_name = "Bu logix adı artıq mövcuddur";
+            return cb(true, validationError);
+        }
+    } else {
+        console.log("Please enter logix name");
+        validationError.logix_name = "Please enter logix name";
+        return cb(true, validationError);
+    }
+
+    if (data.tabel_no && data.tabel_no) {
+        dbData.tabel_no = data.tabel_no;
+        const tabel_no = await getLogixTabelNo(data.tabel_no);
+        if (tabel_no.length > 0) {
+            validationError.tabel_no = "Tabel nömrəsi artıq mövcuddur";
+            return cb(true, validationError);
+        }
+    } else {
+        console.log("Please enter tabel number");
+        validationError.tabel_no = "Please enter tabel number";
+        return cb(true, validationError);
+    }
+
+
     if(parseInt(selectedShiftType) === 1) {
         if(parseInt(shiftType) === 1 || parseInt(shiftType) === 2 || parseInt(shiftType) === 3) {
                 shiftData.shift_type = shiftType;
                 shiftData.shift_start = null;
                 shiftData.shift_end = null;
         } else {
-            validationError.shift = "Wrong shift type selected please try again";
+            validationError.shift_type = "Wrong shift type selected please try again";
             return cb(true, validationError);
         }
     } else if(parseInt(selectedShiftType) === 2) {
         const shiftStartT = data.shift_start_t;
         const shiftEndT = data.shift_end_t;
         if(shiftStartT === "" || shiftStartT === null || shiftEndT === "" || shiftEndT === null) {
-            validationError.shift = "Please fill shift times";
+            validationError.shift_start_t = "Please fill shift times";
+            validationError.shift_end_t = "Please fill shift times";
             return cb(true, validationError);
         }
 
@@ -204,7 +278,7 @@ const validateEmployee = (data, cb) => {
             const splittedShiftStart = data.shift_start_t.split(":");
             const splittedShiftEnd = data.shift_end_t.split(":");
             if (parseInt(splittedShiftStart[0]) - parseInt(splittedShiftEnd[0]) > 0) {
-                validationError.shift = "Shift start cannot be greater than shift end";
+                validationError.shift_start_t = "Shift start cannot be greater than shift end";
                 return cb(true, validationError);
             }
             shiftData.shift_type = null;
@@ -212,9 +286,13 @@ const validateEmployee = (data, cb) => {
             shiftData.shift_end = shiftEndT;
         } catch (err) {
             console.log(err);
-            validationError.shift = "Please choose correct shift time type.";
+            validationError.shift_start_t = "Please choose correct shift time type.";
+            validationError.shift_end_t = "Please choose correct shift time type.";
             return cb(true, validationError);
         }
+    } else {
+        validationError.select_shift_type = "Please select shift type";
+        return cb(true, validationError);
     }
 
     if (data.j_start_date !== "" && data.j_start_date !== undefined && data.j_start_date !== null) {
@@ -233,56 +311,50 @@ const validateEmployee = (data, cb) => {
             dbData.j_start_date = data.j_start_date;
         } catch (error) {
             console.log(error);
-            validationError.jStartDate = "Please choose correct job start date";
+            validationError.j_start_date = "Please choose correct job start date";
             return cb(true, validationError);
         }
+    } else {
+        validationError.j_start_date = "Please choose job start date";
+        return cb(true, validationError);
     }
     if (data.dayoff_days_total !== "" && data.dayoff_days_total !== undefined && data.dayoff_days_total !== null) {
         const dayOffDays = data.dayoff_days_total;
         if(isNaN(parseInt(dayOffDays))) {
             console.log("Please enter valid day off dates");
-            validationError.dayOffDays = "Please enter valid day off dates";
+            validationError.dayoff_days_total = "Please enter valid day off dates";
             return cb(true, validationError);
         }
         dbData.dayoff_days_total = dayOffDays;
+    } else {
+        validationError.dayoff_days_total = "Please choose day off dates";
+        return cb(true, validationError);
     }
 
     if (data.full_day !== "" && data.full_day !== undefined && data.full_day !== null) {
-        if (data.workingDays !== "" && data.workingDays !== undefined && data.workingDays !== null) {
-            const fDay = data.full_day;
-            const wDays = data.workingDays;
-            if(fDay === 'on') {
-                dbData.working_days = 77;
-            } else if (parseInt(wDays) > 26) {
-                validationError.wDay = "Working days cannot be greater than maximum working day limit";
-                return cb(true, validationError);
-            } else if(isNaN(parseInt(wDays))) {
-                validationError.wDay = "Please enter valid working days";
-                return cb(true, validationError);
+        const fDay = data.full_day;
+        if(fDay === 'on') {
+            dbData.working_days = 77;
+        } else {
+            if (data.workingDays !== "" && data.workingDays !== undefined && data.workingDays !== null) {
+                const wDays = data.workingDays;
+                if (parseInt(wDays) > 26) {
+                    validationError.workingDays = "Working days cannot be greater than maximum working day limit";
+                    return cb(true, validationError);
+                } else if(isNaN(parseInt(wDays))) {
+                    validationError.workingDays = "Please enter valid working days";
+                    return cb(true, validationError);
+                } else {
+                    dbData.working_days = parseInt(wDays);
+                }
             } else {
-                dbData.working_days = parseInt(wDays);
+                validationError.workingDays = "Please fill working days";
+                return cb(true, validationError);
             }
         }
     }
     
-    if (data.department !== "" && data.department !== undefined && data.department !== null) {
-        const department = data.department;
-        if(isNaN(parseInt(department))) {
-            console.log("Please enter valid department");
-            validationError.department = "Please enter valid department";
-            return cb(true, validationError);
-        }
-        dbData.department = department;
-    }
-    if (data.position !== "" && data.position !== undefined && data.position !== null) {
-        const position = data.position;
-        if(isNaN(parseInt(position))) {
-            console.log("Please enter valid position");
-            validationError.position = "Please enter valid position";
-            return cb(true, validationError);
-        }
-        dbData.poisiton_id = position;
-    }
+
     if (data.project !== "" && data.project !== undefined && data.project !== null) {
         const project = data.project;
         if(isNaN(parseInt(project))) {
@@ -291,7 +363,36 @@ const validateEmployee = (data, cb) => {
             return cb(true, validationError);
         }
         dbData.project_id = project;
+    } else {
+        validationError.project = "Please enter project";
+        return cb(true, validationError);
     }
+    if (data.department !== "" && data.department !== undefined && data.department !== null) {
+        const department = data.department;
+        if(isNaN(parseInt(department))) {
+            console.log("Please enter valid department");
+            validationError.department = "Please enter valid department";
+            return cb(true, validationError);
+        }
+        dbData.department = department;
+    } else {
+        validationError.department = "Please enter department";
+        return cb(true, validationError);
+    }
+    if (data.position !== "" && data.position !== undefined && data.position !== null) {
+        const position = data.position;
+        if(isNaN(parseInt(position))) {
+            console.log("Please enter valid position");
+            validationError.position = "Please enter valid position";
+            return cb(true, validationError);
+        }
+        dbData.position_id = position;
+    } else {
+        validationError.position = "Please enter position";
+        return cb(true, validationError);
+    }
+    
+    
 
     return cb(null, null, dbData, shiftData);
 }
@@ -335,7 +436,7 @@ module.exports = {
             }
             result.empRes[0].uplaoded_files = {};
             uploadedFiles = JSON.parse(uploadedFiles);
-            if (uploadedFiles.recruitment) {
+            if (uploadedFiles && uploadedFiles.reqruitment) {
                 uploadedFiles = JSON.parse(uploadedFiles.recruitment);
                 result.empRes[0].filename = uploadedFiles.profilePicture[0].filename;
             }
@@ -540,6 +641,42 @@ module.exports = {
             return res.status(500).send({
                 success: false,
                 message: "Ups... Something went wrong"
+            });
+        }
+    },
+    addEmployee: (req, res) => {
+        try {
+            const body = req.body;
+            validateEmployee(body, (err, message, empData, shiftData) => {
+                if (err) {
+                    console.log(empData);
+                    console.log(err);
+                    return res.status(400).send({
+                        success: false,
+                        message
+                    });
+                }
+                empData.user_id = req.user.id;
+                addEmploye(empData, shiftData, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        return res.status(400).send({
+                            success: false,
+                            message: "Missing data. Please try again."
+                        });
+                    }
+                    return res.status(200).send({
+                        success: true,
+                        message: "Employee has been added",
+                        emp_id: result.id
+                    });
+                });
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
             });
         }
     }

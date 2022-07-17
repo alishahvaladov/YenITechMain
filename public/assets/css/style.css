@@ -729,3 +729,38 @@ table thead input {
     border-radius: 5px;
     background: #090;
 }
+
+
+.error-label {
+    color: red !important;
+}
+.error-input {
+    outline: rgb(255, 0, 0);
+    border-color: rgb(255, 0, 0) !important;
+}
+
+.error-input:focus {
+    box-shadow: 0 0 0 0.2rem rgb(255 0 0 / 25%) !important;
+}
+
+.holiday-error-message,
+.holiday-success-message {
+    position: absolute;
+    top: 10%;
+    left: 25%;
+    width: 60%;
+}
+
+.holiday-error-message .bg-danger,
+.holiday-success-message .bg-success {
+    border-radius: 5px;
+}
+
+.required-lowast::after {
+    content: ' *';
+    color: red;
+}
+
+.i4ewOd-pzNkMb-haAclf {
+    display: none !important;
+}

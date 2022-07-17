@@ -4,15 +4,7 @@ const router = express.Router();
 const { super_admin } = require("../auth/auth");
 
 router.get("/add-position", super_admin, (req, res) => {
-    if(req.user.role === 5) {
-        res.render("position/add-position", {
-            hr: true
-        });
-    } else if (req.user.role === 1) {
-        res.render("position/add-position", {
-            super_admin: true
-        });
-    }
+    return res.render("position/add-position");
 });
 
 router.get("/", super_admin, getPositions);

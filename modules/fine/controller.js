@@ -201,29 +201,9 @@ module.exports = {
         return res.redirect("/fines");
     },
     renderFinePage: async (req, res) => {
-        if(req.user.role === 1) {
-            res.render("fine/fine", {
-                super_admin: true
-            });
-        } else if (req.user.role === 5) {
-            res.render("fine/fine", {
-                hr: true
-            });
-        }else if (req.user.role === 2) {
-            res.render("fine/fine", {
-                admin: true
-            });
-        }
+        return res.render("fine/fine");
     },
     renderCumilativeFPrints: async (req, res) => {
-        if(req.user.role === 1) {
-            return res.render('fine/cumilative-fprints', {
-                super_admin: true
-            });
-        } else if (req.user.role === 5) {
-            return res.render('fine/cumilative-fprints', {
-                hr: true
-            });
-        }
+        return res.render('fine/cumilative-fprints');
     }
 }

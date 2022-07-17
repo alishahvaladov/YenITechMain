@@ -1,6 +1,7 @@
 const notificationAlert = document.querySelector(".notification-alert");
 const indicator = document.querySelector(".indicator");
 const listGroup = document.querySelector(".list-group");
+const navAccordion = document.querySelector("#nav_accordion");
 
 $(".profile-container").click(() => {
    $(".dropdown-for-profile").fadeToggle(400);
@@ -165,5 +166,163 @@ $.get('http://localhost:3000/api/profile/profile-picture', (res) => {
    dropdownUsername.innerHTML = res.username[0].username;
    avatars.forEach(item => {
       item.src = filename;
-   })
+   });
 });
+
+$.ajax({
+   type: "GET",
+   url: "http://localhost:3000/api/navbar",
+   success: ((result) => {
+      const navs = result.result;
+      console.log(navs);
+      if (navs.length > 0) {
+         let navHtml = `
+            <li class="sidebar-header" style="padding-top: 0px !important;">
+                  Səhifələr
+            </li>
+         `;
+         navs.forEach(nav => {
+            if (nav.url && nav.parent_id === null) {
+               navHtml += `
+                  <li class="sidebar-item ${nav.class}">
+                        <a class="sidebar-link" href="${nav.url}">
+                           ${nav.icon}
+                           <span class="align-middle">${nav.name}</span>
+                        </a>
+                  </li>
+               `;
+            } else if(nav.parent_element_id !== null) {
+               navHtml += `
+                  <li class="sidebar-item has-submenu ${nav.class}">
+                     <a class="collapsed sidebar-link" href="#" data-bs-target="${nav.parent_element_id}" aria-expanded="false">
+                        ${nav.icon}
+                        <span class="align-middle">${nav.name}</span>
+                        <i class="fas fa-chevron-down align-middle" style="margin-left: 15px;"></i>
+                     </a>
+                     <ul id="${nav.parent_element_id}" class="submenu collapse" data-bs-parent="#nav_accordion">
+               `;
+               navs.forEach(item => {
+                  if (item.parent_id === nav.id) {
+                     navHtml += `
+                        <li class="sidebar-item">
+                              <a class="sidebar-link" href="${item.url}">
+                                 ${item.icon}
+                                 <span class="align-middle">${item.name}</span>
+                              </a>
+                        </li>
+                     `;
+                  }
+               });
+
+               navHtml += `
+                     </ul>
+                  </li>
+               `
+            }
+            
+         });
+         navAccordion.innerHTML = navHtml;
+
+         const sideBarItems = document.querySelectorAll('.sidebar-item');
+
+         const path = window.location.pathname;
+         if (path.includes('/dashboard')) {
+               sideBarItems.forEach(item => {
+                  item.classList.remove('active');
+               })
+               document.querySelector(".dashboard").classList.add('active');
+         } else if (path.includes('/employee')) {
+               sideBarItems.forEach(item => {
+                  item.classList.remove('active');
+               });
+               document.querySelector('.employees').classList.add('active');
+         } else if (path.includes('/all-fprints')) {
+               sideBarItems.forEach(item => {
+                  item.classList.remove('active');
+               });
+               document.querySelector('.fprints').classList.add('active');
+         } else if (path.includes('/fines')) {
+               sideBarItems.forEach(item => {
+                  item.classList.remove('active');
+               });
+               document.querySelector('.fines').classList.add('active');
+         } else if (path.includes('/projects')) {
+               sideBarItems.forEach(item => {
+                  item.classList.remove('active');
+               });
+               document.querySelector('.projects').classList.add('active');
+         } else if (path.includes('/department')) {
+               sideBarItems.forEach(item => {
+                  item.classList.remove('active');
+               });
+               document.querySelector('.departments').classList.add('active');
+         } else if (path.includes('/positions')) {
+               sideBarItems.forEach(item => {
+                  item.classList.remove('active');
+               });
+               document.querySelector('.positions').classList.add('active');
+         } else if (path.includes('/users')) {
+               sideBarItems.forEach(item => {
+                  item.classList.remove('active');
+               });
+               document.querySelector('.users').classList.add('active');
+         } else if (path.includes('/timeoffrequests')) {
+               sideBarItems.forEach(item => {
+                  item.classList.remove('active');
+               });
+               document.querySelector('.time-offs').classList.add('active');
+         } else if (path.includes('/salaries')) {
+               sideBarItems.forEach(item => {
+                  item.classList.remove('active');
+               });
+               document.querySelector('.salaries').classList.add('active');
+         } else if (path.includes('/working-hours')) {
+               sideBarItems.forEach(item => {
+                  item.classList.remove('active');
+               });
+               document.querySelector('.working-hours').classList.add('active');
+         } else if (path.includes('/holidays')) {
+               sideBarItems.forEach(item => {
+                  item.classList.remove('active');
+               });
+               document.querySelector('.holidays').classList.add('active');
+         } else if (path.includes('/support')) {
+               sideBarItems.forEach(item => {
+                  item.classList.remove('active');
+               });
+               document.querySelector('.support').classList.add('active');
+         }
+
+         document.querySelectorAll('.sidebar .sidebar-link').forEach(function(element){
+               
+               element.addEventListener('click', function (e) {
+
+               let nextEl = element.nextElementSibling;
+               let parentEl  = element.parentElement
+
+                  if(nextEl) {
+                     e.preventDefault();
+                     let mycollapse = new bootstrap.Collapse(nextEl);
+                     
+                     if(nextEl.classList.contains('show')){
+                     mycollapse.hide();
+                     } else {
+                           mycollapse.show();
+                           // find other submenus with class=show
+                           var opened_submenu = parentEl.parentElement.querySelector('.submenu.show');
+                           // if it exists, then close all of them
+                           if(opened_submenu){
+                           new bootstrap.Collapse(opened_submenu);
+                           }
+                     }
+                  }
+               }); // addEventListener
+         }) // forEach
+      }
+      
+   })
+}).catch((err) => {
+   console.log(err);
+});
+
+

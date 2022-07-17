@@ -1,0 +1,82 @@
+<div class="d-flex justify-content-center align-items-center w-100 h-100">
+    <div class="card w-100 h-100">
+        <div class="card-header">
+            <h5 class="card-title">
+                İnsidenti Bildirin
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row h-100">
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label" for="">İnsidentin Səhifəsi</label>
+                        <select class="form-select" name="" id="insident">
+                            
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label" for="">İnsidentin yaranma səbəbi</label>
+                        <select class="form-select" name="" id="">
+                            <option value="" hidden>Seçin</option>
+                            <option value="">Disfunksiya (Texniki)</option>
+                            <option value="">Məlumat İtkisi</option>
+                            <option value="">Görüntü Problemi</option>
+                            <option value="">Təklif və İradlar</option>
+                            <option value="">Digər</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label" for="">İnsident Prioriteti</label>
+                        <select class="form-select" name="" id="">
+                            <option value="" hidden>Seçin</option>
+                            <option value="">Yüksək</option>
+                            <option value="">Orta</option>
+                            <option value="">Aşağı</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label" for="">İnsident detalları</label>
+                        <textarea class="form-control" name="" id="" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="col-12 mt-3">
+                    <div class="support-submit-btn w-25 float-end">
+                        <button class="float-end btn btn-primary">Göndər</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script>
+    const insidentSelect = document.querySelector("#insident");
+    $.ajax({
+            type: "GET",
+            url: "http://localhost:3000/api/navbar",
+            success: ((res) => {
+                const pages = res.result;
+                let insidentHTML = "<option hidden>Səhifəni seçin</option>";
+                pages.forEach(page => {
+                    if (page.parent_id === null) {
+                        insidentHTML += `
+                            <option ${page.id}>${page.name}</option>
+                        `;
+                    }
+                });
+                insidentSelect.innerHTML = insidentHTML;
+                setTimeout(() => {
+                    document.querySelector(".loading").classList.add("d-none");
+                }, 1000);
+            })
+        }).catch((err) => {
+            console.log(err);
+        });
+</script>

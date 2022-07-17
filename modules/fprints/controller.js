@@ -24,15 +24,7 @@ if(dateOfDay === 1) {
 
 module.exports = {
     getFPrints: async (req, res) => {
-        if(req.user.role === 1) {
-            res.render("fprint/fprints", {
-                super_admin: true
-            });
-        } else if (req.user.role === 5) {
-            res.render("fprint/fprints", {
-                hr: true
-            });
-        }
+        return res.render("fprint/fprints");
     },
     checkIfFPrintForgotten: async (req, res, next) => {
         const notificationData = {};
@@ -203,14 +195,6 @@ module.exports = {
         }
     },
     renderForgottenFPrints: (req, res) => {
-        if(req.user.role === 1) {
-            res.render("fprint/inappropriate-fprints", {
-                super_admin: true
-            });
-        } else if (req.user.role === 5) {
-            res.render("fprint/forgotten-fprint", {
-                hr: true
-            });
-        }
+        return res.render("fprint/inappropriate-fprints");
     }
 }

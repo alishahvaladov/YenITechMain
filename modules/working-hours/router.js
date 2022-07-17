@@ -1,8 +1,8 @@
 const express = require('express');
 const { renderStandardWorkingHours } = require('./controller');
 const router = express.Router();
-const { hr, checkRoles } = require('../auth/auth');
+const { hr, checkRoles, ensureAuthenticated, ensureActivated } = require('../auth/auth');
 
-router.get('/', hr, checkRoles, renderStandardWorkingHours);
+router.get('/', ensureAuthenticated, ensureActivated, checkRoles, renderStandardWorkingHours);
 
 module.exports = router;

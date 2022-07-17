@@ -83,25 +83,9 @@ module.exports = {
         });
     },
     getSalaries: (req, res) => {
-        if(req.user.role === 5) {
-            return res.render("salary/salaries", {
-                hr: true
-            });
-        } else if(req.user.role === 1) {
-            return res.render("salary/salaries", {
-                super_admin: true
-            });
-        }
+        return res.render("salary/salaries");
     },
     renderSalaryByMonthPage: (req, res) => {
-        if(req.user.role === 1) {
-            res.render('salary/salary-by-months', {
-                super_admin: true
-            });
-        } else if (req.user.role === 5) {
-            res.render('salary/salary-by-months', {
-                hr: true
-            });
-        }
+        return res.render('salary/salary-by-months');
     }
 }

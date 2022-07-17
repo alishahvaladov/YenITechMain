@@ -128,8 +128,8 @@ module.exports = {
             SELECT cfd.*, emp.first_name, emp.last_name, emp.father_name FROM CalculatedFineData as cfd
             LEFT JOIN Employees as emp ON emp.id = cfd.emp_id
             WHERE cfd.emp_id = :id
-            AND MONTH(cfd.f_print_date) = :month 
-            AND YEAR(cfd.f_print_date) = :year 
+            AND MONTH(cfd.f_print_date) = :month
+            AND YEAR(cfd.f_print_date) = :year
         `, {
             logging: false,
             type: QueryTypes.SELECT,
@@ -157,7 +157,7 @@ module.exports = {
     },
     getAllForgivenData: async (offset) => {
         const result = {};
-        result.forgiven_fines =  await sequelize.query(`
+        result.forgiven_fines = await sequelize.query(`
             SELECT ff.*, emp.first_name, emp.last_name, emp.father_name FROM ForgivenFines as ff
             LEFT JOIN Employees as emp ON emp.id = ff.emp_id
             AND emp.deletedAt IS NULL

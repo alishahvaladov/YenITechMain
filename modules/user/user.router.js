@@ -26,27 +26,7 @@ router.get('/login', forwardAuthenticated, (req, res) => {
     });
 });
 router.get("/dashboard",  ensureActivated, ensureAuthenticated, (req, res) => {
-    if (req.user.role === 5) {
-        res.render('dashboard', {
-            hr: true
-        });
-    } else if (req.user.role === 1) {
-        res.render('dashboard', {
-            super_admin: true
-        })
-    } else if (req.user.role === 2) {
-        res.render('dashboard', {
-            hr: true
-        })
-    } else if (req.user.role === 10) {
-        res.render('dashboard', {
-            deptDirector: true
-        })
-    } else if (req.user.role === 7) {
-        res.render('dashboard', {
-            hr: true
-        })
-    }
+    return res.render('dashboard');
 });
 router.get("/users", admin, checkRoles, getUsers);
 router.get("/delete/:id", ensureActivated, admin, userDelete);

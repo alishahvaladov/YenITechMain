@@ -5,6 +5,8 @@ const shiftTypeSelect = document.querySelector("#select_shift_type");
 const shiftAuto = document.querySelector(".shift-auto");
 const shiftManual = document.querySelector(".shift-manual");
 const loading = document.querySelector('.loading');
+const phoneNumbInput = document.querySelector("#phone_number");
+const submitBtn = document.querySelector("#submitBtn");
 
 const renderPage = () => {
     projSelector.change(() => {
@@ -17,7 +19,6 @@ const renderPage = () => {
                 deptSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
             }
             posSelector.html(" ");
-            console.log(result);
         });
     });
     
@@ -30,7 +31,6 @@ const renderPage = () => {
             for (let i = 0; i < result.length; i++) {
                 posSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
             }
-            console.log(result);
         });
     });
     
@@ -72,7 +72,74 @@ const renderPage = () => {
         }
     });
 
+    const phoneNumbInputHandler = () => {
+        phoneNumbInput.addEventListener("keyup", () => {
+            let phoneNumb = phoneNumbInput.value.toString();
+            phoneNumb = phoneNumb.replaceAll("(", "");
+            phoneNumb = phoneNumb.replaceAll(")", "");
+            phoneNumb = phoneNumb.replaceAll(" ", "");
+
+            if (phoneNumb.length > 0 && phoneNumb.length <= 2) {
+                phoneNumbInput.value = `(${phoneNumb.slice(0, 2)})`;
+            }
+            if (phoneNumb.length > 2 && phoneNumb.length <= 5) {
+                phoneNumbInput.value = `(${phoneNumb.slice(0, 2)}) ${phoneNumb.slice(2, 5)}`;
+            }
+
+            if (phoneNumb.length > 5 && phoneNumb.length <= 7) {
+                phoneNumbInput.value = `(${phoneNumb.slice(0, 2)}) ${phoneNumb.slice(2, 5)} ${phoneNumb.slice(5, 7)}`;
+            }
+
+            if (phoneNumb.length > 7 && phoneNumb.length <= 9) {
+                phoneNumbInput.value = `(${phoneNumb.slice(0, 2)}) ${phoneNumb.slice(2, 5)} ${phoneNumb.slice(5, 7)} ${phoneNumb.slice(7, 9)}`;
+            }
+        });
+    }
+
+    phoneNumbInputHandler()
+
     loading.classList.add('d-none');
 }
+
+submitBtn.addEventListener("click", () => {
+    const employeeInputs = document.querySelectorAll(".emp-data-input");
+    const data = {};
+    employeeInputs.forEach(item => {
+        data[item.name] = item.value;
+    });
+    loading.classList.remove("d-none");
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:3000/api/employee/add",
+        data,
+        success: (res) => {
+            const emp_id = res.emp_id;
+            window.location.href = `http://localhost:3000/employee/emp-files/${emp_id}`;
+        }
+    }).catch((err) => {
+        if (err.responseJSON.message) {
+            const message = err.responseJSON.message;
+            for (const [key, value] of Object.entries(message)) {
+                const errorInput = document.getElementsByName(key);
+                errorInput.forEach(item => {
+                    const inputID = item.id;
+                    const labelForInput = document.querySelector(`label[for='${inputID}']`)
+                    labelForInput.classList.add("error-label");
+                    const labelHTML = labelForInput.innerHTML;
+                    labelForInput.innerHTML = `${labelHTML} <span>${value}</span>`
+                    item.classList.add("error-input");
+                    item.addEventListener("click", () => {
+                        labelForInput.classList.remove("error-label");
+                        item.classList.remove("error-input");
+                        labelForInput.innerHTML = labelHTML;
+                    });
+                });
+            }
+            setTimeout(() => {
+                loading.classList.add("d-none");
+            }, 500);
+        }
+    })
+});
 
 setTimeout(renderPage, 1000);

@@ -115,6 +115,9 @@ const workingHoursAPI = require('./api/working-hours/router');
 const workingHoursRouter = require('./modules/working-hours/router');
 const holidayRouter = require("./modules/holidays/router");
 const holidayAPI = require("./api/holidays/api");
+const dashboardAPI = require("./api/dashboard/api");
+const navbarAPI = require("./api/navbar/api");
+
 
 // Routers
 app.use("/", userRouter);
@@ -147,32 +150,21 @@ app.use("/api/position", positionAPI);
 app.use("/api/project", projectAPI);
 app.use('/api/working-hours', workingHoursAPI);
 app.use('/api/holidays', holidayAPI);
+app.use("/api/dashboard", dashboardAPI);
+app.use("/api/navbar", navbarAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });
+app.get("/support", (req, res) => {
+    return res.render("support");
+});
 
 app.get("/ali-shahvaladov", (req, res) => {
-    if (req.user.role === 1) {
-        return res.render("ali-shahvaladov", {
-            super_admin: true
-        });
-    } else if (req.user.role === 5) {
-        return res.render("ali-shahvaladov", {
-            hr: true
-        });
-    }
+    return res.render("ali-shahvaladov");
 });
 
 app.get("/mehdi-mammadzada", (req, res) => {
-    if (req.user.role === 1) {
-        return res.render("/mehdi-mammadzada", {
-            super_admin: true
-        });
-    } else if (req.user.role === 5) {
-        return res.render("/mehdi-mammadzada", {
-            hr: true
-        });
-    }
+    return res.render("/mehdi-mammadzada");
 });
 
 const port = process.env.PORT || 3000;

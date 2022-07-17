@@ -458,19 +458,11 @@ module.exports = {
                 dob = result[i].dob.split("-").reverse().join('.');
                 result[i].dob = dob;
             }
-            if(req.user.role === 5 ) {
-                res.render("employee/employee", {
-                    employee: result,
-                    hr: true,
-                    hr_emp: true
-                });
-            } else if (req.user.role === 1) {
-                res.render("employee/employee", {
-                    employee: result,
-                    super_admin: true,
-                    super_admin_emp: true
-                });
-            }
+            return res.render("employee/employee", {
+                employee: result,
+                hr: true,
+                hr_emp: true
+            });
         } catch (err) {
             console.log(err);
             req.flash("error_msg", "An unknown error occurred please contact System Admin")

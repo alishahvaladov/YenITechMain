@@ -4,6 +4,9 @@ module.exports = {
     getHoldiays: async (req, res) => {
         try {
             let offset = req.query.offset;
+            if (parseInt(offset) !== 0) {
+                offset = parseInt(offset) - 1;
+            }
             offset = Math.ceil(parseInt(offset) * 10);
             const result = await getHolidays(offset);
 
@@ -21,7 +24,7 @@ module.exports = {
             });
         }
     },
-    addHolidayDate: (req, res) => {
+    addHolidayDate: async (req, res) => {
         try {
             const body = req.body;
             const data = {};
@@ -40,12 +43,13 @@ module.exports = {
                 });
             }
 
-            if (body.holidayID === "" || !body.holidayID) {
+            if (body.holidayID === "" || !body.holidayID || isNaN(parseInt(body.holidayID))) {
                 return res.status(400).send({
                     success: false,
                     message: "Please choose holiday"
                 });
             } else {
+                console.log(body.holidayID);
                 data.holiday_id = body.holidayID;
             }
 
@@ -59,18 +63,21 @@ module.exports = {
                 });
             }
 
+            let hasError = false;
             for (let i = holidayStartDate; i <= holidayEndDate; i.setDate(i.getDate() + 1)) {
-                data.holiday_date = `${i.getFullYear()}-${i.getMonth()}-${i.getDate()}`;
-                console.log(data.holiday_date);
-                addHolidayDate(data, (err, result) => {
+                data.holiday_date = `${i.getFullYear()}-${i.getMonth() + 1}-${i.getDate()}`;
+                await addHolidayDate(data, (err, result) => {
                     if (err) {
-                        console.log(err);
-                        return res.status(400).send({
-                            success: false,
-                            message: "An unknown error has been occurred. Please contact system admin"
-                        });
+                        // console.log(err);
+                        hasError = true;
                     }
                 });
+                if (hasError) {
+                    return res.status(400).send({
+                        success: false,
+                        message: "An unknown error has been occurred. Please contact system admin"
+                    });
+                }
             }
 
             return res.status(200).send({
@@ -79,7 +86,7 @@ module.exports = {
             });
             
         } catch (err) {
-            console.log(err);
+            // console.log(err);
             return res.status(500).send({
                 success: false,
                 message: "Ups... Something went wrong!"

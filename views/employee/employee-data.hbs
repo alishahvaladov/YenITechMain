@@ -1,11 +1,6 @@
 {{> messages }}
-<div class="time-off-form mb-5">
+{{!-- <div class="time-off-form mb-5">
     <h1 class="text-center">Əməkdaş Qeydiyyat Formu</h1>
-    {{#if name}}
-        <p class="text-center bold">
-            <span class="text-black">({{name}})</span>
-        </p>
-    {{/if}}
     <form action="" method="post" enctype="multipart/form-data">
         <div class="toff-partitions toff-active">
             <div class="time-off-select-container d-flex justify-content-between mt-5">
@@ -115,7 +110,81 @@
             <button class="btn" id="toffApplyBtn">Apply</button>
         </div>
     </form>
+</div> --}}
+
+
+
+<div class="card-container w-100 h-100 d-flex justify-content-center align-items-center">
+    <div class="card w-100">
+        <div class="card-header">
+            <h5 class="card-title">Əməkdaş Qeydiyyat Formu</h5>
+        </div>
+        {{#if name}}
+            <h3 class="text-center bold">
+                ({{name}})
+            </h3>
+        {{/if}}
+        <form action="" method="post" enctype="multipart/form-data">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <div class="mb-5">
+                            <label class="form-label" for="">Tam Maddi-Məsuliyyət Müqaviləsi Skan</label>
+                            <input class="form-control" type="file" id="frScan" name="frScan">
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label" for="pcScan">Məxfi Məlumatların Qorunması Müqaviləsi Skan</label>
+                            <input class="form-control" type="file" id="pcScan" name="pcScan">
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label" for="pcScan">Sağlamlıq Haqqında Arayış Skan</label>
+                            <input class="form-control" type="file" id="hcScan" name="hcScan">
+                        </div>
+                        <div class="mb-5">
+                                <label class="form-label" for="gross">Rəsmi əmək haqqı</label>
+                                <input class="form-control" type="number" id="gross" name="gross">
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label" for="u_pay">Qeyri rəsmi(əlavə) əmək haqqı</label>
+                                <input class="form-control" type="number" id="u_pay" name="u_pay">
+                            </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="mb-5">
+                            <label class="form-label" for="injScan">Əmr Skan</label>
+                            <input class="form-control" type="file" id="injScan" name="injScan">
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label" for="diplomaScan">Diplom Skan</label>
+                            <input class="form-control" type="file" id="diplomaScan" name="diplomaScan">
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label" for="idScan">Şəxsiyyət Vəsiqəsi Skan</label>
+                            <input class="form-control" type="file" id="idScan" name="idScan">
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label" for="lcScan">Əmək Müqaviləsi Skan</label>
+                            <input class="form-control" type="file" id="lcScan" name="lcScan">
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label" for="pp">Şəkil 3x4</label>
+                            <input class="form-control" type="file" id="pp" name="profilePicture">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="button float-end">
+                            <button type="submit" class="btn btn-primary">Əlavə Et</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="/assets/js/jquery.min.js"></script>
-<script src="/assets/js/add-employee.js"></script>
+<script>
+    setTimeout(() => {
+        document.querySelector(".loading").classList.add("d-none");
+    }, 1000);
+</script>

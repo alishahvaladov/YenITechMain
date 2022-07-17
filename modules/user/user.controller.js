@@ -306,20 +306,7 @@ module.exports = {
     },
     getUser: async (req, res) => {
         const id = req.params.id;
-
-        if(req.user.role === 1) {
-            return res.render("users/user-update", {
-                super_admin: true
-            });
-        } else if (req.user.role === 5) {
-            return res.render("users/user-update", {
-                hr: true
-            });
-        }else if (req.user.role === 2) {
-            res.render("users/user-update", {
-                admin: true
-            });
-        }
+        return res.render("users/user-update");
     },
     updateUser: (req, res) => {
         const data = req.body;

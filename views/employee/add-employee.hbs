@@ -3,74 +3,79 @@
     <div class="card-body">
         {{> messages }}
     </div>
-    <form class="row" method="post">
+    <div class="row">
         <div class="col-12 col-lg-6">
             <div class="card-body" style="padding-top: 0 !important; padding-bottom: 0 !important;">
                 <div class="mb-3">
-                    <label for="empName" class="form-label">Ad:</label>
-                    <input class="form-control" type="text" name="first_name" id="empName">
+                    <label for="empName" class="form-label required-lowast">Ad:</label>
+                    <input class="form-control emp-data-input" type="text" name="employeeName" id="empName">
                 </div>
                 <div class="mb-3">
-                    <label for="empSurname" class="form-label">Soyad:</label>
-                    <input class="form-control" type="text" name="last_name" id="empSurname">
+                    <label for="empSurname" class="form-label required-lowast">Soyad:</label>
+                    <input class="form-control emp-data-input" type="text" name="employeeLastName" id="empSurname">
                 </div>
                 <div class="mb-3">
-                    <label for="father_name" class="form-label">Ata adı:</label>
-                    <input class="form-control" type="text" name="father_name" id="father_name">
+                    <label for="father_name" class="form-label required-lowast">Ata adı:</label>
+                    <input class="form-control emp-data-input" type="text" name="employeeFatherName" id="father_name">
                 </div>
                 <div class="mb-3">
-                    <label for="sex" class="form-label">Cinsiyyət:</label>
-                    <select class="form-select" name="sex" id="sex">
+                    <label for="sex" class="form-label required-lowast">Cinsiyyət:</label>
+                    <select class="form-select emp-data-input" name="sex" id="sex">
                         <option value="0">Kişi</option>
                         <option value="1">Qadın</option>
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="dob" class="form-label">Doğum Tarixi:</label>
-                    <input class="form-control" type="date" id="dob" name="dob" style="background-color: #fff !important;">
+                    <label for="dob" class="form-label required-lowast">Doğum Tarixi:</label>
+                    <input class="form-control emp-data-input" type="date" id="dob" name="dob" style="background-color: #fff !important;">
                 </div>
                 <div class="mb-3">
-                    <label for="ssn" class="form-label">SSN</label>
-                    <input class="form-control" type="number" name="SSN" id="ssn">
+                    <label for="ssn" class="form-label required-lowast">SSN</label>
+                    <input class="form-control emp-data-input" type="number" name="SSN" id="ssn">
                 </div>
                 <div class="mb-3">
-                    <label for="q_address" class="form-label">Qeydiyyatda olduğu ünvan:</label>
-                    <input class="form-control" type="text" name="q_address" id="q_address">
+                    <label for="q_address" class="form-label required-lowast">Qeydiyyatda olduğu ünvan:</label>
+                    <input class="form-control emp-data-input" type="text" name="q_address" id="q_address">
                 </div>
                 <div class="mb-3">
                     <label for="y_address" class="form-label">Faktiki ünvan:</label>
-                    <input class="form-control" type="text" name="y_address" id="y_address">
+                    <input class="form-control emp-data-input" type="text" name="y_address" id="y_address">
                 </div>
                 <div class="mb-3">
-                    <label for="phone_number" class="form-label">Mobil telefonu:</label>
-                    <input class="form-control" type="number" name="phone_number" id="phone_number">
+                    <label for="phone_number" class="form-label required-lowast">Mobil telefonu:</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">+994</span>
+                        </div>
+                        <input class="form-control emp-data-input" type="text" name="phoneNumber" id="phone_number" maxlength="14">
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="home_number" class="form-label">Ev telefonu:</label>
-                    <input class="form-control" type="number" name="home_number" id="home_number">
+                    <input class="form-control emp-data-input" type="number" name="homeNumber" id="home_number">
                 </div>
             </div>
         </div>
         <div class="col-12 col-lg-6">
             <div class="card-body" style="padding-top: 0 !important; padding-bottom: 0 !important;">
                 <div class="mb-3">
-                    <label for="logix_name" class="form-label">Logix adı:</label>
-                    <input class="form-control" type="text" name="logix_name" id="logix_name">
+                    <label for="logix_name" class="form-label required-lowast">Logix adı:</label>
+                    <input class="form-control emp-data-input" type="text" name="logix_name" id="logix_name">
                 </div>
                 <div class="mb-3">
-                    <label for="tabel_no" class="form-label">Logix Tabel No:</label>
-                    <input class="form-control" type="text" name="tabel_no" id="tabel_no">
+                    <label for="tabel_no" class="form-label required-lowast">Logix Tabel No:</label>
+                    <input class="form-control emp-data-input" type="text" name="tabel_no" id="tabel_no">
                 </div>
                 <div class="mb-3">
-                    <label for="select_shift_type" class="form-label">Ştat Tipi</label>
-                    <select class="form-select" name="select_shift_type" id="select_shift_type">
+                    <label for="select_shift_type" class="form-label required-lowast">Ştat Tipi:</label>
+                    <select class="form-select emp-data-input" name="select_shift_type" id="select_shift_type">
                         <option value="1" selected>Standart</option>
                         <option value="2">Xüsusi</option>
                     </select>
                 </div>
                 <div class="mb-3 shift-auto">
-                    <label for="shift_type" class="form-label">Ştat: </label>
-                    <select class="form-select" name="shift_type" id="shift_type">
+                    <label for="shift_type" class="form-label required-lowast">Ştat: </label>
+                    <select class="form-select emp-data-input" name="shift_type" id="shift_type">
                         <option value="default" hidden>Ştat qrafiki</option>
                         <option value="1">Tam Ştat</option>
                         <option value="2">Yarımştat (Günün 1-ci yarısı)</option>
@@ -79,30 +84,30 @@
                 </div>
                 <div class="mb-3 shift-manual d-none">
                     <div class="mb-3">
-                        <label for="shift_start_t" class="form-label">İşə gəlmə vaxtı: </label>
-                        <input class="form-control" type="time" name="shift_start_t" id="shift_start_t" style="background-color: #fff !important;">
+                        <label for="shift_start_t" class="form-label required-lowast">İşə gəlmə vaxtı: </label>
+                        <input class="form-control emp-data-input" type="time" name="shift_start_t" id="shift_start_t" style="background-color: #fff !important;">
                     </div>
                     <div>
-                        <label for="shift_end_t" class="form-label">İşdən çıxma vaxtı: </label>
-                        <input class="form-control" type="time" name="shift_end_t" id="shift_end_t" style="background-color: #fff !important;">
+                        <label for="shift_end_t" class="form-label required-lowast">İşdən çıxma vaxtı: </label>
+                        <input class="form-control emp-data-input" type="time" name="shift_end_t" id="shift_end_t" style="background-color: #fff !important;">
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="job_start_date" class="form-label">İşə başlama tarixi: </label>
-                    <input class="form-control" type="date" name="j_start_date" id="job_start_date" style="background-color: #fff !important;">
+                    <label for="job_start_date" class="form-label required-lowast">İşə başlama tarixi: </label>
+                    <input class="form-control emp-data-input" type="date" name="j_start_date" id="job_start_date" style="background-color: #fff !important;">
                 </div>
                 <div class="mb-3">
-                    <label for="dayoff_days_total" class="form-label">Məzuniyyət günlərinin sayı:</label>
-                    <input class="form-control" type="number" name="dayoff_days_total" id="dayoff_days_total">
+                    <label for="dayoff_days_total" class="form-label required-lowast">Məzuniyyət günlərinin sayı:</label>
+                    <input class="form-control emp-data-input" type="number" name="dayoff_days_total" id="dayoff_days_total">
                 </div>
                 <div class="mb-3">
-                    <label for="working_days" class="form-label">İş günlərinin sayı:</label>
-                    <input class="form-check-input mx-2" type="checkbox" name="full_day" id="full_day" checked>
-                    <input class="form-control" placeholder="Tam iş günü" type="number" name="working_days" id="working_days" disabled>
+                    <label for="working_days" class="form-label required-lowast">İş günlərinin sayı:</label>
+                    <input class="form-check-input emp-data-input mx-2" type="checkbox" name="full_day" id="full_day" checked>
+                    <input class="form-control emp-data-input" placeholder="Tam iş günü" type="number" name="workingDays" id="working_days" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="project_id" class="form-label">Proyekt:</label>
-                    <select class="form-select" name="project_id" id="project_id">
+                    <label for="project_id" class="form-label required-lowast">Proyekt:</label>
+                    <select class="form-select emp-data-input" name="project" id="project_id">
                         <option value="" hidden>Seçin</option>
                         {{#if pjResult}}
                             {{#each pjResult}}
@@ -112,14 +117,14 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="department_id" class="form-label">Departament:</label>
-                    <select class="form-select" name="department" id="department_id">
+                    <label for="department_id" class="form-label required-lowast">Departament:</label>
+                    <select class="form-select emp-data-input" name="department" id="department_id">
                         
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="position_id" class="form-label">Vəzifəsi:</label>
-                    <select class="form-select" name="position_id" id="position_id">
+                    <label for="position_id" class="form-label required-lowast">Vəzifəsi:</label>
+                    <select class="form-select emp-data-input" name="position" id="position_id">
                         
                     </select>
                 </div>
@@ -128,8 +133,8 @@
         <div class="col-12">
             <div class="card-body" style="padding-top: 0 !important; padding-bottom: 0 !important;">
                 <div class="mb-3">
-                    <label for="fin" class="form-label">FIN</label>
-                    <input class="form-control" type="text" name="FIN" id="fin">
+                    <label for="fin" class="form-label required-lowast">FIN:</label>
+                    <input class="form-control emp-data-input" type="text" name="FIN" id="fin">
                 </div>
             </div>
         </div>
@@ -149,12 +154,12 @@
                         </p>
                     </div>
                     <div class="">
-                        <button class="btn btn-primary btn-lg" type="submit">Apply</button>
+                        <button class="btn btn-primary btn-lg" id="submitBtn">Apply</button>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
 </div>
 
 <script src="/assets/js/jquery.min.js"></script>

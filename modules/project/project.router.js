@@ -4,15 +4,7 @@ const router = express.Router();
 const { super_admin } = require("../auth/auth");
 
 router.get("/add-project", super_admin, (req, res) => {
-    if(req.user.role === 5) {
-        res.render("project/add-project", {
-            hr: true
-        });
-    } else if (req.user.role === 1) {
-        res.render("project/add-project", {
-            super_admin: true
-        });
-    }
+    return res.render("project/add-project");
 });
 
 router.post("/add-project", super_admin, addProject);
