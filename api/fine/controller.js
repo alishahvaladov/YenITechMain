@@ -8,13 +8,17 @@ const {
     getFinedData,
     insertForgivenData,
     updateFine,
-    getAllForgivenData
+    getAllForgivenData,
+    getFineDataForExport
 } = require("./service");
-
+const excelJS = require("exceljs");
+const path = require("path");
+const fs = require("fs");
 
 module.exports = {
     getFineData: async (req, res, next) => {
         const role = req.user.role;
+        const data = req.body;
         try {
             let limit = req.query.limit;
             let offset = req.query.offset;
@@ -47,7 +51,7 @@ module.exports = {
             }
 
 
-            const result = await getFineData(role, limit, offset);
+            const result = await getFineData(role, limit, offset, data);
             if (req.user.role === 2) {
                 result.role = "admin";
             } else {
@@ -59,7 +63,11 @@ module.exports = {
                 fineCount: result.fineCount
             });
         } catch (err) {
-            req.flash("error_msg", "An unknown error has been occurred");
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
         }
     },
     approveEditedFine: async (req, res) => {
@@ -225,6 +233,58 @@ module.exports = {
             return res.status(500).send({
                 success: false,
                 message: "Something went wrong"
+            });
+        }
+    },
+    exportDataToExcel: async (req, res) => {
+        try {
+            const role = req.user.role;
+            const data = req.body;
+            const date = new Date();
+            const filename = `${date.getTime()}-cərimələr.xlsx`;
+            let offset = req.body.offset;
+            offset = (offset - 1) * 10;
+            let fineData = await getFineDataForExport(role, data);
+            const workbook = new excelJS.Workbook();
+            const worksheet = workbook.addWorksheet("Cərimələr");
+            worksheet.columns= [
+                {header: "Əməkdaş", key: "full_name", width: 10},
+                {header: "Ümumi Gecikmə", key: "minute_total", width: 10},
+                {header: "Tədbiq Olunacaq Cərimələr", key: "fine_minute", width: 10},
+                {header: "Ən Son Cərimənin Hesablanma Tarixi", key: "updatedAt", width: 10},
+            ]
+            fineData.forEach(fine => {
+                const fineDataFromDB = {
+                    full_name: `${fine.first_name} ${fine.last_name} ${fine.father_name}`,
+                    minute_total: fine.minute_total,
+                    fine_minute: fine.fine_minute,
+                    updatedAt: fine.updatedAt,
+                };
+                worksheet.addRow(fineDataFromDB);
+            });
+            worksheet.getRow(1).eachCell((cell) => {
+                cell.font = {bold: true};
+            });
+            const excelPath = path.join((__dirname), `../../public/excels/${filename}`);
+            await workbook.xlsx.writeFile(excelPath);
+            setTimeout(() => {
+                fs.unlink(excelPath, (err) => {
+                    if(err) {
+                        console.log(err);
+                        res.status(400).json({
+                            success: false,
+                            message: "Unknown error has been occurred"
+                        });
+                    }
+                });
+            }, 10000);
+            res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            res.download(excelPath, "Cərimələr.xlsx");
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
             });
         }
     }

@@ -1,5 +1,8 @@
-const { getUser, updatePassword, getAllUsers, getDeletedUsers, getDeleterUser } = require("./service");
+const { getUser, updatePassword, getAllUsers, getDeletedUsers, getDeleterUser, getUsersForExport } = require("./service");
 const jsonConfig = require("../../config/config.json");
+const excelJS = require("exceljs");
+const path = require("path");
+const fs = require("fs");
 
 module.exports = {
     getUser: async (req, res) => {
@@ -55,10 +58,8 @@ module.exports = {
         try {
             let offset = req.params.offset;
             offset = parseInt(offset) * 15;
-            console.log(offset);
-            
-            console.log(offset);
-            const result = await getAllUsers(offset);
+            const body = req.body;
+            const result = await getAllUsers(offset, body);
             return res.status(200).send({
                 success: true,
                 users: result.users,
@@ -125,6 +126,56 @@ module.exports = {
                 message: "Ups... Something went wrong"
             });
         }
+    },
+    exportDataToExcel: async (req, res) => {
+        try {
+            const data = req.body;
+            const date = new Date();
+            const filename = `${date.getTime()}-istifadəçilər.xlsx`;
+            let offset = req.body.offset;
+            offset = (offset - 1) * 10;
+            let userData = await getUsersForExport(data);
+            const workbook = new excelJS.Workbook();
+            const worksheet = workbook.addWorksheet("İstifadəçilər");
+            worksheet.columns= [
+                {header: "Əməkdaş", key: "full_name", width: 10},
+                {header: "İstifadəçi Adı", key: "username", width: 10},
+                {header: "Email", key: "email", width: 10},
+                {header: "Rol", key: "role", width: 10},
+            ]
+            userData.forEach(user => {
+                const userDataFromDB = {
+                    full_name: `${user.first_name} ${user.last_name} ${user.father_name}`,
+                    username: user.username,
+                    email: user.email,
+                    role: user.RoleName
+                };
+                worksheet.addRow(userDataFromDB);
+            });
+            worksheet.getRow(1).eachCell((cell) => {
+                cell.font = {bold: true};
+            });
+            const excelPath = path.join((__dirname), `../../public/excels/${filename}`);
+            await workbook.xlsx.writeFile(excelPath);
+            setTimeout(() => {
+                fs.unlink(excelPath, (err) => {
+                    if(err) {
+                        console.log(err);
+                        res.status(400).json({
+                            success: false,
+                            message: "Unknown error has been occurred"
+                        });
+                    }
+                });
+            }, 10000);
+            res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            res.download(excelPath, "İstifadəçilər.xlsx");
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
     }
-    
 }

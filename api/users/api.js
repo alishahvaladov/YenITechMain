@@ -1,11 +1,12 @@
-const { getUser, updatePassword, getAllUsers, getDeletedUsers } = require("./controller");
+const { getUser, updatePassword, getAllUsers, getDeletedUsers, exportDataToExcel } = require("./controller");
 const express = require("express");
 const router = express.Router();
-const { hr, admin, checkRoles, audit } = require("../../modules/auth/auth");
+const { hr, admin, checkRoles, audit, checkRolesForAPI } = require("../../modules/auth/auth");
 
-router.get('/getUser/:id', admin, checkRoles, getUser);
-router.post('/update-password/:id', admin, checkRoles, updatePassword);
-router.get("/allUsers/:offset", admin, checkRoles, getAllUsers);
-router.post("/deleted-users", admin, audit, checkRoles, getDeletedUsers);
+router.get('/getUser/:id', admin, checkRolesForAPI, getUser);
+router.post('/update-password/:id', admin, checkRolesForAPI, updatePassword);
+router.post("/allUsers/:offset", admin, checkRolesForAPI, getAllUsers);
+router.post("/deleted-users", admin, audit, checkRolesForAPI, getDeletedUsers);
+router.post('/export-to-excel', admin, audit, checkRolesForAPI, exportDataToExcel);
 
 module.exports = router;

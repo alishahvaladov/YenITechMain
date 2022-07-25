@@ -7,18 +7,35 @@
     <table class="table table-hover my-0" style="margin: 0 !important;">
         <div class="container">
             <thead>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th>Employer</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>
-                <a class="btn btn-outline-success btn-sm" href="/register">Əlavə <i class="bi bi-plus-circle"></i></a>
-            </th>
-            <th></th>
-            <th></th>
+                <tr>
+                    <th>Employer</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>
+                        <a class="btn btn-outline-success btn-sm" href="/register">Əlavə <i class="bi bi-plus-circle"></i></a>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <input class="form-control" type="text" id="qEmployee" name="qEmployee">
+                    </th>
+                    <th>
+                        <input class="form-control" type="text" id="qUsername" name="qUsername">
+                    </th>
+                    <th>
+                        <input class="form-control" type="text" id="qEmail" name="qEmail">
+                    </th>
+                    <th>
+                        <select class="form-select" name="qRole" id="qRole">
+                            <option value="">All</option>
+                            <option value="2">Admin</option>
+                        </select>
+                    </th>
+                    <th>
+                        <button class="btn btn-success w-100" id="exportToExcel"><i class="bi bi-file-earmark-excel-fill"></i> Export</button>
+                    </th>
+                </tr>
             </thead>
             <tbody>
             

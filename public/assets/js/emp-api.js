@@ -51,7 +51,6 @@ let empInpNameVal = '';
 let empInpPhoneVal = '';
 let empDeptVal = '';
 let empPosVal = '';
-let empProjVal = '';
 let empStatusVal = '';
 let limitVal;
 
@@ -60,7 +59,6 @@ const getEmpInps = () => {
    empInpPhoneVal = $("#empPhoneNumb").val();
    empDeptVal = $("#empDept").val();
    empPosVal = $("#empPos").val();
-   empProjVal = $("#empProj").val();
    empStatusVal = $("#empStatus").val();
    limitVal = $("#limitCount").val();
 }
@@ -349,8 +347,6 @@ const pageFuncs = () => {
                empInpPhoneVal,
                empDeptVal,
                empPosVal,
-               empProjVal,
-               empStatusVal,
                limit: limitVal
             }, (res) => {
                let tbody = $("tbody");
@@ -374,14 +370,6 @@ const pageFuncs = () => {
                            <button class="btn btn-outline-secondary empEditBtn" value="${emps[i].id}" "><i class="bi bi-pencil-square"></i></button>
                         </div>
                      `;
-                     if (emps[i].j_end_date) {
-                        tdClass = 'badge bg-danger';
-                        tdText = 'İşdən Ayrılıb'
-                        adminBtns = "";
-                     } else {
-                        tdClass = 'badge bg-success';
-                        tdText = 'İşləyir';
-                     }
                      trs +=
                          `
                        <tr>
@@ -391,8 +379,6 @@ const pageFuncs = () => {
                            <td>${emps[i].phone_number}</td>
                            <td>${emps[i].deptName}</td>
                            <td>${emps[i].posName}</td>
-                           <td>${emps[i].projName}</td>
-                           <td><span class="${tdClass}">${tdText}</span></td>
                            <td>
                               ${adminBtns}
                             </td>
@@ -413,15 +399,7 @@ const pageFuncs = () => {
                            <button class="btn btn-outline-danger empRmBtn" value="${emps[i].id}"><i class="bi bi-dash-circle"></i></button>
                            <button class="btn btn-outline-secondary empEditBtn" value="${emps[i].id}" "><i class="bi bi-pencil-square"></i></button>
                         </div>
-                     `
-                     if (emps[i].j_end_date) {
-                        tdClass = 'badge bg-danger';
-                        tdText = 'İşdən Ayrılıb';
-                        hrBtns = "";
-                     } else {
-                        tdClass = 'badge bg-success';
-                        tdText = 'İşləyir';
-                     }
+                     `;
                      trs +=
                          `
                        <tr>
@@ -431,8 +409,6 @@ const pageFuncs = () => {
                            <td>${emps[i].phone_number}</td>
                            <td>${emps[i].deptName}</td>
                            <td>${emps[i].posName}</td>
-                           <td>${emps[i].projName}</td>
-                           <td><span class="${tdClass}">${tdText}</span></td>
                            <td class="d-flex justify-content-between last-td" style="position: relative">
                                 ${hrBtns}
                             </td>
@@ -448,15 +424,6 @@ const pageFuncs = () => {
                      } else {
                         emailTD = email;
                      }
-                     if (emps[i].j_end_date) {
-                        tdClass = 'text-danger';
-                        tdText = 'İşdən Ayrılıb'
-                     } else {
-                        tdClass = 'text-success';
-                        tdText = 'İşləyir';
-                     }
-         
-         
                      trs += `
                         <tr>
                            <td></td>
@@ -465,11 +432,9 @@ const pageFuncs = () => {
                            <td>${emps[i].phone_number}</td>
                            <td>${emps[i].deptName}</td>
                            <td>${emps[i].posName}</td>
-                           <td>${emps[i].projName}</td>
-                           <td><span class="${tdClass}">${tdText}</span></td>
                            <td><td>
                         </tr>
-                     `
+                     `;
                   }
                   tbody.innerHTML = trs;
                }
@@ -495,8 +460,6 @@ const renderPage = () => {
       empInpPhoneVal,
       empDeptVal,
       empPosVal,
-      empProjVal,
-      empStatusVal,
       limit: limitVal
    }, (res) => {
       console.log(res);
@@ -521,34 +484,24 @@ const renderPage = () => {
             }
             let adminBtns = `
                <div class="btn-group" role="group" aria-label="First group">
-                  <a type="button" class="btn btn-outline-danger" href="/employee/delete/${result[i].id}"><i class="bi bi-person-x"></i></a>
-                  <button type="button" class="btn btn-outline-danger empRmBtn" value="${result[i].id}"><i class="bi bi-dash-circle"></i></button>
-                  <button type="button" class="btn btn-outline-secondary empEditBtn" value="${result[i].id}" "><i class="bi bi-pencil-square"></i></button>
+                  <a type="button" class="btn btn-block btn-outline-danger" href="/employee/delete/${result[i].id}"><i class="bi bi-person-x"></i></a>
+                  <button type="button" class="btn btn-block btn-outline-danger empRmBtn" value="${result[i].id}"><i class="bi bi-dash-circle"></i></button>
+                  <button type="button" class="btn btn-block btn-outline-secondary empEditBtn" value="${result[i].id}" "><i class="bi bi-pencil-square"></i></button>
                </div>
             `
-            if (result[i].j_end_date) {
-               tdClass = 'badge bg-danger';
-               tdText = 'İşdən Ayrılıb';
-               adminBtns = "";
-            } else {
-               tdClass = 'badge bg-success';
-               tdText = 'İşləyir';
-            }
             html += `
-         <tr>
-             <td></td>
-             <td>${result[i].first_name + " " + result[i].last_name + " " + result[i].father_name}</td>
-             <td>${emailTD}</td>
-             <td class="d-none d-xl-table-cell">${result[i].phone_number}</td>
-             <td>${result[i].deptName}</td>
-             <td class="d-none d-xl-table-cell">${result[i].posName}</td>
-             <td>${result[i].projName}</td>
-             <td class="d-none d-xl-table-cell"><span class="${tdClass}">${tdText}</span></td>
-             <td class="d-flex justify-content-between last-td d-none d-xl-table-cell" style="position: relative">
-                  ${adminBtns}
-             </td>
-         </tr>
-      `
+               <tr>
+                  <td></td>
+                  <td>${result[i].first_name + " " + result[i].last_name + " " + result[i].father_name}</td>
+                  <td>${emailTD}</td>
+                  <td class="d-none d-xl-table-cell">${result[i].phone_number}</td>
+                  <td>${result[i].deptName}</td>
+                  <td class="d-none d-xl-table-cell">${result[i].posName}</td>
+                  <td class="d-flex justify-content-between last-td d-none d-xl-table-cell" style="position: relative">
+                        ${adminBtns}
+                  </td>
+               </tr>
+            `;
          }
          tbody.innerHTML = html;
          if (count === 1) {
@@ -608,31 +561,19 @@ const renderPage = () => {
                   <button class="btn btn-outline-secondary empEditBtn" value="${result[i].id}" "><i class="bi bi-pencil-square"></i></button>
                </div>
             `
-            if (result[i].j_end_date) {
-               tdClass = 'text-danger';
-               tdText = 'İşdən Ayrılıb'
-               hrBtns = "";
-            } else {
-               tdClass = 'text-success';
-               tdText = 'İşləyir';
-            }
-
-
             html += `
-         <tr>
-             <td></td>
-             <td>${result[i].first_name + " " + result[i].last_name + " " + result[i].father_name}</td>
-             <td>${emailTD}</td>
-             <td>${result[i].phone_number}</td>
-             <td>${result[i].deptName}</td>
-             <td>${result[i].posName}</td>
-             <td>${result[i].projName}</td>
-              <td><span class="${tdClass}">${tdText}</span></td>
-             <td>
-                 ${hrBtns}
-             </td>
-         </tr>
-      `
+               <tr>
+                  <td></td>
+                  <td>${result[i].first_name + " " + result[i].last_name + " " + result[i].father_name}</td>
+                  <td>${emailTD}</td>
+                  <td>${result[i].phone_number}</td>
+                  <td>${result[i].deptName}</td>
+                  <td>${result[i].posName}</td>
+                  <td>
+                     ${hrBtns}
+                  </td>
+               </tr>
+            `;
          }
          tbody.innerHTML = html;
          for (let i = 1; i <= count; i++) {
@@ -696,8 +637,6 @@ const renderPage = () => {
                   <td>${result[i].phone_number}</td>
                   <td>${result[i].deptName}</td>
                   <td>${result[i].posName}</td>
-                  <td>${result[i].projName}</td>
-                  <td><span class="${tdClass}">${tdText}</span></td>
                   <td><td>
                </tr>
             `

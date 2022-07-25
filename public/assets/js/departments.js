@@ -2,6 +2,15 @@ const tbody = document.querySelector("tbody");
 const loading = document.querySelector(".loading");
 const pgContatiner = document.querySelector(".pagination-container");
 const pagination = document.querySelector(".pagination");
+const exportToExcelBtn = document.querySelector("#exportToExcel");
+
+const qNameInput = document.querySelector("#qName");
+
+let qName;
+
+const getSearchData = () => {
+    qName = qNameInput.value;
+}
 
 
 const pageFunctions = () => {
@@ -57,7 +66,10 @@ const pageFunctions = () => {
                 }
             }
             setTimeout(() => {
-                $.get(`http://localhost:3000/api/department/allDepartments/${offset}`, (res) => {
+                getSearchData();
+                $.post(`http://localhost:3000/api/department/allDepartments/${offset}`, {
+                    qName
+                }, (res) => {
                     let tbody = document.querySelector("tbody");
                     let html = "";
                     const departments = res.departments;
@@ -84,7 +96,10 @@ const pageFunctions = () => {
 
 const renderPage = () => {
     let html = "";
-    $.get("http://localhost:3000/api/department/allDepartments/0", (res) => {
+    getSearchData();
+    $.post("http://localhost:3000/api/department/allDepartments/0", {
+        qName
+    }, (res) => {
         console.log(res);
         const departments = res.departments;
         let count = res.count[0].count;
@@ -107,6 +122,7 @@ const renderPage = () => {
 
         if (count > 1) {
             let countHtml = "";
+            pagination.classList.remove("d-none");
 
             for (let i = 1; i <= count; i++) {
                 if (i === 1) {
@@ -140,5 +156,36 @@ const renderPage = () => {
         }
     });
 }
+
+qNameInput.addEventListener("keyup", () => {
+    renderPage();
+});
+
+const exportToExcel = () => {
+    getSearchData();
+    const method = "post";
+    let params = {
+        qName
+    }
+    let form = document.createElement('form');
+    form.setAttribute("method", method);
+    form.setAttribute("action", "http://localhost:3000/api/department/export-to-excel");
+ 
+    for (let key in params) {
+       if (params.hasOwnProperty(key)) {
+          const hiddenField = document.createElement("input");
+          hiddenField.setAttribute('type', 'hidden');
+          hiddenField.setAttribute('name', key);
+          hiddenField.setAttribute('value', params[key]);
+          form.appendChild(hiddenField);
+       }
+    }
+    document.body.appendChild(form);
+    form.submit();
+ }
+ 
+ exportToExcelBtn.addEventListener("click", () => {
+    exportToExcel();
+ });
 
 setTimeout(renderPage, 1000);

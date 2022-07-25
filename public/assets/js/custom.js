@@ -16,6 +16,17 @@ flatpickr("input[type='time']", {
    time_24hr: true
 });
 
+flatpickr(".month-and-year", {
+   plugins: [
+      new monthSelectPlugin({
+      shorthand: true, //defaults to false
+      dateFormat: "m.Y", //defaults to "F Y"
+      altFormat: "F Y", //defaults to "F Y",
+      })
+   ],
+   locale: "az"
+});
+
 const monthsAz = {
    0: "Yanvar",
    1: "Fevral",

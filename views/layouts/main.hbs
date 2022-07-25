@@ -15,15 +15,14 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/font.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="/assets/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/plugins/monthSelect/style.css">
     <link href="/assets/css/app.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
     <title>Blink-Q</title>
-
-    
 </head>
 
 <body>
@@ -40,7 +39,7 @@
     </div>
 
     <div class="wrapper">
-        <nav id="sidebar" class="sidebar js-sidebar">
+        <nav id="sidebar" class="sidebar js-sidebar collapsed">
             <div class="sidebar-content js-simplebar">
                 <a href="/dashboard">
                     <img src="/assets/img/a.png" alt="" style="filter: invert(1); height: 150px;">
@@ -101,7 +100,7 @@
                                     </button> --}}
                                 </div>
                                 <div class="dropdown-menu-footer">
-                                    <a href="#" class="text-muted">Show all notifications</a>
+                                    <a href="/notification/all-notifications" class="text-muted">Show all notifications</a>
                                 </div>
                             </div>
                         </li>
@@ -253,8 +252,9 @@
 
     <script src="/assets/js/jquery.min.js"></script>
     <script src="/assets/js/socket.io.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    {{!-- <script src="/assets/js/bootstrap.min.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/plugins/monthSelect/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/az.js"></script>
     <script src="/assets/js/all.min.js"></script>
     <script src="/assets/js/custom.js"></script>
     <script src="/assets/js/app.js"></script>

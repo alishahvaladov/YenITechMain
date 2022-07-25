@@ -1,4 +1,4 @@
-const { getDepartmentsForPoisiton, addPosition, addDeptPostRel, checkIfDeptExists, getPositionsByDepartment, getAllPositions, getPositionByID, updatePositionName, getDepartmentForPositions, deleteDepartmentForPosition, insertDepartmentForPosition } = require("./service");
+const { getDepartmentsForPoisiton, addPosition, addDeptPostRel, checkIfDeptExists, getPositionsByDepartment, getAllPositions, getPositionByID, updatePositionName, getDepartmentForPositions, deleteDepartmentForPosition, insertDepartmentForPosition, getPoistionsForExport } = require("./service");
 const randomId = (count) => {
     const string = "abcdefghijklmnopqrstuvwxyz123456789";
     let generatedId = "";
@@ -7,6 +7,10 @@ const randomId = (count) => {
     }
     return generatedId;
 }
+const excelJS = require("exceljs");
+const path = require("path");
+const fs = require("fs");
+
 
 module.exports = {
     getDepartmentsForPoisiton: async (req, res) => {
@@ -113,10 +117,11 @@ module.exports = {
     },
     getAllPositions: async (req, res) => {
         try {
+            const body = req.body;
             let offset = req.params.offset;
             offset = parseInt(offset) * 15;
 
-            const result = await getAllPositions(offset);
+            const result = await getAllPositions(offset, body);
             return res.status(200).send({
                 success: true,
                 positions: result.positions,
@@ -242,6 +247,51 @@ module.exports = {
             }
 
 
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    exportDataToExcel: async (req, res) => {
+        try {
+            const data = req.body;
+            const date = new Date();
+            const filename = `${date.getTime()}-vəzifələr.xlsx`;
+            let offset = req.body.offset;
+            offset = (offset - 1) * 10;
+            let positionData = await getPoistionsForExport(data);
+            const workbook = new excelJS.Workbook();
+            const worksheet = workbook.addWorksheet("Vəzifələr");
+            worksheet.columns= [
+                {header: "Vəzifə Adı", key: "name", width: 10},
+            ]
+            positionData.forEach(position => {
+                const posDataFromDB = {
+                    name: position.name
+                };
+                worksheet.addRow(posDataFromDB);
+            });
+            worksheet.getRow(1).eachCell((cell) => {
+                cell.font = {bold: true};
+            });
+            const excelPath = path.join((__dirname), `../../public/excels/${filename}`);
+            await workbook.xlsx.writeFile(excelPath);
+            setTimeout(() => {
+                fs.unlink(excelPath, (err) => {
+                    if(err) {
+                        console.log(err);
+                        res.status(400).json({
+                            success: false,
+                            message: "Unknown error has been occurred"
+                        });
+                    }
+                });
+            }, 10000);
+            res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            res.download(excelPath, "Vəzifələr.xlsx");
         } catch (err) {
             console.log(err);
             return res.status(500).send({

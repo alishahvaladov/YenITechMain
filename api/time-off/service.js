@@ -15,8 +15,10 @@ module.exports = {
             logging: false
         });
     },
-    getTimeOffs: async (hr_approve, director_approve, directorProject = null, offset) => {
+    getTimeOffs: async (hr_approve, director_approve, directorProject = null, offset, body) => {
         const result = {};
+        const replacements = {};
+
         let query = `
             SELECT toff.*, emp.first_name, emp.last_name, emp.father_name FROM TimeOffRequests as toff
             LEFT JOIN Employees as emp ON toff.emp_id = emp.id
@@ -39,29 +41,121 @@ module.exports = {
 
         if(directorProject !== null) {
             query += " AND emp.project_id = :directorProject"
-            countQuery += " AND emp.project_id = :directorProject"
+            countQuery += " AND emp.project_id = :directorProject"        
+            replacements.directorProject = directorProject;
+        }
+
+        if (body.qEmployee && body.qEmployee !== "") {
+            const splittedEmp = body.qEmployee.split(" ");
+            if (splittedEmp.length === 1) {
+                query += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee)
+                `;
+                countQuery += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+            }
+            if (splittedEmp.length === 2) {
+                query += `
+                    AND ((emp.first_name like :qEmployee AND emp.last_name like :qEmployee2) OR (emp.first_name like :qEmployee AND emp.father_name like :qEmployee2) OR (emp.last_name like :qEmployee AND emp.father_name like :qEmployee2))
+                `;
+                countQuery += `
+                    AND ((emp.first_name like :qEmployee AND emp.last_name like :qEmployee2) OR (emp.first_name like :qEmployee AND emp.father_name like :qEmployee2) OR (emp.last_name like :qEmployee AND emp.father_name like :qEmployee2))
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+            }
+            if (splittedEmp.length === 3) {
+                query += `
+                    AND (emp.first_name like :qEmployee AND emp.last_name like :qEmployee2 AND emp.father_name like :qEmployee3)
+                `;
+                countQuery += `
+                    AND (emp.first_name like :qEmployee AND emp.last_name like :qEmployee2 AND emp.father_name like :qEmployee3)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+                replacements.qEmployee3 = `%${splittedEmp[2]}%`;
+            }
+        }
+
+        if (body.qType && body.qType !== "") {
+            query += `
+                AND toff.timeoff_type = :qType
+            `;
+            countQuery += `
+                AND toff.timeoff_type = :qType
+            `;
+            replacements.qType = body.qType;
+        }
+        
+        if (body.qStartDate && body.qStartDate !== "") {
+            query += `
+                AND toff.timeoff_start_date >= :qStartDate
+                AND toff.timeoff_end_date >= :qStartDate
+            `;
+            countQuery += `
+                AND toff.timeoff_start_date >= :qStartDate
+                AND toff.timeoff_end_date >= :qStartDate
+            `;
+            replacements.qStartDate = body.qStartDate
+        }
+        
+        if (body.qEndDate && body.qEndDate !== "") {
+            query += `
+                AND toff.timeoff_end_date <= :qEndDate
+                AND toff.timeoff_start_date <= :qEndDate
+            `;
+            countQuery += `
+                AND toff.timeoff_end_date <= :qEndDate
+                AND toff.timeoff_start_date <= :qEndDate
+            `;
+            replacements.qEndDate = body.qEndDate
+        }
+        
+        if (body.qJStartDate && body.qJStartDate !== "") {
+            query += `
+                AND toff.timeoff_job_start_date = :qJStartDate
+            `;
+            countQuery += `
+                AND toff.timeoff_job_start_date = :qJStartDate
+            `;
+            replacements.qJStartDate = body.qJStartDate;
+        }
+
+        if (body.qStatus && body.qStatus !== "") {
+            query += `
+                AND toff.status = :qStatus
+            `;
+            countQuery += `
+                AND toff.status = :qStatus
+            `;
+            replacements.qStatus = body.qStatus;
         }
 
         query += `
-            ORDER BY (toff.status <> 0) DESC, toff.status
+            AND (toff.timeoff_start_date < toff.timeoff_end_date AND toff.timeoff_start_date < toff.timeoff_job_start_date AND toff.timeoff_end_date <= toff.timeoff_job_start_date)
+        `;
+        countQuery += `
+            AND (toff.timeoff_start_date < toff.timeoff_end_date AND toff.timeoff_start_date < toff.timeoff_job_start_date AND toff.timeoff_end_date <= toff.timeoff_job_start_date)
+        `;
+
+        query += `
+            ORDER BY toff.created_at DESC
             LIMIT 15 OFFSET :offset
         `;
+        replacements.offset = offset;
 
         result.timeoffs = await sequelize.query(query, {
             type: QueryTypes.SELECT,
             logging: false,
-            replacements: {
-                directorProject,
-                offset
-            }
+            replacements
         });
 
         result.count = await sequelize.query(countQuery, {
             type: QueryTypes.SELECT,
             logging: false,
-            replacements: {
-                directorProject
-            }
+            replacements
         });
 
         return result;
@@ -357,5 +451,87 @@ module.exports = {
         });
 
         return result;
+    },
+    getTimeOffsForExport: async (body) => {
+        const replacements = {};
+
+        let query = `
+            SELECT toff.*, emp.first_name, emp.last_name, emp.father_name FROM TimeOffRequests as toff
+            LEFT JOIN Employees as emp ON toff.emp_id = emp.id
+            WHERE emp.deletedAt IS NULL
+            AND emp.id IS NOT NULL
+        `;
+
+        if (body.qEmployee && body.qEmployee !== "") {
+            const splittedEmp = body.qEmployee.split(" ");
+            if (splittedEmp.length === 1) {
+                query += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+            }
+            if (splittedEmp.length === 2) {
+                query += `
+                    AND ((emp.first_name like :qEmployee AND emp.last_name like :qEmployee2) OR (emp.first_name like :qEmployee AND emp.father_name like :qEmployee2) OR (emp.last_name like :qEmployee AND emp.father_name like :qEmployee2))
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+            }
+            if (splittedEmp.length === 3) {
+                query += `
+                    AND (emp.first_name like :qEmployee AND emp.last_name like :qEmployee2 AND emp.father_name like :qEmployee3)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+                replacements.qEmployee3 = `%${splittedEmp[2]}%`;
+            }
+        }
+
+        if (body.qType && body.qType !== "") {
+            query += `
+                AND toff.timeoff_type = :qType
+            `;
+            replacements.qType = body.qType;
+        }
+        
+        if (body.qStartDate && body.qStartDate !== "") {
+            query += `
+                AND toff.timeoff_start_date >= :qStartDate
+                AND toff.timeoff_end_date >= :qStartDate
+            `;
+            replacements.qStartDate = body.qStartDate
+        }
+        
+        if (body.qEndDate && body.qEndDate !== "") {
+            query += `
+                AND toff.timeoff_end_date <= :qEndDate
+                AND toff.timeoff_start_date <= :qEndDate
+            `;
+            replacements.qEndDate = body.qEndDate
+        }
+        
+        if (body.qJStartDate && body.qJStartDate !== "") {
+            query += `
+                AND toff.timeoff_job_start_date = :qJStartDate
+            `;
+            replacements.qJStartDate = body.qJStartDate;
+        }
+
+        if (body.qStatus && body.qStatus !== "") {
+            query += `
+                AND toff.status = :qStatus
+            `;
+            replacements.qStatus = body.qStatus;
+        }
+
+        query += `
+            AND (toff.timeoff_start_date < toff.timeoff_end_date AND toff.timeoff_start_date < toff.timeoff_job_start_date AND toff.timeoff_end_date <= toff.timeoff_job_start_date)
+        `;
+
+        return await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
+        });
     }
 }

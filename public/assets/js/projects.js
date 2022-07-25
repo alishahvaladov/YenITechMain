@@ -2,13 +2,25 @@ const tbody = document.querySelector("tbody");
 const loading = document.querySelector(".loading");
 const pgContatiner = document.querySelector(".pagination-container");
 const pagination = document.querySelector('.pagination');
+const exportToExcelBtn = document.querySelector("#exportToExcel");
+
+const qNameInput = document.querySelector("#qName");
+const qAddressInput = document.querySelector("#qAddress");
+const qEmployeeInput = document.querySelector("#qEmployee");
+
+let qName, qAddress, qEmployee;
+
+const getSearchData = () => {
+    qName = qNameInput.value;
+    qAddress = qAddressInput.value;
+    qEmployee = qEmployeeInput.value;
+}
 
 const pageFunctions = () => {
     let pgItems = document.querySelectorAll('.pagination-item');
     let fTDots = document.querySelector('.fTDots');
     let lTDots = document.querySelector('.lTDots');
     pgItems = Array.from(pgItems);
-    console.log(pgItems);
     pgItems.forEach(item => {
         item.addEventListener("click", () => {
             loading.classList.remove('d-none');
@@ -56,7 +68,13 @@ const pageFunctions = () => {
                 }
             }
             setTimeout(() => {
-                $.get(`http://localhost:3000/api/project/allProjects/${offset}`, (res) => {
+                getSearchData();
+                $.post(`http://localhost:3000/api/project/allProjects/${offset}`, {
+                    qName,
+                    qEmployee,
+                    qAddress
+                },
+                (res) => {
                     let tbody = document.querySelector("tbody");
                     let html = "";
                     const projects = res.project;
@@ -86,8 +104,12 @@ const pageFunctions = () => {
 
 const renderPage = () => {
     let html = "";
-    $.get("http://localhost:3000/api/project/allProjects/0", (res) => {
-        console.log(res);
+    getSearchData();
+    $.post("http://localhost:3000/api/project/allProjects/0", {
+        qName,
+        qAddress,
+        qEmployee
+    }, (res) => {
         const projects = res.project;
         let count = res.count[0].count;
         count = Math.ceil(count / 15);
@@ -112,6 +134,7 @@ const renderPage = () => {
 
         if (count > 1) {
             let countHtml = "";
+            pagination.classList.remove('d-none');
 
             for (let i = 1; i <= count; i++) {
                 if (i === 1) {
@@ -145,5 +168,44 @@ const renderPage = () => {
         }
     });
 }
+
+qNameInput.addEventListener('keyup', () => {
+    renderPage();
+});
+qAddressInput.addEventListener('keyup', () => {
+    renderPage();
+});
+qEmployeeInput.addEventListener('keyup', () => {
+    renderPage();
+});
+
+const exportToExcel = () => {
+    getSearchData();
+    const method = "post";
+    let params = {
+        qName,
+        qAddress,
+        qEmployee
+    }
+    let form = document.createElement('form');
+    form.setAttribute("method", method);
+    form.setAttribute("action", "http://localhost:3000/api/project/export-to-excel");
+ 
+    for (let key in params) {
+       if (params.hasOwnProperty(key)) {
+          const hiddenField = document.createElement("input");
+          hiddenField.setAttribute('type', 'hidden');
+          hiddenField.setAttribute('name', key);
+          hiddenField.setAttribute('value', params[key]);
+          form.appendChild(hiddenField);
+       }
+    }
+    document.body.appendChild(form);
+    form.submit();
+ }
+ 
+ exportToExcelBtn.addEventListener("click", () => {
+    exportToExcel();
+ });
 
 setTimeout(renderPage, 1000);

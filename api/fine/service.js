@@ -9,52 +9,139 @@ if (date !== 1) {
 }
 
 module.exports = {
-    getFineData: async (role, limit, offset) => {
+    getFineData: async (role, limit, offset, body) => {
         let query, countQuery;
+        const replacements = {};
         const result = {};
+        console.log(body)
         if (role === 2) {
             query = `
                 SELECT fn.id as fineID, fn.emp_id, fn.minute_total, fn.fine_minute, fn.fine_status, fn.updatedAt, emp.first_name, emp.last_name, emp.father_name FROM Fines as fn
                 LEFT JOIN Employees as emp ON fn.emp_id = emp.id
                 WHERE fn.fine_minute > 0
-                ORDER BY fn.createdAt DESC
-                LIMIT :limit OFFSET :offset
             `;
             countQuery = `
                 SELECT COUNT(*) as count FROM Fines as fn
                 LEFT JOIN Employees as emp ON fn.emp_id = emp.id
                 WHERE fn.fine_minute > 0
-                ORDER BY fn.createdAt DESC
-            `
+            `;
         } else {
             query = `
                 SELECT fn.id as fineID, fn.emp_id, fn.minute_total, fn.fine_minute, fn.fine_status, fn.updatedAt, emp.first_name, emp.last_name, emp.father_name FROM Fines as fn
                 LEFT JOIN Employees as emp ON fn.emp_id = emp.id
-                WHERE (fn.minute_total > 0 OR fn.fine_minute > 0)
-                ORDER BY fn.createdAt DESC
-                LIMIT :limit OFFSET :offset
-            `;
+                WHERE (fn.minute_total > 0 OR fn.fine_minute > 0)`;
             countQuery = `
                 SELECT COUNT(*) as count FROM Fines as fn
                 LEFT JOIN Employees as emp ON fn.emp_id = emp.id
-                WHERE (fn.minute_total > 0 OR fn.fine_minute > 0)
-                ORDER BY fn.createdAt DESC
-            `
+                WHERE (fn.minute_total > 0 OR fn.fine_minute > 0)`;
         }
+
+        if (body.qEmployee && body.qEmployee !== "") {
+            const splittedEmp = body.qEmployee.split(" ");
+            if (splittedEmp.length === 1) {
+                query += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee)
+                `;
+                countQuery += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+            }
+            if (splittedEmp.length === 2) {
+                query += `
+                    AND ((emp.first_name like :qEmployee AND emp.last_name like :qEmployee2) OR (emp.first_name like :qEmployee AND emp.father_name like :qEmployee2) OR (emp.last_name like :qEmployee AND emp.father_name like :qEmployee2))
+                `;
+                countQuery += `
+                    AND ((emp.first_name like :qEmployee AND emp.last_name like :qEmployee2) OR (emp.first_name like :qEmployee AND emp.father_name like :qEmployee2) OR (emp.last_name like :qEmployee AND emp.father_name like :qEmployee2))
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+            }
+            if (splittedEmp.length === 3) {
+                query += `
+                    AND (emp.first_name like :qEmployee AND emp.last_name like :qEmployee2 AND emp.father_name like :qEmployee3)
+                `;
+                countQuery += `
+                    AND (emp.first_name like :qEmployee AND emp.last_name like :qEmployee2 AND emp.father_name like :qEmployee3)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+                replacements.qEmployee3 = `%${splittedEmp[2]}%`;
+            }
+        }
+        if (body.qMinuteTotalMin && body.qMinuteTotalMin !== "") {
+            query += `
+                AND fn.minute_total > :qMinuteTotalMin
+            `;
+            countQuery += `
+                AND fn.minute_total > :qMinuteTotalMin
+            `;
+            replacements.qMinuteTotalMin = body.qMinuteTotalMin;
+        }
+
+        if (body.qMinuteTotalMax && body.qMinuteTotalMax !== "") {
+            query += `
+                AND fn.minute_total < :qMinuteTotalMax
+            `;
+            countQuery += `
+                AND fn.minute_total < :qMinuteTotalMax
+            `;
+            replacements.qMinuteTotalMax = body.qMinuteTotalMax;
+        }
+
+        if (body.qApprovedFineMin && body.qApprovedFineMin !== "") {
+            query += `
+                AND fn.fine_minute > :qApprovedFineMin
+            `;
+            countQuery += `
+                AND fn.fine_minute > :qApprovedFineMin
+            `;
+            replacements.qApprovedFineMin = body.qApprovedFineMin;
+        }
+
+        if (body.qApprovedFineMax && body.qApprovedFineMax !== "") {
+            query += `
+                AND fn.fine_minute < :qApprovedFineMax
+            `;
+            countQuery += `
+                AND fn.fine_minute < :qApprovedFineMax
+            `;
+            replacements.qApprovedFineMax = body.qApprovedFineMax;
+        }
+
+        if(body.qDate && body.qDate !== "") {
+            const splittedqDate = body.qDate.split(".");
+            if (splittedqDate.length === 2) {
+                query += `
+                    AND (MONTH(fn.updatedAt) = :qMonth AND YEAR(fn.updatedAt) = :qYear)
+                `;
+                countQuery += `
+                    AND (MONTH(fn.updatedAt) = :qMonth AND YEAR(fn.updatedAt) = :qYear)
+                `;
+                replacements.qMonth = splittedqDate[0];
+                replacements.qYear = splittedqDate[1];
+            }
+        }
+
+        query += `
+            ORDER BY fn.createdAt DESC
+            LIMIT :limit OFFSET :offset
+        `;
+
+        replacements.limit = limit;
+        replacements.offset = offset;
+
         result.fineData = await sequelize.query(query, {
             logging: false,
             type: QueryTypes.SELECT,
-            replacements: {
-                limit,
-                offset
-            }
+            replacements
         });
 
         result.fineCount = await sequelize.query(countQuery, {
             logging: false,
-            type: QueryTypes.SELECT
+            type: QueryTypes.SELECT,
+            replacements
         });
-
         return result;
     },
     getFineDataByID: async (id) => {
@@ -217,6 +304,91 @@ module.exports = {
             cb(null, res);
         }).catch((err) => {
             cb(err);
+        });
+    },
+    getFineDataForExport: async (role, body) => {
+        const replacements = {};
+        let query;
+        if (role === 2) {
+            query = `
+                SELECT fn.id as fineID, fn.emp_id, fn.minute_total, fn.fine_minute, fn.fine_status, fn.updatedAt, emp.first_name, emp.last_name, emp.father_name FROM Fines as fn
+                LEFT JOIN Employees as emp ON fn.emp_id = emp.id
+                WHERE fn.fine_minute > 0
+            `;
+        } else {
+            query = `
+                SELECT fn.id as fineID, fn.emp_id, fn.minute_total, fn.fine_minute, fn.fine_status, fn.updatedAt, emp.first_name, emp.last_name, emp.father_name FROM Fines as fn
+                LEFT JOIN Employees as emp ON fn.emp_id = emp.id
+                WHERE (fn.minute_total > 0 OR fn.fine_minute > 0)`;
+        }
+
+        if (body.qEmployee && body.qEmployee !== "") {
+            const splittedEmp = body.qEmployee.split(" ");
+            if (splittedEmp.length === 1) {
+                query += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+            }
+            if (splittedEmp.length === 2) {
+                query += `
+                    AND ((emp.first_name like :qEmployee AND emp.last_name like :qEmployee2) OR (emp.first_name like :qEmployee AND emp.father_name like :qEmployee2) OR (emp.last_name like :qEmployee AND emp.father_name like :qEmployee2))
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+            }
+            if (splittedEmp.length === 3) {
+                query += `
+                    AND (emp.first_name like :qEmployee AND emp.last_name like :qEmployee2 AND emp.father_name like :qEmployee3)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+                replacements.qEmployee3 = `%${splittedEmp[2]}%`;
+            }
+        }
+        if (body.qMinuteTotalMin && body.qMinuteTotalMin !== "") {
+            query += `
+                AND fn.minute_total > :qMinuteTotalMin
+            `;
+            replacements.qMinuteTotalMin = body.qMinuteTotalMin;
+        }
+
+        if (body.qMinuteTotalMax && body.qMinuteTotalMax !== "") {
+            query += `
+                AND fn.minute_total < :qMinuteTotalMax
+            `;
+            replacements.qMinuteTotalMax = body.qMinuteTotalMax;
+        }
+
+        if (body.qApprovedFineMin && body.qApprovedFineMin !== "") {
+            query += `
+                AND fn.fine_minute > :qApprovedFineMin
+            `;
+            replacements.qApprovedFineMin = body.qApprovedFineMin;
+        }
+
+        if (body.qApprovedFineMax && body.qApprovedFineMax !== "") {
+            query += `
+                AND fn.fine_minute < :qApprovedFineMax
+            `;
+            replacements.qApprovedFineMax = body.qApprovedFineMax;
+        }
+
+        if(body.qDate && body.qDate !== "") {
+            const splittedqDate = body.qDate.split(".");
+            if (splittedqDate.length === 2) {
+                query += `
+                    AND (MONTH(fn.updatedAt) = :qMonth AND YEAR(fn.updatedAt) = :qYear)
+                `;
+                replacements.qMonth = splittedqDate[0];
+                replacements.qYear = splittedqDate[1];
+            }
+        }
+
+        return await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
         });
     }
 }

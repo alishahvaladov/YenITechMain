@@ -62,31 +62,46 @@ module.exports = {
             }
         });
     },
-    getAllPositions: async (offset) => {
+    getAllPositions: async (offset, body) => {
         const result = {};
+        const replacements = {};
 
-        const positions = await sequelize.query(`
+        let query = `
             SELECT id, name FROM Positions
             WHERE deletedAt IS NULL
-            LIMIT 15 OFFSET :offset
-        `, {
-            logging: false,
-            type: QueryTypes.SELECT,
-            replacements: {
-                offset
-            }
-        });
-
-        const count = await sequelize.query(`
+        `;
+        let countQuery = `
             SELECT COUNT(*) as count FROM Positions
             WHERE deletedAt IS NULL
-        `, {
+        `;
+
+        if (body.qName && body.qName !== "") {
+            query += `
+                AND name like :qName
+            `;
+            countQuery += `
+                AND name like :qName
+            `;
+            replacements.qName = `%${body.qName}%`
+        }
+
+        query += `
+            LIMIT 15 OFFSET :offset
+        `;
+        replacements.offset = offset;
+
+        result.positions = await sequelize.query(query, {
             logging: false,
             type: QueryTypes.SELECT,
+            replacements
         });
 
-        result.positions = positions;
-        result.count = count;
+        result.count = await sequelize.query(countQuery, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
+        });
+
         return result;
     },
     getPositionByID: async (id) => {
@@ -176,6 +191,34 @@ module.exports = {
             cb(null, res);
         }).catch((err) => {
             cb(err);
+        });
+    },
+    getPoistionsForExport: async (body) => {
+        const replacements = {};
+
+        let query = `
+            SELECT id, name FROM Positions
+            WHERE deletedAt IS NULL
+        `;
+        let countQuery = `
+            SELECT COUNT(*) as count FROM Positions
+            WHERE deletedAt IS NULL
+        `;
+
+        if (body.qName && body.qName !== "") {
+            query += `
+                AND name like :qName
+            `;
+            countQuery += `
+                AND name like :qName
+            `;
+            replacements.qName = `%${body.qName}%`
+        }
+
+        return await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
         });
     }
 }

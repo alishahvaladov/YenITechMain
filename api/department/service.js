@@ -62,27 +62,45 @@ module.exports = {
             }
         });
     },
-    getAllDepartments: async (offset) => {
+    getAllDepartments: async (offset, body) => {
         const result = {};
-        
-        const departments = await sequelize.query(`
+        const replacements = {};
+
+        let query = `
             SELECT id, name FROM Departments
             WHERE deletedAt IS NULL
-            LIMIT 15 OFFSET :offset
-        `, {
-            type: QueryTypes.SELECT,
-            logging: false,
-            replacements: {
-                offset
-            }
-        });
-
-        const count = await sequelize.query(`
+        `;
+        let countQuery = `
             SELECT COUNT(*) as count FROM Departments
             WHERE deletedAt IS NULL
-        `, {
+        `;
+
+        if (body.qName && body.qName !== "") {
+            query += `
+                AND name like :qName
+            `;
+            countQuery += `
+                AND name like :qName
+            `;
+            replacements.qName = `%${body.qName}%`
+        }
+
+        query += `
+            LIMIT 15 OFFSET :offset
+        `;
+
+        replacements.offset = offset
+
+        const departments = await sequelize.query(query, {
             type: QueryTypes.SELECT,
             logging: false,
+            replacements
+        });
+
+        const count = await sequelize.query(countQuery, {
+            type: QueryTypes.SELECT,
+            logging: false,
+            replacements
         });
 
         result.departments = departments;
@@ -183,4 +201,32 @@ module.exports = {
             cb(err);
         });
     },
+    getDepartmentsForExport: async (body) => {
+        const replacements = {};
+
+        let query = `
+            SELECT id, name FROM Departments
+            WHERE deletedAt IS NULL
+        `;
+        let countQuery = `
+            SELECT COUNT(*) as count FROM Departments
+            WHERE deletedAt IS NULL
+        `;
+
+        if (body.qName && body.qName !== "") {
+            query += `
+                AND name like :qName
+            `;
+            countQuery += `
+                AND name like :qName
+            `;
+            replacements.qName = `%${body.qName}%`
+        }
+
+        return await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
+        });
+    }
 }

@@ -9,6 +9,28 @@ const warningModalApprove = document.querySelector("#warningModalApprove");
 const warningModal = document.querySelector(".warning-modal");
 const pagination = document.querySelector(".pagination");
 const pgContainer = document.querySelector(".pagination-container");
+const exportToExcelBtn = document.querySelector("#exportToExcel");
+
+const qEmployeeInput = document.querySelector("#qEmployee");
+const qMinuteTotalMinInput = document.querySelector("#qMinuteTotalMin");
+const qMinuteTotalMaxInput = document.querySelector("#qMinuteTotalMax");
+const qApprovedFineMinInput = document.querySelector("#qApprovedFineMin");
+const qApprovedFineMaxInput = document.querySelector("#qApprovedFineMax");
+const qDateInput = document.querySelector("#qDate");
+
+let qEmployee, qMinuteTotalMin, qMinuteTotalMax, qApprovedFineMin, qApprovedFineMax, qDate;
+
+const dateResetBtn = document.querySelector("#dateReset");
+
+
+const getSearchData = () => {
+   qEmployee = qEmployeeInput.value;
+   qMinuteTotalMin = qMinuteTotalMinInput.value;
+   qMinuteTotalMax = qMinuteTotalMaxInput.value;
+   qApprovedFineMin = qApprovedFineMinInput.value;
+   qApprovedFineMax = qApprovedFineMaxInput.value;
+   qDate = qDateInput.value;
+}
 
 
 const pageBtnActions = () => {
@@ -105,8 +127,16 @@ const pageFuncs = () => {
                 }
              }
           }
+          getSearchData();
           setTimeout(() => {
-             $.get(`http://localhost:3000/api/fine?limit=15&offset=${offset}`, (res) => {
+             $.post(`http://localhost:3000/api/fine?limit=15&offset=${offset}`, {
+                qEmployee,
+                qMinuteTotalMin,
+                qMinuteTotalMax,
+                qApprovedFineMin,
+                qApprovedFineMax,
+                qDate
+             }, (res) => {
                 let tbody = $("tbody");
                 let trs = ``;
                 tbody.text("");
@@ -181,122 +211,163 @@ const pageFuncs = () => {
 
 
 const renderPage = () => {
-    $.get("http://localhost:3000/api/fine?limit=15&offset=0", (res) => {
-        let html = "";
-        let count = res.fineCount[0].count;
-        count = Math.ceil(parseInt(count) / 15);
-        if (res.fineData.length > 0) {
-            res.fineData.forEach(fine => {
-                let date = new Date(fine.updatedAt);
-                date = date.toLocaleDateString();
-                const splitDate = date.toString().split("/");
-                date = `${splitDate[1]}.${splitDate[0]}.${splitDate[2]}`;
-                if (res.role === "admin") {
-                    html += `
-                        <tr>
-                            <td>
-                                ${fine.first_name} ${fine.last_name} ${fine.father_name}
-                            </td>
-                            <td>
-                                ${fine.minute_total}
-                            </td>
-                            <td>
-                                ${fine.fine_minute}
-                            </td>
-                            <td>
-                                ${date}
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    <button class="btn btn-outline-primary reset-approved-fine" value="${fine.fineID}"><i class="bi bi-arrow-clockwise"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                    `
-                } else {
-                    html += `
-                        <tr>
-                            <td>
-                                ${fine.first_name} ${fine.last_name} ${fine.father_name}
-                            </td>
-                            <td>
-                                ${fine.minute_total}
-                            </td>
-                            <td>
-                                ${fine.fine_minute}
-                            </td>
-                            <td>
-                                ${date}
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    <button class="btn btn-outline-success approve-fine" value="${fine.fineID}"><i class="bi bi-check-circle-fill"></i></button>
-                                    <button class="btn btn-outline-danger delete-fine" value="${fine.fineID}"><i class="bi bi-x-circle-fill"></i></button>
-                                    <button class="btn btn-outline-secondary reset-fine" value="${fine.fineID}"><i class="bi bi-pencil-square"></i></button>
-                                    <a class="btn btn-outline-info" href="/fines/cumilative/${fine.emp_id}"><i class="bi bi-arrow-return-right"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                    `
-                }
-            });
-            tbody.innerHTML = html;
-            
-            
-            let pgHtml = "";
-            if (count === 1) {
-                pagination.classList.add('d-none');
-             } else {
-                for (let i = 1; i <= count; i++) {
-                   if (i === 1) {
-                      pgHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
-                      if(count > 21) {
-                         pgHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
-                      } else {
-                        pgHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots d-none disabled">...</button>`
-                      }
-                   } if (i > 21 && i < count) {
-                      pgHtml += `
-                           <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                       `
-                   } else if (i !== 1 && i !== count) {
-                      pgHtml += `
-                           <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                       `
-                   }
-                   if (i === count) {
-                      if (count > 21) {
-                         pgHtml += `
-                           <button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>
-                         `
-                      } else {
-                        pgHtml += `
-                            <button class="btn btn-outline-dark btn-sm lTDots d-none disabled">...</button>
+    getSearchData();
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:3000/api/fine?limit=15&offset=0",
+        data: {
+            qEmployee,
+            qMinuteTotalMin,
+            qMinuteTotalMax,
+            qApprovedFineMin,
+            qApprovedFineMax,
+            qDate
+        },
+        success: ((res) => {
+            let html = "";
+            let count = res.fineCount[0].count;
+            count = Math.ceil(parseInt(count) / 15);
+            if (res.fineData.length > 0) {
+                res.fineData.forEach(fine => {
+                    let date = new Date(fine.updatedAt);
+                    date = date.toLocaleDateString();
+                    const splitDate = date.toString().split("/");
+                    date = `${splitDate[1]}.${splitDate[0]}.${splitDate[2]}`;
+                    if (res.role === "admin") {
+                        html += `
+                            <tr>
+                                <td>
+                                    ${fine.first_name} ${fine.last_name} ${fine.father_name}
+                                </td>
+                                <td>
+                                    ${fine.minute_total}
+                                </td>
+                                <td>
+                                    ${fine.fine_minute}
+                                </td>
+                                <td>
+                                    ${date}
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-outline-primary reset-approved-fine" value="${fine.fineID}"><i class="bi bi-arrow-clockwise"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
                         `
-                      }
-                      if (count > 1) {
-                         pgHtml += `
-                           <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                       `
-                      }
-                      
-                   }
-                }
-                pgContainer.innerHTML = pgHtml;
-             }
-
-
-            pageFuncs();
-        } else {
-            tbody.innerHTML = "No Data Found";
-        }
-        
-
-        setTimeout(() => {
-            loading.classList.add("d-none");
-        }, 1000);
+                    } else {
+                        html += `
+                            <tr>
+                                <td>
+                                    ${fine.first_name} ${fine.last_name} ${fine.father_name}
+                                </td>
+                                <td>
+                                    ${fine.minute_total}
+                                </td>
+                                <td>
+                                    ${fine.fine_minute}
+                                </td>
+                                <td>
+                                    ${date}
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-outline-success approve-fine" value="${fine.fineID}"><i class="bi bi-check-circle-fill"></i></button>
+                                        <button class="btn btn-outline-danger delete-fine" value="${fine.fineID}"><i class="bi bi-x-circle-fill"></i></button>
+                                        <button class="btn btn-outline-secondary reset-fine" value="${fine.fineID}"><i class="bi bi-pencil-square"></i></button>
+                                        <a class="btn btn-outline-info" href="/fines/cumilative/${fine.emp_id}"><i class="bi bi-arrow-return-right"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        `
+                    }
+                });
+                tbody.innerHTML = html;
+                
+                
+                let pgHtml = "";
+                if (count === 1) {
+                    pagination.classList.add('d-none');
+                 } else {
+                    pagination.classList.remove('d-none');
+                    for (let i = 1; i <= count; i++) {
+                       if (i === 1) {
+                          pgHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
+                          if(count > 21) {
+                             pgHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
+                          } else {
+                            pgHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots d-none disabled">...</button>`
+                          }
+                       } if (i > 21 && i < count) {
+                          pgHtml += `
+                               <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                           `
+                       } else if (i !== 1 && i !== count) {
+                          pgHtml += `
+                               <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                           `
+                       }
+                       if (i === count) {
+                          if (count > 21) {
+                             pgHtml += `
+                               <button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>
+                             `
+                          } else {
+                            pgHtml += `
+                                <button class="btn btn-outline-dark btn-sm lTDots d-none disabled">...</button>
+                            `
+                          }
+                          if (count > 1) {
+                             pgHtml += `
+                               <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                           `
+                          }
+                          
+                       }
+                    }
+                    pgContainer.innerHTML = pgHtml;
+                 }
+    
+    
+                pageFuncs();
+            } else {
+                tbody.innerHTML = "No Data Found";
+            }
+    
+            setTimeout(() => {
+                loading.classList.add("d-none");
+            }, 1000);
+        })
+    }).catch((err) => {
+        console.log(err);
     });
 }
+
+qEmployeeInput.addEventListener("keyup", () => {
+    renderPage();
+});
+qMinuteTotalMinInput.addEventListener("keyup", () => {
+    renderPage();
+});
+qMinuteTotalMaxInput.addEventListener("keyup", () => {
+    renderPage();
+});
+qApprovedFineMinInput.addEventListener("keyup", () => {
+    renderPage();
+});
+qApprovedFineMaxInput.addEventListener("keyup", () => {
+    renderPage();
+});
+qDateInput.addEventListener("change", () => {
+    renderPage();
+});
+
+
+dateResetBtn.addEventListener("click", () => {
+    qDateInput.value = "";
+    renderPage();
+});
+
 
 const requests = () => {
     approveModalApprove.addEventListener("click", () => {
@@ -328,3 +399,36 @@ approveModalCancel.addEventListener("click", () => {
 warningModalCancel.addEventListener("click", () => {
     warningModal.classList.add("d-none");
 });
+
+
+const exportToExcel = () => {
+    getSearchData();
+    const method = "post";
+    let params = {
+        qEmployee,
+        qMinuteTotalMin,
+        qMinuteTotalMax,
+        qApprovedFineMin,
+        qApprovedFineMax,
+        qDate
+    }
+    let form = document.createElement('form');
+    form.setAttribute("method", method);
+    form.setAttribute("action", "http://localhost:3000/api/fine/export-to-excel");
+ 
+    for (let key in params) {
+       if (params.hasOwnProperty(key)) {
+          const hiddenField = document.createElement("input");
+          hiddenField.setAttribute('type', 'hidden');
+          hiddenField.setAttribute('name', key);
+          hiddenField.setAttribute('value', params[key]);
+          form.appendChild(hiddenField);
+       }
+    }
+    document.body.appendChild(form);
+    form.submit();
+ }
+ 
+ exportToExcelBtn.addEventListener("click", () => {
+    exportToExcel();
+ });

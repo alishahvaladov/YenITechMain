@@ -2,6 +2,15 @@ const tbody = document.querySelector("tbody");
 const loading = document.querySelector(".loading");
 const pgContatiner = document.querySelector(".pagination-container");
 const pagination = document.querySelector(".pagination");
+const exportToExcelBtn = document.querySelector("#exportToExcel");
+
+const qNameInput = document.querySelector("#qName");
+
+let qName;
+
+const getSearchData = () => {
+    qName = qNameInput.value;
+}
 
 
 const pageFunctions = () => {
@@ -56,7 +65,10 @@ const pageFunctions = () => {
                 }
             }
             setTimeout(() => {
-                $.get(`http://localhost:3000/api/position/allPositions/${offset}`, (res) => {
+                getSearchData();
+                $.post(`http://localhost:3000/api/position/allPositions/${offset}`, {
+                    qName
+                }, (res) => {
                     let tbody = document.querySelector("tbody");
                     let html = "";
                     const positions = res.positions;
@@ -64,9 +76,6 @@ const pageFunctions = () => {
                     positions.forEach(position => {
                         html += `
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
                             <td>${position.name}</td>
                             <td>
                                 <div class="btn-group">
@@ -87,16 +96,16 @@ const pageFunctions = () => {
 
 const renderPage = () => {
     let html = "";
-    $.get("http://localhost:3000/api/position/allPositions/0", (res) => {
+    getSearchData();
+    $.post("http://localhost:3000/api/position/allPositions/0", {
+        qName
+    }, (res) => {
         const positions = res.positions;
         let count = res.count[0].count;
         count = Math.ceil(count / 15);
         positions.forEach(position => {
             html += `
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
                     <td>${position.name}</td>
                     <td>
                         <div class="btn-group">
@@ -111,6 +120,7 @@ const renderPage = () => {
         loading.classList.add('d-none');
 
         if (count > 1) {
+            pagination.classList.remove('d-none');
             let countHtml = "";
 
             for (let i = 1; i <= count; i++) {
@@ -145,5 +155,36 @@ const renderPage = () => {
         }
     });
 }
+
+qNameInput.addEventListener("keyup", () => {
+    renderPage();
+});
+
+const exportToExcel = () => {
+    getSearchData();
+    const method = "post";
+    let params = {
+        qName
+    }
+    let form = document.createElement('form');
+    form.setAttribute("method", method);
+    form.setAttribute("action", "http://localhost:3000/api/position/export-to-excel");
+ 
+    for (let key in params) {
+       if (params.hasOwnProperty(key)) {
+          const hiddenField = document.createElement("input");
+          hiddenField.setAttribute('type', 'hidden');
+          hiddenField.setAttribute('name', key);
+          hiddenField.setAttribute('value', params[key]);
+          form.appendChild(hiddenField);
+       }
+    }
+    document.body.appendChild(form);
+    form.submit();
+ }
+ 
+ exportToExcelBtn.addEventListener("click", () => {
+    exportToExcel();
+ });
 
 setTimeout(renderPage, 1000);

@@ -30,36 +30,107 @@ module.exports = {
             cb(err);
         });
     },
-    getAllUsers: async (offset) => {
+    getAllUsers: async (offset, body) => {
         const result = {};
+        const replacements = {};
 
-        const users = await sequelize.query(`
+        let query = `
             SELECT usr.id, emp.first_name, emp.last_name, emp.father_name, usr.username, usr.email, usr.role FROM Users as usr
             LEFT JOIN Employees as emp ON emp.id = usr.emp_id
             WHERE emp.deletedAt IS NULL
             AND usr.deletedAt IS NULL
             AND emp.j_end_date IS NULL
             AND usr.role != 1
-            LIMIT 15 OFFSET :offset
-        `, {
-            logging: false,
-            type: QueryTypes.SELECT,
-            replacements: {
-                offset
-            }
-        });
-
-
-        const count = await sequelize.query(`
+        `;
+        let countQuery = `
             SELECT COUNT(*) as count FROM Users as usr
             LEFT JOIN Employees as emp ON emp.id = usr.emp_id
             WHERE emp.deletedAt IS NULL
             AND usr.deletedAt IS NULL
             AND emp.j_end_date IS NULL
             AND usr.role != 1
-        `, {
+        `;
+
+        if (body.qEmployee && body.qEmployee !== "") {
+            const splittedEmp = body.qEmployee.split(" ");
+            if (splittedEmp.length === 1) {
+                query += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee)
+                `;
+                countQuery += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+            }
+            if (splittedEmp.length === 2) {
+                query += `
+                    AND ((emp.first_name like :qEmployee AND emp.last_name like :qEmployee2) OR (emp.first_name like :qEmployee AND emp.father_name like :qEmployee2) OR (emp.last_name like :qEmployee AND emp.father_name like :qEmployee2))
+                `;
+                countQuery += `
+                    AND ((emp.first_name like :qEmployee AND emp.last_name like :qEmployee2) OR (emp.first_name like :qEmployee AND emp.father_name like :qEmployee2) OR (emp.last_name like :qEmployee AND emp.father_name like :qEmployee2))
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+            }
+            if (splittedEmp.length === 3) {
+                query += `
+                    AND (emp.first_name like :qEmployee AND emp.last_name like :qEmployee2 AND emp.father_name like :qEmployee3)
+                `;
+                countQuery += `
+                    AND (emp.first_name like :qEmployee AND emp.last_name like :qEmployee2 AND emp.father_name like :qEmployee3)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+                replacements.qEmployee3 = `%${splittedEmp[2]}%`;
+            }
+        }
+
+        if (body.qUsername && body.qUsername !== "") {
+            query += `
+                AND usr.username like :qUsername
+            `;
+            countQuery += `
+                AND usr.username like :qUsername
+            `;
+            replacements.qUsername = `%${body.qUsername}%`
+        }
+
+        if (body.qEmail && body.qEmail !== "") {
+            query += `
+                AND usr.email like :qEmail
+            `;
+            countQuery += `
+                AND usr.email like :qEmail
+            `;
+            replacements.qEmail = `%${body.qEmail}%`;
+        }
+
+        if (body.qRole && body.qRole !== "") {
+            query += `
+                AND usr.role = :qRole
+            `;
+            countQuery += `
+                AND usr.role = :qRole
+            `;
+            replacements.qRole = body.qRole;
+        }
+
+        query += `
+            LIMIT 15 OFFSET :offset
+        `;
+        replacements.offset = offset;
+
+        const users = await sequelize.query(query, {
             logging: false,
-            type: QueryTypes.SELECT
+            type: QueryTypes.SELECT,
+            replacements
+        });
+
+
+        const count = await sequelize.query(countQuery, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
         });
 
         result.users = users;
@@ -170,6 +241,71 @@ module.exports = {
             replacements: {
                 user_id
             }
+        });
+    },
+    getUsersForExport: async (body) => {
+        const replacements = {};
+
+        let query = `
+            SELECT usr.id, emp.first_name, emp.last_name, emp.father_name, usr.username, usr.email, usr.role, rol.name as RoleName FROM Users as usr
+            LEFT JOIN Employees as emp ON emp.id = usr.emp_id
+            LEFT JOIN Roles AS rol ON rol.id = usr.role
+            WHERE emp.deletedAt IS NULL
+            AND usr.deletedAt IS NULL
+            AND emp.j_end_date IS NULL
+            AND usr.role != 1
+        `;
+
+        if (body.qEmployee && body.qEmployee !== "") {
+            const splittedEmp = body.qEmployee.split(" ");
+            if (splittedEmp.length === 1) {
+                query += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+            }
+            if (splittedEmp.length === 2) {
+                query += `
+                    AND ((emp.first_name like :qEmployee AND emp.last_name like :qEmployee2) OR (emp.first_name like :qEmployee AND emp.father_name like :qEmployee2) OR (emp.last_name like :qEmployee AND emp.father_name like :qEmployee2))
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+            }
+            if (splittedEmp.length === 3) {
+                query += `
+                    AND (emp.first_name like :qEmployee AND emp.last_name like :qEmployee2 AND emp.father_name like :qEmployee3)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+                replacements.qEmployee3 = `%${splittedEmp[2]}%`;
+            }
+        }
+
+        if (body.qUsername && body.qUsername !== "") {
+            query += `
+                AND usr.username like :qUsername
+            `;
+            replacements.qUsername = `%${body.qUsername}%`
+        }
+
+        if (body.qEmail && body.qEmail !== "") {
+            query += `
+                AND usr.email like :qEmail
+            `;
+            replacements.qEmail = `%${body.qEmail}%`;
+        }
+
+        if (body.qRole && body.qRole !== "") {
+            query += `
+                AND usr.role = :qRole
+            `;
+            replacements.qRole = body.qRole;
+        }
+
+        return await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
         });
     }
 }

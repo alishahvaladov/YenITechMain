@@ -7,37 +7,76 @@
         <div class="container">
             <h1 class="text-center my-5">Təsdiqləmə Matrisi</h1>
             <thead>
-            <th>Əməkdaş</th>
-            <th>Məzuniyyətin Tipi</th>
-            <th>Başlama Tarixi</th>
-            <th>Bitmə Tarixi</th>
-            <th>İşə qayıtma tarixi</th>
-            <th>Status</th>
-            <th>
-                {{#if hr}}
-                    <a class="btn btn-outline-success btn-sm" href="/timeoffrequests/add-toff-non-user">Əlavə <i class="bi bi-plus-circle"></i></a>
-                {{/if}}
-            </th>
-            <th>
-                {{#if hr}}
-                    <a class="btn btn-outline-primary btn-sm" href="/timeoffrequests/approve-requests/hr">Emal <i class="bi bi-check2-square"></i></a>
-                {{/if}}
-                {{#if deptDirector}}
-                    <a class="btn btn-outline-primary btn-sm" href="/timeoffrequests/approve-requests/dr">Emal <i class="bi bi-check2-square"></i></a>
-                {{/if}}
-            </th>
+                <tr>
+                    <th>Əməkdaş</th>
+                    <th>Məzuniyyətin Tipi</th>
+                    <th>Başlama Tarixi</th>
+                    <th>Bitmə Tarixi</th>
+                    <th>İşə qayıtma tarixi</th>
+                    <th>Status</th>
+                    <th>
+                        {{#if hr}}
+                            <a class="btn btn-outline-success btn-sm" href="/timeoffrequests/add-toff-non-user">Əlavə <i class="bi bi-plus-circle"></i></a>
+                        {{/if}}
+                    </th>
+                    <th>
+                        {{#if hr}}
+                            <a class="btn btn-outline-primary btn-sm" href="/timeoffrequests/approve-requests/hr">Emal <i class="bi bi-check2-square"></i></a>
+                        {{/if}}
+                        {{#if deptDirector}}
+                            <a class="btn btn-outline-primary btn-sm" href="/timeoffrequests/approve-requests/dr">Emal <i class="bi bi-check2-square"></i></a>
+                        {{/if}}
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <input class="form-control" type="text" id="qEmployee" name="qEmployee">
+                    </th>
+                    <th>
+                        <select class="form-select" name="qType" id="qType">
+                            <option value="">All</option>
+                        </select>
+                    </th>
+                    <th>
+                        <div class="d-flex">
+                            <input class="form-control" type="date" id="qStartDate" name="qStartDate">
+                            <div class="mx-1"></div>
+                            <button class="btn btn-light" id="qStartReset">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </button>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="d-flex">
+                            <input class="form-control" type="date" id="qEndDate" name="qEndDate">
+                            <div class="mx-1"></div>
+                            <button class="btn btn-light" id="qEndReset">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </button>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="d-flex">
+                            <input class="form-control" type="date" id="qJStartDate" name="qJStartDate">
+                            <div class="mx-1"></div>
+                            <button class="btn btn-light" id="qJStartReset">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </button>
+                        </div>
+                    </th>
+                    <th>
+                        <select class="form-select" name="qStatus" id="qStatus">
+                            <option value="">All</option>
+                        </select>
+                    </th>
+                    <th>
+                        <button class="btn btn-success w-100" id="exportToExcel"><i class="bi bi-file-earmark-excel-fill"></i> Export</button>
+                    </th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="bold">Waiting</td>
-                    <td class="bold">Waiting</td>
-                    <td class="bold">Waiting</td>
-                    <td class="bold">Waiting</td>
-                    <td class="bold">Waiting</td>
-                    <td class="bold">Waiting</td>
-                    <td class="bold">Waiting</td>
-                    <td class="bold">Waiting</td>
-                </tr>
+                
             </tbody>
         </div>
     </table>

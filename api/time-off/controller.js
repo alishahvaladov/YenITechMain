@@ -18,10 +18,14 @@ const {
     getTimeOffByID, 
     approveTimeOffRequest,
     getDirectorDepartment,
-    getTimeOffsForDirector
+    getTimeOffsForDirector,
+    getTimeOffsForExport
 } = require("./service");
 const path = require("path");
 const fs = require("fs");
+const excelJS = require("exceljs");
+const dayOffsJson = require("../../config/config.json").day_offs;
+
 
 module.exports = { 
     getEmpInfo: async (req, res) => {
@@ -41,18 +45,19 @@ module.exports = {
             let id = req.user.id;
             let offset = req.query.offset;
             offset = parseInt(offset) * 15;
+            const body = req.body;
             if (req.user.role === 10) {
                 directorProject = await getEmployeeByUserID(id);
                 directorProject = directorProject[0].project_id;
             }
             if (req.query.hr_approve === "true") {
                 hr_approve = true;
-                result = await getTimeOffs(hr_approve, director_approve, null, offset);
+                result = await getTimeOffs(hr_approve, director_approve, null, offset, body);
             } else if (req.query.director_approve === "true") {
                 director_approve = true;
-                result = await getTimeOffs(hr_approve, director_approve, directorProject, offset);
+                result = await getTimeOffs(hr_approve, director_approve, directorProject, offset, body);
             } else {
-                result = await getTimeOffs(hr_approve, director_approve, null, offset);
+                result = await getTimeOffs(hr_approve, director_approve, null, offset, body);
             }
             res.status(200).send({
                 result
@@ -588,6 +593,76 @@ module.exports = {
                 result
             });
         } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    exportDataToExcel: async (req, res) => {
+        try {
+            const data = req.body;
+            const date = new Date();
+            const filename = `${date.getTime()}-məzuniyyətlər.xlsx`;
+            let offset = req.body.offset;
+            offset = (offset - 1) * 10;
+            let timeOffData = await getTimeOffsForExport(data);
+            const workbook = new excelJS.Workbook();
+            const worksheet = workbook.addWorksheet("Məzuniyyətlər");
+            worksheet.columns= [
+                {header: "Əməkdaş", key: "full_name", width: 10},
+                {header: "Məzuniyyətin Tipi", key: "timeoff_type", width: 10},
+                {header: "Başlama Tarixi", key: "timeoff_start_date", width: 10},
+                {header: "Bitmə Tarixi", key: "timeoff_end_date", width: 10},
+                {header: "İşə Qayıtma Tarixi", key: "timeoff_job_start_date", width: 10},
+                {header: "Status", key: "status", width: 10},
+            ]
+            timeOffData.forEach(timeOff => {
+                let dayOffName = dayOffsJson[timeOff.timeoff_type];
+                let statusName;
+                if(timeOff.status === 0) {
+                    statusName = `Sənəd Əksikdir`;
+                } else if (timeOff.status === 1){
+                    statusName = `Emaldadır(HR)`;
+                } else if (timeOff.status === 2) {
+                    statusName = `Emaldadır(Şöbə Rəhbəri)`;
+                } else if (timeOff.status === 3) {
+                    statusName = `Əmr təsdiqi gözləyir`;
+                } else if (timeOff.status === 4) {
+                    statusName = `Təsdiqləndi`;
+                } else if (timeOff.status === 7) {
+                    statusName = `Ləğv Edildi`;
+                }
+                const userDataFromDB = {
+                    full_name: `${timeOff.first_name} ${timeOff.last_name} ${timeOff.father_name}`,
+                    timeoff_type: dayOffName,
+                    timeoff_start_date: timeOff.timeoff_start_date,
+                    timeoff_end_date: timeOff.timeoff_end_date,
+                    timeoff_job_start_date: timeOff.timeoff_job_start_date,
+                    status: statusName
+                };
+                worksheet.addRow(userDataFromDB);
+            });
+            worksheet.getRow(1).eachCell((cell) => {
+                cell.font = {bold: true};
+            });
+            const excelPath = path.join((__dirname), `../../public/excels/${filename}`);
+            await workbook.xlsx.writeFile(excelPath);
+            setTimeout(() => {
+                fs.unlink(excelPath, (err) => {
+                    if(err) {
+                        console.log(err);
+                        res.status(400).json({
+                            success: false,
+                            message: "Unknown error has been occurred"
+                        });
+                    }
+                });
+            }, 10000);
+            res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            res.download(excelPath, "Məzuniyyətlər.xlsx");
+        } catch (err) {
             console.log(err);
             return res.status(500).send({
                 success: false,

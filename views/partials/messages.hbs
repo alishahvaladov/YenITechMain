@@ -1,8 +1,13 @@
 {{#if errors}}
     {{#each errors}}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="error-message bg-danger bg-opacity-25 p-2 rounded" role="alert">
             {{msg}}
         </div>
+        <script>
+            setTimeout(() => {
+                document.querySelector(".error-message").classList.add("d-none");
+            }, 1500);
+        </script>
     {{/each}}
 {{/if}}
 
@@ -13,13 +18,23 @@
 {{/if}}
 
 {{#if error_msg}}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{error_msg}}
+    <div class="error-message bg-danger bg-opacity-25 p-2 rounded" role="alert">
+        <span class="text-danger">{{error_msg}}</span>
     </div>
+    <script>
+        setTimeout(() => {
+            document.querySelector(".error-message").classList.add("d-none");
+        }, 1500);
+    </script>
 {{/if}}
 
 {{#if error}}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{error}}
+    <div class="error-message bg-danger bg-opacity-25 p-2 rounded" role="alert">
+        <span class="text-danger">{{error}}</span>
     </div>
+    <script>
+        setTimeout(() => {
+            document.querySelector(".error-message").classList.add("d-none");
+        }, 1500);
+    </script>
 {{/if}}

@@ -19,8 +19,8 @@ const mailTest = (mail, subject, mailContent) => {
             port: 587,
             secure: false, // true for 465, false for other ports
             auth: {
-                user: "yenihayat.local\\proqram.ali", // generated ethereal user
-                pass: "-Ap203030!@#+", // generated ethereal password
+                user: "yenihayat.local\\no-reply", // generated ethereal user
+                pass: "Nr203030!@", // generated ethereal password
             },
             tls: {
                 rejectUnauthorized: false
@@ -29,7 +29,7 @@ const mailTest = (mail, subject, mailContent) => {
 
         // send mail with defined transport object
         let info = await transporter.sendMail({
-            from: '"Test User" <Proqram.Ali@yenihayat.az>', // sender address
+            from: '"No Reply" <no-reply@yenihayat.az>', // sender address
             to: mail, // list of receivers
             subject: subject, // Subject line
             text: mailContent, // plain text body

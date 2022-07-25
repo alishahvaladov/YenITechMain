@@ -2,29 +2,90 @@ const { sequelize, Project } = require("../../db_config/models");
 const { QueryTypes } = require("sequelize");
 
 module.exports = {
-    getProjects: async (offset) => {
+    getProjects: async (offset, body) => {
         const result = {};
-
-        const project = await sequelize.query(`
+        const replacements = {};
+        let query = `
             SELECT pj.id, pj.name, pj.address, emp.first_name, emp.last_name, emp.father_name FROM Projects as pj
             LEFT JOIN Employees as emp ON emp.id = pj.project_manager_id
             WHERE pj.deletedAt IS NULL
-            limit 15 offset :offset
-        `, {
-            type: QueryTypes.SELECT,
-            logging: false,
-            replacements: {
-                offset
-            }
-        });
-
-        const count = await sequelize.query(`
+        `;
+        let countQuery = `
             SELECT COUNT(*) as count FROM Projects as pj
             LEFT JOIN Employees as emp ON emp.id = pj.project_manager_id
             WHERE pj.deletedAt IS NULL
-        `, {
+        `;
+
+        if(body.qName && body.qName !== "") {
+            query += `
+                AND pj.name like :qName
+            `;
+            countQuery += `
+                AND pj.name like :qName
+            `;
+            replacements.qName = `%${body.qName}%`;
+        }
+
+        if(body.qAddress && body.qAddress !== "") {
+            query += `
+                AND pj.address like :qAddress
+            `;
+            countQuery += `
+                AND pj.address like :qAddress
+            `;
+            replacements.qAddress = `%${body.qAddress}%`;
+        }
+        
+        if (body.qEmployee && body.qEmployee !== "") {
+            const splittedEmp = body.qEmployee.split(" ");
+            if (splittedEmp.length === 1) {
+                query += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee)
+                `;
+                countQuery += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+            }
+            if (splittedEmp.length === 2) {
+                query += `
+                    AND ((emp.first_name like :qEmployee AND emp.last_name like :qEmployee2) OR (emp.first_name like :qEmployee AND emp.father_name like :qEmployee2) OR (emp.last_name like :qEmployee AND emp.father_name like :qEmployee2))
+                `;
+                countQuery += `
+                    AND ((emp.first_name like :qEmployee AND emp.last_name like :qEmployee2) OR (emp.first_name like :qEmployee AND emp.father_name like :qEmployee2) OR (emp.last_name like :qEmployee AND emp.father_name like :qEmployee2))
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+            }
+            if (splittedEmp.length === 3) {
+                query += `
+                    AND (emp.first_name like :qEmployee AND emp.last_name like :qEmployee2 AND emp.father_name like :qEmployee3)
+                `;
+                countQuery += `
+                    AND (emp.first_name like :qEmployee AND emp.last_name like :qEmployee2 AND emp.father_name like :qEmployee3)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+                replacements.qEmployee3 = `%${splittedEmp[2]}%`;
+            }
+        }
+
+        query += `
+            limit 15 offset :offset
+        `;
+
+        replacements.offset = offset;
+        
+        const project = await sequelize.query(query, {
             type: QueryTypes.SELECT,
             logging: false,
+            replacements
+        });
+
+        const count = await sequelize.query(countQuery, {
+            type: QueryTypes.SELECT,
+            logging: false,
+            replacements
         });
 
         result.projects = project;
@@ -94,6 +155,59 @@ module.exports = {
             cb(null, res);
         }).catch((err) => {
             cb(err);
+        });
+    },
+    getProjectsForExport: async (body) => {
+        const replacements = {};
+        let query = `
+            SELECT pj.id, pj.name, pj.address, emp.first_name, emp.last_name, emp.father_name FROM Projects as pj
+            LEFT JOIN Employees as emp ON emp.id = pj.project_manager_id
+            WHERE pj.deletedAt IS NULL
+        `;
+
+        if(body.qName && body.qName !== "") {
+            query += `
+                AND pj.name like :qName
+            `;
+            replacements.qName = `%${body.qName}%`;
+        }
+
+        if(body.qAddress && body.qAddress !== "") {
+            query += `
+                AND pj.address like :qAddress
+            `;
+            replacements.qAddress = `%${body.qAddress}%`;
+        }
+        
+        if (body.qEmployee && body.qEmployee !== "") {
+            const splittedEmp = body.qEmployee.split(" ");
+            if (splittedEmp.length === 1) {
+                query += `
+                    AND (emp.first_name like :qEmployee OR emp.last_name like :qEmployee OR emp.father_name like :qEmployee)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+            }
+            if (splittedEmp.length === 2) {
+                query += `
+                    AND ((emp.first_name like :qEmployee AND emp.last_name like :qEmployee2) OR (emp.first_name like :qEmployee AND emp.father_name like :qEmployee2) OR (emp.last_name like :qEmployee AND emp.father_name like :qEmployee2))
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+            }
+            if (splittedEmp.length === 3) {
+                query += `
+                    AND (emp.first_name like :qEmployee AND emp.last_name like :qEmployee2 AND emp.father_name like :qEmployee3)
+                `;
+                replacements.qEmployee = `%${splittedEmp[0]}%`;
+                replacements.qEmployee2 = `%${splittedEmp[1]}%`;
+                replacements.qEmployee3 = `%${splittedEmp[2]}%`;
+            }
+        }
+
+        return await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
         });
     }
 }

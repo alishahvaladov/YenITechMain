@@ -118,7 +118,6 @@ module.exports = {
         const empPhone = data.empInpPhoneVal;
         const empDept = data.empDeptVal;
         const empPos = data.empPosVal;
-        const empProj = data.empProjVal;
         const empStatus = data.empStatusVal;
         const empMail = data.empMail;
 
@@ -129,7 +128,8 @@ module.exports = {
             LEFT JOIN Projects as proj ON emp.project_id = proj.id
             LEFT JOIN Users AS usr ON usr.emp_id = emp.id
             WHERE emp.deletedAt IS NULL
-        `
+            AND emp.j_end_date IS NULL
+        `;
         let countQuery = `
             SELECT COUNT(*) as count FROM Employees as emp
             LEFT JOIN Positions as pos ON emp.position_id = pos.id
@@ -137,7 +137,8 @@ module.exports = {
             LEFT JOIN Projects as proj ON emp.project_id = proj.id
             LEFT JOIN Users AS usr ON usr.emp_id = emp.id
             WHERE emp.deletedAt IS NULL
-        `
+            AND emp.j_end_date IS NULL
+        `;
         let replacements = {};
 
         if(empName !== '' && empName !== null) {
@@ -186,21 +187,7 @@ module.exports = {
             countQuery += " AND pos.name like :posName"
             replacements.posName = `%${empPos}%`;
         }
-        if(empProj !== '' && empProj !== null) {
-            query += " AND proj.name like :projName";
-            countQuery += " AND proj.name like :projName";
-            replacements.projName = `%${empProj}%`;
-        }
-        if(empStatus !== '' && empStatus !== null) {
-            if(parseInt(empStatus) === 1) {
-                query += " AND emp.j_end_date IS NULL";
-                countQuery += " AND emp.j_end_date IS NULL";
-            }
-            if(parseInt(empStatus) === 2) {
-                query += " AND emp.j_end_date IS NOT NULL";
-                countQuery += " AND emp.j_end_date IS NOT NULL";
-            }
-        }
+        
         if(empMail !== '' && empMail) {
             query += " AND usr.email like :email";
             countQuery += " AND usr.email like :email";
@@ -209,7 +196,7 @@ module.exports = {
         if (data.limit === "all") {
             query += `
             ORDER BY emp.id DESC
-        `    
+        `;
         } else {
             query += `
                 ORDER BY emp.id DESC
@@ -284,19 +271,6 @@ module.exports = {
             query += " AND pos.name like :posName"
             replacements.posName = `%${empPos}%`;
         }
-        if(empProj !== '' && empProj !== null) {
-            query += " AND proj.name like :projName";
-            replacements.projName = `%${empProj}%`;
-        }
-        if(empStatus !== '' && empStatus !== null) {
-            if(parseInt(empStatus) === 1) {
-                query += " AND emp.j_end_date IS NULL";
-            }
-            if(parseInt(empStatus) === 2) {
-                query += " AND emp.j_end_date IS NOT NULL";
-            }
-        }
-
         if(limit === "all") {
             query += `
             ORDER BY emp.id DESC

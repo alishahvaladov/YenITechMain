@@ -1,6 +1,30 @@
 const tbody = document.querySelector("tbody");
 const loading = document.querySelector(".loading");
 const pgContainer = document.querySelector(".pagination-container");
+const pagination = document.querySelector(".pagination");
+const exportToExcelBtn = document.querySelector("#exportToExcel");
+
+const qEmployeeInput = document.querySelector("#qEmployee");
+const qTypeInput = document.querySelector("#qType");
+const qStartDateInput = document.querySelector("#qStartDate");
+const qEndDateInput = document.querySelector("#qEndDate");
+const qJStartDateInput = document.querySelector("#qJStartDate");
+const qStatusInput = document.querySelector("#qStatus");
+
+let qEmployee, qType, qStartDate, qEndDate, qJStartDate, qStatus;
+
+const getSearchData = () => {
+    qEmployee = qEmployeeInput.value;
+    qType = qTypeInput.value;
+    qStartDate = qStartDateInput.value;
+    qEndDate = qEndDateInput.value;
+    qJStartDate = qJStartDateInput.value;
+    qStatus = qStatusInput.value;
+}
+
+const qStartReset = document.querySelector("#qStartReset");
+const qEndReset = document.querySelector("#qEndReset");
+const qJStartReset = document.querySelector("#qJStartReset")
 
 
 
@@ -56,7 +80,15 @@ const pageFunctions = () => {
                 }
             }
             setTimeout(() => {
-                $.get(`http://localhost:3000/api/time-off?offset=${offset}`,(res) => {
+                getSearchData();
+                $.post(`http://localhost:3000/api/time-off?offset=${offset}`, {
+                    qEmployee,
+                    qType,
+                    qStartDate,
+                    qEndDate,
+                    qJStartDate,
+                    qStatus
+                }, (res) => {
                     let up = "";
                     let html = "";
                     const timeOffs = res.result.timeoffs;
@@ -277,12 +309,25 @@ const sendTimeOffRequest = (emp_id, id) => {
     
 }
 const renderPage = () => {
-    $.get("http://localhost:3000/api/time-off?offset=0", (res) => {
+    getSearchData();
+    $.post("http://localhost:3000/api/time-off?offset=0", {
+        qEmployee,
+        qType,
+        qStartDate,
+        qEndDate,
+        qJStartDate,
+        qStatus
+    }, (res) => {
         console.log(res);
         const timeOffs = res.result.timeoffs;
         let count = res.result.count[0].count;
         count = Math.ceil(count / 15); 
         let html = "";
+        if (count <= 1) {
+            pagination.classList.add("d-none");
+        } else {
+            pagination.classList.remove("d-none");
+        }
         if(timeOffs.length < 1) {
             tbody.innerHTML = `<p class="text-danger">No Data Found</p>`
         } else {
@@ -472,7 +517,7 @@ const renderPage = () => {
             if (i === 1) {
                 countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
                 countHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
-            } 
+            }
             if (i > 21 && i < count) {
                 countHtml += `
                     <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
@@ -499,5 +544,58 @@ const renderPage = () => {
         pageFunctions();
     });
 }
+
+qEmployeeInput.addEventListener('keyup', renderPage);
+qTypeInput.addEventListener("change", renderPage);
+qStartDateInput.addEventListener('change', renderPage);
+qEndDateInput.addEventListener("change", renderPage);
+qJStartDateInput.addEventListener("change", renderPage);
+qStatusInput.addEventListener("change", renderPage);
+
+qStartReset.addEventListener("click", () => {
+    qStartDateInput.value = "";
+    renderPage();
+});
+qEndReset.addEventListener("click", () => {
+    qEndDateInput.value = "";
+    renderPage();
+});
+qJStartReset.addEventListener("click", () => {
+    qJStartDateInput.value = "";
+    renderPage();
+});
+
+const exportToExcel = () => {
+    getSearchData();
+    const method = "post";
+    let params = {
+        qEmployee,
+        qType,
+        qStartDate,
+        qEndDate,
+        qJStartDate,
+        qStatus
+    }
+    let form = document.createElement('form');
+    form.setAttribute("method", method);
+    form.setAttribute("action", "http://localhost:3000/api/time-off/export-to-excel");
+
+    for (let key in params) {
+        if (params.hasOwnProperty(key)) {
+            const hiddenField = document.createElement("input");
+            hiddenField.setAttribute('type', 'hidden');
+            hiddenField.setAttribute('name', key);
+            hiddenField.setAttribute('value', params[key]);
+            form.appendChild(hiddenField);
+        }
+    }
+    document.body.appendChild(form);
+    form.submit();
+}
+
+exportToExcelBtn.addEventListener("click", () => {
+    exportToExcel();
+});
+
 
 setTimeout(renderPage, 1000);

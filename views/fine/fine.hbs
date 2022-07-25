@@ -11,23 +11,40 @@
                     <th>Ümumi gecikmə</th>
                     <th>Tədbiq olunacaq cərimələr</th>
                     <th>Ən son cərimənin hesablanma tarixi</th>
+                    <th></th>
                 </tr>
                 <tr>
-                    <th><input class="form-control" type="text" name="qEmployee" id="qEmployee"></th>
-                    <th><input class="form-control" type="text" name="qMinuteTotal" id="qMinuteTotal"></th>
-                    <th><input class="form-control" type="text" name="qApprovedFine" id="qApprovedFine"></th>
-                    <th><input class="form-control" type="date" name="qDate"></th>
-                    <th></th>
+                    <th><input class="form-control fine-search" type="text" name="qEmployee" id="qEmployee"></th>
+                    <th>
+                        <div class="d-flex">
+                            <input class="form-control fine-search" type="text" name="qMinuteTotalMin" id="qMinuteTotalMin" placeholder="Min">
+                            <div class="mx-1"></div>
+                            <input class="form-control fine-search" type="text" name="qMinuteTotalMax" id="qMinuteTotalMax" placeholder="Max">
+                        </div>
+                    </th>
+                    <th>
+                        <div class="d-flex">
+                            <input class="form-control fine-search" type="text" name="qApprovedFineMin" id="qApprovedFineMin" placeholder="Min">
+                            <div class="mx-1"></div>
+                            <input class="form-control fine-search" type="text" name="qApprovedFineMax" id="qApprovedFineMax" placeholder="Max">
+                        </div>
+                    </th>
+                    <th>
+                        <div class="d-flex">
+                            <input class="form-control fine-search month-and-year" name="qDate" id="qDate">
+                            <div class="mx-1"></div>
+                            <button class="btn btn-light" id="dateReset">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </=>
+                        </div>
+                    </th>
+                    <th>
+                        <button class="btn btn-success w-100" id="exportToExcel"><i class="bi bi-file-earmark-excel-fill"></i> Export</button>
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                    <td class="bg-warning bg-opacity-50 text-black bold">Waiting</td>
-                </tr>
+                
             </tbody>
         </div>
     </table>
@@ -73,3 +90,6 @@
 
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/fine-api.js"></script>
+<script>
+    
+</script>

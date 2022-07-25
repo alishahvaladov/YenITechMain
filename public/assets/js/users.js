@@ -2,6 +2,21 @@ const tbody = document.querySelector("tbody");
 const loading = document.querySelector(".loading");
 const pgContatiner = document.querySelector(".pagination-container");
 const pagination = document.querySelector('.pagination');
+const exportToExcelBtn = document.querySelector("#exportToExcel");
+
+const qEmployeeInput = document.querySelector("#qEmployee");
+const qUsernameInput = document.querySelector("#qUsername");
+const qEmailInput = document.querySelector("#qEmail");
+const qRoleSelect = document.querySelector("#qRole");
+
+let qEmployee, qUsername, qEmail, qRole;
+
+const getSearchData = () => {
+    qEmployee = qEmployeeInput.value;
+    qUsername = qUsernameInput.value;
+    qEmail = qEmailInput.value;
+    qRole = qRoleSelect.value;
+}
 
 
 const pageFunctions = () => {
@@ -56,7 +71,13 @@ const pageFunctions = () => {
                 }
             }
             setTimeout(() => {
-                $.get(`http://localhost:3000/api/users/allUsers/${offset}`, (res) => {
+                getSearchData();
+                $.post(`http://localhost:3000/api/users/allUsers/${offset}`, {
+                    qEmployee,
+                    qUsername,
+                    qEmail,
+                    qRole
+                }, (res) => {
                     let tbody = document.querySelector("tbody");
                     let html = "";
                     const users = res.users;
@@ -84,9 +105,6 @@ const pageFunctions = () => {
                         }
                         html += `
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
                             <td>${user.first_name} ${user.last_name} ${user.father_name}</td>
                             <td>${user.username}</td>
                             <td>${user.email}</td>
@@ -99,8 +117,6 @@ const pageFunctions = () => {
                                     <a class="btn btn-outline-secondary" href="/users/update/${user.id}"><i class="bi bi-pencil-square"></i></a>
                                 </div>
                             </td>
-                            <td></td>
-                            <td></td>
                         </tr>
                         `
                     });
@@ -114,7 +130,13 @@ const pageFunctions = () => {
 
 const renderPage = () => {
     let html = "";
-    $.get("http://localhost:3000/api/users/allUsers/0", (res) => {
+    getSearchData();
+    $.post("http://localhost:3000/api/users/allUsers/0", {
+        qEmployee,
+        qUsername,
+        qEmail,
+        qRole
+    }, (res) => {
         console.log(res);
         const users = res.users;
         let count = res.count[0].count;
@@ -145,9 +167,6 @@ const renderPage = () => {
             }
             html += `
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
                     <td>${user.first_name} ${user.last_name} ${user.father_name}</td>
                     <td>${user.username}</td>
                     <td>${user.email}</td>
@@ -155,13 +174,11 @@ const renderPage = () => {
                         ${roleTD}
                     </td>
                     <td>
-                    <div class="btn-group">
-                        <a class="btn btn-outline-danger" href="/delete/${user.id}"><i class="bi bi-x-circle"></i></a>
-                        <a class="btn btn-outline-secondary" href="/users/update/${user.id}"><i class="bi bi-pencil-square"></i></a>
-                    </div>
+                        <div class="btn-group">
+                            <a class="btn btn-outline-danger" href="/delete/${user.id}"><i class="bi bi-x-circle"></i></a>
+                            <a class="btn btn-outline-secondary" href="/users/update/${user.id}"><i class="bi bi-pencil-square"></i></a>
+                        </div>
                     </td>
-                    <td></td>
-                    <td></td>
                 </tr>
             `
         });
@@ -170,6 +187,7 @@ const renderPage = () => {
 
         if (count > 1) {
             let countHtml = "";
+            pagination.classList.remove('d-none');
 
             for (let i = 1; i <= count; i++) {
                 if (i === 1) {
@@ -203,5 +221,40 @@ const renderPage = () => {
         }
     });
 }
+
+qEmployeeInput.addEventListener('keyup', renderPage);
+qUsernameInput.addEventListener('keyup', renderPage);
+qEmailInput.addEventListener('keyup', renderPage);
+qRoleSelect.addEventListener('change', renderPage);
+
+const exportToExcel = () => {
+    getSearchData();
+    const method = "post";
+    let params = {
+        qEmployee,
+        qUsername,
+        qEmail,
+        qRole
+    }
+    let form = document.createElement('form');
+    form.setAttribute("method", method);
+    form.setAttribute("action", "http://localhost:3000/api/users/export-to-excel");
+ 
+    for (let key in params) {
+       if (params.hasOwnProperty(key)) {
+          const hiddenField = document.createElement("input");
+          hiddenField.setAttribute('type', 'hidden');
+          hiddenField.setAttribute('name', key);
+          hiddenField.setAttribute('value', params[key]);
+          form.appendChild(hiddenField);
+       }
+    }
+    document.body.appendChild(form);
+    form.submit();
+ }
+ 
+ exportToExcelBtn.addEventListener("click", () => {
+    exportToExcel();
+ });
 
 setTimeout(renderPage, 1000);

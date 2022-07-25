@@ -1,4 +1,4 @@
-const { getProjectsForDepartments, addDepartment, addProjDeptRel, checkIfProjectExists, getDepartmentsByProject, getAllDepartments, getDepartmentByID, updateDepartmentName, getProjDeptRel, deleteProjeDeptRel, insertProjDeptRel } = require("./service");
+const { getProjectsForDepartments, addDepartment, addProjDeptRel, checkIfProjectExists, getDepartmentsByProject, getAllDepartments, getDepartmentByID, updateDepartmentName, getProjDeptRel, deleteProjeDeptRel, insertProjDeptRel, getDepartmentsForExport } = require("./service");
 const randomId = (count) => {
     const string = "abcdefghijklmnopqrstuvwxyz123456789";
     let generatedId = "";
@@ -7,7 +7,9 @@ const randomId = (count) => {
     }
     return generatedId;
 }
-
+const excelJS = require("exceljs");
+const path = require("path");
+const fs = require("fs");
 
 module.exports = {
     getProjectsForDepartments: async (req, res) => {
@@ -109,7 +111,8 @@ module.exports = {
         try {
             let offset = req.params.offset;
             offset = parseInt(offset) * 15;
-            const result = await getAllDepartments(offset);
+            const body = req.body;
+            const result = await getAllDepartments(offset, body);
 
             return res.status(200).send({
                 success: true,
@@ -247,6 +250,51 @@ module.exports = {
             return res.status(500).send({
                 success: false,
                 message: "Ups... Something went wrong"
+            });
+        }
+    },
+    exportDataToExcel: async (req, res) => {
+        try {
+            const data = req.body;
+            const date = new Date();
+            const filename = `${date.getTime()}-departamentlər.xlsx`;
+            let offset = req.body.offset;
+            offset = (offset - 1) * 10;
+            let departmentData = await getDepartmentsForExport(data);
+            const workbook = new excelJS.Workbook();
+            const worksheet = workbook.addWorksheet("Departamentlər");
+            worksheet.columns= [
+                {header: "Departament Adı", key: "name", width: 10},
+            ]
+            departmentData.forEach(department => {
+                const deptDataFromDB = {
+                    name: department.name
+                };
+                worksheet.addRow(deptDataFromDB);
+            });
+            worksheet.getRow(1).eachCell((cell) => {
+                cell.font = {bold: true};
+            });
+            const excelPath = path.join((__dirname), `../../public/excels/${filename}`);
+            await workbook.xlsx.writeFile(excelPath);
+            setTimeout(() => {
+                fs.unlink(excelPath, (err) => {
+                    if(err) {
+                        console.log(err);
+                        res.status(400).json({
+                            success: false,
+                            message: "Unknown error has been occurred"
+                        });
+                    }
+                });
+            }, 10000);
+            res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            res.download(excelPath, "Departamentlər.xlsx");
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
             });
         }
     }

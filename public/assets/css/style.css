@@ -761,6 +761,6 @@ table thead input {
     color: red;
 }
 
-.i4ewOd-pzNkMb-haAclf {
-    display: none !important;
+.pagination-item {
+    margin: 0 1px;
 }
