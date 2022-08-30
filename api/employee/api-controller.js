@@ -19,7 +19,7 @@ const excelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
 const standardShiftTypes = require("../../config/config.json").shift_types[1].types;
-const validateEmployee = async (data, cb) => {
+const validateEmployee = async (data,  emp_id = null, cb) => {
     const dbData = {};
     const validationError = {};
     let fName;
@@ -146,7 +146,7 @@ const validateEmployee = async (data, cb) => {
                 return cb(true, validationError);
             }
         }
-        const dbSSN = await getSSN(SSN);
+        const dbSSN = await getSSN(SSN, emp_id);
         if (dbSSN.length > 0) {
             validationError.SSN = "Bu SSN bazada mövcuddur";
             return cb(true, validationError);
@@ -171,7 +171,7 @@ const validateEmployee = async (data, cb) => {
                 return cb(true, validationError);
             }
         }
-        const dbFIN = await getFIN(FIN);
+        const dbFIN = await getFIN(FIN, emp_id);
         if (dbFIN.length > 0) {
             validationError.FIN = "Bu FIN bazada mövcuddur";
             return cb(true, validationError);
@@ -194,7 +194,7 @@ const validateEmployee = async (data, cb) => {
                     return cb(true, validationError);
                 }
             }
-            const phone_number = await getPhoneNumber(phoneNumber);
+            const phone_number = await getPhoneNumber(phoneNumber, emp_id);
             if (phone_number.length > 0) {
                 validationError.phoneNumber = "Bu nömrə artıq mövcuddur";
                 return cb(true, validationError);
@@ -468,9 +468,9 @@ module.exports = {
             });
         } catch (err) {
             console.log(err);
-            return res.send({
+            return res.status(500).send({
                 error: "An unknown error has been occurred"
-            })
+            });
         }
     },
     empRenderByPage: async (req, res) => {
@@ -483,7 +483,7 @@ module.exports = {
                 role = "super_admin"
             }
             let offset = req.body.offset;
-            offset = (offset - 1) * 10;
+            offset = (offset - 1) * parseInt(body.limit);
             let result = await empRenderByPage(offset, body);
             res.send({
                 result,
@@ -576,7 +576,8 @@ module.exports = {
             const body = req.body.data;
             const user_id = req.user.id;
             const notificationData = {};
-            validateEmployee(body, (err, message, empData, shiftData) => {
+            const emp_id = body.employeeId;
+            validateEmployee(body, emp_id, (err, message, empData, shiftData) => {
                 if (err) {
                     for (const [key, value] of Object.entries(message)) {
                         console.log(`Error of ${key} is ${value}`);
@@ -647,7 +648,7 @@ module.exports = {
     addEmployee: (req, res) => {
         try {
             const body = req.body;
-            validateEmployee(body, (err, message, empData, shiftData) => {
+            validateEmployee(body, null,  (err, message, empData, shiftData) => {
                 if (err) {
                     console.log(empData);
                     console.log(err);

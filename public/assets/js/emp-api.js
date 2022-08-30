@@ -453,14 +453,21 @@ const pageFuncs = () => {
       });
    });
 }
-const renderPage = () => {
+const renderPage = (render_offset = null) => {
    getEmpInps();
+   let offset;
+   if (render_offset !== null) {
+      offset = render_offset;
+   } else {
+      offset = 1;
+   }
    $.post("http://localhost:3000/api/all-employee", {
       empInpNameVal,
       empInpPhoneVal,
       empDeptVal,
       empPosVal,
-      limit: limitVal
+      limit: limitVal,
+      offset
    }, (res) => {
       console.log(res);
       let tbody = document.querySelector('tbody');
@@ -676,6 +683,14 @@ const renderPage = () => {
          }, 200);
          pageFuncs();
       }
+      let pgItems = document.querySelectorAll('.pagination-item');
+      pgItems.forEach(item => {
+         if (item.value == offset) {
+            item.classList.add('pagination-active');
+         } else {
+            item.classList.remove('pagination-active');
+         }
+      });
    });
    empEditCancelBtn.addEventListener("click", () => {
       empEditModal.classList.add('d-none');
@@ -684,6 +699,8 @@ const renderPage = () => {
 
 empEditApplyBtn.addEventListener("click", () => {
    const data = {};
+   let activeClass = document.querySelector('.pagination-active');
+   const offset = activeClass.value;
    empUpdateInputs.forEach(item => {
       data[item.name] = item.value;
    });
@@ -693,7 +710,7 @@ empEditApplyBtn.addEventListener("click", () => {
       empEditModal.classList.add('d-none');
       loading.classList.remove('d-none');
       setTimeout(() => {
-         renderPage();
+         renderPage(offset);
          const updateNotification = document.querySelector('.update-notification-alert');
          const updateNotificationP = document.querySelector('.update-notification-p');
          updateNotification.classList.remove('d-none');

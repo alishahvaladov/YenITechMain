@@ -53,28 +53,42 @@ module.exports = {
 
         return result;
     },
-    getSSN: async (ssn) => {
-        return await sequelize.query(`
+    getSSN: async (ssn, emp_id = null) => {
+        let query = `
             SELECT ssn FROM Employees
             WHERE ssn = :ssn
-        `, {
+        `;
+        if (emp_id !== null) {
+            query += `
+                AND id != :emp_id
+            `;
+        }
+        return await sequelize.query(query, {
             logging: false,
             type: QueryTypes.SELECT,
             replacements: {
-                ssn
+                ssn,
+                emp_id
             }
         });
     },
-    getFIN: async (fin) => {
-        return await sequelize.query(`
+    getFIN: async (fin, emp_id = null) => {
+        let replacements = {};
+        let query = `
             SELECT fin FROM Employees
             WHERE fin = :fin
-        `, {
+        `;
+        replacements.fin = fin;
+        if (emp_id !== null) {
+            query += `
+                AND id != :emp_id
+            `;
+            replacements.emp_id = emp_id;
+        }
+        return await sequelize.query(query, {
             logging: false,
             type: QueryTypes.SELECT,
-            replacements: {
-                fin
-            }
+            replacements
         });
     },
     getLogixName: async (logixName) => {
@@ -101,16 +115,24 @@ module.exports = {
             }
         });
     },
-    getPhoneNumber: async (phoneNumber) => {
-        return await sequelize.query(`
+    getPhoneNumber: async (phoneNumber, emp_id = null) => {
+        const replacements = {};
+        let query = `
             SELECT phone_number FROM Employees
             WHERE phone_number = :phoneNumber
-        `, {
+        `;
+        replacements.phoneNumber = phoneNumber;
+        if (emp_id !== null) {
+            query += `
+                AND id != :emp_id
+            `;
+            replacements.emp_id = emp_id;
+        }
+        
+        return await sequelize.query(query, {
             logging: false,
             type: QueryTypes.SELECT,
-            replacements: {
-                phoneNumber
-            }
+            replacements
         });
     },
     empRenderPage: async (data) => {
@@ -195,15 +217,18 @@ module.exports = {
         }
         if (data.limit === "all") {
             query += `
-            ORDER BY emp.id DESC
-        `;
+                ORDER BY emp.id DESC
+            `;
         } else {
             query += `
                 ORDER BY emp.id DESC
-                LIMIT :limit OFFSET 0
+                LIMIT :limit OFFSET :offset
             `
             replacements.limit = parseInt(data.limit);
+            replacements.offset = (parseInt(data.offset) - 1) * parseInt(data.limit);
         }
+
+        console.log(query);
         
         let result = {};
         const empData = await sequelize.query(query, { 
@@ -235,7 +260,8 @@ module.exports = {
             LEFT JOIN Departments as dept ON emp.department = dept.id
             LEFT JOIN Projects as proj ON emp.project_id = proj.id
             WHERE emp.deletedAt IS NULL
-        `
+            AND emp.j_end_date IS NULL
+        `;
         let replacements = {};
         if(empName !== '' && empName !== null) {
             const splittedName = empName.split(" ");
@@ -283,9 +309,10 @@ module.exports = {
         } else {
             " AND 1 = 0"
         }
-        replacements.offset = offset;
+        replacements.offset = parseInt(offset);
         replacements.limit = limit;
 
+        console.log(query)
 
 
         return await sequelize.query(query, {

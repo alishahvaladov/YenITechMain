@@ -56,11 +56,17 @@ const renderPage = () => {
     
     timeOffEndDate.addEventListener("change", () => {
         let timeOffEndDateValue = new Date(timeOffEndDate.value);
-        let dayAfterEndDateValue = new Date();
-        dayAfterEndDateValue.setDate(timeOffEndDateValue.getDate() + 1);
+        let dayAfterEndDateValue = new Date(timeOffEndDate.value);
+        dayAfterEndDateValue.setDate(dayAfterEndDateValue.getDate() + 1);
+        console.log(timeOffEndDateValue.toLocaleDateString());
+        console.log(dayAfterEndDateValue.toLocaleDateString());
         flatpickr("#w-start-date", {
             dateFormat: "Y-m-d",
-            enable: [`${timeOffEndDateValue.getFullYear()}-${timeOffEndDateValue.getMonth() + 1}-${timeOffEndDateValue.getDate()}`, `${dayAfterEndDateValue.getFullYear()}-${dayAfterEndDateValue.getMonth() + 1}-${dayAfterEndDateValue.getDate()}`]
+            enable:
+            [
+                `${timeOffEndDateValue.getFullYear()}-${timeOffEndDateValue.getMonth() + 1}-${timeOffEndDateValue.getDate()}`,
+                `${dayAfterEndDateValue.getFullYear()}-${dayAfterEndDateValue.getMonth() + 1}-${dayAfterEndDateValue.getDate()}`
+            ]
         });
     });
     

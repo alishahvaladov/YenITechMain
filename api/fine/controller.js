@@ -16,7 +16,7 @@ const path = require("path");
 const fs = require("fs");
 
 module.exports = {
-    getFineData: async (req, res, next) => {
+    getFineData: async (req, res) => {
         const role = req.user.role;
         const data = req.body;
         try {

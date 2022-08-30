@@ -77,7 +77,7 @@ module.exports = {
             logging: false,
             type: QueryTypes.SELECT
         });
-    }, 
+    },
     getEmployeeExperience: async (emp_id) => {
         return await sequelize.query(`
             SELECT * FROM EmployeeExperiences
@@ -391,6 +391,74 @@ module.exports = {
             cb(null, res);
         }).catch((err) => {
             cb(err);
+        });
+    },
+    getSalariesForExportAll: async (data) => {
+        let query = `
+            SELECT slr.*, emp.first_name, emp.last_name, emp.father_name FROM Salaries as slr
+            LEFT JOIN Employees as emp ON slr.emp_id = emp.id
+            WHERE emp.deletedAt IS NULL 
+            AND emp.j_end_date IS NULL
+        `;
+        let replacements = {};
+        const emp = data.emp;
+        const uPay = parseInt(data.uPay);
+        const min = data.min;
+        const max = data.max;
+
+        if (emp !== null && emp !== "" && emp !== " ") {
+            const splitEmp = emp.split(' ');
+            if(splitEmp.length === 1) {
+                query += `
+                    AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)
+                `;
+                replacements.empName = `%${splitEmp[0]}%`;
+            }
+            if(splitEmp.length === 2) {
+                query += `
+                    AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.first_name like :empName AND emp.father_name like :empName2) OR (emp.last_name like :empName AND emp.father_name like :empName2))
+                `;
+                replacements.empName = `%${splitEmp[0]}%`;
+                replacements.empName2 = `%${splitEmp[1]}%`;
+            }
+            if (splitEmp.length > 2) {
+                query += `
+                    AND (emp.first_name like :empName AND emp.last_name like :empName2 AND emp.father_name like :empName3)
+                `;
+                replacements.empName = `%${splitEmp[0]}%`;
+                replacements.empName2 = `%${splitEmp[1]}%`;
+                replacements.empName3 = `%${splitEmp[2]}%`;
+            }
+        }
+        if (uPay === 1 || uPay === 2) {
+            if (uPay === 1) {
+                query += `
+                    AND slr.unofficial_pay IS NOT NULL
+                `;
+            }
+            if (uPay === 2) {
+                query += `
+                    AND slr.unofficial_pay IS NULL
+                `;
+            }
+        }
+        if (min !== null && min !== "" && min !== " ") {
+            query += `
+                AND slr.gross >= :min
+            `;
+            replacements.min = min;
+        }
+        if (max !== null && max !== "" && max !== " ") {
+            query += `
+                AND slr.gross <= :max
+            `;
+            replacements.max = max;
+        }
+
+        return await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
         });
     }
 }

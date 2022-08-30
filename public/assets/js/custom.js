@@ -107,7 +107,6 @@ const getLastNotifications = () => {
                      <div class="col-10">
                         <div class="text-dark dropdown-text">${notification.header}</div>
                         <div class="text-muted small mt-1 dropdown-text">${notification.description}</div>
-                        <div class="text-muted small mt-1 dropdown-text">30m ago</div>
                      </div>
                   </div>
                </button>

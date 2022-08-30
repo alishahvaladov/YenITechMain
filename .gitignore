@@ -1,4 +1,9 @@
 node_modules
 .env
-
-
+.VSCodeCounter
+.VSCodeCounter/*
+public/employees/day_offs(to_do)/*
+public/employees/recruitment/*
+public/employees/resignations/*
+public/employees/time-off/form/*
+public/employees/time-off/letter/*

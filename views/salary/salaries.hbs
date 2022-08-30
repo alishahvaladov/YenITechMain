@@ -11,7 +11,7 @@
                     <th>salary</th>
                     <th>Unofficial Pay</th>
                     <th>Gross</th>
-                    <th class="text-center"><a class="btn btn-outline-info" href="/salaries/salary-by-months">Aylıq alınan maaşlar</a></th>
+                    <th class="text-center"><a class="btn btn-outline-info w-100" href="/salaries/salary-by-months">Aylıq alınan maaşlar</a></th>
                 </tr>
                 <tr>
                     <th><input class="form-control" type="text" id="emp"></th>
@@ -30,7 +30,9 @@
                             <input class="form-control px-2" type="number" id="max" placeholder="max">
                         </div>
                     </th>
-                    <th class="text-center">Actions</th>
+                    <th class="text-center">
+                        <button class="btn btn-success w-100" id="exportToExcel"><i class="bi bi-file-earmark-excel-fill"></i> Export</button>
+                    </th>
                 </tr>
             </thead>
             <tbody>

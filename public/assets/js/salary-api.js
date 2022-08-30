@@ -11,7 +11,18 @@ const salaryEditApplyBtn = document.querySelector("#salaryEditApplyBtn");
 const uPaySearchInput = document.querySelector("#u_pay");
 const grossInput = document.querySelector("#gross");
 const uPayInput = document.querySelector("#uPay");
+const exportToExcelBtn = document.querySelector("#exportToExcel");
 
+
+let emp,uPay,min,max;
+
+
+const getSearchData = () => {
+    emp = empInput.value;
+    uPay = uPaySearchInput.value;
+    min = minInput.value;
+    max = maxInput.value;
+}
 
 const editSalary = () => {
     const editSalaryBtns = document.querySelectorAll(".edit-salary");
@@ -120,10 +131,10 @@ const pageFunctions = () => {
 }
 
 const search = () => {
-    const emp = empInput.value;
-    const uPay = uPaySearchInput.value;
-    const min = minInput.value;
-    const max = maxInput.value;
+    emp = empInput.value;
+    uPay = uPaySearchInput.value;
+    min = minInput.value;
+    max = maxInput.value;
     const offset = 0;
     let html = "";
     $.post('http://localhost:3000/api/salary/search', {
@@ -186,8 +197,15 @@ const search = () => {
     });
 }
 
-const renderPage = () => {
-    $.get('http://localhost:3000/api/salary/all/0', (res) => {
+const renderPage = (renderOffset = null) => {
+    let offset;
+    console.log(renderOffset);
+    if (renderOffset !== null) {
+        offset = renderOffset;
+    } else {
+        offset = 1;
+    }
+    $.get(`http://localhost:3000/api/salary/all/${offset}`, (res) => {
         const result = res.result.salaries;
         let html = '';
         let count = res.result.count[0].count;
@@ -215,7 +233,7 @@ const renderPage = () => {
 
         for (let i = 1; i <= count; i++) {
             if (i === 1) {
-                countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
+                countHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>`
                 countHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
             }
             if (i > 21 && i < count) {
@@ -238,6 +256,19 @@ const renderPage = () => {
                 }
             }
         }
+        
+        setTimeout(() => {
+            let pgItems = document.querySelectorAll('.pagination-item');
+            console.log(pgItems);
+            pgItems.forEach(item => {
+                if (item.value == offset) {
+                    item.classList.add("pagination-active");
+                } else {
+                    item.classList.remove("pagination-active");
+                }
+            });
+        }, 0)
+
         editSalary();
         pgContainer.innerHTML = countHtml;
         pageFunctions();
@@ -274,13 +305,51 @@ salaryEditApplyBtn.addEventListener("click", () => {
         success: (res) => {
             loading.classList.remove("d-none");
             salaryModal.classList.add("d-none");
-            setTimeout(renderPage, 1000);
+            setTimeout(() => {
+                let activeClass = document.querySelector('.pagination-active');
+                const offset = activeClass.value;
+                renderPage(offset);
+            }, 1000);
         }
     }).catch((err) => {
         loading.classList.remove("d-none");
         salaryModal.classList.add("d-none");
-        setTimeout(renderPage, 1000);
+        setTimeout(() => {
+            let activeClass = document.querySelector('.pagination-active');
+            const offset =activeClass.value;
+            renderPage(offset);
+        }, 1000);
     });
-})
+});
+
+const exportToExcel = () => {
+    getSearchData();
+    const method = "post";
+    let params = {
+        emp,
+        uPay,
+        min,
+        max,
+    }
+    let form = document.createElement('form');
+    form.setAttribute("method", method);
+    form.setAttribute("action", "http://localhost:3000/api/salary/export-all-to-excel");
+
+    for (let key in params) {
+        if (params.hasOwnProperty(key)) {
+            const hiddenField = document.createElement("input");
+            hiddenField.setAttribute('type', 'hidden');
+            hiddenField.setAttribute('name', key);
+            hiddenField.setAttribute('value', params[key]);
+            form.appendChild(hiddenField);
+        }
+    }
+    document.body.appendChild(form);
+    form.submit();
+}
+
+exportToExcelBtn.addEventListener("click", () => {
+    exportToExcel();
+});
 
 setTimeout(renderPage, 1000);

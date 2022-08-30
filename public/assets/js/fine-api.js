@@ -45,7 +45,12 @@ const pageBtnActions = () => {
                 loading.classList.remove("d-none");
                 const id = resetApprovedBtn.value;
                 $.get(`http://localhost:3000/api/fine/reset-approved-fine/${id}`, (res) => {
-                    setTimeout(renderPage, 1500);
+                    setTimeout(() => {
+                        let activeClass = document.querySelector('.pagination-active');
+                        const offset = activeClass.value;
+                        console.log(offset);
+                        renderPage(offset);
+                    }, 1000);
                 });
             });
         });
@@ -57,7 +62,11 @@ const pageBtnActions = () => {
             $.get(`http://localhost:3000/api/fine/approve-fine?btnValue=${btnValue}`);
             loading.classList.remove("d-none");
             loading.classList.add("d-flex");
-            setTimeout(renderPage, 1500);
+            setTimeout(() => {
+                let activeClass = document.querySelector('.pagination-active');
+                const offset = activeClass.value;
+                renderPage(offset);
+            }, 1000);
         });
     });
     resetFineBtnS.forEach(item => {
@@ -207,14 +216,20 @@ const pageFuncs = () => {
        });
     });
     pageBtnActions();
- }
+}
 
 
-const renderPage = () => {
+const renderPage = (renderOffset = null) => {
+    let offset;
+    if (renderOffset !== null) {
+        offset = parseInt(renderOffset);
+    } else {
+        offset = 1;
+    }
     getSearchData();
     $.ajax({
         type: "POST",
-        url: "http://localhost:3000/api/fine?limit=15&offset=0",
+        url: `http://localhost:3000/api/fine?limit=15&offset=${offset}`,
         data: {
             qEmployee,
             qMinuteTotalMin,
@@ -281,6 +296,7 @@ const renderPage = () => {
                             </tr>
                         `
                     }
+                    
                 });
                 tbody.innerHTML = html;
                 
@@ -326,8 +342,16 @@ const renderPage = () => {
                        }
                     }
                     pgContainer.innerHTML = pgHtml;
-                 }
-    
+                }
+                
+                const pgItems = document.querySelectorAll('.pagination-item');
+                pgItems.forEach(item => {
+                    if(item.value == offset) {
+                        item.classList.add("pagination-active");
+                    } else {
+                        item.classList.remove("pagination-active");
+                    }
+                });
     
                 pageFuncs();
             } else {
@@ -365,7 +389,9 @@ qDateInput.addEventListener("change", () => {
 
 dateResetBtn.addEventListener("click", () => {
     qDateInput.value = "";
-    renderPage();
+    let activeClass = document.querySelector('.pagination-active');
+    const offset = activeClass.value;
+    renderPage(offset);
 });
 
 
@@ -378,7 +404,11 @@ const requests = () => {
         loading.classList.add("d-flex");
         approveModal.classList.remove("d-flex");
         approveModal.classList.add("d-none");
-        setTimeout(renderPage, 1500);
+        setTimeout(() => {
+            let activeClass = document.querySelector('.pagination-active');
+            const offset = activeClass.value;
+            renderPage(offset);
+        }, 1000);
     });
     warningModalApprove.addEventListener("click", (event) => {
         const btnValue = warningModalApprove.value;
@@ -387,7 +417,11 @@ const requests = () => {
         loading.classList.add("d-flex");
         warningModal.classList.remove("d-flex");
         warningModal.classList.add("d-none");
-        setTimeout(renderPage, 1500);
+        setTimeout(() => {
+            let activeClass = document.querySelector('.pagination-active');
+            const offset = activeClass.value;
+            renderPage(offset);
+        }, 1000);
     });
 }
 renderPage();

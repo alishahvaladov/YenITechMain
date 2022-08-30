@@ -1,4 +1,4 @@
-const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB, search, searchSalaryByMonts, getSalariesForExport, getSalaryByID, updateSalary } = require("./service");
+const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB, search, searchSalaryByMonts, getSalariesForExport, getSalaryByID, updateSalary, getSalariesForExportAll } = require("./service");
 const jsDateF = new Date();
 const month = jsDateF.getMonth();
 const year = jsDateF.getFullYear();
@@ -6,6 +6,7 @@ const date = jsDateF.getDate();
 const excelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
+
 function weekends( m, y ) {
     let count = {};
     let satCount = 0;
@@ -200,7 +201,11 @@ module.exports = {
     getSalaries: async (req, res) => {
         try {
             let offset = req.params.offset;
-            offset = parseInt(offset) * 15;
+            if (parseInt(offset) !== 0) {
+                offset = (parseInt(offset) - 1) * 15;
+            } else {
+                offset = 0;
+            }
             const result = await getSalary(offset);
             res.send({
                 result
@@ -354,6 +359,55 @@ module.exports = {
                 });
             })
         } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    exportDataToExcel: async (req, res) => {
+        try {
+            const data = req.body;
+            const date = new Date();
+            const filename = `${date.getTime()}-əmək-haqqı.xlsx`;
+            let offset = req.body.offset;
+            offset = (offset - 1) * 10;
+            let salaryData = await getSalariesForExportAll(data);
+            const workbook = new excelJS.Workbook();
+            const worksheet = workbook.addWorksheet("Əmək-haqqı");
+            worksheet.columns= [
+                {header: "Əməkdaş", key: "full_name", width: 10},
+                {header: "Qeyri Rəsmi Maaş", key: "unofficial_pay", width: 10},
+                {header: "Gross", key: "gross", width: 10},
+            ]
+            salaryData.forEach(salary => {
+                const salaryDataFromDB = {
+                    full_name: `${salary.first_name} ${salary.last_name} ${salary.father_name}`,
+                    unofficial_pay: salary.unofficial_pay,
+                    gross: salary.gross,
+                };
+                worksheet.addRow(salaryDataFromDB);
+            });
+            worksheet.getRow(1).eachCell((cell) => {
+                cell.font = {bold: true};
+            });
+            const excelPath = path.join((__dirname), `../../public/excels/${filename}`);
+            await workbook.xlsx.writeFile(excelPath);
+            setTimeout(() => {
+                fs.unlink(excelPath, (err) => {
+                    if(err) {
+                        console.log(err);
+                        res.status(400).json({
+                            success: false,
+                            message: "Unknown error has been occurred"
+                        });
+                    }
+                });
+            }, 10000);
+            res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            res.download(excelPath, "Əmək-haqqı.xlsx");
+        } catch (err) {
             console.log(err);
             return res.status(500).send({
                 success: false,
