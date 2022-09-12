@@ -37,7 +37,10 @@ module.exports = {
         });
     },
     getEmployeesIDsAndShiftTimes: async () => {
-        return await sequelize.query(`SELECT id, shift_start_t, shift_end_t FROM Employees WHERE position_id != 17`, {
+        return await sequelize.query(`
+            SELECT emp.id, es.shift_type, es.shift_start, es.shift_end FROM Employees as emp
+            LEFT JOIN EmployeeShifts AS es ON es.emp_id = emp.id
+            WHERE position_id != 17`, {
             type: QueryTypes.SELECT,
             logging: false
         });

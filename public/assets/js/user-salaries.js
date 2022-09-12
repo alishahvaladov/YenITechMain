@@ -5,6 +5,7 @@ const exportToExcelBtn = document.querySelector("#exportToExcel");
 let qSalaryMin = document.querySelector("#qSalaryMin");
 let qSalaryMax = document.querySelector("#qSalaryMax");
 let qSalaryDate = document.querySelector("#qSalaryDate");
+const resetDate = document.querySelector("#resetDate");
 
 const pageFunctions = () => {
     let pgItems = document.querySelectorAll('.pagination-item');
@@ -237,3 +238,7 @@ setTimeout(renderPage, 1000);
 qSalaryMin.addEventListener("keyup", search);
 qSalaryMax.addEventListener("keyup", search);
 qSalaryDate.addEventListener("change", search);
+resetDate.addEventListener('click', () => {
+    qSalaryDate.value = "";
+    search();
+});

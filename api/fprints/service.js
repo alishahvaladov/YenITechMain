@@ -3,6 +3,8 @@ const {QueryTypes} = require("sequelize");
 const date = new Date();
 let month = date.getMonth();
 month = parseInt(month) + 1;
+let year = date.getFullYear();
+let day = date.getDate();
 
 module.exports = {
     searchFPrint: async (data) => {
@@ -67,20 +69,19 @@ module.exports = {
             countQuery += " AND DAY(fp.f_print_date) = :fDay"
             replacements.fDay = data.qDay;
         }
-        if (data.qMonth !== '' && data.qMonth !== "00" && data.qMonth !== 'ay') {
-            query += " AND MONTH(fp.f_print_date) = :fMonth"
-            countQuery += " AND MONTH(fp.f_print_date) = :fMonth"
-            replacements.fMonth = data.qMonth;
-        } else {
-            query += " AND MONTH(fp.f_print_date) = :fMonth"
-            countQuery += " AND MONTH(fp.f_print_date) = :fMonth"
-            replacements.fMonth = month;
+        if (data.qDate !== '' && data.qDate !== "00" && data.qDate !== 'ay') {
+            const splittedDate = data.qDate.split('-');
+            month = splittedDate[1];
+            year = splittedDate[0];
         }
-        if (data.qYear !== '' && data.qYear !== "00" && data.qYear !== "il") {
-            query += " AND YEAR(fp.f_print_date) = :fYear"
-            countQuery += " AND YEAR(fp.f_print_date) = :fYear"
-            replacements.fYear = data.qYear;
-        }
+        
+        query += " AND MONTH(fp.f_print_date) = :fMonth"
+        countQuery += " AND MONTH(fp.f_print_date) = :fMonth"
+        replacements.fMonth = month;
+
+        query += " AND YEAR(fp.f_print_date) = :fYear"
+        countQuery += " AND YEAR(fp.f_print_date) = :fYear"
+        replacements.fYear = year;
 
         if (data.limit = "all") {
             query += " ORDER BY fp.f_print_date DESC"
@@ -370,6 +371,164 @@ module.exports = {
             type: QueryTypes.SELECT,
             replacements
         });
+
+        return result;
+    },
+    getActiveFPrints: async (data) => {
+        let query = `
+            SELECT fp.*, emp.first_name, emp.last_name, emp.father_name, pos.name AS posName, dept.name AS deptName, proj.name AS projName FROM FPrints AS fp
+            LEFT JOIN Employees AS emp ON fp.emp_id = emp.id
+            LEFT JOIN Positions AS pos ON pos.id = emp.position_id
+            LEFT JOIN Departments AS dept ON dept.id = emp.department
+            LEFT JOIN Projects AS proj ON proj.id = emp.project_id
+            WHERE emp.deletedAt IS NULL
+            AND emp.j_end_date IS NULL
+        `;
+        let countQuery = `
+            SELECT COUNT(*) FROM FPrints AS fp
+            LEFT JOIN Employees AS emp ON fp.emp_id = emp.id
+            LEFT JOIN Positions AS pos ON pos.id = emp.position_id
+            LEFT JOIN Departments AS dept ON dept.id = emp.department
+            LEFT JOIN Projects AS proj ON proj.id = emp.project_id
+            WHERE emp.deletedAt IS NULL
+            AND emp.j_end_date IS NULL
+        `;
+        const replacements = {};
+
+        if(data.qEmployee !== '' && data.qEmployee) {
+            let qEmp = data.qEmployee.split(" ");
+            if(qEmp.length === 1) {
+                query += " AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)";
+                countQuery += " AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)"
+                replacements.empName =  "%" + data.qEmployee + "%";
+            } else if (qEmp.length === 2) {
+                query += " AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.last_name like :empName AND emp.father_name like :empName2))";
+                countQuery += " AND ((emp.first_name like :empName AND emp.last_name like :empName2) OR (emp.last_name like :empName AND emp.father_name like :empName2))"
+                replacements.empName = "%" + qEmp[0] + "%";
+                replacements.empName2 = "%" + qEmp[1] + "%";
+            } else if(qEmp.length === 3) {
+                query += " AND ((emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName) OR (emp.first_name like :empName2 OR emp.last_name like :empName2 OR emp.father_name like :empName2) OR (emp.first_name like :empName3 OR emp.last_name like :empName3 OR emp.father_name like :empName3))";
+                countQuery += " AND ((emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName) OR (emp.first_name like :empName2 OR emp.last_name like :empName2 OR emp.father_name like :empName2) OR (emp.first_name like :empName3 OR emp.last_name like :empName3 OR emp.father_name like :empName3))";
+                replacements.empName = "%" + qEmp[0] + "%";
+                replacements.empName2 = "%" + qEmp[1] + "%";
+                replacements.empName3 = "%" + qEmp[2] + "%";
+            } else if (qEmp.length > 3) {
+                query += " AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)";
+                countQuery += " AND (emp.first_name like :empName OR emp.last_name like :empName OR emp.father_name like :empName)";
+                replacements.empName =  "%" + data.qEmployee + "%";
+            }
+        }
+
+        if (data.qProject !== "" && data.qProject) {
+            query += `
+                AND poj.name like :qProject
+            `;
+            countQuery += `
+                AND poj.name like :qProject
+            `;
+            replacements.qProject = `%${data.qProject}%`;
+        }
+
+        if (data.qDepartment !== "" && data.qDepartment) {
+            query += `
+                AND dept.name like :qDepartment
+            `;
+            countQuery += `
+                AND dept.name like :qDepartment
+            `;
+            replacements.qDepartment = `%${data.qDepartment}%`;
+        }
+        
+        if (data.qPosition !== "" && data.qPosition) {
+            query += `
+                AND pos.name like :qPosition
+            `;
+            countQuery += `
+                AND pos.name like :qPosition
+            `;
+            replacements.qPosition = `%${data.qPosition}%`;
+        }
+        
+        if (data.qMin && data.qMin !== "") {
+            query += `
+                AND fp.f_print_time > :qMin
+            `;
+            countQuery += `
+                AND fp.f_print_time > :qMin
+            `;
+            replacements.qMin = data.qMin;
+        }
+
+        if (data.qMax && data.qMax !== "") {
+            query += `
+                AND fp.f_print_time > :qMax
+            `;
+            countQuery += `
+                AND fp.f_print_time > :qMax
+            `;
+            replacements.qMax = data.qMax;
+        }
+
+        if (data.qDate && data.qDate !== "") {
+            let splittedDate = data.qDate.split("-");
+            day = splittedDate[2];
+            month = splittedDate[1];
+            year = splittedDate[0];
+        }
+
+        query += `
+            AND DAY(fp.f_print_date) = :day
+        `;
+        countQuery += `
+            AND DAY(fp.f_print_date) = :day
+        `;
+        replacements.day = day;
+
+        query += `
+            AND MONTH(fp.f_print_date) = :month
+        `;
+        countQuery += `
+            AND MONTH(fp.f_print_date) = :month
+        `;
+        replacements.month = month;
+
+        query += `
+            AND YEAR(fp.f_print_date) = :year
+        `;
+        countQuery += `
+            AND YEAR(fp.f_print_date) = :year
+        `;
+        replacements.year = year;
+
+        let offset = 0;
+
+        if (data.offset && data.offset !== "") {
+            offset = parseInt(data.offset) * 15;
+        }
+
+        query += `
+            ORDER BY fp.f_print_date DESC
+            LIMIT 15 OFFSET :offset
+        `;
+
+        replacements.offset = offset;
+        
+        const fPrints = await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
+        });
+
+        const count = await sequelize.query(countQuery, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements
+        });
+
+        const result = {};
+
+        result.fPrints = fPrints;
+        result.count = count;
 
         return result;
     }

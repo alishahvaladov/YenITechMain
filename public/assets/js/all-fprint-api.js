@@ -4,6 +4,7 @@ const tbody = document.querySelector("tbody");
 const pgContainer = document.querySelector(".pagination-container");
 const thead = document.querySelector(".headers");
 const inputs = document.querySelector(".inputs");
+const resetDate = document.querySelector("#resetDate");
 
 const renderAllFPrint = () => {
     const qEmp = $("#qEmployee");
@@ -12,8 +13,7 @@ const renderAllFPrint = () => {
     const qPos = $("#qPosition");
     const qTime = $("#qTime");
     const qDay = $("#day");
-    const qMonth = $("#month");
-    const qYear = $("#year");
+    const qDate = $("#qDate");
 
 
     const pgContatiner = document.querySelector(".pagination-container");
@@ -77,8 +77,7 @@ const renderAllFPrint = () => {
                     let qPos = $("#qPosition").val();
                     let qTime = $("#qTime").val();
                     let qDay = $("#day").val();
-                    let qMonth = $("#month").val();
-                    let qYear = $("#year").val();
+                    let qDate = $("#qDate").val();
 
                     $.post('http://localhost:3000/all-fprints/api', {
                         qEmployee: qEmp,
@@ -87,8 +86,7 @@ const renderAllFPrint = () => {
                         qPosition: qPos,
                         qTime: qTime,
                         qDay: qDay,
-                        qMonth: qMonth,
-                        qYear: qYear,
+                        qDate,
                         offset: offset
                     }, (res) => {
                         let tbody = $("tbody");
@@ -137,8 +135,7 @@ const renderAllFPrint = () => {
         let qPos = $("#qPosition").val();
         let qTime = $("#qTime").val();
         let qDay = $("#day").val();
-        let qMonth = $("#month").val();
-        let qYear = $("#year").val();
+        let qDate = $("#qDate").val();
         let offset = 0;
 
         $.post("http://localhost:3000/all-fprints/api", {
@@ -148,8 +145,7 @@ const renderAllFPrint = () => {
                 qPosition: qPos,
                 qTime: qTime,
                 qDay: qDay,
-                qMonth: qMonth,
-                qYear: qYear,
+                qDate,
                 offset: offset
             },
             (res) => {
@@ -223,8 +219,7 @@ const renderAllFPrint = () => {
         let qPosition = $("#qPosition").val();
         let qTime = $("#qTime").val();
         let qDay = $("#day").val();
-        let qMonth = $("#month").val();
-        let qYear = $("#year").val();
+        let qDate = $("#qDate").val();
 
         const method = "post";
         let params = {
@@ -234,8 +229,7 @@ const renderAllFPrint = () => {
             qPosition,
             qTime,
             qDay,
-            qMonth,
-            qYear,
+            qDate,
             limit: "all"
         }
         let form = document.createElement('form');
@@ -261,15 +255,17 @@ const renderAllFPrint = () => {
     });
     setTimeout(renderPage, 2500);
 
-    qEmp.keyup(renderPage)
-    qProj.keyup(renderPage)
-    qDept.keyup(renderPage)
-    qPos.keyup(renderPage)
-    qTime.keyup(renderPage)
-    qDay.change(renderPage)
-    qMonth.change(renderPage)
-    qYear.change(renderPage)
-
+    qEmp.keyup(renderPage);
+    qProj.keyup(renderPage);
+    qDept.keyup(renderPage);
+    qPos.keyup(renderPage);
+    qTime.keyup(renderPage);
+    qDay.change(renderPage);
+    qDate.change(renderPage);
+    resetDate.addEventListener("click", () => {
+        qDate.val('');
+        renderPage();
+    })
 
 }
 renderAllFPrint();

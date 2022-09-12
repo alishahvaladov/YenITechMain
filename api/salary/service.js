@@ -263,10 +263,16 @@ module.exports = {
         const result = {};
         let replacements = {};
         const emp = data.emp;
-        const month = data.month;
-        const year = data.year;
+        let month = null;
+        let year = null;
         const min = data.min;
         const max = data.max;
+
+        if (data.qSalaryDate !== null && data.qSalaryDate !== "") {
+            let splittedSalaryDate = data.qSalaryDate.split(".");
+            month = splittedSalaryDate[0];
+            year = splittedSalaryDate[1];
+        }
 
         if (emp !== null && emp !== "" && emp !== " ") {
             const splitEmp = emp.split(' ');

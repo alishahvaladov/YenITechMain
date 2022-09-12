@@ -9,6 +9,7 @@ const { getFPrints,
 } = require("./service");
 const { addNotification } = require("../../notification/service");
 const readXlsxFile = require("read-excel-file/node");
+const shiftTypesJSON = require('../../config/config.json').shift_types[1].types;
 const path = require("path");
 const date = new Date();
 const month = date.getMonth();
@@ -27,103 +28,119 @@ module.exports = {
         return res.render("fprint/fprints");
     },
     checkIfFPrintForgotten: async (req, res, next) => {
-        const notificationData = {};
-        const empIDsAndShiftTimes = await getEmployeesIDsAndShiftTimes();
-        let fPrintData = {};
-        let fPrintDataHasValue = false;
-        for (let i = 1; i <= lastDayOfMonth; i++) {
-            for (let j = 0; j < empIDsAndShiftTimes.length; j++) {
-                fPrintDataHasValue = false;
-                fPrintData = {};
-                const result = await getFPrintsByDate(empIDsAndShiftTimes[j].id, i);
-                const splitShiftStart = parseInt(empIDsAndShiftTimes[j].shift_start_t.split(":")[0]);
-                const splitShiftEnd = parseInt(empIDsAndShiftTimes[j].shift_end_t.split(":")[0]);
-                if (result.length === 1) {
-                    const splittedTime = result[0].f_print_time.split(":");
-                    if(parseInt(splittedTime[0]) >= splitShiftEnd - 2) {
-                        fPrintData.emp_id = empIDsAndShiftTimes[j].id;
-                        fPrintData.f_print_date = result[0].f_print_date;
-                        fPrintData.f_print_time_entrance = null;
-                        fPrintData.f_print_time_exit = result[0].f_print_time;
-                        fPrintDataHasValue = true;
+        try {
+            const notificationData = {};
+            const empIDsAndShiftTimes = await getEmployeesIDsAndShiftTimes();
+            let fPrintData = {};
+            console.log(empIDsAndShiftTimes);
+            let fPrintDataHasValue = false;
+            for (let i = 1; i <= lastDayOfMonth; i++) {
+                for (let j = 0; j < empIDsAndShiftTimes.length; j++) {
+                    fPrintDataHasValue = false;
+                    fPrintData = {};
+                    const result = await getFPrintsByDate(empIDsAndShiftTimes[j].id, i);
+
+                    let splitShiftStart;
+                    let splitShiftEnd;
+                    if (empIDsAndShiftTimes[j].shift_type === null) {
+                        splitShiftStart = parseInt(empIDsAndShiftTimes[j].shift_start.split(":")[0]);
+                        splitShiftEnd = parseInt(empIDsAndShiftTimes[j].shift_end.split(":")[0]);
                     } else {
-                        fPrintData.emp_id = empIDsAndShiftTimes[j].id;
-                        fPrintData.f_print_date = result[0].f_print_date;
-                        fPrintData.f_print_time_entrance = result[0].f_print_time;
-                        fPrintData.f_print_time_exit = null;
-                        fPrintDataHasValue = true;
+                        splitShiftStart = parseInt(shiftTypesJSON[empIDsAndShiftTimes[j].shift_type].shift_start.split(":")[0]);
+                        splitShiftStart = parseInt(shiftTypesJSON[empIDsAndShiftTimes[j].shift_type].shift_end.split(":")[0]);
                     }
-                    if(fPrintDataHasValue) {
-                        addForgottenFPrintsToDB(fPrintData, (err, result) => {
-                            if(err) {
-                                console.log(err);
-                                req.flash("error_msg", "An unknown error has been occurred");
-                                return res.redirect("/fines");
-                            }
-                        });
-                    }
-                } else if (result.length > 1) {
-                    let countEntrance = 0;
-                    let countExit = 0;
-                    let timeEntrance;
-                    let timeExit;
-                    let dateEntrance;
-                    let dateExit;
-                    for (let k = 0; k < result.length; k++) {
-                        const splittedTime = result[k].f_print_time.split(":");
+                    
+                    if (result.length === 1) {
+                        const splittedTime = result[0].f_print_time.split(":");
                         if(parseInt(splittedTime[0]) >= splitShiftEnd - 2) {
-                            timeExit = result[k].f_print_time;
-                            dateExit = result[k].f_print_date;
-                            countExit++;
+                            fPrintData.emp_id = empIDsAndShiftTimes[j].id;
+                            fPrintData.f_print_date = result[0].f_print_date;
+                            fPrintData.f_print_time_entrance = null;
+                            fPrintData.f_print_time_exit = result[0].f_print_time;
+                            fPrintDataHasValue = true;
+                        } else {
+                            fPrintData.emp_id = empIDsAndShiftTimes[j].id;
+                            fPrintData.f_print_date = result[0].f_print_date;
+                            fPrintData.f_print_time_entrance = result[0].f_print_time;
+                            fPrintData.f_print_time_exit = null;
+                            fPrintDataHasValue = true;
                         }
-                        if(parseInt(splittedTime[0]) <= splitShiftStart + 2) {
-                            timeEntrance = result[k].f_print_time;
-                            dateEntrance = result[k].f_print_date;
-                            countEntrance++;
+                        if(fPrintDataHasValue) {
+                            addForgottenFPrintsToDB(fPrintData, (err, result) => {
+                                if(err) {
+                                    console.log(err);
+                                    req.flash("error_msg", "An unknown error has been occurred");
+                                    return res.redirect("/fines");
+                                }
+                            });
                         }
-                    }
-                    if(countEntrance < 1) {
-                        fPrintData.emp_id = empIDsAndShiftTimes[j].id;
-                        fPrintData.f_print_time_exit = timeExit;
-                        fPrintData.f_print_time_entrance = null;
-                        fPrintData.f_print_date = dateExit;
-                        fPrintDataHasValue = true;
-                    } else if (countExit < 1) {
-                        fPrintData.emp_id = empIDsAndShiftTimes[j].id;
-                        fPrintData.f_print_time_entrance = timeEntrance;
-                        fPrintData.f_print_date = dateEntrance;
-                        fPrintData.f_print_time_exit = null;
-                        fPrintDataHasValue = true;
-                    }
-                    if(fPrintDataHasValue) {
-                        addForgottenFPrintsToDB(fPrintData, (err, result) => {
-                            if(err) {
-                                console.log(err);
-                                req.flash("error_msg", "An unknown error has been occurred.");
-                                return res.redirect("/all-fprints");
+                    } else if (result.length > 1) {
+                        let countEntrance = 0;
+                        let countExit = 0;
+                        let timeEntrance;
+                        let timeExit;
+                        let dateEntrance;
+                        let dateExit;
+                        for (let k = 0; k < result.length; k++) {
+                            const splittedTime = result[k].f_print_time.split(":");
+                            if(parseInt(splittedTime[0]) >= splitShiftEnd - 2) {
+                                timeExit = result[k].f_print_time;
+                                dateExit = result[k].f_print_date;
+                                countExit++;
                             }
-                        });
+                            if(parseInt(splittedTime[0]) <= splitShiftStart + 2) {
+                                timeEntrance = result[k].f_print_time;
+                                dateEntrance = result[k].f_print_date;
+                                countEntrance++;
+                            }
+                        }
+                        if(countEntrance < 1) {
+                            fPrintData.emp_id = empIDsAndShiftTimes[j].id;
+                            fPrintData.f_print_time_exit = timeExit;
+                            fPrintData.f_print_time_entrance = null;
+                            fPrintData.f_print_date = dateExit;
+                            fPrintDataHasValue = true;
+                        } else if (countExit < 1) {
+                            fPrintData.emp_id = empIDsAndShiftTimes[j].id;
+                            fPrintData.f_print_time_entrance = timeEntrance;
+                            fPrintData.f_print_date = dateEntrance;
+                            fPrintData.f_print_time_exit = null;
+                            fPrintDataHasValue = true;
+                        }
+                        if(fPrintDataHasValue) {
+                            addForgottenFPrintsToDB(fPrintData, (err, result) => {
+                                if(err) {
+                                    console.log(err);
+                                    req.flash("error_msg", "An unknown error has been occurred.");
+                                    return res.redirect("/all-fprints");
+                                }
+                            });
+                        }
                     }
                 }
             }
+            if (fPrintDataHasValue) {
+                notificationData.header = "Unudulmuş Barmaq İzləri";
+                notificationData.description = "Unudulmuş barmaq izlərini yoxlayın";
+                notificationData.belongs_to_role = 5;
+                notificationData.belongs_to_table = "FPrints";
+                notificationData.url = "/all-fprints?inappropriate-data=true";
+                notificationData.importance = 1;
+                addNotification(notificationData, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        req.flash("error_msg", "Ups... Something went wrong!");
+                        return res.redirect('/all-fprints');
+                    }
+                });
+            }
+            req.flash("success_msg", "Finger print information have been uploaded successfully.");
+            return res.redirect("/all-fprints");
+        } catch (err) {
+            console.log(err);
+            req.flash("error_msg", "Ups... Something went wrong!");
+            return res.redirect("/fprints");
         }
-        if (fPrintDataHasValue) {
-            notificationData.header = "Unudulmuş Barmaq İzləri";
-            notificationData.description = "Unudulmuş barmaq izlərini yoxlayın";
-            notificationData.belongs_to_role = 5;
-            notificationData.belongs_to_table = "FPrints";
-            notificationData.url = "/all-fprints?inappropriate-data=true";
-            notificationData.importance = 1;
-            addNotification(notificationData, (err, result) => {
-                if (err) {
-                    console.log(err);
-                    req.flash("error_msg", "Ups... Something went wrong!");
-                    return res.redirect('/all-fprints');
-                }
-            });
-        }
-        req.flash("success_msg", "Finger print information have been uploaded successfully.");
-        return res.redirect("/all-fprints");
     },
     addFPrintToDB: async (req, res, next) => {
         try {
@@ -160,8 +177,6 @@ module.exports = {
                                 if (err) {
                                     console.log("There is an error uploading the excel row");
                                     console.log(err);
-                                    req.flash("error_msg", "There is an error uploading the excel row");
-                                    return res.redirect("/all-fprints");
                                 }
                             });
                         } else {
@@ -171,8 +186,6 @@ module.exports = {
                             addUnknownEmpsToDB(data, (err, result) => {
                                 if (err) {
                                     console.log(err);
-                                    req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
-                                    return res.redirect("/all-fprints");
                                 }
                             });
                         }
@@ -185,13 +198,13 @@ module.exports = {
                     }, 1000);
                 } else {
                     req.flash("error_msg", "Xahiş olunur düzgün excel faylını(Logix proqramından export olunmuş) yükləyin.");
-                    return res.redirect("/all-fprints");
+                    return res.redirect("/fprints");
                 }
             });
         } catch (err) {
             console.log(err);
             req.flash("error_msg", "An unknown error has been occurred please contact System Admin");
-            return res.redirect("/all-fprints");
+            return res.redirect("/fprints");
         }
     },
     renderForgottenFPrints: (req, res) => {

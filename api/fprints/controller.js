@@ -1,4 +1,4 @@
-const { searchFPrint, renderForgottenFPrints, updateForgottenFPrints, getForgottenFPrintById, createFPrintForForgottenFPrint, getFPrintsForDeptDirectors } = require("./service");
+const { searchFPrint, renderForgottenFPrints, updateForgottenFPrints, getForgottenFPrintById, createFPrintForForgottenFPrint, getFPrintsForDeptDirectors, getActiveFPrints } = require("./service");
 const excelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
@@ -9,7 +9,7 @@ module.exports = {
             const data = req.body;
             let result = await searchFPrint(data);
 
-            res.send({
+            res.status(200).send({
                 result
             });
         } catch (e) {
@@ -209,6 +209,22 @@ module.exports = {
             return res.status(500).send({
                 success: false,
                 message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    getActiveFPrints: async ( req, res) => {
+        try {
+            const body = req.body;
+            const result = await getActiveFPrints(body);
+            return res.status(200).send({
+                fPrints: result.fPrints,
+                count: result.count
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong"
             });
         }
     }

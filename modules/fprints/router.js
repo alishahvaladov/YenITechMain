@@ -5,7 +5,7 @@ const { hr, deptDirector, checkRoles } = require("../auth/auth");
 const upload = require("./upload-middleware");
 
 router.get("/", hr, getFPrints);
-router.post("/", upload.single("file"), addFPrintToDB, checkIfFPrintForgotten);
+router.post("/", hr, checkRoles, upload.single("file"), addFPrintToDB, checkIfFPrintForgotten);
 router.get("/test", checkIfFPrintForgotten);
 router.get("/inappropriate-fprints", hr, renderForgottenFPrints);
 router.get("/department", deptDirector, checkRoles, (req, res) => {

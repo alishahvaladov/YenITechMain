@@ -4,13 +4,11 @@ const exportBtn = document.querySelector('#export');
 const empInput = document.querySelector("#emp");
 const minInput = document.querySelector("#min");
 const maxInput = document.querySelector("#max");
-const monthSelect = document.querySelector("#month");
-const yearSelect = document.querySelector("#year");
 const resetDate = document.querySelector("#resetDate");
 const pgContainer = document.querySelector(".pagination-container");
 const dateNow = new Date();
 const year = dateNow.getFullYear();
-
+const salaryDate = document.querySelector("#qSalaryDate");
 
 const pageFunctions = () => {
     let pgItems = document.querySelectorAll('.pagination-item');
@@ -104,45 +102,19 @@ const pageFunctions = () => {
 }
 
 
-const resetDateSelect = () => {
-    const monthHtml = `
-        <option hidden>Ay</option>
-        <option value="1">Yanvar</option>
-        <option value="2">Fevral</option>
-        <option value="3">Mart</option>
-        <option value="4">Aprel</option>
-        <option value="5">May</option>
-        <option value="6">İyun</option>
-        <option value="7">İyul</option>
-        <option value="8">Avqust</option>
-        <option value="9">Sentyabr</option>
-        <option value="10">Oktyabr</option>
-        <option value="11">Noyabr</option>
-        <option value="12">Dekabr</option>
-    `
-    let yearSelectHtml = "<option hidden>İl</option>";
-    for (let i = year; i >= 2021; i--) {
-        yearSelectHtml += `
-            <option value=${i}>${i}</option>
-        `
-    }
-    monthSelect.innerHTML = monthHtml;
-    yearSelect.innerHTML = yearSelectHtml
-}
+
 const search = () => {
     const emp = empInput.value;
     const min = minInput.value;
     const max = maxInput.value;
-    const month = monthSelect.value;
-    const year = yearSelect.value;
+    const qSalaryDate = salaryDate.value;
     const offset = 0;
     let html = "";
     $.post('http://localhost:3000/api/salary/search-salary-by-months', {
         emp,
         min,
         max,
-        month,
-        year,
+        qSalaryDate,
         offset
     }, (sRes) => {
         const salaries = sRes.result.salaries;
@@ -192,7 +164,6 @@ const search = () => {
     });
 }
 const renderPage = () => {
-    resetDateSelect();
     $.get('http://localhost:3000/api/salary/salary-by-months/0', (res) => {
         const result = res.result.salaries;
         let count = res.result.count[0].count;
@@ -258,15 +229,13 @@ const renderPage = () => {
     maxInput.addEventListener('keyup', () => {
         search();
     });
-    monthSelect.addEventListener('change', () => {
-        search();
-    });
-    yearSelect.addEventListener('change', () => {
+
+    salaryDate.addEventListener('change', () => {
         search();
     });
     
     resetDate.addEventListener("click", () => {
-        resetDateSelect();
+        salaryDate.value = "";
         search();
     });
 }

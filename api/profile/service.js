@@ -116,16 +116,35 @@ module.exports = {
             `;
             replacements.qMax = data.qMax;
         }
-
+        let month = null;
+        let year = null;
         if (data.qDate !== "" && data.qDate) {
+            let splittedDate = data.qDate.split('.');
+            month = splittedDate[0];
+            year = splittedDate[1];
+        }
+
+        if (month !== null && month !== "") {
             query += `
-                AND salary_date = :qDate
+                AND MONTH(salary_date) = :qMonth
             `;
             countQuery += `
-                AND salary_date = :qDate
+                AND MONTH(salary_date) = :qMonth
             `;
-            replacements.qDate = data.qDate;
+            replacements.qMonth = month;
         }
+
+        if (year !== null && year !== "") {
+            query += `
+                AND YEAR(salary_date) = :qYear
+            `;
+            countQuery += `
+                AND YEAR(salary_date) = :qYear
+            `;
+            replacements.qYear = year;
+        }
+
+
         replacements.emp_id = data.emp_id;
         replacements.offset = data.offset;
         query += "LIMIT 15 OFFSET :offset";
