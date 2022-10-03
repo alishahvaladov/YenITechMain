@@ -362,7 +362,7 @@ module.exports = {
             LEFT JOIN Positions as pos ON emp.position_id = pos.id
             LEFT JOIN Projects as proj ON emp.project_id = proj.id
             LEFT JOIN EmployeeShifts as es ON emp.id = es.emp_id
-            WHERE emp.deletedAt IS NOT NULL
+            WHERE (emp.deletedAt IS NOT NULL OR emp.j_end_date IS NOT NULL)
         `;
         let countQuery = `
             SELECT COUNT(*) as count FROM Employees as emp
@@ -370,8 +370,8 @@ module.exports = {
             LEFT JOIN Positions as pos ON emp.position_id = pos.id
             LEFT JOIN Projects as proj ON emp.project_id = proj.id
             LEFT JOIN EmployeeShifts as es ON emp.id = es.emp_id
-            WHERE emp.deletedAt IS NOT NULL
-        `
+            WHERE (emp.deletedAt IS NOT NULL OR emp.j_end_date IS NOT NULL)
+        `;
 
         if (data.qName !== "" && data.qName) {
             let splittedQName = data.qName.split(" ");
@@ -448,6 +448,18 @@ module.exports = {
             `;
             replacements.qProject = data.qProject;
         }
+
+        let offset = 0;
+
+        if (data.offset && data.offset !== "") {
+            offset = data.offset;
+        }
+
+        query += `
+            LIMIT 15 OFFSET :offset
+        `;
+
+        replacements.offset = offset;
 
 
 

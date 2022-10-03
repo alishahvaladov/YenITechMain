@@ -459,7 +459,7 @@ const renderPage = (render_offset = null) => {
    if (render_offset !== null) {
       offset = render_offset;
    } else {
-      offset = 1;
+      offset = 1; 
    }
    $.post("http://localhost:3000/api/all-employee", {
       empInpNameVal,
@@ -469,7 +469,6 @@ const renderPage = (render_offset = null) => {
       limit: limitVal,
       offset
    }, (res) => {
-      console.log(res);
       let tbody = document.querySelector('tbody');
       let result = res.result;
       let role = res.role;

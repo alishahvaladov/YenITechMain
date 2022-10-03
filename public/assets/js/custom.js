@@ -172,11 +172,11 @@ setTimeout(() => {
 
 
 $.get('http://localhost:3000/api/profile/profile-picture', (res) => {
-   const filename = res.filename;
+   // const filename = res.filename;
    dropdownUsername.innerHTML = res.username[0].username;
-   avatars.forEach(item => {
-      item.src = filename;
-   });
+   // avatars.forEach(item => {
+   //    item.src = filename;
+   // });
 });
 
 $.ajax({

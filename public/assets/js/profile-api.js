@@ -29,8 +29,8 @@ const loading = document.querySelector(".loading");
 const renderPage = () => {
     $.get('http://localhost:3000/api/profile/profile-picture', (result) => {
         const filename = result.filename;
-        const cardPP = document.querySelector("#card-pp");
-        cardPP.src = filename;
+        // const cardPP = document.querySelector("#card-pp");
+        // cardPP.src = filename;
     });
 
     $.get("http://localhost:3000/api/profile", (res) => {
