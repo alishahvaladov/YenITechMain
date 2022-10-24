@@ -1,5 +1,8 @@
 const { QueryTypes } = require("sequelize");
 const { sequelize } = require("../../db_config/models");
+const date = new Date();
+
+const month = date.getMonth();
 
 module.exports = {
     getEmployeeCount: async () => {
@@ -68,13 +71,14 @@ module.exports = {
     },
     getSalarySumForEachDepartment: async (user_id) => {
         return await sequelize.query(`
-            SELECT SUM(sal.gross) as gross, SUM(sal.unofficial_pay) AS upay, dept.name FROM Salaries AS sal
+            SELECT SUM(sal.salary_cost) as gross, dept.name FROM SalaryByMonths AS sal
             LEFT JOIN Employees AS emp ON emp.id = sal.emp_id
             LEFT JOIN Departments AS dept ON emp.department = dept.id
             LEFT JOIN Projects AS proj ON emp.project_id = proj.id
             WHERE emp.deletedAt IS NULL
             AND emp.j_end_date IS NULL
             AND dept.name IS NOT NULL
+            AND MONTH(salary_date) = :month
             AND emp.project_id = (
                 SELECT emp.project_id FROM Employees AS emp
                 LEFT JOIN Users AS usr ON usr.emp_id = emp.id
@@ -85,7 +89,8 @@ module.exports = {
             logging: false,
             type: QueryTypes.SELECT,
             replacements: {
-                user_id
+                user_id,
+                month
             }
         });
     },

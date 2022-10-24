@@ -209,5 +209,20 @@ module.exports = {
             type: QueryTypes.SELECT,
             replacements
         });
-    }
+    },
+    addProject: (data, cb) => {
+        Project.create({
+            user_id: data.user_id,
+            name: data.name,
+            address: data.address,
+            project_manager_id: data.project_manager_id,
+            parent_id: data.parent_id
+        }, {
+            logging: false
+        }).then((project) => {
+            cb(null, project)
+        }).catch(err => {
+            cb(err);
+        })
+    },
 }

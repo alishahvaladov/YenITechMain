@@ -1,6 +1,6 @@
 const departmentsDiv = document.querySelector(".departments-checkbox");
 const submitPositionBtn = document.querySelector("#submitPosition");
-const inputPassword4 = document.querySelector("#inputPassword4");
+const inputPassword4 = document.querySelector("#name");
 const successModal = document.querySelector(".success-modal");
 const errorModal = document.querySelector('.error-modal');
 const errorMessage = document.querySelector("#errorMessage");

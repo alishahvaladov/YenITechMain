@@ -187,10 +187,17 @@
                                 <i class="align-middle" data-feather="settings"></i>
                             </a>
 
-                            <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#"
+                            <a class="nav-icon dropdown-toggle d-flex d-sm-inline-block navbar-user-button"  style="font-size: var(--bs-body-font-size)" href="#"
                                 data-bs-toggle="dropdown">
-                                <img src="/assets/img/john.jpg" class="avatar img-fluid rounded-circle me-1"/>
-                                <span class="text-dark" id="dropdown-username"></span>
+                                <div class="d-flex">
+                                    <div class="letter-avatar d-none justify-content-center align-items-center rounded-circle me-1" style="background-color: #2c3e50;">
+                                        <h4 class="avatar-letters text-white m-0"></h4>
+                                    </div>
+                                    <div class="avatar-picture d-none">
+                                        <img src="/assets/img/john.jpg" class="avatar img-fluid rounded-circle me-1"/>
+                                    </div>
+                                    <span class="text-dark" id="dropdown-username"></span>
+                                </div>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <a class="dropdown-item" href="/profile">

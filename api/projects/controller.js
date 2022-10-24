@@ -1,4 +1,5 @@
-const { getProjects, getProjectsForEmpForm, getProjectManagersAndParentProjects, getProjectById, updateProject, getProjectsForExport } = require("./service");
+const { getProjects, getProjectsForEmpForm, getProjectManagersAndParentProjects, getProjectById, updateProject, getProjectsForExport, addProject } = require("./service");
+const { Project } = require("../../db_config/models")
 const excelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
@@ -170,6 +171,86 @@ module.exports = {
             return res.status(500).send({
                 success: false,
                 message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    addProject: (req, res) => {
+        try {
+            const body = req.body;
+            const data = {};
+            data.user_id = req.user.id;
+            console.log(body);
+
+            if (body.name && body.name !== "") {
+                data.name = body.name
+            } else {
+                return res.status(400).send({
+                    success: false,
+                    field: "name",
+                    message: "Zəhmət olmasa layihə adını qeyd edin"
+                });
+            }
+
+            if (body.address && body.address !== "") {
+                data.address = body.address;
+            } else {
+                return res.status(400).send({
+                    success: false,
+                    field: "address",
+                    message: "Zəhmət olmasa addresi qeyd edin"
+                });
+            }
+
+            if (body.project_manager_id && body.project_manager_id !== "") {
+                data.project_manager_id = body.project_manager_id;
+            } else {
+                return res.status(400).send({
+                    success: false,
+                    field: "project_manager_id",
+                    message: "Zəhmət olmasa layihə menecerini seçin"
+                });
+            }
+
+            if (body.parent_id && body.parent_id !== "") {
+                data.parent_id = body.parent_id;
+            } else {
+                data.parent_id = null;
+            };
+
+            Project.findOne({
+                where: {
+                    name: data.name
+                }
+            }).then((project) => {
+                if(project) {
+                    return res.status(400).send({
+                        success: false,
+                        field: "name",
+                        message: "This project name already exists. Try other name"
+                    });
+                } else {
+                    addProject(data, (err, result) => {
+                        if(err) {
+                            console.log(err);
+                            return res.status(500).send({
+                                success: false,
+                                field: "none",
+                                message: "Ups... Something went wrong!"
+                            });
+                        }
+                        return res.status(201).send({
+                            success: true,
+                            message: "Project has been added"
+                        });
+                    });
+                }
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                field: "none",
+                message: "Ups... Something went wrong"
             });
         }
     }

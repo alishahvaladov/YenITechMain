@@ -7,14 +7,18 @@ module.exports = {
     getNoFPrints: async (req, res) => {
         try {
             const data = req.body;
-            let result = await getNoFPrints(data);
- 
-            res.send({
-                result
+            const result = await getNoFPrints(data);
+            console.log(result);
+            res.status(200).send({
+                count: result.count[0].count,
+                fprints: result.nfprints
             });
-        } catch (e) {
-            req.flash("error_msg", "An unkown error has been occurred");
-            return res.redirect("/fprints");
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
         }
     },
     exportDataToExcel: async (req, res) => {

@@ -2,7 +2,7 @@ const { User, sequelize} = require("../../db_config/models");
 const {Op, QueryTypes, where} = require("sequelize");
 
 module.exports = {
-    renderRegister: async (req, res) => {
+    renderRegister: async () => {
         return await sequelize.query(`SELECT emp.id as empID, emp.first_name as empName, emp.last_name as empLName, emp.father_name as empFName, usr.* 
                                     FROM Employees as emp 
                                     LEFT JOIN Users as usr ON emp.id = usr.emp_id 

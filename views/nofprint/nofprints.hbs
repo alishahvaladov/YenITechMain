@@ -1,54 +1,108 @@
-<div class="department-table">
-    {{> messages }}
-    <table class="table table-striped">
+<div class="card flex-fill">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Barmaq İzləri</h5>
+    </div>
+    <h2 class="text-center">Barmaq İzləri</h2>
+    <table class="table table-hover my-0">
         <div class="container">
             <thead>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th>Employee</th>
-            <th>Enter Sign Time</th>
-            <th>Status</th>
-            <th>
-                <a class="btn btn-outline-success btn-sm" href="/nofprint/add-nofprint"><i class="bi bi-plus-circle"></i></a>
-            </th>
-            <th></th>
-            <th></th>
-            <th></th>
+                <tr>
+                    <th>Əməkdaş</th>
+                    <th>Layihə</th>
+                    <th>Departament</th>
+                    <th>Vəzifə</th>
+                    <th>Giriş Vaxtı</th>
+                    <th>Çıxış Vaxtı</th>
+                    <th>Tarix</th>
+                    <th>
+                        <a class="btn btn-outline-success w-100" href="/nofprint/add-nofprint"><i class="bi bi-plus-circle"></i></a>
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="form-control" type="text" id="qEmployee" placeholder="Əməkdaş">
+                    </td>
+                    <td>
+                        <input class="form-control" type="text" id="qProject" placeholder="Layihə">
+                    </td>
+                    <td>
+                        <input class="form-control" type="text" id="qDepartment" placeholder="Departament">
+                    </td>
+                    <td>
+                        <input class="form-control" type="text" id="qPosition" placeholder="Vəzifə">
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            <input class="form-control" type="time" id="qTimeEnter" placeholder="Giriş Vaxtı">
+                            <div class="mx-1"></div>
+                            <button class="btn btn-light" id="qTimeEnterReset">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </button>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            <input class="form-control" type="time" id="qTimeLeave" placeholder="Çıxış Vaxtı">
+                            <div class="mx-1"></div>
+                            <button class="btn btn-light" id="qTimeLeaveReset">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </button>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            <input class="form-control" type="date" id="qDate" placeholder="Tarix">
+                            <div class="mx-1"></div>
+                            <button class="btn btn-light" id="qDateReset">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </button>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-success w-100" id="exportToExcel"><i
+                            class="bi bi-file-earmark-excel-fill"></i></button>
+                    </td>
+                </tr>
             </thead>
             <tbody>
-            {{#if nofprints}}
-                {{#each nofprints}}
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>{{dataValues.emp.dataValues.first_name}} {{dataValues.emp.dataValues.last_name}} {{dataValues.emp.dataValues.father_name}}</td>
-                        <td>{{dataValues.enter_sign_time}}</td>
-                        {{#if dataValues.leave_sign_time}}
-                            <td class="text-success">{{dataValues.leave_sign_time}}</td>
-                        {{else}}
-                            <td class="text-danger">Not Left</td>
-                        {{/if}}
-                        <td>
-                        {{#if dataValues.leave_sign_time}}
-                            <span class="text-success"><i class="bi bi-check-lg"></i></span>
-                        {{else}}
-                            <div class="btn-group">
-                                <a class="btn btn-outline-warning btn-sm" href="/nofprint/update/{{dataValues.id}}"><i class="bi bi-check-lg"></i></a>
-                            </div>
-                        {{/if}}
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                {{/each}}
-            {{/if}}
+
             </tbody>
         </div>
     </table>
+    <div class="pagination d-flex justify-content-center">
+        <div class="pagination-container w-50 d-flex justify-content-between">
+            <button class="pagination-item btn btn-outline-dark btn-sm active disabled">1</button>
+        </div>
+    </div>
 </div>
 
-<script src="/assets/js/jquery.min.js"></script>
+
+<div class="fprint-modal position-fixed w-100">
+    <div class="fprint-modal-container w-100 h-100 d-flex justify-content-center align-items-center">
+        <form action="/fprints" method="post" enctype="multipart/form-data">
+            <div class="fprint-background d-flex flex-column p-5">
+                <label for="upload" class="btn btn-outline-dark btn-sm mb-3">Fayl Seç</label>
+                <input class="d-none" type="file" id="upload" name="file">
+                <div class="buttons">
+                    <span id="fpCancelBtn" class="btn btn-outline-danger btn-sm" type="button">Ləğv et</span>
+                    <button class="btn btn-outline-primary btn-sm" type="submit">Təsdiqlə</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="add-time-modal d-none position-fixed justify-content-center align-items-center">
+    <div class="add-time-modal-container">
+        <div class="time-input my-2">
+            <input type="time" id="timeInput">
+        </div>
+        <div class="add-time-btns btn-group d-flex justify-content-between my-2">
+            <button class="btn btn-outline-danger" id="timeInputCancel">Ləğv Et</button>
+            <button class="btn btn-outline-success" id="timeInputSubmit">Təsdiqlə</button>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/jquery.min.js" defer></script>
 <script src="/assets/js/nofprint-api.js"></script>

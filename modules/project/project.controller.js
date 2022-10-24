@@ -9,7 +9,7 @@ module.exports = {
         errors = [];
         const data = req.body;
         data.user_id = req.user.id;
-        if(!data.parent_id) {
+        if(!data.parent_id || data.parent_id === "") {
             data.parent_id = null;
         }
         Project.findOne({
@@ -19,17 +19,9 @@ module.exports = {
         }).then((project) => {
             if(project) {
                 errors.push({msg: "This project already exists"});
-                if(req.user.role === 5) {
-                    return res.render("project/add-project", {
-                        errors,
-                        hr: true
-                    });
-                } else if (req.user.role === 1) {
-                    return res.render("project/add-project", {
-                        errors,
-                        super_admin: true
-                    });
-                }
+                return res.render("project/add-project", {
+                    errors
+                });
             }
             if(errors.length === 0) {
                 addProject(data, (err, result) => {

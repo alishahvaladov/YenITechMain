@@ -373,12 +373,6 @@ table {
     margin-left: 10px;
     border: none;
 }
-#toff-maker {
-    width: 275px !important;
-}
-/*.time-off-form select {*/
-/*    width: 250px !important;*/
-/*}*/
 .select-width {
     width: 300px !important;
 }
@@ -470,72 +464,6 @@ input[type=number] {
 }
 .fprint-background {
     background-color: #fff;
-}
-
-#toffNextBtn,
-#toffPrevBtn {
-    background-color: var(--web-right-bg-color);
-    font-size: 20px;
-    font-weight: 400;
-    border: 1px solid var(--web-right-bg-color);
-    color: var(--web-text-color);
-    padding: 5px;
-    border-radius: 5px;
-    box-shadow: -1px -1px 3px rgba(255, 255, 255, 0.1),
-    2px 2px 6px rgba(0, 0, 0, 0.3);
-    outline: none;
-}
-
-#toffApplyBtn {
-    background-color: var(--web-right-bg-color);
-    font-size: 20px;
-    font-weight: 400;
-    border: 1px solid var(--web-right-bg-color);
-    color: var(--web-text-color);
-    padding: 5px;
-    border-radius: 5px;
-    box-shadow: -1px -1px 3px rgba(255, 255, 255, 0.1),
-    2px 2px 6px rgba(0, 0, 0, 0.3);
-    outline: none;
-    float: right;
-}
-#toffNextBtn,
-#empRegApply {
-    background-color: var(--web-right-bg-color);
-    font-size: 20px;
-    font-weight: 400;
-    border: 1px solid var(--web-right-bg-color);
-    color: var(--web-text-color);
-    padding: 5px;
-    border-radius: 5px;
-    box-shadow: -1px -1px 3px rgba(255, 255, 255, 0.1),
-    2px 2px 6px rgba(0, 0, 0, 0.3);
-    outline: none;
-}
-
-#toffNextBtn:hover,
-#empRegApply:hover {
-    color: var(--web-text-color);
-    box-shadow: -1px -1px 3px rgba(255, 255, 255, 1),
-    2px 2px 6px rgba(0, 0, 0, 0.3),
-    inset -2px -2px 10px rgba(255, 255, 255, 1),
-    inset 2px 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-#toffNextBtn:hover,
-#toffApplyBtn:hover,
-#toffPrevBtn:hover {
-    color: var(--web-text-color);
-    box-shadow: -1px -1px 3px rgba(255, 255, 255, 1),
-    2px 2px 6px rgba(0, 0, 0, 0.3),
-    inset -2px -2px 10px rgba(255, 255, 255, 1),
-    inset 2px 2px 10px rgba(0, 0, 0, 0.3);
-}
-#toffNextBtn:active,
-#toffApplyBtn:active,
-#toffPrevBtn:active {
-    box-shadow: inset -1px -1px 3px rgba(0, 0, 0, 0.3),
-    inset 2px 2px 6px rgba(255, 255, 255, 1);
 }
 
 
@@ -763,4 +691,53 @@ table thead input {
 
 .pagination-item {
     margin: 0 1px;
+}
+
+.successfull-added-modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.successfull-added-modal-container {
+    width: 40%;
+    height: 30%;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.successfull-added-container-content {
+    display: flex;
+    width: 40%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.successfull-added-container-content i {
+    font-size: 70px;
+    color: #090;
+}
+
+.success-added-message {
+    font-size: 20px;
+}
+
+.navbar-user-button:hover {
+    text-decoration: none !important;
+}
+.letter-avatar {
+    height: 40px;
+    width: 40px;
+    margin-bottom: -15px;
+    margin-top: -15px;
 }

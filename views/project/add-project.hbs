@@ -3,21 +3,21 @@
         <h5 class="card-title mb-0">Layihə əlavə formu</h5>
     </div>
     <div class="card-body">
-        <form action="/projects/add-project" method="post">
+        <div>
             <div class="row">
                 <div class="col-12">
                     <div class="mb-3">
                         <div class="row">
                             <div class="col-12 col-lg-6">
                                 <div class="form-group">
-                                    <label class="form-label">Layihə adı</label>
-                                    <input class="form-control" type="text" name="name">
+                                    <label class="form-label required-lowast" for="name">Layihə adı</label>
+                                    <input class="form-control" type="text" name="name" id="name">
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6">
                                 <div class="form-group">
-                                    <label class="form-label">Layihə adresi</label>
-                                    <input class="form-control" type="text" name="address">
+                                    <label class="form-label required-lowast" for="address">Layihə adresi</label>
+                                    <input class="form-control" type="text" name="address" id="address">
                                 </div>
                             </div>
                         </div>
@@ -28,8 +28,8 @@
                         <div class="row">
                             <div class="col-12 col-lg-6">
                                 <div class="form-group">
-                                    <label class="form-label">Layihə meneceri</label>
-                                    <select class="form-select" id="projectManagers" name="project_manager_id" id="">
+                                    <label class="form-label required-lowast" for="project_manager_id">Layihə meneceri</label>
+                                    <select class="form-select" name="project_manager_id" id="project_manager_id">
                                         <option value="" hidden>Layihə meneceri seçin</option>
                                     </select>
                                 </div>
@@ -37,7 +37,7 @@
                             <div class="col-12 col-lg-6">
                                 <div class="form-group">
                                     <label class="form-label">Üst proyekt</label>
-                                    <select class="form-select" id="parentProjects" name="parent_id" id="">
+                                    <select class="form-select" name="parent_id" id="parent_id">
                                         <option value="" selected>Əsas layihə</option>
                                     </select>
                                 </div>
@@ -47,11 +47,23 @@
                 </div>
                 <div class="col-12">
                     <div class="submit-button">
-                        <button type="submit" class="btn btn-primary" style="float: right;">Əlavə et</button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary" style="float: right;">Əlavə et</button>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
+    </div>
+</div>
+
+<div class="successfull-added-modal d-none opacity-hide">
+    <div class="successfull-added-modal-container">
+        <div class="successfull-added-container-content">
+            <i class="bi bi-check2-circle"></i>
+            <div class="my-4"></div>
+            <p class="success-added-message">
+                Layihe elave olundu!
+            </p>
+        </div>
     </div>
 </div>
 

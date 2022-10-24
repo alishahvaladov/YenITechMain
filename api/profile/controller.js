@@ -37,13 +37,26 @@ module.exports = {
         try {
             const username = await getUsername(id);
             const result = await getProfilePicture(id);
+            const full_name = `${result[0].first_name} ${result[0].last_name}`;
+            let filename;
             let uploadedFiles = result[0].uploaded_files;
-            uploadedFiles = JSON.parse(uploadedFiles);
-            uploadedFiles = JSON.parse(uploadedFiles.recruitment);
-            const filename = `/employee/files/recruitment/${result[0].id}-${result[0].first_name.toLowerCase()}-${result[0].last_name.toLowerCase()}-${result[0].father_name.toLowerCase()}/${uploadedFiles.profilePicture[0].filename}`;
+            if (uploadedFiles && uploadedFiles !== "") {
+                uploadedFiles = JSON.parse(uploadedFiles);
+                if (uploadedFiles.recruitment && uploadedFiles.recruitment.length > 1) {
+                    uploadedFiles = JSON.parse(uploadedFiles.recruitment);
+                    filename = `/employee/files/recruitment/${result[0].id}-${result[0].first_name.toLowerCase()}-${result[0].last_name.toLowerCase()}-${result[0].father_name.toLowerCase()}/${uploadedFiles.profilePicture[0].filename}`;
+                } else {
+                    filename = null;
+                }
+            } else {
+                filename = null;
+            }
+
+            
             return res.status(200).send({
                 filename,
-                username
+                username: username[0].username,
+                full_name
             });
         } catch (err) {
             console.log(err);

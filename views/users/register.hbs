@@ -31,11 +31,6 @@
                 <label for="inputState">Role</label>
                 <select name="role" id="inputState" class="form-select">
                     <option selected hidden>Choose Role</option>
-                    {{#if roles}}
-                        {{#each roles}}
-                            <option value="{{@key}}">{{this}}</option>
-                        {{/each}}
-                    {{/if}}
                 </select>
             </div>
             <button type="submit" class="btn btn-primary mt-3">Create User</button>

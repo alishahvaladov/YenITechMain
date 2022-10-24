@@ -150,7 +150,8 @@ module.exports = {
         `;
         const replacements = {};
         const result = {};
-        if (data.qEmp !== "" && qEmp) {
+        console.log(data);
+        if (data.qEmp !== "" && data.qEmp) {
             const qEmp = data.qEmp.split(" ");
             if(qEmp.length === 1) {
                 query += `
@@ -212,9 +213,8 @@ module.exports = {
         }
 
         query += `
-            LIMIT :limit OFFSET :offset
+            LIMIT 15 OFFSET :offset
         `;
-        replacements.limit = parseInt(data.limit);
         replacements.offset = parseInt(data.offset);
 
         result.deletedUsers = await sequelize.query(query, {
@@ -306,6 +306,14 @@ module.exports = {
             logging: false,
             type: QueryTypes.SELECT,
             replacements
+        });
+    },
+    getUserRoles: async () => {
+        return await sequelize.query(`
+            SELECT * FROM Roles
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT
         });
     }
 }

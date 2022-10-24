@@ -729,7 +729,6 @@ const exportToExcel = () => {
       empInpPhoneVal,
       empDeptVal,
       empPosVal,
-      empProjVal,
       empStatusVal,
       limit: "all"
    }
@@ -762,12 +761,24 @@ limit.addEventListener("change", () => {
 });
 
 
-empInpName.keyup(renderPage);
-empInpPhone.keyup(renderPage);
-empDept.keyup(renderPage);
-empPos.keyup(renderPage);
-empProj.keyup(renderPage);
-empStatus.change(renderPage);
+empInpName.keyup(() => {
+   renderPage();
+});
+empInpPhone.keyup(() => {
+   renderPage();
+});
+empDept.keyup(() => {
+   renderPage();
+});
+empPos.keyup(() => {
+   renderPage();
+});
+empProj.keyup(() => {
+   renderPage();
+});
+empStatus.change(() => {
+   renderPage();
+});
 
 
 setTimeout(renderPage, 1000);

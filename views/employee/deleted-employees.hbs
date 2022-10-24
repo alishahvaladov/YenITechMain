@@ -2,43 +2,26 @@
     <div class="card-header">
         <h5 class="card-title mb-0">Əməkdaşlar</h5>
     </div>
+    <h3 class="text-center">İşdən Ayrılan Əməkdaşlar</h3>
     <table class="table table-hover my-0" style="margin: 0 !important;">
         <thead>
             <tr> 
-                <th></th>
                 <th>İşçi</th>
                 <th class="d-none d-xl-table-cell">Telefon Nömrəsi</th>
                 <th>Departament</th>
                 <th class="d-none d-xl-table-cell">Vəzifəsi</th>
                 <th>Proyekt</th>
-                <th class="d-none d-xl-table-cell">Status</th>
                 <th class="d-none d-md-table-cell">
                     <a class="btn btn-outline-success btn-sm w-100" href="/employee/add-employee">Əlavə <i
                             class="bi bi-person-plus"></i></a>
                 </th>
             </tr>
             <tr>
-                <th>
-                    <select id="limitCount">
-                        <option value="10">10</option>
-                        <option value="15" selected>15</option>
-                        <option value="30">30</option>
-                        <option value="50">50</option>
-                        <option value="all">ALL</option>
-                    </select>
-                </th>
-                <th><input class="form-control" type="text" name="empName" id="empName"></th>
-                <th class="d-none d-xl-table-cell"><input class="form-control" type="text" name="empPhoneNumb" id="empPhoneNumb"></th>
-                <th><input class="form-control" type="text" name="empDept" id="empDept"></th>
-                <th class="d-none d-xl-table-cell"><input class="form-control" type="text" name="empPos" id="empPos"></th>
-                <th><input class="form-control" type="text" name="empProj" id="empProj"></th>
-                <th class="d-none d-xl-table-cell">
-                    <select class="form-select" name="empStatus" id="empStatus">
-                        <option value="0">All</option>
-                        <option value="1">İşləyir</option>
-                        <option value="2">İşdən Ayrılıb</option>
-                    </select>
-                </th>
+                <th><input class="form-control" type="text" name="qName" id="qName"></th>
+                <th class="d-none d-xl-table-cell"><input class="form-control" type="text" name="qPhoneNumber" id="qPhoneNumber"></th>
+                <th><input class="form-control" type="text" name="qDepartment" id="qDepartment"></th>
+                <th class="d-none d-xl-table-cell"><input class="form-control" type="text" name="qPosition" id="qPosition"></th>
+                <th><input class="form-control" type="text" name="qProject" id="qProject"></th>
                 <th class="d-none d-xl-table-cell">
                     <button class="btn btn-success w-100" id="exportToExcel"><i
                             class="bi bi-file-earmark-excel-fill"></i> Export</button>

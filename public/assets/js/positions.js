@@ -78,7 +78,7 @@ const pageFunctions = () => {
                         <tr>
                             <td>${position.name}</td>
                             <td>
-                                <div class="btn-group">
+                                <div class="btn-group w-100">
                                     <a class="btn btn-outline-danger" href="/positions/delete/${position.id}"><i class="bi bi-x-circle"></i></a>
                                     <a class="btn btn-outline-secondary" href="/positions/update/${position.id}"><i class="bi bi-pencil-square"></i></a>
                                 </div>
@@ -108,7 +108,7 @@ const renderPage = () => {
                 <tr>
                     <td>${position.name}</td>
                     <td>
-                        <div class="btn-group">
+                        <div class="btn-group w-100">
                             <a class="btn btn-outline-danger" href="/positions/delete/${position.id}"><i class="bi bi-x-circle"></i></a>
                             <a class="btn btn-outline-secondary" href="/positions/update/${position.id}"><i class="bi bi-pencil-square"></i></a>
                         </div>

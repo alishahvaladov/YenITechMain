@@ -12,5 +12,4 @@ router.get('/cumilative/:id', hr, admin, checkRolesForAPI, getFinedData);
 router.get('/forgiven-fine/:offset', audit, admin, checkRolesForAPI, getAllForgivenData);
 router.post('/export-to-excel', audit, hr, checkRolesForAPI, exportDataToExcel);
 
-
 module.exports = router;

@@ -218,7 +218,7 @@ module.exports = {
             const result = await getActiveFPrints(body);
             return res.status(200).send({
                 fPrints: result.fPrints,
-                count: result.count
+                count: result.count[0].count
             });
         } catch (err) {
             console.log(err);

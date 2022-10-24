@@ -227,8 +227,6 @@ module.exports = {
             replacements.limit = parseInt(data.limit);
             replacements.offset = (parseInt(data.offset) - 1) * parseInt(data.limit);
         }
-
-        console.log(query);
         
         let result = {};
         const empData = await sequelize.query(query, { 
@@ -452,7 +450,7 @@ module.exports = {
         let offset = 0;
 
         if (data.offset && data.offset !== "") {
-            offset = data.offset;
+            offset = data.offset * 15;
         }
 
         query += `

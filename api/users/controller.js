@@ -1,4 +1,4 @@
-const { getUser, updatePassword, getAllUsers, getDeletedUsers, getDeleterUser, getUsersForExport } = require("./service");
+const { getUser, updatePassword, getAllUsers, getDeletedUsers, getDeleterUser, getUsersForExport, getUserRoles } = require("./service");
 const jsonConfig = require("../../config/config.json");
 const excelJS = require("exceljs");
 const path = require("path");
@@ -80,7 +80,6 @@ module.exports = {
             const qUsername = req.body.qUsername;
             const qEmail = req.body.qEmail;
             const qRole = req.body.qRole;
-            const limit = req.body.limit;
             const offset = req.body.offset;
             const roles = jsonConfig.roles;
             
@@ -90,20 +89,12 @@ module.exports = {
                     message: "Role must be number"
                 });
             }
-
-            if (isNaN(parseInt(limit)) || isNaN(parseInt(offset))) {
-                return res.status(400).send({
-                    success: false,
-                    message: "Limit or offset must be a number"
-                });
-            }
             
             deletedUserData.qEmp = qEmp;
             deletedUserData.qUsername = qUsername;
             deletedUserData.qEmail = qEmail;
             deletedUserData.qRole = qRole;
-            deletedUserData.limit = parseInt(limit);
-            deletedUserData.offset = parseInt(limit) * parseInt(offset);
+            deletedUserData.offset = 15 * parseInt(offset);
 
             const result = await getDeletedUsers(deletedUserData);
             const deletedUsers = result.deletedUsers;
@@ -175,6 +166,22 @@ module.exports = {
             return res.status(500).send({
                 success: false,
                 message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    getUserRoles: async (req, res) => {
+        try {
+            const result = await getUserRoles();
+
+            return res.status(200).send({
+                success: true,
+                result
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong"
             });
         }
     }

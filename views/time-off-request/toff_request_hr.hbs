@@ -1,4 +1,4 @@
-<div class="container">
+{{!-- <div class="container">
     <div class="time-off-form-container d-flex justify-content-center align-items-center" style="height: 90vh">
         <div class="time-off-form mb-5">
             <h1 class="text-center">Məzuniyyət Formu</h1>
@@ -76,16 +76,129 @@
                 </div>
             </div>
             <div class="time-off-select-container d-flex justify-content-between mt-5">
-                <div class="time-off-select-container d-none word-btn-container justify-content-between mt-5">
-                <button class="btn btn-primary" id="downloadDoc"><i class="bi bi-file-earmark-word"></i> Ərizəni Yükləyin</button>
-                <label for="uploadDoc" class="btn btn-info mx-2">Ərizəni əlavə et</label>
-                <input class="d-none" type="file" id="uploadDoc" disabled>
-            </div>
+                <div class="d-none word-btn-container justify-content-between mt-5">
+                    <button class="btn btn-primary" id="downloadDoc"><i class="bi bi-file-earmark-word"></i> Ərizəni Yükləyin</button>
+                    <label for="uploadDoc" class="btn btn-info mx-2">Ərizəni əlavə et</label>
+                    <input class="d-none" type="file" id="uploadDoc" disabled>
+                </div>
             </div>
             <div class="toff-submit-btn mt-4 d-flex justify-content-between">
                 <button class="btn d-none" id="toffPrevBtn">Geri Qayıt</button>
                 <button class="btn" id="toffNextBtn">Növbəti</button>
                 <button class="btn d-none" id="toffApplyBtn">Təsdiqlə</button>
+            </div>
+        </div>
+    </div>
+</div> --}}
+
+<div class="card flex-fill">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Məzuniyyət Formu</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12 time-off-select-container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-xs-12">
+                        <div class="time-off-type">
+                            <label class="form-label" for="time-off-selector">Məzuniyyətin Növü:</label>
+                            <select class="form-select" name="time-off-type" id="time-off-selector">
+                                {{#if tOffTypes}}
+                                    {{#each tOffTypes}}
+                                        <option value="{{@key}}">{{this}}</option>
+                                    {{/each}}
+                                {{/if}}
+                            </select>
+                        </div>
+                        <div class="toff-start-date">
+                            <label class="form-label" for="toff-start-date">Başlanğıc Tarixi: </label>
+                            <input class="form-control" type="date" id="toff-start-date">
+                        </div>
+                        <div class="toff-end-date">
+                            <label class="form-label" for="toff-end-date">Bitmə Tarixi: </label>
+                            <input class="form-control" type="date" id="toff-end-date">
+                        </div>
+                        <div class="timeoff-time-date d-none">
+                            <label class="form-label" for="timeoff-time-date">İcazə Tarixi</label>
+                            <input class="form-control" type="date" id="timeoff-time-date">
+                        </div>
+                        <div class="toff-authorized-time d-none">
+                            <label class="form-label" for="toff-authorized-time">İcazə Saatı</label>
+                            <input class="form-control" type="number" id="toff-authorized-time">
+                        </div>
+                        <div class="w-start-date">
+                            <label class="form-label" for="w-start-date">İşə Qayıtma Tarixi: </label>
+                            <input class="form-control" type="date" id="w-start-date">
+                        </div>
+                        <div class="possible-toff-days">
+                            <label class="form-label" for="toff-possible-days">Mümkün məzuniyyət günlərinin sayı: </label>
+                            <input class="form-control" type="text" id="toff-possible-days" value="11" disabled>
+                        </div>
+                        <div class="health-toff-percentage d-none">
+                            <label class="form-label" for="toff-percentage">Əməkdaşın məzuniyyət hesablanma faizi</label>
+                            <input class="form-control" type="text" id="toff-percentage">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-xs-12">
+                        <div class="toff-maker">
+                            <label class="form-label" for="toff-maker">Təşəbbüsçü:</label>
+                            <select class="form-select" name="emp_id" id="toff-maker">
+                                <option value="0" hidden>Əməkdaş Seçin</option>
+                                {{#each result}}
+                                    <option value="{{this.id}}">{{this.first_name}} {{this.last_name}} {{this.father_name}}</option>
+                                {{/each}}
+                            </select>
+                            <input type="hidden" id="empNameForWord">
+                        </div>
+                        <div class="toff-branch">
+                            <label class="form-label" for="toff-branch">Filial: </label>
+                            <input class="form-control" type="text" name="toff-branch" id="toff-branch" disabled>
+                        </div>
+                        <div class="toff-department">
+                            <label class="form-label" for="toff-department">Departament</label>
+                            <input class="form-control" type="text" name="toff-department" id="toff-department" disabled>
+                        </div>
+                        <div class="toff-emp-position">
+                            <label class="form-label" for="toff-emp-position">Vəzifə: </label>
+                            <input class="form-control" type="text" name="toff-emp-position" id="toff-emp-position" disabled>
+                        </div>
+                        <div class="toff-emp-comment">
+                            <label class="form-label" for="toff-emp-comment">Şərh: </label>
+                            <textarea class="form-control" name="toff-emp-comment" id="toff-emp-comment" placeholder="Şərhinizi bizə bildirin"></textarea>
+                        </div>
+                        <div class="d-none toff-directors-hidden-inputs">
+                            <input type="hidden" id="deptDirector">
+                            <input type="hidden" id="director">
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-end mt-5">
+                        <button class="btn btn-primary" id="toffNextBtn">Dəvam Et</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="approve-modal position-absolute top-0 left-0 d-none justify-content-center align-items-center">
+    <div class="approve-modal-container d-flex justify-content-center align-items-center rounded-2">
+        <div class="card mb-0">
+            <h3 class="mb-2 text-center">Ərizə Təsdiqləmə Matrisi</h3>
+            <div class="row">
+                <div class="col-12 my-2">
+                    <button class="btn btn-primary w-100" id="downloadDoc"><i class="bi bi-file-earmark-word"></i> Ərizəni Yükləyin</button>
+                    <p class="doc-message mt-2">Ərizə Yüklənməyib</p>
+                </div>
+                <div class="col-12 my-2">
+                    <label for="uploadDoc" class="btn btn-outline-dark disabled w-100">Ərizəni əlavə et</label>
+                    <input class="d-none" type="file" id="uploadDoc" disabled>
+                </div>
+                <div class="col-12 my-2">
+                    <div class="approve-modal-buttons d-flex justify-content-between">
+                        <button class="btn btn-danger" id="cancelBtn">Ləğv Et</button>
+                        <button class="btn btn-success disabled" id="toffApplyBtn">Təsdiqlə</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

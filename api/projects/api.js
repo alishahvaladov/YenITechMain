@@ -1,5 +1,5 @@
 const express = require("express");
-const { getProjects, getProjectsForEmpForm, getProjectManagersAndParentProjects, getProjectById, updateProject, exportDataToExcel } = require("./controller");
+const { getProjects, getProjectsForEmpForm, getProjectManagersAndParentProjects, getProjectById, updateProject, exportDataToExcel, addProject } = require("./controller");
 const { admin, hr, checkRoles, checkRolesForAPI } = require("../../modules/auth/auth");
 const router = express.Router();
 
@@ -9,6 +9,7 @@ router.get("/getProject/:emp_id", hr, admin, checkRolesForAPI, getProjectsForEmp
 router.get("/project-managers-and-parent-projects", hr, admin, checkRolesForAPI, getProjectManagersAndParentProjects);
 router.get("/get-project/:project_id", hr, admin, checkRolesForAPI, getProjectById);
 router.post("/update", hr, admin, checkRolesForAPI, updateProject);
-router.post('/export-to-excel', hr, admin, checkRolesForAPI, exportDataToExcel);
+router.post("/export-to-excel", hr, admin, checkRolesForAPI, exportDataToExcel);
+router.post("/add-project", hr, checkRolesForAPI, addProject);
 
 module.exports = router;

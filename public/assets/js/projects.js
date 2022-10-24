@@ -85,7 +85,7 @@ const pageFunctions = () => {
                                 <td>${project.address}</td>
                                 <td>${project.first_name} ${project.last_name} ${project.father_name}</td>
                                 <td class="d-flex">
-                                    <div class="btn-group">
+                                    <div class="btn-group w-100">
                                         <a class="btn btn-outline-danger" href="/projects/delete/${project.id}"><i class="bi bi-x-circle"></i></a>
                                         <a class="btn btn-outline-secondary" href="/projects/update/${project.id}"><i class="bi bi-pencil-square"></i></a>
                                         <a class="btn btn-outline-primary" href="/projects/project/${project.id}"><i class="bi bi-diagram-3"></i></a>
@@ -120,7 +120,7 @@ const renderPage = () => {
                     <td>${project.address}</td>
                     <td>${project.first_name} ${project.last_name} ${project.father_name}</td>
                     <td class="d-flex">
-                        <div class="btn-group">
+                        <div class="btn-group w-100">
                             <a class="btn btn-outline-danger" href="/projects/delete/${project.id}"><i class="bi bi-x-circle"></i></a>
                             <a class="btn btn-outline-secondary" href="/projects/update/${project.id}"><i class="bi bi-pencil-square"></i></a>
                             <a class="btn btn-outline-primary" href="/projects/project/${project.id}"><i class="bi bi-diagram-3"></i></a>

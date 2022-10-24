@@ -385,7 +385,7 @@ module.exports = {
             AND emp.j_end_date IS NULL
         `;
         let countQuery = `
-            SELECT COUNT(*) FROM FPrints AS fp
+            SELECT COUNT(*) AS count FROM FPrints AS fp
             LEFT JOIN Employees AS emp ON fp.emp_id = emp.id
             LEFT JOIN Positions AS pos ON pos.id = emp.position_id
             LEFT JOIN Departments AS dept ON dept.id = emp.department
@@ -421,10 +421,10 @@ module.exports = {
 
         if (data.qProject !== "" && data.qProject) {
             query += `
-                AND poj.name like :qProject
+                AND proj.name like :qProject
             `;
             countQuery += `
-                AND poj.name like :qProject
+                AND proj.name like :qProject
             `;
             replacements.qProject = `%${data.qProject}%`;
         }
@@ -461,10 +461,10 @@ module.exports = {
 
         if (data.qMax && data.qMax !== "") {
             query += `
-                AND fp.f_print_time > :qMax
+                AND fp.f_print_time < :qMax
             `;
             countQuery += `
-                AND fp.f_print_time > :qMax
+                AND fp.f_print_time < :qMax
             `;
             replacements.qMax = data.qMax;
         }
@@ -474,6 +474,11 @@ module.exports = {
             day = splittedDate[2];
             month = splittedDate[1];
             year = splittedDate[0];
+        } else {
+            month = date.getMonth();
+            month = parseInt(month) + 1;
+            year = date.getFullYear();
+            day = date.getDate();
         }
 
         query += `
