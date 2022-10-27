@@ -10,10 +10,15 @@ module.exports = {
       },
       date: {
         type: Sequelize.DATEONLY,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       status: {
         allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      holidayNameId: {
+        allowNull: true,
         type: Sequelize.INTEGER
       },
       createdAt: {

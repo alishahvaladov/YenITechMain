@@ -239,6 +239,8 @@ module.exports = {
                             message: "Position has been inserted"
                         });
                     }
+                    console.log(data);
+                    console.log(result);
                     return res.status(201).send({
                         success: false,
                         message: "Position has been inserted"

@@ -1,84 +1,97 @@
-<div class="card">
-    <div class="card-header">
-        <h5 class="card-title mb-0">
-            Bayram Günləri
-        </h5>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-12 col-lg-6">
-                <div class="mb-3">
-                    <label class="form-label">Bayaram Günü</label>
-                    <select class="form-select" id="holidaySelect" type="text">
-                        <option value="" hidden>Bayram Gününü Seçin</option>
+<div class="w-100 h-100 d-flex justify-content-center align-items-center">
+    <div class="work-calendar rounded-3 p-3" style="width: 340px;">
+        <div class="work-calendar-container">
+            <div class="calendar-header d-flex justify-content-between">
+                <div class="calendar-months">
+                    <select class="form-select" name="" id="calendarMonths">
+                        <option value="0">Yanvar</option>
+                        <option value="1">Fevral</option>
+                        <option value="2">Mart</option>
+                        <option value="3">Aprel</option>
+                        <option value="4">May</option>
+                        <option value="5">İyun</option>
+                        <option value="6">İyul</option>
+                        <option value="7">Avqust</option>
+                        <option value="8">Sentyabr</option>
+                        <option value="9">Oktyabr</option>
+                        <option value="10">Noyabr</option>
+                        <option value="11">Dekabr</option>
                     </select>
                 </div>
+                <div class="mx-2"></div>
+                <div class="calendar-years">
+                    <input type="number" class="form-control year-input" name="" id="calendarYear" value=""></input>
+                </div>
             </div>
-            <div class="col-12 col-lg-6">
-                <div class="row">
-                    <div class="col-12 col-lg-6">
-                        <div class="mb-3">
-                            <label class="form-label">Başlanğıc Tarixini Seçin</label>
-                            <input class="form-control" id="holidayStartDate" type="date">
+            <div class="my-3"></div>
+            <div class="calendar-body">
+                <div class="calendar-row row">
+                    <div class="d-flex align-items-center flex-column px-4">
+                        <div class="col-12">
+                            <div class="calendar-date-header d-flex">
+                                <div class="calendar-header-item">
+                                    <span>B.e.</span>
+                                </div>
+                                <div class="calendar-header-item">
+                                    <span>Ç.a.</span>
+                                </div>
+                                <div class="calendar-header-item">
+                                    <span>Ç.</span>
+                                </div>
+                                <div class="calendar-header-item">
+                                    <span>C.a.</span>
+                                </div>
+                                <div class="calendar-header-item">
+                                    <span>C.</span>
+                                </div>
+                                <div class="calendar-header-item">
+                                    <span>Ş.</span>
+                                </div>
+                                <div class="calendar-header-item">
+                                    <span>B.    </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-lg-6">
-                        <div class="mb-3">
-                            <label class="form-label">Bitiş Tarixini Seçin</label>
-                            <input class="form-control" id="holidayEndDate" type="date">
+                        <div class="col-12 mt-3">
+                            <div class="calendar-dates d-flex justify-content-between flex-wrap" style="gap: 3px;">
+                                
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
-            <div class="col-12 mt-3">
-                <div class="row">
-                    <div class="col-12 col-lg-6 mt-3">
-                        <p class="text-danger" style="font-style: italic; font-size: 13px;">* Qeyd etdiyiniz tarixlər qeyri-iş günlərinə daxil ediləcək.</p>
+        </div>
+    </div>
+
+    <div class="calendar-modal d-none border border-dark border-1 rounded-4 border-opacity-25 p-4 position-absolute">
+        <div class="calendar-modal-container d-flex align-items-center">
+            <div class="row">
+                <div class="col-12">
+                    <div class="border border-1 border-opacity-25 border-dark rounded-2 py-1 px-3 selected-day h-100 d-flex align-items-center">
+                        <span class="text-black-50">
+                            24.09.2022
+                        </span>
                     </div>
-                    <div class="col-12 col-lg-6 mt-3">
-                        <div class="btn-group float-end">
-                            <button class="btn btn-primary" id="submitBtn">Əlavə Et</button>
-                        </div>
+                </div>
+                <div class="my-2"></div>
+                <div class="col-12">
+                    <div class="work-type-select">
+                        <select name="" id="" class="form-select">
+                            <option value="0">İş Günü</option>
+                            <option value="1">Bayram Günü</option>
+                            <option value="2">Həftə Sonu</option>
+                        </select>
                     </div>
+                </div>
+                <div class="my-2"></div>
+                <div class="col-12">
+                    <button class="btn btn-primary w-100" id="saveBtn">Yadda Saxla</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="holiday-error-message" style="display: none;">
-    <div class="bg-danger p-2 w-100">
-        <span class="text-light" id="errorSpan">Salam</span>
-    </div>
-</div>
-<div class="holiday-success-message" style="display: none;">
-    <div class="bg-success p-2 w-100">
-        <span class="text-light" id="successSpan">Salam</span>
-    </div>
-</div>
 
-<div class="card">
-    <div class="card-header">
-        <h5 class="card-title mb-0">
-            Tabel
-        </h5>
-    </div>
-    <table class="table table-hover my-0" style="margin: 0 !important;">
-        <thead>
-            <tr>
-                <th>Bayram günü</th>
-                <th>Bayram Tarixləri</th>
-            </tr>
-        </thead>
-        <tbody>
-            
-        </tbody>
-    </table>
-    <div class="pagination d-flex justify-content-center">
-        <div class="pagination-container w-50 d-flex justify-content-between">
-            <button class="pagination-item btn btn-outline-dark btn-sm pagination-active disabled">1</button>
-        </div>
-    </div>
-</div>
-
-<script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/holidays.js"></script>
+<script src="/assets/js/jquery.min.js"></script>

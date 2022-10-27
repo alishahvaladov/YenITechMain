@@ -741,3 +741,65 @@ table thead input {
     margin-bottom: -15px;
     margin-top: -15px;
 }
+
+.work-calendar {
+    border: 1px solid #dedede;
+    background-color: #fff;
+}
+.calendar-header-item {
+    text-align: center;
+    flex: 1;
+    font-size: 90%;
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.year-input {
+    text-align: center;
+}
+
+.calendar-date-item {
+    /* background-color: rgba(107, 107, 107, 0.3); */
+    width: 33px;
+    height: 33px;
+    color: #636363;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    transition: all .1s ease;
+}
+
+.calendar-date-item:hover {
+    cursor: pointer;
+    background-color: rgba(107, 107, 107, 0.3);
+}
+
+.weekend-days {
+    background-color: rgba(107, 107, 107, 0.5);
+}
+
+.calendar-months {
+    width: 140px;
+}
+
+.prevMonth,
+.nextMonth {
+    color: #6363636f;
+}
+
+.holidays {
+    background-color: #007bff;
+    color: white;
+    transition: all .1s ease;
+}
+
+.holidays:hover {
+    background-color: #007bff8b;
+    color: #636363 !important;
+}
+
+.calendar-modal {
+    background-color: #fff;
+    width: 15%;
+    border-radius: 15px;
+}

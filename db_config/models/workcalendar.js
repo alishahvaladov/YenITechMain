@@ -16,10 +16,15 @@ module.exports = (sequelize, DataTypes) => {
   WorkCalendar.init({
     date: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     status: {
       allowNull: false,
+      type: DataTypes.INTEGER
+    },
+    holidayNameId: {
+      allowNull: true,
       type: DataTypes.INTEGER
     },
   }, {
