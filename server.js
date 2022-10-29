@@ -117,6 +117,8 @@ const holidayRouter = require("./modules/holidays/router");
 const holidayAPI = require("./api/holidays/api");
 const dashboardAPI = require("./api/dashboard/api");
 const navbarAPI = require("./api/navbar/api");
+const salaryExcelsApi = require("./api/salary-excels/api");
+const vacationAPI = require("./api/vacation/api");
 
 
 // Routers
@@ -152,6 +154,8 @@ app.use('/api/working-hours', workingHoursAPI);
 app.use('/api/holidays', holidayAPI);
 app.use("/api/dashboard", dashboardAPI);
 app.use("/api/navbar", navbarAPI);
+app.use("/api/salary-excels", salaryExcelsApi);
+app.use("/api/vacation", vacationAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });
