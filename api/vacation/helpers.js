@@ -20,18 +20,15 @@ async function getUser(empId) {
   );
 
   const { first_name, last_name, j_start_date } = empData[0];
-  const currentDate = moment().format("YYYY-MM-DD");
+  const currentDate = moment().startOf("month").format("YYYY-MM-DD");
   const dateDiff = moment(currentDate).diff(j_start_date, "months");
   const monthCount = dateDiff >= 12 ? 12 : dateDiff;
+  const last12Months = moment(j_start_date).add(monthCount, "M").format("YYYY-MM-DD");
   return {
     fullname: `${first_name} ${last_name}`,
     totalSalary: empData.slice(0, 12).reduce((acc, cur) => acc + cur.salary_cost, 0),
     workMonths: empData.length >= 12 ? 12 : empData.length,
-    lastYearWorkDays:
-      (await calculateWorkDays(currentDate, j_start_date))[0].work_days || empData.length >= 12
-        ? 12 * 30
-        : empData.length * 30, // ! tomporary
-    // monthCount,
+    lastYearWorkDays: (await calculateWorkDays(last12Months, currentDate))[0].work_days,
     salaryPerc: 1,
   };
 }
@@ -41,7 +38,7 @@ async function getUser(empId) {
 async function vacationCalculator(empId, vacationDays) {
   const employee = await getUser(empId);
   const { fullname, workMonths, totalSalary } = employee;
-  const averageSalary = totalSalary / workMonths;
+  const averageSalary = Number((totalSalary / workMonths).toFixed(2));
   const dailySalary = Number((averageSalary / 30.4).toFixed(2));
   const vacationSalary = Number((dailySalary * vacationDays).toFixed(2));
   return {
@@ -63,6 +60,7 @@ async function healthVacCalcualtor(empId, vacationDays) {
     vacationSalary,
     totalSalary,
     dailySalary,
+    lastYearWorkDays,
   };
 }
 
@@ -71,7 +69,7 @@ async function maternityCalculator(empId, toDate) {
   const { fullname, totalSalary, lastYearWorkDays } = employee;
 
   const currentDate = moment().format("YYYY-MM-DD");
-  const workDayCount = (await calculateWorkDays(toDate, currentDate).work_days) || 100;
+  const workDayCount = (await calculateWorkDays(currentDate, toDate))[0].work_days;
 
   const dailySalary = Number((totalSalary / lastYearWorkDays).toFixed(2));
   const vacationSalary = Number((dailySalary * workDayCount).toFixed(2));
@@ -80,6 +78,8 @@ async function maternityCalculator(empId, toDate) {
     vacationSalary,
     totalSalary,
     dailySalary,
+    lastYearWorkDays,
+    workDayCount,
   };
 }
 
