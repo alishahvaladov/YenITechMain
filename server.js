@@ -114,9 +114,11 @@ const projectAPI = require("./api/projects/api");
 const workingHoursAPI = require('./api/working-hours/router');
 const workingHoursRouter = require('./modules/working-hours/router');
 const holidayRouter = require("./modules/holidays/router");
-const holidayAPI = require("./api/holidays/api");
+const calendarAPI = require("./api/calendar/api");
 const dashboardAPI = require("./api/dashboard/api");
 const navbarAPI = require("./api/navbar/api");
+const salaryExcelsApi = require("./api/salary-excels/api");
+const vacationAPI = require("./api/vacation/api");
 
 
 // Routers
@@ -149,9 +151,11 @@ app.use("/api/department", departmentAPI);
 app.use("/api/position", positionAPI);
 app.use("/api/project", projectAPI);
 app.use('/api/working-hours', workingHoursAPI);
-app.use('/api/holidays', holidayAPI);
+app.use('/api/calendar', calendarAPI);
 app.use("/api/dashboard", dashboardAPI);
 app.use("/api/navbar", navbarAPI);
+app.use("/api/salary-excels", salaryExcelsApi);
+app.use("/api/vacation", vacationAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });
