@@ -10,9 +10,34 @@ module.exports = {
         `, {
             logging: false,
             type: QueryTypes.SELECT,
-            replacments: {
+            replacements: {
                 startDate: data.startDate,
                 endDate: data.endDate
+            }
+        });
+    },
+    updateWorkCalendar: async (data) => {
+        return await sequelize.query(`
+            UPDATE WorkCalendars SET status = :status
+            WHERE date = :date
+        `, {
+            logging: false,
+            type: QueryTypes.UPDATE,
+            replacements: {
+                status: data.status,
+                date: data.date
+            }
+        });
+    },
+    getCalendarByDate: async (date) => {
+        return await sequelize.query(`
+            SELECT * FROM WorkCalendars
+            WHERE date = :date
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                date: date
             }
         });
     }
