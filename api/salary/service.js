@@ -1,5 +1,6 @@
 const { Salary, SalaryByMonth, sequelize } = require("../../db_config/models");
 const { QueryTypes } = require("sequelize");
+const { SalaryCalculator } = require("./helpers");
 
 module.exports = {
     getSalary: async (offset) => {
@@ -466,5 +467,31 @@ module.exports = {
             type: QueryTypes.SELECT,
             replacements
         });
-    }
+    },
+    getCalculatedSalary: async (id = null) => {
+        let query = `SELECT CONCAT(Employees.first_name, " ", Employees.last_name) AS fullname,
+            Employees.FIN as fin, Salaries.gross as gross FROM Employees`;
+        const replacements = {};
+
+        if (id) {
+          query =
+            query.replace("FROM Employees", "FROM Salaries") +
+            " LEFT JOIN Employees ON Employees.id = Salaries.emp_id" +
+            " WHERE emp_id = :id";
+          replacements.id = id;
+        } else {
+          query += ` LEFT JOIN Salaries ON Salaries.emp_id = Employees.id`;
+        }
+
+        employees = await sequelize.query(query, {
+          logging: false,
+          type: QueryTypes.SELECT,
+          replacements,
+        });
+
+        return employees.map((emp) => {
+          const empWithTaxes = new SalaryCalculator(emp);
+          return empWithTaxes.getCalculatedData();
+        });
+      },
 }

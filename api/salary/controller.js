@@ -1,4 +1,4 @@
-const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB, search, searchSalaryByMonts, getSalariesForExport, getSalaryByID, updateSalary, getSalariesForExportAll } = require("./service");
+const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB, search, searchSalaryByMonts, getSalariesForExport, getSalaryByID, updateSalary, getSalariesForExportAll, getCalculatedSalary } = require("./service");
 const jsDateF = new Date();
 const month = jsDateF.getMonth();
 const year = jsDateF.getFullYear();
@@ -408,6 +408,30 @@ module.exports = {
             res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             res.download(excelPath, "Əmək-haqqı.xlsx");
         } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    getCalculatedSalary: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const salary = await getCalculatedSalary(id);
+            if (salary.length < 1) {
+                return res.status(404).send({
+                    success: false,
+                    message: "This salary could not found"
+                });
+            }
+
+            return res.status(200).send({
+                success: true,
+                salary
+            });
+
+        } catch(err) {
             console.log(err);
             return res.status(500).send({
                 success: false,
