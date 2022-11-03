@@ -11,13 +11,13 @@ const saveBtn = document.querySelector("#saveBtn");
 const renderPage = () => {
     const projectId = splittedUrl[splittedUrl.length - 1];
 
-    $.get(`http://localhost:3000/api/project/get-project/${projectId}`, (res) => {
+    $.get(`/api/project/get-project/${projectId}`, (res) => {
         if (res.success === true) {
             const project = res.project[0];
             projectName.value = project.name;
             projectAddress.value = project.address;
 
-            $.get('http://localhost:3000/api/project/project-managers-and-parent-projects', (result) => {
+            $.get('/api/project/project-managers-and-parent-projects', (result) => {
                 const projectManagers = result.projectManagers;
                 const parentProjects = result.parentProjects;
                 let projectManagerHtml = `<option value="" hidden>Layihə meneceri seçin</option>`;
@@ -60,7 +60,7 @@ const renderPage = () => {
         const parent_id = parentProjectSelector.value;
         const project_id = projectId;
         
-        $.post("http://localhost:3000/api/project/update", {
+        $.post("/api/project/update", {
             name,
             project_manager_id,
             address,

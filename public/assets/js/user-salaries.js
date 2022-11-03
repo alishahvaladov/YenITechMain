@@ -59,7 +59,7 @@ const pageFunctions = () => {
                 }
             }
             setTimeout(() => {
-                $.post(`http://localhost:3000/api/profile/salaries/${offset}`, {
+                $.post(`/api/profile/salaries/${offset}`, {
                     qMin: qSalaryMin.value,
                     qMax: qSalaryMax.value,
                     qDate: qSalaryDate.value
@@ -89,7 +89,7 @@ const pageFunctions = () => {
 }
 
 const search = () => {
-    $.post(`http://localhost:3000/api/profile/salaries/0`, {
+    $.post(`/api/profile/salaries/0`, {
         qMin: qSalaryMin.value,
         qMax: qSalaryMax.value,
         qDate: qSalaryDate.value
@@ -147,7 +147,7 @@ const search = () => {
 }
 
 const renderPage = () => {
-    $.post(`http://localhost:3000/api/profile/salaries/0`, {
+    $.post(`/api/profile/salaries/0`, {
         qMin: "",
         qMax: "",
         qDate: ""
@@ -213,7 +213,7 @@ const exportToExcel = () => {
     }
     let form = document.createElement('form');
     form.setAttribute("method", method);
-    form.setAttribute("action", "http://localhost:3000/api/profile/export/salary");
+    form.setAttribute("action", "/api/profile/export/salary");
 
     for (let key in params) {
         if (params.hasOwnProperty(key)) {

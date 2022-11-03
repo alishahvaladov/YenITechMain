@@ -67,7 +67,7 @@ const pageFunctions = () => {
                 const max = maxInput.value;
                 const month = monthSelect.value;
                 const year = yearSelect.value;
-                $.post(`http://localhost:3000/api/salary/search-salary-by-months`, {
+                $.post(`/api/salary/search-salary-by-months`, {
                     emp,
                     min,
                     max,
@@ -110,7 +110,7 @@ const search = () => {
     const qSalaryDate = salaryDate.value;
     const offset = 0;
     let html = "";
-    $.post('http://localhost:3000/api/salary/search-salary-by-months', {
+    $.post('/api/salary/search-salary-by-months', {
         emp,
         min,
         max,
@@ -164,7 +164,7 @@ const search = () => {
     });
 }
 const renderPage = () => {
-    $.get('http://localhost:3000/api/salary/salary-by-months/0', (res) => {
+    $.get('/api/salary/salary-by-months/0', (res) => {
         const result = res.result.salaries;
         let count = res.result.count[0].count;
         count = Math.ceil(count / 15);
@@ -216,7 +216,7 @@ const renderPage = () => {
         let method = 'get';
         let form = document.createElement('form');
         form.setAttribute("method", method);
-        form.setAttribute("action", "http://localhost:3000/api/salary/export-to-excel");
+        form.setAttribute("action", "/api/salary/export-to-excel");
         document.body.appendChild(form);
         form.submit();
     });

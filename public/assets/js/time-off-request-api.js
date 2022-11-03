@@ -81,7 +81,7 @@ const pageFunctions = () => {
             }
             setTimeout(() => {
                 getSearchData();
-                $.post(`http://localhost:3000/api/time-off?offset=${offset}`, {
+                $.post(`/api/time-off?offset=${offset}`, {
                     qEmployee,
                     qType,
                     qStartDate,
@@ -152,7 +152,7 @@ const pageFunctions = () => {
                         downloadLetters.forEach(downloadLetter => {
                             downloadLetter.addEventListener("click", () => {
                                 let tOffID = downloadLetter.value;
-                                $.get(`http://localhost:3000/api/time-off/get-time-off-data/${tOffID}`, (res) => {
+                                $.get(`/api/time-off/get-time-off-data/${tOffID}`, (res) => {
                                     console.log(res);
                                     document.querySelector(".t-o-m-request").classList.remove("d-none");
                                     const downloadDoc = document.querySelector("#downloadDoc");
@@ -206,10 +206,10 @@ const pageFunctions = () => {
                                         });
             
             
-                                        $.post("http://localhost:3000/api/time-off/emp-info", {
+                                        $.post("/api/time-off/emp-info", {
                                             id: tOffID
                                         }, (res) => {
-                                            $.post("http://localhost:3000/api/time-off/get-directors", {
+                                            $.post("/api/time-off/get-directors", {
                                                 projID: result.project_id,
                                                 deptID: result.department
                                             }, (res) => {
@@ -295,7 +295,7 @@ const sendTimeOffRequest = (emp_id, id) => {
         fd.append('file', file);
         fd.append('id', id);
         $.ajax({
-            url: `http://localhost:3000/api/time-off/upload-letter/${emp_id}`,
+            url: `/api/time-off/upload-letter/${emp_id}`,
             type: "post", 
             data: fd,
             enctype: "multipart/form-data",
@@ -310,7 +310,7 @@ const sendTimeOffRequest = (emp_id, id) => {
 }
 const renderPage = () => {
     getSearchData();
-    $.post("http://localhost:3000/api/time-off?offset=0", {
+    $.post("/api/time-off?offset=0", {
         qEmployee,
         qType,
         qStartDate,
@@ -387,7 +387,7 @@ const renderPage = () => {
             downloadLetters.forEach(downloadLetter => {
                 downloadLetter.addEventListener("click", () => {
                     let tOffID = downloadLetter.value;
-                    $.get(`http://localhost:3000/api/time-off/get-time-off-data/${tOffID}`, (res) => {
+                    $.get(`/api/time-off/get-time-off-data/${tOffID}`, (res) => {
                         console.log(res);
                         document.querySelector(".t-o-m-request").classList.remove("d-none");
                         const downloadDoc = document.querySelector("#downloadDoc");
@@ -441,10 +441,10 @@ const renderPage = () => {
                             });
 
 
-                            $.post("http://localhost:3000/api/time-off/emp-info", {
+                            $.post("/api/time-off/emp-info", {
                                 id: tOffID
                             }, (res) => {
-                                $.post("http://localhost:3000/api/time-off/get-directors", {
+                                $.post("/api/time-off/get-directors", {
                                     projID: result.project_id,
                                     deptID: result.department
                                 }, (res) => {
@@ -578,7 +578,7 @@ const exportToExcel = () => {
     }
     let form = document.createElement('form');
     form.setAttribute("method", method);
-    form.setAttribute("action", "http://localhost:3000/api/time-off/export-to-excel");
+    form.setAttribute("action", "/api/time-off/export-to-excel");
 
     for (let key in params) {
         if (params.hasOwnProperty(key)) {

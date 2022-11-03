@@ -9,7 +9,7 @@ const dateToAzVersion = (date) => {
 const renderPage = () => {
     let id = document.querySelector("#id");
     id = id.value;
-    $.get(`http://localhost:3000/api/time-off/approve-requests/hr/${id}`, (res) => {
+    $.get(`/api/time-off/approve-requests/hr/${id}`, (res) => {
         const filename = res.fileName;
         console.log(filename)
         const result = res.result[0];
@@ -65,12 +65,12 @@ const renderPage = () => {
         rightContainer.innerHTML = rightContHtml;
 
         document.querySelector("#timeOffCancel").addEventListener("click", () => {
-            $.get(`http://localhost:3000/api/time-off/cancel-requests/hr/${id}`, (res) => {
+            $.get(`/api/time-off/cancel-requests/hr/${id}`, (res) => {
                 console.log(res);
             });
         });
         document.querySelector("#timeOffApprove").addEventListener("click", () => {
-            $.get(`http://localhost:3000/api/time-off/approve-request/hr/${id}`, (res) => {
+            $.get(`/api/time-off/approve-request/hr/${id}`, (res) => {
                 console.log(res);
             });
         });

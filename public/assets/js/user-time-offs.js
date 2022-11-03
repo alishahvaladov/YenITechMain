@@ -56,7 +56,7 @@ const pageFunctions = () => {
                 }
             }
             setTimeout(() => {
-                $.get(`http://localhost:3000/api/profile/my-time-off-requests?limit=15&offset=${offset}`, (res) => {
+                $.get(`/api/profile/my-time-off-requests?limit=15&offset=${offset}`, (res) => {
                     const myTimeOffs = res.myTimeOffs;
                     let count = res.myTimeOffsCount;
                     count = Math.ceil(parseInt(count) / 15);
@@ -109,7 +109,7 @@ const pageFunctions = () => {
 
 
 const renderPage = () => {
-    $.get('http://localhost:3000/api/profile/my-time-off-requests?limit=15&offset=0', (res) => {
+    $.get('/api/profile/my-time-off-requests?limit=15&offset=0', (res) => {
         const myTimeOffs = res.myTimeOffs;
         let count = res.myTimeOffsCount;
         count = Math.ceil(parseInt(count) / 15);

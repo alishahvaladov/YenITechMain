@@ -5,7 +5,7 @@ const dateToAzVersion = (date) => {
     return `${splittedDate[2]}.${splittedDate[1]}.${splittedDate[0]}`
 }
 const renderPage = () => {
-    $.get("http://localhost:3000/api/time-off/for-director?director_approve=true&offset=0", (res) => {
+    $.get("/api/time-off/for-director?director_approve=true&offset=0", (res) => {
         console.log(res);
         const timeOffs = res.result.timeoffs;
         let html = "";
@@ -21,7 +21,7 @@ const renderPage = () => {
                 } else if (timeOff.timeoff_type === 3) {
                     timeOff.timeoff_type = "Sağlamlıq məzuniyyəti"
                 }
-                let approveBtn = `<td><a class="btn btn-outline-secondary" href="http://localhost:3000/timeoffrequests/approve-requests/dr/${timeOff.id}"><i class="bi bi-arrow-right-circle-fill"></i></a></td>`
+                let approveBtn = `<td><a class="btn btn-outline-secondary" href="/timeoffrequests/approve-requests/dr/${timeOff.id}"><i class="bi bi-arrow-right-circle-fill"></i></a></td>`
                 html += `
                     <tr> 
                         <td>${timeOff.first_name} ${timeOff.last_name} ${timeOff.father_name}</td>

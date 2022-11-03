@@ -10,7 +10,7 @@ const id = url[url.length - 1];
 const renderPage = () => {
     const url = window.location.href.split('/')
     const id = url[url.length - 1];
-    $.get(`http://localhost:3000/api/position/position-by-id/${id}`, (res) => {
+    $.get(`/api/position/position-by-id/${id}`, (res) => {
         positionNameInput.value = res.name[0].name;
         const departments = res.departments;
         const deptPosRel = res.dept_pos;
@@ -33,7 +33,7 @@ const renderPage = () => {
                 }
                 checkBoxList.addEventListener("click", () => {
                     const department_id = checkBoxList.value;
-                    $.get(`http://localhost:3000/api/position/update/department?position_id=${id}&department_id=${department_id}`)
+                    $.get(`/api/position/update/department?position_id=${id}&department_id=${department_id}`)
                 });
             });
         });
@@ -45,7 +45,7 @@ setTimeout(renderPage, 1000);
 
 submitPositionBtn.addEventListener("click", () => {
     const name = positionNameInput.value;
-    $.get(`http://localhost:3000/api/position/update/name/${id}?name=${name}`);
+    $.get(`/api/position/update/name/${id}?name=${name}`);
     loading.classList.remove("d-none");
     setTimeout(renderPage, 500);
 });

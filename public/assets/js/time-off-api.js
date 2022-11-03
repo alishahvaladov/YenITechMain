@@ -25,13 +25,13 @@ empSelector.change(function () {
     let project = $("#toff-branch");
     let position = $("#toff-emp-position");
 
-    $.post("http://localhost:3000/api/time-off/emp-info", {
+    $.post("/api/time-off/emp-info", {
         id: id
     }, (res) => {
         department.val(res.result[0].depName);
         project.val(res.result[0].projName);
         position.val(res.result[0].posName);
-        $.post("http://localhost:3000/api/time-off/get-directors", {
+        $.post("/api/time-off/get-directors", {
             projID: res.result[0].project_id,
             deptID: res.result[0].department
         }, (res) => {
@@ -80,7 +80,7 @@ const sendTimeOffRequest = () => {
     if (file) {
         fd.append('file', file);
         $.ajax({
-            url: `http://localhost:3000/api/time-off/upload-form/${id}`,
+            url: `/api/time-off/upload-form/${id}`,
             type: "post", 
             data: fd,
             enctype: "multipart/form-data",
@@ -88,7 +88,7 @@ const sendTimeOffRequest = () => {
             processData: false,
             success: (res) => {
                 console.log(res);
-                $.post("http://localhost:3000/api/time-off/add", {
+                $.post("/api/time-off/add", {
                     timeOffType: timeOffType.value,
                     timeOffStartDate: timeOffStartDate.value,
                     timeOffEndDate: timeOffEndDate.value,
