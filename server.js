@@ -117,6 +117,8 @@ const holidayRouter = require("./modules/holidays/router");
 const calendarAPI = require("./api/calendar/api");
 const dashboardAPI = require("./api/dashboard/api");
 const navbarAPI = require("./api/navbar/api");
+const groupRouter = require("./modules/group/router");
+const groupAPI = require("./api/group/api");
 const salaryExcelsApi = require("./api/salary-excels/api");
 const vacationAPI = require("./api/vacation/api");
 
@@ -138,6 +140,7 @@ app.use("/profile", profile);
 app.use("/working-hours", workingHoursRouter);
 app.use("/notification", notification);
 app.use("/holidays", holidayRouter);
+app.use("/groups", groupRouter);
 app.use("/api", empAPI);
 app.use("/api/time-off", timeOffAPI)
 app.use("/api/fprints", fPrintAPI);
@@ -154,6 +157,7 @@ app.use('/api/working-hours', workingHoursAPI);
 app.use('/api/calendar', calendarAPI);
 app.use("/api/dashboard", dashboardAPI);
 app.use("/api/navbar", navbarAPI);
+app.use("/api/groups", groupAPI);
 app.use("/api/salary-excels", salaryExcelsApi);
 app.use("/api/vacation", vacationAPI);
 app.get("/not-found", (req, res) => {
