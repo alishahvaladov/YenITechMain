@@ -117,6 +117,8 @@ const holidayRouter = require("./modules/holidays/router");
 const calendarAPI = require("./api/calendar/api");
 const dashboardAPI = require("./api/dashboard/api");
 const navbarAPI = require("./api/navbar/api");
+const groupRouter = require("./modules/group/router");
+const groupAPI = require("./api/group/api");
 
 
 // Routers
@@ -136,6 +138,7 @@ app.use("/profile", profile);
 app.use("/working-hours", workingHoursRouter);
 app.use("/notification", notification);
 app.use("/holidays", holidayRouter);
+app.use("/groups", groupRouter);
 app.use("/api", empAPI);
 app.use("/api/time-off", timeOffAPI)
 app.use("/api/fprints", fPrintAPI);
@@ -152,6 +155,7 @@ app.use('/api/working-hours', workingHoursAPI);
 app.use('/api/calendar', calendarAPI);
 app.use("/api/dashboard", dashboardAPI);
 app.use("/api/navbar", navbarAPI);
+app.use("/api/groups", groupAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });
