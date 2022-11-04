@@ -1,6 +1,6 @@
 const passport = require("passport");
 const express = require("express");
-const exphbs = require("express-handlebars");
+const { engine, create } = require("express-handlebars");
 const flash = require("connect-flash");
 const session = require("express-session");
 require("dotenv").config();
@@ -46,19 +46,20 @@ app.use('/employee/files', express.static(path.join(__dirname, './public/employe
 // Initialize Passport
 
 // Set Engine
+const hbs = create({
+    extname: ".hbs",
+    helpers: {
+        compare_if: (val, checker, opts) => {
+            if (val == checker) {
+                return opts.fn(this);
+            }
+        },
+    },
+
+});
 app.engine(
     ".hbs",
-    exphbs({
-        extname: ".hbs",
-        helpers: {
-            compare_if: (val, checker, opts) => {
-                if (val == checker) {
-                    return opts.fn(this);
-                }
-            },
-        },
-
-    })
+    hbs.engine
 );
 app.set("view engine", ".hbs");
 
