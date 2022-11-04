@@ -1,6 +1,8 @@
 const { Salary, SalaryByMonth, sequelize } = require("../../db_config/models");
 const { QueryTypes } = require("sequelize");
 const { SalaryCalculator } = require("./helpers");
+const moment = require("moment");
+const { calculateWorkDays } = require("../salary-excels/service");
 
 module.exports = {
     getSalary: async (offset) => {
@@ -469,29 +471,127 @@ module.exports = {
         });
     },
     getCalculatedSalary: async (id = null) => {
-        let query = `SELECT CONCAT(Employees.first_name, " ", Employees.last_name) AS fullname,
-            Employees.FIN as fin, Salaries.gross as gross FROM Employees`;
-        const replacements = {};
+        let replacements = {};
+        const startDate = moment().subtract(1, "M").startOf("month").format("YYYY-MM-DD");
+        const endDate = moment().subtract(1, "M").endOf("month").format("YYYY-MM-DD");
+        let timeOffWhereQuery =
+          " TimeOffRequests.status = 4 AND TimeOffRequests.timeoff_start_date BETWEEN :startDate AND :endDate";
+        let query =
+          `SELECT CONCAT(Employees.first_name, " ", Employees.last_name) AS fullname, Employees.id,FIN as fin,` +
+          `Salaries.gross AS gross, TimeOffRequests.timeoff_type,timeoff_start_date,timeoff_job_start_date,status FROM Employees`;
 
         if (id) {
           query =
             query.replace("FROM Employees", "FROM Salaries") +
             " LEFT JOIN Employees ON Employees.id = Salaries.emp_id" +
-            " WHERE emp_id = :id";
+            " WHERE Salaries.emp_id = :id AND" +
+            timeOffWhereQuery;
           replacements.id = id;
         } else {
           query += ` LEFT JOIN Salaries ON Salaries.emp_id = Employees.id`;
         }
 
+        if (query.includes("WHERE")) {
+          query = query.replace("WHERE", ` LEFT JOIN TimeOffRequests ON TimeOffRequests.emp_id = Salaries.emp_id WHERE`);
+        } else {
+          query += " LEFT JOIN TimeOffRequests ON TimeOffRequests.emp_id = Employees.id WHERE" + timeOffWhereQuery;
+        }
+
+        console.log(query)
+
         employees = await sequelize.query(query, {
           logging: false,
           type: QueryTypes.SELECT,
-          replacements,
+          replacements: {
+            ...replacements,
+            startDate,
+            endDate,
+          },
+        });
+        console.log(employees)
+
+
+        return Promise.all(
+          employees.map(async (emp) => {
+            if (emp.timeoff_type) {
+              const toDate = moment(emp.timeoff_end_date).isBefore(endDate) ? emp.timeoff_end_date : endDate;
+              var [{ work_days: workDaysInVacDays }] = await calculateWorkDays(emp.timeoff_start_date, toDate);
+            }
+            const empWithTaxes = new SalaryCalculator(emp);
+            return {
+              ...empWithTaxes.getCalculatedData(),
+              workDaysInVacDays,
+              id: emp.id
+            };
+          })
+        );
+      },
+      getCalculatedSalaryTest: async (id = null) => {
+        let replacements = {};
+        const startDate = moment().subtract(1, "M").startOf("month").format("YYYY-MM-DD");
+        const endDate = moment().subtract(1, "M").endOf("month").format("YYYY-MM-DD");
+
+        let joins = ` LEFT JOIN Departments ON Departments.id = Employees.department` +
+            ` LEFT JOIN Positions ON Positions.id = Employees.position_id`;
+        let empQuery = `SELECT CONCAT(Employees.first_name," ", Employees.father_name, " ", Employees.last_name) AS fullname,` +
+            `Employees.id,j_start_date, Employees.FIN as fin, Salaries.gross, Departments.name as department, Positions.name as position FROM Employees`;
+        if (id) {
+          empQuery =
+            empQuery.replace("FROM Employees", "FROM Salaries") +
+            " LEFT JOIN Employees ON Employees.id = Salaries.emp_id" + joins +
+            " WHERE Salaries.emp_id = :id";
+          replacements.id = id;
+        } else {
+          empQuery += ` LEFT JOIN Salaries ON Salaries.emp_id = Employees.id` + joins;
+        }
+
+
+        let isNotNullQuery = "Employees.j_end_date IS NULL"
+        if (empQuery.includes("WHERE")) empQuery += ` AND ${isNotNullQuery}`;
+        else empQuery += ` WHERE ${isNotNullQuery}`;
+
+        const employees = await sequelize.query(empQuery, {
+          logging: false,
+          type: QueryTypes.SELECT,
+          replacements
+        });
+        if(!employees.length) return { error: "No employees found" }
+
+        const empIds = new Set(employees.map((emp) => emp.id));
+        let torQuery = `SELECT emp_id,timeoff_type,timeoff_start_date,timeoff_job_start_date FROM TimeOffRequests WHERE TimeOffRequests.emp_id IN (${Array.from(
+          empIds
+        ).join()}) AND TimeOffRequests.status = 4 AND TimeOffRequests.timeoff_start_date BETWEEN :startDate AND :endDate`;
+        const timeOffs = await sequelize.query(torQuery, {
+          logging: false,
+          type: QueryTypes.SELECT,
+          replacements: {
+            id,
+            startDate,
+            endDate,
+          },
         });
 
-        return employees.map((emp) => {
-          const empWithTaxes = new SalaryCalculator(emp);
-          return empWithTaxes.getCalculatedData();
-        });
+        const parsedEmps = employees.map((emp) => ({ ...emp, timeOffs: timeOffs.filter((tor) => tor.emp_id === emp.id) }));
+        return await Promise.all(
+          parsedEmps.map(async (emp) => {
+            if (emp.timeOffs.length) {
+              var workDaysInVacDays = 0;
+              for (let tor of emp.timeOffs) {
+                const toDate = moment(tor.timeoff_job_start_date).isBefore(endDate) ? tor.timeoff_job_start_date : endDate;
+                workDaysInVacDays += (await calculateWorkDays(tor.timeoff_start_date, toDate))[0].work_days;
+              }
+            }
+            // todo calc. vac salary
+            // todo İş günləri
+            // todo Məzuniyyətin faktiki qalıq günləri
+            // todo emp's work days calc.
+            const empWithTaxes = new SalaryCalculator(emp);
+            return {
+              id: emp.id,
+              workDaysInVacDays,
+              ...empWithTaxes.getCalculatedData(),
+            };
+          })
+        );
       },
 }

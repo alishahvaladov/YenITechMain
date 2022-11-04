@@ -60,13 +60,16 @@ const calculationType = {
 };
 
 class SalaryCalculator {
-  constructor({ fullname, fin, position, gross, work_hours, actual_hours }, calcType = "nonOilS") {
+  constructor({ fullname, fin, department, position, j_start_date, gross, work_hours, actual_hours }, calcType = "nonOilS") {
     this.fullname = fullname;
     this.fin = fin;
     this.position = position;
+    this.department = department;
+    this.joinDate = j_start_date
     this.gross = gross;
     this.work_hours = work_hours;
     this.actual_hours = actual_hours;
+    this.empTotalTax = 0;
     this.totalTax = 0;
     this.calcType = calcType;
     this.calculationType = calculationType[calcType];
@@ -85,7 +88,7 @@ class SalaryCalculator {
           ? (this.gross - incomeTax.taxFree) * incomeTax.firstRate
           : (this.gross - incomeTax.limit) * incomeTax.secondRate + incomeTax.plus;
     }
-    this.totalTax += tax;
+    this.empTotalTax += tax;
     return Number(tax.toFixed(2));
   }
 
@@ -98,14 +101,14 @@ class SalaryCalculator {
           ? this.gross * empPensionFund.firstRate
           : (this.gross - empPensionFund.limit) * empPensionFund.secondRate + empPensionFund.plus;
     } else tax = this.gross * empPensionFund.rate;
-    this.totalTax += tax;
+    this.empTotalTax += tax;
     return Number(tax.toFixed(2));
   }
 
   getEmpUnemploymentIns() {
     const { empUnemploymentIns } = this.calculationType;
     const tax = this.gross * empUnemploymentIns.rate;
-    this.totalTax += tax;
+    this.empTotalTax += tax;
     return Number(tax.toFixed(2));
   }
 
@@ -115,7 +118,7 @@ class SalaryCalculator {
       this.gross <= empMedicalIns.limit
         ? this.gross * empMedicalIns.firstRate
         : (this.gross - empMedicalIns.limit) * empMedicalIns.secondRate + empMedicalIns.plus;
-    this.totalTax += tax;
+    this.empTotalTax += tax;
     return Number(tax.toFixed(2));
   }
 
@@ -125,12 +128,14 @@ class SalaryCalculator {
       this.gross <= pensionFund.limit
         ? this.gross * pensionFund.firstRate
         : (this.gross - pensionFund.limit) * pensionFund.secondRate + pensionFund.plus;
+    this.totalTax += tax;
     return Number(tax.toFixed(2));
   }
 
   getUnemploymentIns() {
     const { unemploymentIns } = this.calculationType;
     const tax = this.gross * unemploymentIns.rate;
+    this.totalTax += tax;
     return Number(tax.toFixed(2));
   }
 
@@ -140,6 +145,7 @@ class SalaryCalculator {
       this.gross <= medicalIns.limit
         ? this.gross * medicalIns.firstRate
         : (this.gross - medicalIns.limit) * medicalIns.secondRate + medicalIns.plus;
+    this.totalTax += tax;
     return Number(tax.toFixed(2));
   }
 
@@ -148,8 +154,10 @@ class SalaryCalculator {
       fullname: this.fullname,
       fin: this.fin,
       position: this.position,
-      work_hours: this.work_hours,
-      actual_hours: this.actual_hours,
+      department: this.department,
+      joinDate: this.joinDate,
+      // work_hours: this.work_hours,
+      // actual_hours: this.actual_hours,
       gross: this.gross,
       income_tax: this.getIncomeTax(),
       emp_pension_fund: this.getEmpPensionFund(),
@@ -160,13 +168,13 @@ class SalaryCalculator {
         unemployment_insurance: this.getUnemploymentIns(),
         medical_insurance: this.getMedicalIns(),
       }),
+      empTotalTax: Number(this.empTotalTax.toFixed(2)),
       totalTax: Number(this.totalTax.toFixed(2)),
-      nett: Number((this.gross - this.totalTax).toFixed(2)),
+      nett: Number((this.gross - this.empTotalTax).toFixed(2)),
     };
   }
 }
 
 module.exports = {
   SalaryCalculator,
-}
-
+};
