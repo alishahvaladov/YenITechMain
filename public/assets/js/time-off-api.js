@@ -180,16 +180,16 @@ downloadDoc.addEventListener("click", () => {
     }, (res) => {
         console.log(res);
         $.post("http://localhost:5005/day-off/form/download", {
-            project: "project",
-            department: "department",
-            directorName: "directorName",
-            nameSurnameFather: "nameSurnameFather",
-            position: "position",
-            dayOffD: "dayOffD",
-            dayOffS: "dayOffS",
-            dayOffE: "dayOffE",
-            dayOffType: "dayOffType",
-            sedrName: "sedrName",
+            project: "Huseyn Project",
+            department: "Huseyn Department",
+            directorName: "Huseyn Director",
+            nameSurnameFather: "Huseyn Polat Yasin",
+            position: "Huseyn Position",
+            dayOffD: "2",
+            dayOffS: "8 noyabr 2022",
+            dayOffE: "10 noyabr 2022",
+            dayOffType: "Əmək Məzuniyyəti",
+            sedrName: "Huseyn",
             time: "time"
         }, (res) => {
             const documentFile = res;
