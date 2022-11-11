@@ -6,11 +6,16 @@ const date = jsDateF.getDate();
 const excelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
+const axios = require("axios");
 
-getCalculatedSalaryTest().then(d => {
-    // console.log(d.filter(e => e.workDaysInVacDays !== undefined));
-    // console.log(d);
-})
+getCalculatedSalaryTest().then(async (d) => {
+  const filtered = d.filter((e) => e.workDaysInVacDays > 0);
+  const oneOfThem = filtered[0];
+  axios.post("http://localhost:5000/pay-slip/download", JSON.stringify(oneOfThem) ).then((res) => {
+    console.log(res)
+  }).catch(console.log)
+//   console.log(JSON.stringify(oneOfThem));
+});
 
 function weekends( m, y ) {
     let count = {};

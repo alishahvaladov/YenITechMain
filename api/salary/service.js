@@ -3,6 +3,8 @@ const { QueryTypes } = require("sequelize");
 const { SalaryCalculator } = require("./helpers");
 const moment = require("moment");
 const { calculateWorkDays } = require("../salary-excels/service");
+const { calcualteVacSalary } = require("../vacation/service");
+const { findVacAndCalculate, findVacationByKey } = require("../vacation/helpers");
 
 module.exports = {
     getSalary: async (offset) => {
@@ -534,7 +536,7 @@ module.exports = {
         let joins = ` LEFT JOIN Departments ON Departments.id = Employees.department` +
             ` LEFT JOIN Positions ON Positions.id = Employees.position_id`;
         let empQuery = `SELECT CONCAT(Employees.first_name," ", Employees.father_name, " ", Employees.last_name) AS fullname,` +
-            `Employees.id,j_start_date, Employees.FIN as fin, Salaries.gross, Departments.name as department, Positions.name as position FROM Employees`;
+            `Employees.id,j_start_date,working_days, Employees.FIN as fin, Salaries.gross, Departments.name as department, Positions.name as position FROM Employees`;
         if (id) {
           empQuery =
             empQuery.replace("FROM Employees", "FROM Salaries") +
@@ -544,7 +546,6 @@ module.exports = {
         } else {
           empQuery += ` LEFT JOIN Salaries ON Salaries.emp_id = Employees.id` + joins;
         }
-
 
         let isNotNullQuery = "Employees.j_end_date IS NULL"
         if (empQuery.includes("WHERE")) empQuery += ` AND ${isNotNullQuery}`;
@@ -577,18 +578,29 @@ module.exports = {
             if (emp.timeOffs.length) {
               var workDaysInVacDays = 0;
               for (let tor of emp.timeOffs) {
+                // console.log(tor)
                 const toDate = moment(tor.timeoff_job_start_date).isBefore(endDate) ? tor.timeoff_job_start_date : endDate;
-                workDaysInVacDays += (await calculateWorkDays(tor.timeoff_start_date, toDate))[0].work_days;
+                const vacationDays = (await calculateWorkDays(tor.timeoff_start_date, toDate))[0].work_days;
+                const vacType = findVacationByKey(tor.timeoff_type.toString())
+                const vacSalary = await calcualteVacSalary({
+                    empId: tor.emp_id,
+                    vacationType: vacType,
+                    vacationDays,
+                    toDate
+                });
+                if(vacType === "unpaid") emp.gross += vacSalary.vacationSalary;
+                workDaysInVacDays += vacationDays;
               }
             }
-            // todo calc. vac salary
-            // todo İş günləri
-            // todo Məzuniyyətin faktiki qalıq günləri
+            // done todo iş günləri
+            // done todo calc. vac salary
             // todo emp's work days calc.
+            // todo Məzuniyyətin faktiki qalıq günləri
             const empWithTaxes = new SalaryCalculator(emp);
             return {
               id: emp.id,
-              workDaysInVacDays,
+              workDaysInVacDays: workDaysInVacDays ?? 0,
+              startDate, endDate,
               ...empWithTaxes.getCalculatedData(),
             };
           })

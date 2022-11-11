@@ -60,7 +60,9 @@ const calculationType = {
 };
 
 class SalaryCalculator {
-  constructor({ fullname, fin, department, position, j_start_date, gross, work_hours, actual_hours }, calcType = "nonOilS") {
+  constructor({ id, fullname, fin, department, position, j_start_date, gross, work_hours, actual_hours, working_days, group }, calcType = "nonOilS") {
+    this.id = id;
+    this.group = group;
     this.fullname = fullname;
     this.fin = fin;
     this.position = position;
@@ -71,6 +73,7 @@ class SalaryCalculator {
     this.actual_hours = actual_hours;
     this.empTotalTax = 0;
     this.totalTax = 0;
+    this.working_days = working_days
     this.calcType = calcType;
     this.calculationType = calculationType[calcType];
   }
@@ -151,15 +154,20 @@ class SalaryCalculator {
 
   getCalculatedData() {
     return {
-      fullname: this.fullname,
+      timeOffDaysLeft: 0, // ! this is not calculated yet
+      group: this.group || "Şöbə", // ! this is not calculated yet
+      project: "Proyekt", // !
+      tabelNo: this.id,
+      nameSurnameFather: this.fullname,
       fin: this.fin,
       position: this.position,
       department: this.department,
-      joinDate: this.joinDate,
+      jobStartDate: this.joinDate,
       // work_hours: this.work_hours,
       // actual_hours: this.actual_hours,
       gross: this.gross,
       income_tax: this.getIncomeTax(),
+      workDays: this.working_days,
       emp_pension_fund: this.getEmpPensionFund(),
       emp_unemployment_insurance: this.getEmpUnemploymentIns(),
       emp_medical_insurance: this.getEmpMedicalIns(),
