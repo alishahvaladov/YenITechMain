@@ -1,4 +1,4 @@
-const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB, search, searchSalaryByMonts, getSalariesForExport, getSalaryByID, updateSalary, getSalariesForExportAll } = require("./service");
+const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB, search, searchSalaryByMonts, getSalariesForExport, getSalaryByID, updateSalary, getSalariesForExportAll, getCalculatedSalary, getCalculatedSalaryTest } = require("./service");
 const jsDateF = new Date();
 const month = jsDateF.getMonth();
 const year = jsDateF.getFullYear();
@@ -6,6 +6,17 @@ const date = jsDateF.getDate();
 const excelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
+const axios = require("axios");
+
+// getCalculatedSalaryTest().then(async (d) => {
+//   const filtered = d.filter((e) => e);
+//   const oneOfThem = filtered[0];
+//   console.log(oneOfThem)
+//   axios.post("http://10.30.1.69:5005/pay-slip/download", oneOfThem ).then((res) => {
+//     console.log(res)
+//   }).catch(console.log)
+// //   console.log(JSON.stringify(oneOfThem));
+// });
 
 function weekends( m, y ) {
     let count = {};
@@ -408,6 +419,30 @@ module.exports = {
             res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             res.download(excelPath, "Əmək-haqqı.xlsx");
         } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    getCalculatedSalary: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const salary = await getCalculatedSalary(id);
+            if (salary.length < 1) {
+                return res.status(404).send({
+                    success: false,
+                    message: "This salary could not found"
+                });
+            }
+
+            return res.status(200).send({
+                success: true,
+                salary
+            });
+
+        } catch(err) {
             console.log(err);
             return res.status(500).send({
                 success: false,

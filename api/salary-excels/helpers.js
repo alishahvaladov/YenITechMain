@@ -9,6 +9,15 @@ function setColumnDateHeaders() {
   });
 }
 
-module.exports = {
-  setColumnDateHeaders
+function iteratorForEmptyMonths(monthCount) {
+  const months = {};
+  for (monthCount; -12 !== monthCount; monthCount--) {
+    months[monthCount] = "empty";
+  }
+  return months;
 }
+
+module.exports = {
+  setColumnDateHeaders,
+  iteratorForEmptyMonths,
+};

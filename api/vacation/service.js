@@ -8,10 +8,10 @@ module.exports = {
         return await vacationCalculator(empId, vacationDays);
       case "health":
         return await healthVacCalcualtor(empId, vacationDays);
-      case "maternity":
-        return await maternityCalculator(empId, toDate);
       case "unpaid":
         return await unpaidVacCalculator(empId, vacationDays);
+      case "maternity":
+        return await maternityCalculator(empId, toDate);
     }
   },
 };
