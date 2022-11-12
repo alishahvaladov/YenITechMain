@@ -8,14 +8,15 @@ const path = require("path");
 const fs = require("fs");
 const axios = require("axios");
 
-getCalculatedSalaryTest().then(async (d) => {
-  const filtered = d.filter((e) => e.workDaysInVacDays > 0);
-  const oneOfThem = filtered[0];
-  axios.post("http://localhost:5000/pay-slip/download", JSON.stringify(oneOfThem) ).then((res) => {
-    console.log(res)
-  }).catch(console.log)
-//   console.log(JSON.stringify(oneOfThem));
-});
+// getCalculatedSalaryTest().then(async (d) => {
+//   const filtered = d.filter((e) => e);
+//   const oneOfThem = filtered[0];
+//   console.log(oneOfThem)
+//   axios.post("http://10.30.1.69:5005/pay-slip/download", oneOfThem ).then((res) => {
+//     console.log(res)
+//   }).catch(console.log)
+// //   console.log(JSON.stringify(oneOfThem));
+// });
 
 function weekends( m, y ) {
     let count = {};
