@@ -7,6 +7,8 @@ require("dotenv").config();
 const path = require("path");
 const cors = require("cors");
 const MySQLStore = require('express-mysql-session')(session);
+const { Server } = require("socket.io");
+const http = require('http');
 
 const app = express();
 
@@ -20,14 +22,15 @@ const options = {
 }
 
 const sessionStore = new MySQLStore(options);
-
-app.use(session({
+const sessionMiddleware = session({
     key: 'name',
     secret: process.env.COOKIE_SECRET,
     store: sessionStore,
     resave: false,
     saveUninitialized: false
-}));
+})
+
+app.use(sessionMiddleware);
 
 
 require("./modules/auth/passport")(passport);
@@ -119,6 +122,7 @@ const dashboardAPI = require("./api/dashboard/api");
 const navbarAPI = require("./api/navbar/api");
 const salaryExcelsApi = require("./api/salary-excels/api");
 const vacationAPI = require("./api/vacation/api");
+const { createSocketUser, removeSocketUser, sendNotification } = require("./socket/socket");
 
 
 // Routers
@@ -171,6 +175,37 @@ app.get("/mehdi-mammadzada", (req, res) => {
     return res.render("/mehdi-mammadzada");
 });
 
+const server = http.createServer(app);
+
+const io = require("./socket/socket")
+  .init(server)
+  .use((socket, next) => {
+    sessionMiddleware(socket.request, {}, next);
+  });
+
+io.on("connection", (socket) => {
+  const userId = socket.request?.session?.passport?.user || null;
+  if (!userId) return socket.disconnect();
+
+  createSocketUser(userId, socket.id);
+  console.log(`User ${userId} connected: ${socket.id}`);
+
+  socket.on("disconnect", () => {
+    removeSocketUser(userId);
+    console.log(`User ${userId} disconnected: ${socket.id}`);
+  });
+
+  // test for socket connection
+  socket.on('msg', (data) => {
+    console.log(data)
+    sendNotification("2", "notification", {
+        title: "Test",
+        content: "Test content",
+        url: "/",
+      });
+  })
+});
+
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => console.log(`Server is running on PORT ${port}`));
+server.listen(port, () => console.log(`Server is running on PORT ${port}`));
