@@ -26,25 +26,27 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    belongs_to: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     belongs_to_role: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     seen: {
       type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    belongs_to_table: {
-      type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 0
     },
     url: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     importance: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 1
     },
   }, {
     sequelize,

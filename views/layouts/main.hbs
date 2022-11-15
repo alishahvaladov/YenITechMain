@@ -269,13 +269,32 @@
     <script>
         
     </script>
-    <script type="module">
-        import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+    <script src="https://cdn.socket.io/4.5.3/socket.io.min.js" integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi" crossorigin="anonymous"></script>
+    <script>
 
         const socket = io();
         socket.on('connect', () => {
             socket.on('notification', (data) => {
-                console.log(data);
+                if ("notificationCount" in data) {
+                    $(".indicator").removeClass("d-none").text(data.notificationCount);
+                    return
+                };
+
+                $(".notification-alert").removeClass("d-none").addClass("opacity-show").text(data.header);
+                setTimeout(() => {
+                    $(".notification-alert").removeClass("opacity-show").addClass("opacity-hide");
+                    setTimeout(() => {
+                        $(".notification-alert").addClass("d-none");
+                    }, 500);
+                }, 4000);
+
+                $(".indicator").text((idx, val) => {
+                    return parseInt(val) + 1;
+                });
+
+                if(window.location.pathname === "/notification/all-notifications") {
+                    location.reload();
+                }
             });
         });
     </script>

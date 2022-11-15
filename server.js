@@ -123,6 +123,7 @@ const navbarAPI = require("./api/navbar/api");
 const salaryExcelsApi = require("./api/salary-excels/api");
 const vacationAPI = require("./api/vacation/api");
 const { createSocketUser, removeSocketUser, sendNotification } = require("./socket/socket");
+const { getAllNotifications } = require("./api/notifications/service");
 
 
 // Routers
@@ -183,27 +184,36 @@ const io = require("./socket/socket")
     sessionMiddleware(socket.request, {}, next);
   });
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   const userId = socket.request?.session?.passport?.user || null;
   if (!userId) return socket.disconnect();
 
   createSocketUser(userId, socket.id);
   console.log(`User ${userId} connected: ${socket.id}`);
 
+  let {
+    count: [{ count: notificationCount }],
+  } = await getAllNotifications({ userId });
+
   socket.on("disconnect", () => {
     removeSocketUser(userId);
     console.log(`User ${userId} disconnected: ${socket.id}`);
   });
 
-  // test for socket connection
-  socket.on('msg', (data) => {
-    console.log(data)
-    sendNotification("2", "notification", {
-        title: "Test",
-        content: "Test content",
-        url: "/",
-      });
-  })
+  io.to(socket.id).emit("notification", { notificationCount });
+
+  // ! test for socket connection
+  socket.on("msg", (data) => {
+    sendNotification([1,2,3], {
+        "header": "Salam Dunya", 
+        "description": "Hello Ali",
+        "created_by": 35,
+        "belongs_to": 35,
+        "belongs_to_role": 1,
+        "url": null,
+        "importance": 1
+    }, true);
+  });
 });
 
 const port = process.env.PORT || 3000;
