@@ -1,4 +1,4 @@
-const { User, sequelize} = require("../../db_config/models");
+const { User, AccessGroup, UserAccessGroup, Right, sequelize} = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
 
 module.exports = {
@@ -315,5 +315,77 @@ module.exports = {
             logging: false,
             type: QueryTypes.SELECT
         });
+    },
+    updateUserGroup: async function (userId, groupId) {
+        const user = await User.findOne({
+            where: {
+                id: userId
+            }
+        });
+        if (!user) throw new Error("User is not found.");
+
+        const group = await AccessGroup.findOne({
+            where: {
+                id: groupId
+            }
+        });
+        if (!group) throw new Error("Group is not found.");
+
+        const isExist = await UserAccessGroup.findOne({
+            where: {
+                AccessGroupId: groupId,
+                UserId: userId
+            }
+        })
+        if (isExist) throw new Error("User already has this group.");
+
+        await UserAccessGroup.create({
+            AccessGroupId: groupId,
+            UserId: userId
+        })
+    },
+    removeUserFromGroup: async function (userId, groupId) {
+        const user = await User.findOne({
+            where: {
+                id: userId
+            }
+        });
+        if (!user) throw new Error("User is not found.");
+
+        await UserAccessGroup.destroy({ 
+            where: {
+                AccessGroupId: groupId,
+                UserId: userId
+            }
+        })
+    },
+    getUserGroup: async function (userId) {
+        const result = [];
+        const dbRecords = await sequelize.query(
+          `
+            SELECT ag.name as UAG_name, r.name as R_name FROM UserAccessGroups as uag
+            LEFT JOIN AccessGroups as ag ON ag.id = uag.AccessGroupId
+            LEFT JOIN AccessGroupRights as agr ON agr.AccessGroupId = ag.id
+            LEFT JOIN Rights as r ON r.id = agr.RightId
+            WHERE uag.UserId = :userId
+          `,
+          {
+            type: QueryTypes.SELECT,
+            replacements: { userId },
+            logging: false,
+          }
+        );
+        dbRecords.forEach((record) => {
+          const index = result.findIndex((res) => res.name === record.UAG_name);
+          if (index === -1) {
+            result.push({
+              name: record.UAG_name,
+              rights: [record.R_name],
+            });
+          } else {
+            result[index].rights.push(record.R_name);
+          }
+        });
+        return result;
     }
 }
