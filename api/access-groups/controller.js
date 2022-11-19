@@ -6,13 +6,14 @@ const {
   deleteGroup,
   deleteRoleForGroup,
   getAllGroups,
+  getAllRights
 } = require("./service");
 
 module.exports = {
   addNewGroup: async function (req, res) {
     try {
       const { name } = req.body;
-      if (!name || name.length < 3) {
+      if (!name) {
         return res.status(400).json({ message: "Input is incorrect" });
       }
 
@@ -75,7 +76,7 @@ module.exports = {
   updateGroup: async function (req, res) {
     try {
       const { id, name } = req.body;
-      if (!id || !name || name.length < 3) {
+      if (!id || !name) {
         return res.status(400).json({ message: "Input is incorrect" });
       }
 
@@ -123,4 +124,16 @@ module.exports = {
       });
     }
   },
+  getAllRights: async function (req, res) {
+    try {
+      const rights = await getAllRights()
+      return res.status(200).json(rights);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).send({
+        success: false,
+        message: "Ups... Something went wrong!",
+      });
+    }
+  }
 };

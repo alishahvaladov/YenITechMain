@@ -65,4 +65,7 @@ module.exports = {
     });
     if (result === 0) throw new Error("Group or right not found");
   },
+  getAllRights: async function () {
+    return await Right.findAll({ attributes: ["id", "name"] });
+  }
 };
