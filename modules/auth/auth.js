@@ -14,6 +14,12 @@ module.exports = {
     },
     admin: (req, res, next) => {
             // req.roleAuthenticated = false;
+            if (!req.isAuthenticated()) {
+                return res.status(403).send({
+                    success: false,
+                    message: "Forbidden URL!"
+                });
+            } 
             if(req.user.active_status === 0) {
                 req.flash("error_msg", "Please update password");
                 return res.redirect("/update-password");
@@ -27,14 +33,21 @@ module.exports = {
     },
     hr: (req, res, next) => {
         // req.roleAuthenticated = false;
-        if(req.user.active_status === 0) {
-            req.flash("error_msg", "Please update password");
-            return res.redirect("/update-password");
-        }
         if(req.isAuthenticated() && req.user.role === 5 || req.isAuthenticated() && req.user.role === 1) {
             req.roleAuthenticated = true;
             return next();
         }
+        if (!req.isAuthenticated()) {
+            return res.status(403).send({
+                success: false,
+                message: "Forbidden URL!"
+            });
+        } 
+        if(req.user.active_status === 0) {
+            req.flash("error_msg", "Please update password");
+            return res.redirect("/update-password");
+        }
+        
         next();
     },
     audit: (req, res, next) => {

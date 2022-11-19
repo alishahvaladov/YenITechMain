@@ -12,14 +12,14 @@ const renderPage = () => {
     const id = url[url.length - 1];
     $.get(`/api/position/position-by-id/${id}`, (res) => {
         positionNameInput.value = res.name[0].name;
-        const departments = res.departments;
+        const groups = res.groups;
         const deptPosRel = res.dept_pos;
         let html = "";
-        departments.forEach(department => {
+        groups.forEach(group => {
             html += `
                 <div class="project-checkbox-list w-25 d-flex justify-content-center align-items-center"> 
-                    <input class="checkbox-list" type="checkbox" value="${department.id}" id="${department.generatedId}">
-                    <label class="mx-2" for="${department.generatedId}">${department.name}</label>
+                    <input class="checkbox-list" type="checkbox" value="${group.id}" id="${group.generatedId}">
+                    <label class="mx-2" for="${group.generatedId}">${group.name}</label>
                 </div>
             `;
         });

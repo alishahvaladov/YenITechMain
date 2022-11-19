@@ -1,4 +1,4 @@
-const { getDepartmentsForPoisiton, addPosition, addDeptPostRel, checkIfDeptExists, getPositionsByDepartment, getAllPositions, getPositionByID, updatePositionName, getDepartmentForPositions, deleteDepartmentForPosition, insertDepartmentForPosition, getPoistionsForExport } = require("./service");
+const { getGroupsForPositions, addPosition, addGroupPosRel, checkIfGroupExists, getPositionsByGroup, getAllPositions, getPositionByID, updatePositionName, getDepartmentForPositions, deleteDepartmentForPosition, insertDepartmentForPosition, getPoistionsForExport } = require("./service");
 const randomId = (count) => {
     const string = "abcdefghijklmnopqrstuvwxyz123456789";
     let generatedId = "";
@@ -13,9 +13,9 @@ const fs = require("fs");
 
 
 module.exports = {
-    getDepartmentsForPoisiton: async (req, res) => {
+    getGroupsForPositions: async (req, res) => {
         try {
-            const result = await getDepartmentsForPoisiton();
+            const result = await getGroupsForPositions();
             result.forEach(dept => {
                 const generatedId = randomId(15);
                 dept.generatedId = generatedId;
@@ -32,76 +32,84 @@ module.exports = {
         }
     },
     addPosition: (req, res) => {
-        const body = req.body;
-        const name = body.posName;
-        const depts = body.departments;
-        const posData = {};
+        try {
+            const body = req.body;
+            const name = body.posName;
+            const groups = body.groups;
+            const posData = {};
 
-        if (name.length < 1) {
-            return res.status(400).send({
-                success: false,
-                message: "Please fill position input"
-            });
-        }
-        posData.name = name;
-        posData.user_id = req.user.id;
-        if (!depts) {
-            return res.status(400).send({
-                success: false, 
-                message: "Please check at least one department"
-            });
-        }
-        if (typeof depts !== "object") {
-            return res.status(400).send({
-                success: false,
-                message: "Attempt to hacking your data sent to Audit"
-            });
-        }
-        if (depts.length > 0) {
-            depts.forEach(async dept => {
-                const checkedDept = await checkIfDeptExists(dept);
-                if (!checkedDept) {
-                    return res.status(404).send({
-                        success: false,
-                        message: "One of the chosen department does not exists please try again or contact system admin"
-                    });
-                }
-            });
-            const deptData = {};
-            addPosition(posData, (err, result) => {
-                if (err) {
-                    return res.status(500).send({
-                        success: false,
-                        message: "An unkown error has been occurred"
-                    });
-                }
-                let message = ["Position successfully added"];
-                deptData.position_id = result.id;
-                depts.forEach(dept => {
-                    deptData.department_id = dept;
-                    addDeptPostRel(deptData, (err, result) => {
-                        if (err) {
-                            console.log(err);
-                            return message.push("Some parts can be missing please contact system admin");
-                        }
-                    })
+            if (name.length < 1) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please fill position input"
                 });
-                return res.status(200).send({
-                    success: true,
-                    message
+            }
+            posData.name = name;
+            posData.user_id = req.user.id;
+            if (!groups) {
+                return res.status(400).send({
+                    success: false, 
+                    message: "Please check at least one group"
                 });
-            });
-        } else {
-            return res.status(400).send({
-                success: false, 
-                message: "Please check at least one department"
+            }
+            if (typeof groups !== "object") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please choose correct groups"
+                });
+            }
+            if (groups.length > 0) {
+                groups.forEach(async group => {
+                    const checkedGroup = await checkIfGroupExists(group);
+                    if (!checkedGroup) {
+                        return res.status(404).send({
+                            success: false,
+                            message: "One of the chosen group does not exists please try again or contact system admin"
+                        });
+                    }
+                });
+                const groupData = {};
+                addPosition(posData, (err, result) => {
+                    if (err) {
+                        return res.status(500).send({
+                            success: false,
+                            message: "An unkown error has been occurred"
+                        });
+                    }
+                    let message = ["Position successfully added"];
+                    groupData.position_id = result.id;
+                    groups.forEach(group => {
+                        groupData.group_id = group;
+                        addGroupPosRel(groupData, (err, result) => {
+                            if (err) {
+                                console.log(err);
+                                return message.push("Some parts can be missing please contact system admin");
+                            }
+                        })
+                    });
+                    return res.status(200).send({
+                        success: true,
+                        message
+                    });
+                });
+            } else {
+                return res.status(400).send({
+                    success: false, 
+                    message: "Please check at least one department"
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
             });
         }
     },
-    getPositionsByDepartment: async (req, res) => {
-        const deptId = req.params.id;
+    getPositionsByGroup: async (req, res) => {
+        const groupID = req.params.id;
         try {
-            const result = await getPositionsByDepartment(deptId);
+            const result = await getPositionsByGroup(groupID);
 
             return res.status(200).send({
                 success: true,
@@ -144,7 +152,7 @@ module.exports = {
             return res.status(200).send({
                 success: true,
                 name: result.name,
-                departments: result.departments,
+                groups: result.groups,
                 dept_pos: result.dept_pos
             });
         } catch (err) {

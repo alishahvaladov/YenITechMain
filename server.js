@@ -120,6 +120,7 @@ const dashboardAPI = require("./api/dashboard/api");
 const navbarAPI = require("./api/navbar/api");
 const groupRouter = require("./modules/group/router");
 const groupAPI = require("./api/group/api");
+const deviceManagementAPI = require("./api/device-management/api");
 const salaryExcelsApi = require("./api/salary-excels/api");
 const vacationAPI = require("./api/vacation/api");
 
@@ -161,6 +162,7 @@ app.use("/api/navbar", navbarAPI);
 app.use("/api/groups", groupAPI);
 app.use("/api/salary-excels", salaryExcelsApi);
 app.use("/api/vacation", vacationAPI);
+app.use("/api/devices", deviceManagementAPI);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });

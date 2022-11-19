@@ -1,12 +1,9 @@
-const { sequelize, Position, DeptPosRel } = require("../../db_config/models");
+const { sequelize, Position, PosGroupRel } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
 
 module.exports = {
-    getDepartmentsForPoisiton: async () => {
-        return await sequelize.query(`
-            SELECT * FROM Departments
-            WHERE deletedAt IS NULL
-        `, {
+    getGroupsForPositions: async () => {
+        return await sequelize.query("SELECT * FROM `Groups`", {
             logging: false,
             type: QueryTypes.SELECT
         });
@@ -23,9 +20,9 @@ module.exports = {
             cb(err);
         });
     },
-    addDeptPostRel: (data, cb) => {
-        DeptPosRel.create({
-            department_id: data.department_id,
+    addGroupPosRel: (data, cb) => {
+        PosGroupRel.create({
+            group_id: data.group_id,
             position_id: data.position_id
         }, {
             logging: false
@@ -35,12 +32,10 @@ module.exports = {
             cb(err);
         });
     },
-    checkIfDeptExists: async (id) => {
-        return await sequelize.query(`
-            SELECT * FROM Departments
-            WHERE deletedAt IS NULL
-            AND id = :id
-        `, {
+    checkIfGroupExists: async (id) => {
+        return await sequelize.query( "SELECT * FROM `Groups`" + 
+        `WHERE deletedAt IS NULL
+         AND id = :id`, {
             logging: false,
             type: QueryTypes.SELECT,
             replacements: {
@@ -48,17 +43,17 @@ module.exports = {
             }
         });
     },
-    getPositionsByDepartment: async (deptId) => {
+    getPositionsByGroup: async (groupID) => {
         return await sequelize.query(`
             SELECT pos.* FROM Positions as pos
-            LEFT JOIN DeptPosRels as dpr ON dpr.position_id = pos.id
+            LEFT JOIN PosGroupRels as pgr ON pgr.position_id = pos.id
             WHERE pos.deletedAt IS NULL
-            AND dpr.department_id = :deptId
+            AND pgr.department_id = :groupID
         `, {
             logging: false,
             type: QueryTypes.SELECT,
             replacements: {
-                deptId
+                groupID
             }
         });
     },
@@ -120,8 +115,8 @@ module.exports = {
         });
 
         result.dept_pos = await sequelize.query(`
-            SELECT dpr.* FROM Positions AS pos
-            LEFT JOIN DeptPosRels AS dpr ON dpr.position_id = pos.id
+            SELECT pgr.* FROM Positions AS pos
+            LEFT JOIN PosGroupRels AS pgr ON pgr.position_id = pos.id
             WHERE pos.deletedAt IS NULL
             AND pos.id = :id
         `, {
@@ -132,10 +127,7 @@ module.exports = {
             }
         });
 
-        result.departments = await sequelize.query(`
-            SELECT id, name FROM Departments
-            WHERE deletedAt IS NULL
-        `, {
+        result.groups = await sequelize.query("SELECT id, name FROM `Groups` WHERE deletedAt IS NULL", {
             logging: false,
             type: QueryTypes.SELECT
         });

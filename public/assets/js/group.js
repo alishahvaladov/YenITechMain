@@ -3,7 +3,6 @@ const tbody = document.querySelector("tbody");
 
 const renderPage = () => {
     $.get("/api/groups?offset=0", (res) => {
-        console.log(res);
         const groups = res.groups;
         let html = "";
 
@@ -12,12 +11,14 @@ const renderPage = () => {
                 <tr>
                     <td>${group.name}</td>
                     <td>
-                        <button></button>
+                        <button class="btn btn-outline-secondary">Edit</button>
                     </td>
                 </tr>
             `
         });
-    })
+
+        tbody.innerHTML = html;
+    });
 
     setTimeout(() => {
         loading.classList.add("d-none");

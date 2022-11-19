@@ -1,9 +1,10 @@
-const { addGroup, getDepartmentsForGroups, getGroups } = require("./service");
+const { addGroup, getDepartmentsForGroups, getGroups, checkIfDepartmentExists, addDeptGroupRels } = require("./service");
 
 module.exports = {
     addGroup: (req, res) => {
         try {
             const body = req.body;
+            const departments = body.departments;
             body.user_id = req.user.id;
 
             if (!body.name || body.name === "") {
@@ -13,19 +14,48 @@ module.exports = {
                 });
             }
 
-            addGroup(body, (err, result) => {
-                if(err) {
-                    console.log(err);
-                    return res.status(500).send({
-                        success: false,
-                        message: "Ups... Something went wrong!"
-                    });
-                }
-                return res.status(200).send({
-                    success: true,
-                    message: "Şöbə əlavə edildi"
+            if (departments.length > 0) {
+                departments.forEach(async department => {
+                    const checkedDept = await checkIfDepartmentExists(department);
+                    if (!checkedDept) {
+                        return res.status(400).send({
+                            succes: false,
+                            message: "One of the checked department not exists. Please try again."
+                        });
+                    }
                 });
-            })
+                const deptData = {};
+                addGroup(body, (err, result) => {
+                    if(err) {
+                        console.log(err);
+                        return res.status(500).send({
+                            success: false,
+                            message: "Ups... Something went wrong!"
+                        });
+                    }
+                    let message = ["Group successfully added"];
+                    deptData.group_id = result.id;
+                    departments.forEach(department => {
+                        deptData.department_id = department;
+                        addDeptGroupRels(deptData, (err, result) => {
+                            if (err) {
+                                message.push("Some parts can be missing. Please contact system admin");
+                            }
+                        })
+                    });
+                    return res.status(200).send({
+                        success: true,
+                        message: "Şöbə əlavə edildi"
+                    });
+                });
+            } else {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please insert at least one department"
+                });
+            }
+
+            
         } catch(err) {
             console.log(err);
             return res.status(500).send({
