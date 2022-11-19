@@ -9,7 +9,7 @@ const renderPage = () => {
         loading.classList.remove("d-none");
         $.ajax({
             type: "POST",
-            url: "http://localhost:3000/api/profile/change-password",
+            url: "/api/profile/change-password",
             data: {
                 oldPassword: oldPassword.value,
                 password: password.value,

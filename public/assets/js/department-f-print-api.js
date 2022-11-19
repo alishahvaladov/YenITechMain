@@ -67,7 +67,7 @@ const pageFunctions = () => {
 
                 $.ajax({
                     type: "POST",
-                    url: "http://localhost:3000/api/fprints/department",
+                    url: "/api/fprints/department",
                     data: {
                         qEmployee: qEmp,
                         qProject: qProj,
@@ -109,7 +109,7 @@ const renderPage = () => {
     const data = {};
     $.ajax({
         type: "POST",
-        url: "http://localhost:3000/api/fprints/department",
+        url: "/api/fprints/department",
         data: {
             limit: 15,
             offset: 0

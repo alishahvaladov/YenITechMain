@@ -60,7 +60,7 @@ const pageFuncs = () => {
                 }
             }
             setTimeout(() => {
-                $.get(`http://localhost:3000/api/time-off?hr_approve=true&offset=${offset}`, (res) => {
+                $.get(`/api/time-off?hr_approve=true&offset=${offset}`, (res) => {
                     const timeOffs = res.result.timeoffs;
                     let count = res.result.count[0].count;
                     count = Math.ceil(parseInt(count) / 15);
@@ -79,7 +79,7 @@ const pageFuncs = () => {
                             } else if (timeOff.timeoff_type === 4) {
                                 timeOff.timeoff_type = "Saatlıq icazə"
                             }
-                            let approveBtn = `<td><a class="btn btn-outline-secondary" href="http://localhost:3000/timeoffrequests/approve-requests/hr/${timeOff.id}"><i class="bi bi-arrow-right-circle-fill"></i></a></td>`
+                            let approveBtn = `<td><a class="btn btn-outline-secondary" href="/timeoffrequests/approve-requests/hr/${timeOff.id}"><i class="bi bi-arrow-right-circle-fill"></i></a></td>`
                             html += `
                                 <tr> 
                                     <td>${timeOff.first_name} ${timeOff.last_name} ${timeOff.father_name}</td>
@@ -101,7 +101,7 @@ const pageFuncs = () => {
 }
 
 const renderPage = () => {
-    $.get("http://localhost:3000/api/time-off?hr_approve=true&offset=0", (res) => {
+    $.get("/api/time-off?hr_approve=true&offset=0", (res) => {
         console.log(res);
         const timeOffs = res.result.timeoffs;
         let count = res.result.count[0].count;
@@ -121,7 +121,7 @@ const renderPage = () => {
                 } else if (timeOff.timeoff_type === 4) {
                     timeOff.timeoff_type = "Saatlıq icazə"
                 }
-                let approveBtn = `<td><a class="btn btn-outline-secondary" href="http://localhost:3000/timeoffrequests/approve-requests/hr/${timeOff.id}"><i class="bi bi-arrow-right-circle-fill"></i></a></td>`
+                let approveBtn = `<td><a class="btn btn-outline-secondary" href="/timeoffrequests/approve-requests/hr/${timeOff.id}"><i class="bi bi-arrow-right-circle-fill"></i></a></td>`
                 html += `
                     <tr> 
                         <td>${timeOff.first_name} ${timeOff.last_name} ${timeOff.father_name}</td>

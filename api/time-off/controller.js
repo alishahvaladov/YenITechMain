@@ -82,16 +82,63 @@ module.exports = {
             const body = req.body;
             body.user_id = req.user.id;
             if (parseInt(body.timeOffType) === 4) {
-                if(body.emp === "" || parseInt(body.emp) === 0 || body.toffTime === "" || body.toffTimeDate === "" || body.timeOffType === "") {
+                if( body.emp === "" ||
+                    parseInt(body.emp) === 0 ||
+                    body.toffTimeDate === "" ||
+                    body.timeOffType === "" ||
+                    body.timeoff_time_start === "" ||
+                    body.timeoff_time_end === ""
+                ) {
                     return res.status(400).send({
                         success: false,
                         message: "Missing requirements"
                     });
                 }
+                const toffTimeDate = body.toffTimeDate;
+                let splittedTimeOffStart = body.timeoff_time_start.split(":");
+                let spilttedTimeOffEnd = body.timeoff_time_end.split(":");
+
+                let splittedTimeOffStartHour = parseInt(splittedTimeOffStart[0]);
+                let splittedTimeoffEndHour = parseInt(spilttedTimeOffEnd[0]);
+
+                let splittedTimeOffStartMinute = parseInt(splittedTimeOffStart[1]);
+                let splittedTimeOffEndMinute = parseInt(spilttedTimeOffEnd[1]);
+
+                let differenceBetweenHours = splittedTimeoffEndHour - splittedTimeOffStartHour;
+                let differenceBetweenMinutes = splittedTimeOffEndMinute - splittedTimeOffStartMinute;
+
+                if (differenceBetweenHours < 0) {
+                    return res.status(400).send({
+                        success: false,
+                        message: "Zəhmət olmasa bitmə saatını düzgün qeyd edin."
+                    });
+                } else {
+                    if(differenceBetweenMinutes < 0) {
+                        differenceBetweenHours = differenceBetweenHours - 1;
+                        differenceBetweenMinutes = 60 + differenceBetweenMinutes;
+                    }
+                }
+
+                const differenceBetweenTimes = `${differenceBetweenHours}.${differenceBetweenMinutes}`;
+
+                console.log(parseFloat(differenceBetweenTimes));
+
+                body.toffTime = differenceBetweenTimes;
                 body.timeOffStartDate = null;
                 body.timeOffEndDate = null;
                 body.wStartDate = null;
+                body.timeoff_percent = null;
             } else {
+                if(parseInt(body.timeOffType) === 3 ) {
+                    if(body.timeoff_percent === null || body.timeoff_percent === "") {
+                        return res.status(400).send({
+                            success: false,
+                            message: "Zəhmət olmasa məzuniyyətin hesablanma faizini daxil edin."
+                        });
+                    }
+                } else {
+                    body.timeoff_percent = null;
+                }
                 if(body.emp === "" || parseInt(body.emp) === 0 || body.timeOffStartDate === "" || body.timeOffEndDate === "" || body.timeOffType === "" || body.wStartDate === "") {
                     return res.status(400).send({
                         success: false,

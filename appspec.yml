@@ -5,14 +5,14 @@ files:
     destination: /home/ec2-user/blink
 hooks:
   ApplicationStop:
-    - location: sudo chmod +x scripts/application_stop.sh
-      timeout: 300
+    - location: scripts/application_stop.sh
+      timeout: 10000
       runas: ec2-user
   BeforeInstall:
     - location: scripts/before_install.sh
-      timeout: 300
+      timeout: 10000
       runas: ec2-user
   ApplicationStart:
     - location: scripts/application_start.sh
-      timeout: 300
+      timeout: 10000
       runas: ec2-user

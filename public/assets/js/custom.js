@@ -82,7 +82,7 @@ if(fpCancelBtn) {
 }
 
 // const getLastNotifications = () => {
-//    $.get('http://localhost:3000/api/notification/last-notifications', (res) => {
+//    $.get('/api/notification/last-notifications', (res) => {
 //       let listGroupHtml = "";
 //       const notifications = res.result.notifications;
 //       const unseenNotificationCount = parseInt(res.result.unseenNotificationCount[0].count);
@@ -119,7 +119,7 @@ if(fpCancelBtn) {
 //                const btnId= notificationBtn.value;
 //                const url = notificationBtn.getAttribute("data-url");
 //                loading.classList.remove('d-none');
-//                $.get(`http://localhost:3000/api/notification//update-notification/${btnId}?seen=2`);
+//                $.get(`/api/notification//update-notification/${btnId}?seen=2`);
 //                setTimeout(() => {
 //                   window.location.href = url;
 //                }, 1000);
@@ -139,7 +139,7 @@ if(fpCancelBtn) {
 // getLastNotifications();
 
 // const getNotification = () => {
-//    $.get('http://localhost:3000/api/notification', (res) => {
+//    $.get('/api/notification', (res) => {
 //       const unseenNotifications = res.unseenNotifications;
 //       if (res.new_notification === true) {
 //          notificationAlert.classList.remove('d-none');
@@ -158,7 +158,7 @@ if(fpCancelBtn) {
 
 //       if (unseenNotifications && unseenNotifications.length > 0) {
 //          unseenNotifications.forEach(notification => {
-//             $.get(`http://localhost:3000/api/notification/update-notification/${notification.id}?seen=1`);
+//             $.get(`/api/notification/update-notification/${notification.id}?seen=1`);
 //          });
 //       }
 //    });
@@ -171,7 +171,7 @@ if(fpCancelBtn) {
 // }, 2000);
 
 
-$.get('http://localhost:3000/api/profile/profile-picture', (res) => {
+$.get('/api/profile/profile-picture', (res) => {
    dropdownUsername.innerHTML = res.username;
    if (res.filename !== null) {
       const avatarPicture = document.querySelector(".avatar-picture");
@@ -194,7 +194,7 @@ $.get('http://localhost:3000/api/profile/profile-picture', (res) => {
 
 $.ajax({
    type: "GET",
-   url: "http://localhost:3000/api/navbar",
+   url: "/api/navbar",
    success: ((result) => {
       const navs = result.result;
       if (navs.length > 0) {

@@ -72,7 +72,7 @@ const monthlyGivenSalaryChart = async (labels, data) => {
 const renderPage = () => {
     $.ajax({
         type: "GET",
-        url: "http://localhost:3000/api/dashboard/employee-count",
+        url: "/api/dashboard/employee-count",
         success: ((result) => {
             empCardDiv.classList.remove("d-none");
             const count = result.result[0].count;
@@ -84,7 +84,7 @@ const renderPage = () => {
 
     $.ajax({
         type: "GET",
-        url: "http://localhost:3000/api/dashboard/last-month-salary",
+        url: "/api/dashboard/last-month-salary",
         success: ((result) => {
             salarySumDiv.classList.remove("d-none");
             const sumSalary = result.result[0].salarySum;
@@ -100,7 +100,7 @@ const renderPage = () => {
 
     $.ajax({
         type: "GET",
-        url: "http://localhost:3000/api/dashboard/inappropriate-fprints",
+        url: "/api/dashboard/inappropriate-fprints",
         success: ((result) => {
             inapFprints.classList.remove("d-none");
             inapFprintsCount.innerHTML = result.result[0].count;
@@ -111,7 +111,7 @@ const renderPage = () => {
 
     $.ajax({
         type: "GET",
-        url: "http://localhost:3000/api/dashboard/last-employees",
+        url: "/api/dashboard/last-employees",
         success: ((result) => {
             newEmp.classList.remove("d-none");
             newEmpCount.innerHTML = result.result[0].count;
@@ -122,7 +122,7 @@ const renderPage = () => {
 
     $.ajax({
         type: "GET",
-        url: "http://localhost:3000/api/dashboard/last-notifications",
+        url: "/api/dashboard/last-notifications",
         success: ((result) => {
             const notifications = result.result;
             let tbodyHtml = "";
@@ -147,7 +147,7 @@ const renderPage = () => {
 
     $.ajax({
         type: "GET",
-        url: "http://localhost:3000/api/dashboard/salary-sum-by-department",
+        url: "/api/dashboard/salary-sum-by-department",
         success: ((result) => {
             const label = [];
             const data = [];
@@ -189,7 +189,7 @@ const renderPage = () => {
 
     $.ajax({
         type: "GET",
-        url: "http://localhost:3000/api/dashboard/last-timeoffs",
+        url: "/api/dashboard/last-timeoffs",
         success: ((result) => {
             const timeoffs = result.result;
             latestTimeOffDiv.classList.remove("d-none");
@@ -246,7 +246,7 @@ const renderPage = () => {
 
     $.ajax({
         type: "GET",
-        url: "http://localhost:3000/api/dashboard/given-salaries",
+        url: "/api/dashboard/given-salaries",
         success: (async (result) => {
 
             const salariesByMonths = result.result;

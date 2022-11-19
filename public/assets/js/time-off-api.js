@@ -5,10 +5,15 @@ const empNameForWord = $("#empNameForWord");
 const deptDirectorInp = $("#deptDirector");
 const directorInp = $("#director");
 const uploadDoc = document.querySelector("#uploadDoc");
+const downloadDoc = document.querySelector("#downloadDoc");
 const toffStartDiv = document.querySelector('.toff-start-date');
 const toffEndDiv = document.querySelector('.toff-end-date');
-const toffTimeDiv = document.querySelector(".toff-authorized-time");
+const toffTimeStartDiv = document.querySelector(".toff-authorized-time-start");
+const toffTimeEndDiv = document.querySelector(".toff-authorized-time-end");
+const toffTimeStartInput = document.querySelector("#toff-authorized-time-start");
+const toffTimeEndInput = document.querySelector("#toff-authorized-time-end");
 const toffTimeDateDiv = document.querySelector('.timeoff-time-date');
+const tofftimePercent = document.querySelector("#timeoff-percent");
 const wStartDateDiv = document.querySelector('.w-start-date');
 const loading = document.querySelector(".loading");
 const approveModal = document.querySelector(".approve-modal");
@@ -20,13 +25,13 @@ empSelector.change(function () {
     let project = $("#toff-branch");
     let position = $("#toff-emp-position");
 
-    $.post("http://localhost:3000/api/time-off/emp-info", {
+    $.post("/api/time-off/emp-info", {
         id: id
     }, (res) => {
         department.val(res.result[0].depName);
         project.val(res.result[0].projName);
         position.val(res.result[0].posName);
-        $.post("http://localhost:3000/api/time-off/get-directors", {
+        $.post("/api/time-off/get-directors", {
             projID: res.result[0].project_id,
             deptID: res.result[0].department
         }, (res) => {
@@ -75,7 +80,7 @@ const sendTimeOffRequest = () => {
     if (file) {
         fd.append('file', file);
         $.ajax({
-            url: `http://localhost:3000/api/time-off/upload-form/${id}`,
+            url: `/api/time-off/upload-form/${id}`,
             type: "post", 
             data: fd,
             enctype: "multipart/form-data",
@@ -83,13 +88,15 @@ const sendTimeOffRequest = () => {
             processData: false,
             success: (res) => {
                 console.log(res);
-                $.post("http://localhost:3000/api/time-off/add", {
+                $.post("/api/time-off/add", {
                     timeOffType: timeOffType.value,
                     timeOffStartDate: timeOffStartDate.value,
                     timeOffEndDate: timeOffEndDate.value,
                     wStartDate: wStartDate.value,
-                    toffTime: toffTime.value,
+                    timeoff_time_start: toffTimeStartInput.value,
+                    timeoff_time_end: toffTimeEndInput.value,
                     toffTimeDate: toffTimeDate.value,
+                    timeoff_percent: tofftimePercent.value,
                     emp: emp.value
                 }).done((data) => {
                     let html = `
@@ -133,6 +140,64 @@ const sendTimeOffRequest = () => {
 } 
 
 
+downloadDoc.addEventListener("click", () => {
+    // $.ajax({
+    //     url: "http://loclahost:5005/day-off/form/validate",
+    //     method: "post",
+    //     data: {
+    //         project: "project",
+    //         department: "department",
+    //         directorName: "directorName",
+    //         nameSurnameFather: "nameSurnameFather",
+    //         position: "position",
+    //         dayOffD: "dayOffD",
+    //         dayOffS: "dayOffS",
+    //         dayOffE: "dayOffE",
+    //         dayOffType: "dayOffType",
+    //         sedrName: "sedrName",
+    //         time: "time"
+    //     },
+    //     dataType: "json",
+    //     contentType: "application/json",
+    //     success: ((res) => {
+    //         console.log(res);
+    //     })
+    // }).catch((err) => {
+    //     console.log(err);
+    // })
+    $.post("http://localhost:5005/day-off/form/validate", {
+        project: "project",
+        department: "department",
+        directorName: "directorName",
+        nameSurnameFather: "nameSurnameFather",
+        position: "position",
+        dayOffD: "dayOffD",
+        dayOffS: "dayOffS",
+        dayOffE: "dayOffE",
+        dayOffType: "dayOffType",
+        sedrName: "sedrName",
+        time: "time"
+    }, (res) => {
+        console.log(res);
+        $.post("http://localhost:5005/day-off/form/download", {
+            project: "Huseyn Project",
+            department: "Huseyn Department",
+            directorName: "Huseyn Director",
+            nameSurnameFather: "Huseyn Polat Yasin",
+            position: "Huseyn Position",
+            dayOffD: "2",
+            dayOffS: "8 noyabr 2022",
+            dayOffE: "10 noyabr 2022",
+            dayOffType: "Əmək Məzuniyyəti",
+            sedrName: "Huseyn",
+            time: "time"
+        }, (res) => {
+            const documentFile = res;
+//            let buff = Buffer.from(documentFile, "base64");
+            window.location.href = `data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${documentFile}`;
+        });
+    });
+})
 
 applyBtn.addEventListener("click", () => {
     sendTimeOffRequest();
@@ -145,13 +210,15 @@ timeOffType.addEventListener('change', () => {
         toffStartDiv.classList.add('d-none');
         toffEndDiv.classList.add('d-none');
         wStartDateDiv.classList.add('d-none');
-        toffTimeDiv.classList.remove('d-none');
+        toffTimeStartDiv.classList.remove('d-none');
+        toffTimeEndDiv.classList.remove('d-none');
         toffTimeDateDiv.classList.remove('d-none');
     } else {
         toffStartDiv.classList.remove('d-none');
         toffEndDiv.classList.remove('d-none');
         wStartDateDiv.classList.remove('d-none');
-        toffTimeDiv.classList.add('d-none');
+        toffTimeStartDiv.classList.add('d-none');
+        toffTimeEndDiv.classList.add('d-none');
         toffTimeDateDiv.classList.add('d-none');
     }
 

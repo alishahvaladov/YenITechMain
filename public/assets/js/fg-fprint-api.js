@@ -17,7 +17,7 @@ const pageFunctions = () => {
             timeInputSubmit.addEventListener("click", () => {
                 const btnValue = timeInputSubmit.value;
                 const inputValue = timeInput.value;
-                $.get(`http://localhost:3000/api/fprints/update/forgotten-fprints?btnValue=${btnValue}&entrance=true&time=${inputValue}`);
+                $.get(`/api/fprints/update/forgotten-fprints?btnValue=${btnValue}&entrance=true&time=${inputValue}`);
                 addTimeModal.classList.remove('d-flex');
                 addTimeModal.classList.add('d-none');
                 loading.classList.add('d-flex');
@@ -35,7 +35,7 @@ const pageFunctions = () => {
             timeInputSubmit.addEventListener("click", () => {
                 const btnValue = timeInputSubmit.value;
                 const inputValue = timeInput.value;
-                $.get(`http://localhost:3000/api/fprints/update/forgotten-fprints?btnValue=${btnValue}&exit=true&time=${inputValue}`);
+                $.get(`/api/fprints/update/forgotten-fprints?btnValue=${btnValue}&exit=true&time=${inputValue}`);
                 addTimeModal.classList.remove('d-flex');
                 addTimeModal.classList.add('d-none');
                 loading.classList.add('d-flex');
@@ -52,7 +52,7 @@ const pageFunctions = () => {
 }
 
 function renderPage() {
-    $.get("http://localhost:3000/api/fprints/inappropriate-fprints", (res) => {
+    $.get("/api/fprints/inappropriate-fprints", (res) => {
         const result = res.result;
         let html = "";
         result.forEach(item => {

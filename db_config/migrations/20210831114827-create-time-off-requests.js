@@ -36,8 +36,20 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true
       },
+      timeoff_time_start: {
+        type: Sequelize.TIME,
+        allowNull: true
+      },
+      timeoff_time_end: {
+        type: Sequelize.TIME,
+        allowNull: true,
+      },
       timeoff_time_date: {
         type: Sequelize.DATEONLY,
+        allowNull: true
+      },
+      timeoff_percent: {
+        type: Sequelize.INTEGER,
         allowNull: true
       },
       emr_no: {

@@ -79,7 +79,7 @@ const renderAllFPrint = () => {
                     let qDay = $("#day").val();
                     let qDate = $("#qDate").val();
 
-                    $.post('http://localhost:3000/all-fprints/api', {
+                    $.post('/all-fprints/api', {
                         qEmployee: qEmp,
                         qProject: qProj,
                         qDepartment: qDept,
@@ -138,7 +138,7 @@ const renderAllFPrint = () => {
         let qDate = $("#qDate").val();
         let offset = 0;
 
-        $.post("http://localhost:3000/all-fprints/api", {
+        $.post("/all-fprints/api", {
                 qEmployee: qEmp,
                 qProject: qProj,
                 qDepartment: qDept,
@@ -234,7 +234,7 @@ const renderAllFPrint = () => {
         }
         let form = document.createElement('form');
         form.setAttribute("method", method);
-        form.setAttribute("action", "http://localhost:3000/all-fprints/api/excel-report");
+        form.setAttribute("action", "/all-fprints/api/excel-report");
      
         for (let key in params) {
            if (params.hasOwnProperty(key)) {

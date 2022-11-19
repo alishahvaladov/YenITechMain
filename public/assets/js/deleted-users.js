@@ -71,7 +71,7 @@ const pageFunctions = () => {
            }
            setTimeout(() => {
                getSearchInputValues();
-               $.post(`http://localhost:3000/api/users/deleted-users`, {
+               $.post(`/api/users/deleted-users`, {
                   qEmp,
                   qUsername,
                   qEmail,
@@ -106,7 +106,7 @@ const pageFunctions = () => {
 
 const renderPage = () => {
     getSearchInputValues();
-    $.post(`http://localhost:3000/api/users/deleted-users`, {
+    $.post(`/api/users/deleted-users`, {
         qEmp,
         qUsername,
         qEmail,

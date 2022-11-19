@@ -6,7 +6,7 @@ const url = window.location.href.split("/");
 const id = url[url.length - 1];
 
 const renderPage = () => {
-    $.get(`http://localhost:3000/api/department/department-by-id/${id}`, (res) => {
+    $.get(`/api/department/department-by-id/${id}`, (res) => {
         console.log(res);
         deptNameInput.value = res.name[0].name;
         const projects = res.projects;
@@ -32,7 +32,7 @@ const renderPage = () => {
         const checkBoxLists = document.querySelectorAll(".checkbox-list");
         checkBoxLists.forEach(checkBoxList => {
             checkBoxList.addEventListener("click", () => {
-                $.get(`http://localhost:3000/api/department/update/project/${id}?project_id=${checkBoxList.value}`);
+                $.get(`/api/department/update/project/${id}?project_id=${checkBoxList.value}`);
             });
         });
     });
@@ -43,7 +43,7 @@ const renderPage = () => {
 setTimeout(renderPage, 1000);
 
 saveDepartmentBtn.addEventListener("click", () => {
-    $.get(`http://localhost:3000/api/department/update/name/${id}?name=${deptNameInput.value}`, (res) => {
+    $.get(`/api/department/update/name/${id}?name=${deptNameInput.value}`, (res) => {
         loading.classList.remove("d-none");
         setTimeout(renderPage, 1000);
     });

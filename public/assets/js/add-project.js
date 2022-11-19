@@ -9,7 +9,7 @@ const inputFields = document.querySelectorAll(".form-control");
 const selectFields = document.querySelectorAll(".form-select");
 
 const renderPage = () => {
-    $.get('http://localhost:3000/api/project/project-managers-and-parent-projects', (res) => {
+    $.get('/api/project/project-managers-and-parent-projects', (res) => {
         const projectManagers = res.projectManagers;
         const parentProjects = res.parentProjects;
         let projectManagerHtml = `<option value="" hidden>Layihə meneceri seçin</option>`;

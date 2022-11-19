@@ -15,7 +15,7 @@ const loading = document.querySelector(".loading");
 const renderPage = () => {
     const splittedURL = window.location.href.split("/");
     const lastParam = splittedURL[splittedURL.length - 1];
-    $.get(`http://localhost:3000/api/users/getUser/${lastParam}`, (res) => {
+    $.get(`/api/users/getUser/${lastParam}`, (res) => {
         const roles = res.roles;
         const result = res.result[0];
         let options = '';
@@ -48,7 +48,7 @@ const renderPage = () => {
     passwordUpdateSubmitBtn.addEventListener("click", () => {
         const password = passwordInput.value;
         const retypePassword = retypePasswordInput.value;
-        $.post(`http://localhost:3000/api/users/update-password/${lastParam}`, {
+        $.post(`/api/users/update-password/${lastParam}`, {
             password,
             retypePassword
         }, (res) => {
