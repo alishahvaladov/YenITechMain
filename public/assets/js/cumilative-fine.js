@@ -5,7 +5,7 @@ const loading = document.querySelector('.loading');
 const empName = document.querySelector("#empName");
 
 const renderPage = () => {
-    $.get(`http://localhost:3000/api/fine/cumilative/${lastParam}`, (res) => {
+    $.get(`/api/fine/cumilative/${lastParam}`, (res) => {
         const result = res.result;
         let html = "";
         if (result.length > 0) {

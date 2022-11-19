@@ -27,7 +27,7 @@ const emp_id = url[url.length - 1];
 const renderPage = () => {
     $.ajax({
         type: "POST",
-        url: `http://localhost:3000/api/employee-data`,
+        url: `/api/employee-data`,
         data: {
             emp_id
         },

@@ -66,7 +66,7 @@ const pageFunctions = () => {
             }
             setTimeout(() => {
                 getSearchData();
-                $.post(`http://localhost:3000/api/position/allPositions/${offset}`, {
+                $.post(`/api/position/allPositions/${offset}`, {
                     qName
                 }, (res) => {
                     let tbody = document.querySelector("tbody");
@@ -97,7 +97,7 @@ const pageFunctions = () => {
 const renderPage = () => {
     let html = "";
     getSearchData();
-    $.post("http://localhost:3000/api/position/allPositions/0", {
+    $.post("/api/position/allPositions/0", {
         qName
     }, (res) => {
         const positions = res.positions;
@@ -168,7 +168,7 @@ const exportToExcel = () => {
     }
     let form = document.createElement('form');
     form.setAttribute("method", method);
-    form.setAttribute("action", "http://localhost:3000/api/position/export-to-excel");
+    form.setAttribute("action", "/api/position/export-to-excel");
  
     for (let key in params) {
        if (params.hasOwnProperty(key)) {

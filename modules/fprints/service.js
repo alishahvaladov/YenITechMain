@@ -116,7 +116,7 @@ module.exports = {
         const getDrafts = async () => {
             const fpData = await sequelize.query(`
                     SELECT 'FPrintDrafts' AS "set", fpd.*
-                    FROM FPrintDrafts fpd
+                    FROM FPrintDrafts AS fpd
                     WHERE ROW(fpd.emp_id, fpd.f_print_date, fpd.f_print_time) 
                     NOT IN (SELECT emp_id, f_print_date, f_print_time FROM FPrints)
             `, {

@@ -67,7 +67,7 @@ const pageFunctions = () => {
             }
             setTimeout(() => {
                 getSearchData();
-                $.post(`http://localhost:3000/api/department/allDepartments/${offset}`, {
+                $.post(`/api/department/allDepartments/${offset}`, {
                     qName
                 }, (res) => {
                     let tbody = document.querySelector("tbody");
@@ -97,7 +97,7 @@ const pageFunctions = () => {
 const renderPage = () => {
     let html = "";
     getSearchData();
-    $.post("http://localhost:3000/api/department/allDepartments/0", {
+    $.post("/api/department/allDepartments/0", {
         qName
     }, (res) => {
         console.log(res);
@@ -169,7 +169,7 @@ const exportToExcel = () => {
     }
     let form = document.createElement('form');
     form.setAttribute("method", method);
-    form.setAttribute("action", "http://localhost:3000/api/department/export-to-excel");
+    form.setAttribute("action", "/api/department/export-to-excel");
  
     for (let key in params) {
        if (params.hasOwnProperty(key)) {

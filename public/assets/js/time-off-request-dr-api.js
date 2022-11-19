@@ -58,7 +58,7 @@ const pageFunctions = () => {
                 }
             }
             setTimeout(() => {
-                $.get(`http://localhost:3000/api/time-off/for-director?offset=${offset}`,(res) => {
+                $.get(`/api/time-off/for-director?offset=${offset}`,(res) => {
                     let up = "";
                     let html = "";
                     const timeOffs = res.result.timeoffs;
@@ -128,7 +128,7 @@ const pageFunctions = () => {
 }
 
 const renderPage = () => {
-    $.get("http://localhost:3000/api/time-off/for-director?offset=0 ", (res) => {
+    $.get("/api/time-off/for-director?offset=0 ", (res) => {
         console.log(res);
         const timeOffs = res.result.timeoffs;
         let count = res.result.count[0].count;

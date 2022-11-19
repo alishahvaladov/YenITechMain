@@ -11,7 +11,7 @@ const submitBtn = document.querySelector("#submitBtn");
 const renderPage = () => {
     projSelector.change(() => {
         let id = projSelector.val();
-        $.get(`http://localhost:3000/api/department/by-project/${id}`, (res) => {
+        $.get(`/api/department/by-project/${id}`, (res) => {
             const result = res.result;
             deptSelector.text(" ");
             deptSelector.append(`<option value="" hidden>Seçin</option>`)
@@ -24,7 +24,7 @@ const renderPage = () => {
     
     deptSelector.change(() => {
         let deptID = deptSelector.val();
-        $.get(`http://localhost:3000/api/position/by-department/${deptID}`, (res) => {
+        $.get(`/api/position/by-department/${deptID}`, (res) => {
             const result = res.result;
             posSelector.text(" ");
             posSelector.append(`<option value="" hidden>Seçin</option>`)
@@ -110,11 +110,11 @@ submitBtn.addEventListener("click", () => {
     loading.classList.remove("d-none");
     $.ajax({
         type: "POST",
-        url: "http://localhost:3000/api/employee/add",
+        url: "/api/employee/add",
         data,
         success: (res) => {
             const emp_id = res.emp_id;
-            window.location.href = `http://localhost:3000/employee/emp-files/${emp_id}`;
+            window.location.href = `/employee/emp-files/${emp_id}`;
         }
     }).catch((err) => {
         if (err.responseJSON.message) {

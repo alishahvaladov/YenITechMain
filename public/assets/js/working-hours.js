@@ -9,7 +9,7 @@ const hideLoading = () => {
 
 
 const renderPage = () => {
-    $.get('http://localhost:3000/api/working-hours', (res) => {
+    $.get('/api/working-hours', (res) => {
         const types = res.types;
         const workDateWeekly = res.workDateWeekly;
         let html = "";
@@ -94,7 +94,7 @@ const renderPage = () => {
             item.addEventListener("change", () => {
                 $.ajax({
                     type: "POST",
-                    url: "http://localhost:3000/api/working-hours/update/work-dates",
+                    url: "/api/working-hours/update/work-dates",
                     data: {
                         workDate: item.value
                     },
@@ -117,7 +117,7 @@ saveBtn.addEventListener('click', () => {
     const secondPartTimeForShiftStart = document.querySelector("#secondPartTimeForShiftStart").value;
     const secondPartTimeForShiftEnd = document.querySelector("#secondPartTimeForShiftEnd").value;
 
-    $.post('http://localhost:3000/api/working-hours/update', {
+    $.post('/api/working-hours/update', {
         shiftTypes: [
             {
                 "name": "Tam ştat",

@@ -60,7 +60,7 @@
     const insidentSelect = document.querySelector("#insident");
     $.ajax({
             type: "GET",
-            url: "http://localhost:3000/api/navbar",
+            url: "/api/navbar",
             success: ((res) => {
                 const pages = res.result;
                 let insidentHTML = "<option hidden>Səhifəni seçin</option>";

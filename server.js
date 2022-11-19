@@ -1,6 +1,6 @@
 const passport = require("passport");
 const express = require("express");
-const exphbs = require("express-handlebars");
+const { engine, create } = require("express-handlebars");
 const flash = require("connect-flash");
 const session = require("express-session");
 require("dotenv").config();
@@ -49,19 +49,20 @@ app.use('/employee/files', express.static(path.join(__dirname, './public/employe
 // Initialize Passport
 
 // Set Engine
+const hbs = create({
+    extname: ".hbs",
+    helpers: {
+        compare_if: (val, checker, opts) => {
+            if (val == checker) {
+                return opts.fn(this);
+            }
+        },
+    },
+
+});
 app.engine(
     ".hbs",
-    exphbs({
-        extname: ".hbs",
-        helpers: {
-            compare_if: (val, checker, opts) => {
-                if (val == checker) {
-                    return opts.fn(this);
-                }
-            },
-        },
-
-    })
+    hbs.engine
 );
 app.set("view engine", ".hbs");
 
@@ -120,6 +121,8 @@ const holidayRouter = require("./modules/holidays/router");
 const calendarAPI = require("./api/calendar/api");
 const dashboardAPI = require("./api/dashboard/api");
 const navbarAPI = require("./api/navbar/api");
+const groupRouter = require("./modules/group/router");
+const groupAPI = require("./api/group/api");
 const salaryExcelsApi = require("./api/salary-excels/api");
 const vacationAPI = require("./api/vacation/api");
 const { createSocketUser, removeSocketUser, sendNotification } = require("./socket/socket");
@@ -143,6 +146,7 @@ app.use("/profile", profile);
 app.use("/working-hours", workingHoursRouter);
 app.use("/notification", notification);
 app.use("/holidays", holidayRouter);
+app.use("/groups", groupRouter);
 app.use("/api", empAPI);
 app.use("/api/time-off", timeOffAPI)
 app.use("/api/fprints", fPrintAPI);
@@ -159,6 +163,7 @@ app.use('/api/working-hours', workingHoursAPI);
 app.use('/api/calendar', calendarAPI);
 app.use("/api/dashboard", dashboardAPI);
 app.use("/api/navbar", navbarAPI);
+app.use("/api/groups", groupAPI);
 app.use("/api/salary-excels", salaryExcelsApi);
 app.use("/api/vacation", vacationAPI);
 app.get("/not-found", (req, res) => {

@@ -6,7 +6,7 @@ const loading = document.querySelector(".loading");
 
 
 const renderPage = () => {
-    $.get("http://localhost:3000/api/department", (res) => {
+    $.get("/api/department", (res) => {
         const projects = res.result;
         let html = "";
         console.log(projects);
@@ -28,7 +28,7 @@ const renderPage = () => {
             projectCheckBoxes.forEach(checkedProject => {
                 checkedArray.push(checkedProject.value);
             });
-            $.post("http://localhost:3000/api/department/add-department", {
+            $.post("/api/department/add-department", {
                 departmentName: deptName,
                 projects: checkedArray
             }, (res) => {

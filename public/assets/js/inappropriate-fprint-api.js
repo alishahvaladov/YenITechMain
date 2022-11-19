@@ -15,7 +15,7 @@ const renderInappropriateFPrints = () => {
                 timeInputSubmit.addEventListener("click", () => {
                     const btnValue = timeInputSubmit.value;
                     const inputValue = timeInput.value;
-                    $.get(`http://localhost:3000/api/fprints/update/forgotten-fprints?btnValue=${btnValue}&exit=true&time=${inputValue}`);
+                    $.get(`/api/fprints/update/forgotten-fprints?btnValue=${btnValue}&exit=true&time=${inputValue}`);
                     addTimeModal.classList.remove('d-flex');
                     addTimeModal.classList.add('d-none');
                     loading.classList.add('d-flex');
@@ -41,7 +41,7 @@ const renderInappropriateFPrints = () => {
                 timeInputSubmit.addEventListener("click", () => {
                     const btnValue = timeInputSubmit.value;
                     const inputValue = timeInput.value;
-                    $.get(`http://localhost:3000/api/fprints/update/forgotten-fprints?btnValue=${btnValue}&entrance=true&time=${inputValue}`);
+                    $.get(`/api/fprints/update/forgotten-fprints?btnValue=${btnValue}&entrance=true&time=${inputValue}`);
                     addTimeModal.classList.remove('d-flex');
                     addTimeModal.classList.add('d-none');
                     loading.classList.add('d-flex');
@@ -106,7 +106,7 @@ const renderInappropriateFPrints = () => {
                     }
                 }
                 setTimeout(() => {
-                    $.get(`http://localhost:3000/api/fprints/inappropriate-fprints/${offset}`, (res) => {
+                    $.get(`/api/fprints/inappropriate-fprints/${offset}`, (res) => {
                         let tbody = document.querySelector("tbody");
                         let html = "";
                         const result = res.result;
@@ -139,7 +139,7 @@ const renderInappropriateFPrints = () => {
     }
 
     function renderPage() {
-        $.get("http://localhost:3000/api/fprints/inappropriate-fprints/0", (res) => {
+        $.get("/api/fprints/inappropriate-fprints/0", (res) => {
             const result = res.result;
             let html = "";
             let count = res.count[0].count;
