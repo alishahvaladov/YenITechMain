@@ -575,10 +575,11 @@ module.exports = {
         const parsedEmps = employees.map((emp) => ({ ...emp, timeOffs: timeOffs.filter((tor) => tor.emp_id === emp.id) }));
         return await Promise.all(
           parsedEmps.map(async (emp) => {
+            let vacationSalary = {}
+            let currentMonthTimeOffSalary = 0
             if (emp.timeOffs.length) {
               var workDaysInVacDays = 0;
               for (let tor of emp.timeOffs) {
-                // console.log(tor)
                 const toDate = moment(tor.timeoff_job_start_date).isBefore(endDate) ? tor.timeoff_job_start_date : endDate;
                 const vacationDays = (await calculateWorkDays(tor.timeoff_start_date, toDate))[0].work_days;
                 const vacType = findVacationByKey(tor.timeoff_type.toString())
@@ -588,6 +589,8 @@ module.exports = {
                     vacationDays,
                     toDate
                 });
+                vacationSalary[vacType] = vacSalary.vacationSalary;
+                currentMonthTimeOffSalary += vacSalary.vacationSalary;
                 if(vacType === "unpaid") emp.gross += vacSalary.vacationSalary;
                 workDaysInVacDays += vacationDays;
               }
@@ -597,11 +600,37 @@ module.exports = {
             // todo emp's work days calc.
             // todo Məzuniyyətin faktiki qalıq günləri
             const empWithTaxes = new SalaryCalculator(emp);
+            const workDaysCount = (await calculateWorkDays(startDate, endDate))[0].work_days
+            const calculatedSalary = empWithTaxes.getCalculatedData()
+            const currentMonthGross = calculatedSalary.gross
+            const dailySalaryTimeOff = Object.keys(vacationSalary).length !== 0 ? vacationSalary : 0
+            const totalCostGross = calculatedSalary.gross
+            const overLimitPhoneBill = 0
+            const gymBill = 0, aliment = 0, creditOrMortgage = 0, lateFine = 0, otherFines = 0
+            const totalTaxAndFine = calculatedSalary.empTotalTax + aliment + gymBill + lateFine
+            const totalCompanyTaxes = calculatedSalary.totalTax
+            const lastCost = calculatedSalary.nett
+            
             return {
               id: emp.id,
-              workDaysInVacDays: workDaysInVacDays ?? 0,
+              timeOffDaysCount: workDaysInVacDays ?? 0,
               startDate, endDate,
-              ...empWithTaxes.getCalculatedData(),
+              workDaysCount,
+              dailySalary: Number((calculatedSalary.nett / 30).toFixed(2)),
+              currentMonthGross,
+              dailySalaryTimeOff,
+              currentMonthTimeOffSalary,
+              totalCostGross,
+              overLimitPhoneBill,
+              gymBill,
+              aliment,
+              creditOrMortgage,
+              lateFine,
+              otherFines,
+              totalTaxAndFine,
+              totalCompanyTaxes,
+              lastCost,
+              ...calculatedSalary,
             };
           })
         );
