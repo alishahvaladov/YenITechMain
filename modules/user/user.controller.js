@@ -191,10 +191,12 @@ module.exports = {
             failureFlash: 'Username or password is incorrect'
         })(req, res, next);
     },
-    logout: (req, res) => {
-        req.logout();
-        req.flash("success_msg", "You are logged out");
-        return res.redirect("/login");
+    logout: (req, res, next) => {
+        req.logout(function(err) {
+            if (err) { return next(err) }
+            req.flash("success_msg", "You are logged out");
+            return res.redirect('/login')
+        });
     },
     userDelete: (req, res) => {
         const deleteData = {};
