@@ -72,7 +72,7 @@ const pageFunctions = () => {
             }
             setTimeout(() => {
                 getSearchData();
-                $.post(`http://localhost:3000/api/users/allUsers/${offset}`, {
+                $.post(`/api/users/allUsers/${offset}`, {
                     qEmployee,
                     qUsername,
                     qEmail,
@@ -131,7 +131,7 @@ const pageFunctions = () => {
 const renderPage = () => {
     let html = "";
     getSearchData();
-    $.post("http://localhost:3000/api/users/allUsers/0", {
+    $.post("/api/users/allUsers/0", {
         qEmployee,
         qUsername,
         qEmail,
@@ -238,7 +238,7 @@ const exportToExcel = () => {
     }
     let form = document.createElement('form');
     form.setAttribute("method", method);
-    form.setAttribute("action", "http://localhost:3000/api/users/export-to-excel");
+    form.setAttribute("action", "/api/users/export-to-excel");
  
     for (let key in params) {
        if (params.hasOwnProperty(key)) {

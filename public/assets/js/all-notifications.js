@@ -3,7 +3,7 @@ const pagination = document.querySelector(".pagination");
 const tbody = document.querySelector("tbody");
 
 const renderPage = () => {
-    $.get("http://localhost:3000/api/notification/all-notifications?limit=15&offset=0", (res) => {
+    $.get("/api/notification/all-notifications?limit=15&offset=0", (res) => {
         console.log(res);
         let count = res.count[0].count;
         count = Math.ceil(parseInt(count) / 15);

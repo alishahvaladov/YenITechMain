@@ -79,7 +79,7 @@ const empRemModule = () => {
       $(this).on("click", () => {
          $("body").css("cursor", "progress");
          const id = $(this).val();
-         $.post("http://localhost:3000/api/employee-data", {
+         $.post("/api/employee-data", {
             emp_id: id
          }, (empResult) => {
             const form = $("#remove-form");
@@ -115,7 +115,7 @@ const empEditModule = () => {
       item.addEventListener("click", () => {
          empEditModal.classList.remove('d-none');
          let id = item.value;
-         $.post("http://localhost:3000/api/employee-data", {
+         $.post("/api/employee-data", {
            emp_id: id
          }, (empResult) => {
             const empRes = empResult.result.empRes[0];
@@ -197,7 +197,7 @@ const empEditModule = () => {
             
 
             let projOptions = '';
-            $.get(`http://localhost:3000/api/project/getProject/${id}`, (projRes) => {
+            $.get(`/api/project/getProject/${id}`, (projRes) => {
                for (let i = 0; i < projRes.project.length; i++) {
                   if (empRes.project_id === projRes.project[i].id) {
                      projOptions += `
@@ -213,7 +213,7 @@ const empEditModule = () => {
             });
             
             let deptOptions = '';
-            $.get(`http://localhost:3000/api/department/by-project/${empRes.project_id}`, (res) => {
+            $.get(`/api/department/by-project/${empRes.project_id}`, (res) => {
                const deptRes = res.result;
                for (let i = 0; i < deptRes.length; i++) {
                   if (deptRes[i].id === empRes.department) {
@@ -230,7 +230,7 @@ const empEditModule = () => {
             });
             
             let posOptions = '';
-            $.get(`http://localhost:3000/api/position/by-department/${empRes.department}`, (res) => {
+            $.get(`/api/position/by-department/${empRes.department}`, (res) => {
                const posRes = res.result;
                for (let i = 0; i < posRes.length; i++) {
                   if (posRes[i].id === empRes.position_id) {
@@ -248,7 +248,7 @@ const empEditModule = () => {
             
             projSelector.change(() => {
                let id = projSelector.val();
-               $.get(`http://localhost:3000/api/department/by-project/${id}`, (res) => {
+               $.get(`/api/department/by-project/${id}`, (res) => {
                    const result = res.result;
                    deptSelector.text(" ");
                    deptSelector.append(`<option value="" hidden>Seçin</option>`)
@@ -261,7 +261,7 @@ const empEditModule = () => {
            
            deptSelector.change(() => {
                let deptID = deptSelector.val();
-               $.get(`http://localhost:3000/api/position/by-department/${deptID}`, (res) => {
+               $.get(`/api/position/by-department/${deptID}`, (res) => {
                    const result = res.result;
                    posSelector.text(" ");
                    posSelector.append(`<option value="" hidden>Seçin</option>`)
@@ -341,7 +341,7 @@ const pageFuncs = () => {
          }
          getEmpInps();
          setTimeout(() => {
-            $.post('http://localhost:3000/api/emp-by-page', {
+            $.post('/api/emp-by-page', {
                offset: offset,
                empInpNameVal,
                empInpPhoneVal,
@@ -461,7 +461,7 @@ const renderPage = (render_offset = null) => {
    } else {
       offset = 1; 
    }
-   $.post("http://localhost:3000/api/all-employee", {
+   $.post("/api/all-employee", {
       empInpNameVal,
       empInpPhoneVal,
       empDeptVal,
@@ -703,7 +703,7 @@ empEditApplyBtn.addEventListener("click", () => {
    empUpdateInputs.forEach(item => {
       data[item.name] = item.value;
    });
-   $.post('http://localhost:3000/api/update-employee', {
+   $.post('/api/update-employee', {
       data
    }, (updateResult) => {
       empEditModal.classList.add('d-none');
@@ -734,7 +734,7 @@ const exportToExcel = () => {
    }
    let form = document.createElement('form');
    form.setAttribute("method", method);
-   form.setAttribute("action", "http://localhost:3000/api/download-excel");
+   form.setAttribute("action", "/api/download-excel");
 
    for (let key in params) {
       if (params.hasOwnProperty(key)) {

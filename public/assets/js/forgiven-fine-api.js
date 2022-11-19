@@ -53,7 +53,7 @@ const pageFunctions = () => {
                 }
             }
             setTimeout(() => {
-                $.get('http://localhost:3000/api/fprints/by-page', (res) => {
+                $.get('/api/fprints/by-page', (res) => {
                     let tbody = $("tbody");
                     let trs = "";
                     tbody.text("");
@@ -95,7 +95,7 @@ const pageFunctions = () => {
 }
 
 const renderPage = () => {
-    $.get("http://localhost:3000/api/fine/forgiven-fine/0", (res) => {
+    $.get("/api/fine/forgiven-fine/0", (res) => {
             let forgivenFines = res.result.forgiven_fines;
             console.log(forgivenFines);
             let count = res.result.forgiven_fines_count[0].count;

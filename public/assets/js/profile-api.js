@@ -27,13 +27,13 @@ const loading = document.querySelector(".loading");
 
 
 const renderPage = () => {
-    $.get('http://localhost:3000/api/profile/profile-picture', (result) => {
+    $.get('/api/profile/profile-picture', (result) => {
         const filename = result.filename;
         // const cardPP = document.querySelector("#card-pp");
         // cardPP.src = filename;
     });
 
-    $.get("http://localhost:3000/api/profile", (res) => {
+    $.get("/api/profile", (res) => {
         const profile = res.profile[0];
         console.log(profile);
         username.value = profile.username;

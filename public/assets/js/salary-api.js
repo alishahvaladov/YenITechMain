@@ -28,7 +28,7 @@ const editSalary = () => {
     const editSalaryBtns = document.querySelectorAll(".edit-salary");
     editSalaryBtns.forEach(item => {
         item.addEventListener("click", () => {
-            $.get(`http://localhost:3000/api/salary/get-salary/${item.value}`, (res) => {
+            $.get(`/api/salary/get-salary/${item.value}`, (res) => {
                 const salary = res.salary[0];
                 uPayInput.value = salary.unofficial_pay;
                 grossInput.value = salary.gross;
@@ -95,7 +95,7 @@ const pageFunctions = () => {
                 const uPay = uPaySearchInput.value;
                 const min = minInput.value;
                 const max = maxInput.value;
-                $.post(`http://localhost:3000/api/salary/search`, {
+                $.post(`/api/salary/search`, {
                     emp,
                     uPay,
                     min,
@@ -137,7 +137,7 @@ const search = () => {
     max = maxInput.value;
     const offset = 0;
     let html = "";
-    $.post('http://localhost:3000/api/salary/search', {
+    $.post('/api/salary/search', {
         emp,
         uPay,
         min,
@@ -205,7 +205,7 @@ const renderPage = (renderOffset = null) => {
     } else {
         offset = 1;
     }
-    $.get(`http://localhost:3000/api/salary/all/${offset}`, (res) => {
+    $.get(`/api/salary/all/${offset}`, (res) => {
         const result = res.result.salaries;
         let html = '';
         let count = res.result.count[0].count;
@@ -297,7 +297,7 @@ salaryCancelBtn.addEventListener('click', () => {
 salaryEditApplyBtn.addEventListener("click", () => {
     $.ajax({
         type: "POST",
-        url: `http://localhost:3000/api/salary/update/${salaryEditApplyBtn.value}`,
+        url: `/api/salary/update/${salaryEditApplyBtn.value}`,
         data: {
             uPay: uPayInput.value,
             gross: grossInput.value
@@ -333,7 +333,7 @@ const exportToExcel = () => {
     }
     let form = document.createElement('form');
     form.setAttribute("method", method);
-    form.setAttribute("action", "http://localhost:3000/api/salary/export-all-to-excel");
+    form.setAttribute("action", "/api/salary/export-all-to-excel");
 
     for (let key in params) {
         if (params.hasOwnProperty(key)) {

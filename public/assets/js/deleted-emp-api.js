@@ -70,7 +70,7 @@ const pageFuncs = () => {
           }
           getInputDatas();
           setTimeout(() => {
-             $.post('http://localhost:3000/api/deleted-employees', {
+             $.post('/api/deleted-employees', {
                 offset: offset,
                 qName,
                 qPhoneNumber,
@@ -117,7 +117,7 @@ const pageFuncs = () => {
 
 const renderPage = () => {
     getInputDatas();
-    $.post(`http://localhost:3000/api/deleted-employees`, {
+    $.post(`/api/deleted-employees`, {
         qName,
         qPhoneNumber,
         qDepartment,

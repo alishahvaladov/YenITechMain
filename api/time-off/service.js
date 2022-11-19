@@ -185,7 +185,10 @@ module.exports = {
             timeoff_end_date: data.timeOffEndDate,
             timeoff_job_start_date: data.wStartDate,
             timoff_time: data.toffTime,
+            timeoff_time_start: data.timeoff_time_start,
+            timeoff_time_end: data.timeoff_time_end,
             timoff_time_date: data.toffTimeDate,
+            timeoff_percent: data.timeoff_percent,
             status: 1
         }, {
             logging: false

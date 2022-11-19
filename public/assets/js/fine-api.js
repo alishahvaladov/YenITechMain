@@ -44,7 +44,7 @@ const pageBtnActions = () => {
             resetApprovedBtn.addEventListener("click", () => {
                 loading.classList.remove("d-none");
                 const id = resetApprovedBtn.value;
-                $.get(`http://localhost:3000/api/fine/reset-approved-fine/${id}`, (res) => {
+                $.get(`/api/fine/reset-approved-fine/${id}`, (res) => {
                     setTimeout(() => {
                         let activeClass = document.querySelector('.pagination-active');
                         const offset = activeClass.value;
@@ -59,7 +59,7 @@ const pageBtnActions = () => {
     approveFineBtnS.forEach(item => {
         item.addEventListener("click", () => {
             const btnValue = item.value;
-            $.get(`http://localhost:3000/api/fine/approve-fine?btnValue=${btnValue}`);
+            $.get(`/api/fine/approve-fine?btnValue=${btnValue}`);
             loading.classList.remove("d-none");
             loading.classList.add("d-flex");
             setTimeout(() => {
@@ -138,7 +138,7 @@ const pageFuncs = () => {
           }
           getSearchData();
           setTimeout(() => {
-             $.post(`http://localhost:3000/api/fine?limit=15&offset=${offset}`, {
+             $.post(`/api/fine?limit=15&offset=${offset}`, {
                 qEmployee,
                 qMinuteTotalMin,
                 qMinuteTotalMax,
@@ -229,7 +229,7 @@ const renderPage = (renderOffset = null) => {
     getSearchData();
     $.ajax({
         type: "POST",
-        url: `http://localhost:3000/api/fine?limit=15&offset=${offset}`,
+        url: `/api/fine?limit=15&offset=${offset}`,
         data: {
             qEmployee,
             qMinuteTotalMin,
@@ -399,7 +399,7 @@ const requests = () => {
     approveModalApprove.addEventListener("click", () => {
         let minute = approveModalInput.value;
         let btnValue = approveModalApprove.value;
-        $.get(`http://localhost:3000/api/fine/approve-edited-fine?btnValue=${btnValue}&minute=${minute}`);
+        $.get(`/api/fine/approve-edited-fine?btnValue=${btnValue}&minute=${minute}`);
         loading.classList.remove("d-none");
         loading.classList.add("d-flex");
         approveModal.classList.remove("d-flex");
@@ -412,7 +412,7 @@ const requests = () => {
     });
     warningModalApprove.addEventListener("click", (event) => {
         const btnValue = warningModalApprove.value;
-        $.get(`http://localhost:3000/api/fine/reset-fine?btnValue=${btnValue}`);
+        $.get(`/api/fine/reset-fine?btnValue=${btnValue}`);
         loading.classList.remove("d-none");
         loading.classList.add("d-flex");
         warningModal.classList.remove("d-flex");
@@ -448,7 +448,7 @@ const exportToExcel = () => {
     }
     let form = document.createElement('form');
     form.setAttribute("method", method);
-    form.setAttribute("action", "http://localhost:3000/api/fine/export-to-excel");
+    form.setAttribute("action", "/api/fine/export-to-excel");
  
     for (let key in params) {
        if (params.hasOwnProperty(key)) {

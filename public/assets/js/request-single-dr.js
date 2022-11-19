@@ -8,7 +8,7 @@ const dateToAzVersion = (date) => {
 const renderPage = () => {
     let id = document.querySelector("#id");
     id = id.value;
-    $.get(`http://localhost:3000/api/time-off/approve-requests/director/${id}`, (res) => {
+    $.get(`/api/time-off/approve-requests/director/${id}`, (res) => {
         const filename = res.fileName;
         console.log(filename)
         const result = res.result[0];
@@ -62,12 +62,12 @@ const renderPage = () => {
         rightContainer.innerHTML = rightContHtml;
 
         document.querySelector("#timeOffCancel").addEventListener("click", () => {
-            $.get(`http://localhost:3000/api/time-off/cancel-requests/director/${id}`, (res) => {
+            $.get(`/api/time-off/cancel-requests/director/${id}`, (res) => {
                 localhost.href ="/timeoffrequests";
             });
         });
         document.querySelector("#timeOffApprove").addEventListener("click", () => {
-            $.get(`http://localhost:3000/api/time-off/approve-request/director/${id}`, (res) => {
+            $.get(`/api/time-off/approve-request/director/${id}`, (res) => {
                 localhost.href ="/timeoffrequests";
             });
         });

@@ -37,7 +37,7 @@ const loading = document.querySelector(".loading");
 
 const renderPage = () => {
     const getUserData = () => {
-        $.get('http://localhost:3000/api/profile/user-data', (res) => {
+        $.get('/api/profile/user-data', (res) => {
             const employee = res.employee[0];
             empDataInput.value = `${employee.first_name} ${employee.last_name} ${employee.father_name}`;
             projectInput.value = employee.projName;
@@ -177,7 +177,7 @@ const renderPage = () => {
     })
     
     applyBtn.addEventListener('click', () => {
-        $.post('http://localhost:3000/api/profile/request-time-off', {
+        $.post('/api/profile/request-time-off', {
             timeOffType: timeOffType.value,
             toffTime: toffTime.value,
             timeOffStartDate: timeOffStartDate.value,

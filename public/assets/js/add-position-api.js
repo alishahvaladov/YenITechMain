@@ -9,7 +9,7 @@ const loading = document.querySelector(".loading");
 
 const renderPage = () => {
 
-    $.get("http://localhost:3000/api/position", (res) => {
+    $.get("/api/position", (res) => {
         const departments = res.result;
         let html = "";
         console.log(departments);
@@ -31,14 +31,14 @@ const renderPage = () => {
             departmentCheckBoxes.forEach(checkedProject => {
                 checkedArray.push(checkedProject.value);
             });
-            $.post("http://localhost:3000/api/position/add-position", {
+            $.post("/api/position/add-position", {
                 posName: posName,
                 departments: checkedArray
             }, (res) => {
                 console.log(res);
                 $(".success-modal").fadeIn();
                 setTimeout(() => {
-                    location.href = "http://localhost:3000/positions";
+                    location.href = "/positions";
                 }, 700);
             }).catch(e => {
                 errorMessage.innerHTML = e.responseJSON.message;

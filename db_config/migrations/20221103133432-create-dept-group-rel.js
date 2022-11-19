@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('DeptPosRels', {
+    await queryInterface.createTable('DeptGroupRels', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      position_id: {
+      group_id: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
@@ -27,6 +27,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('DeptPosRels');
+    await queryInterface.dropTable('DeptGroupRels');
   }
 };
