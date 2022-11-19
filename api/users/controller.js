@@ -1,4 +1,4 @@
-const { getUser, updatePassword, getAllUsers, getDeletedUsers, getDeleterUser, getUsersForExport, getUserRoles } = require("./service");
+const { getUser, updatePassword, getAllUsers, getDeletedUsers, getDeleterUser, getUsersForExport, getUserRoles, updateUserGroup, removeUserFromGroup, getUserGroup } = require("./service");
 const jsonConfig = require("../../config/config.json");
 const excelJS = require("exceljs");
 const path = require("path");
@@ -184,5 +184,71 @@ module.exports = {
                 message: "Ups... Something went wrong"
             });
         }
-    }
+    },
+    updateUserGroup: async function (req, res) {
+        try {
+          const { userId, groupId } = req.body;
+          if (!userId || !groupId) {
+            return res.status(400).send({
+              success: false,
+              message: "User id and group id are required",
+            });
+          }
+          await updateUserGroup(userId, groupId);
+          return res.status(201).send({
+            success: true,
+            message: "User group updated successfully",
+          })
+        } catch (err) {
+          console.log(err);
+          return res.status(500).send({
+            success: false,
+            message: "Ups... Something went wrong",
+          });
+        }
+      },
+      removeUserGroup: async function (req, res) {
+        try {
+          const { userId, groupId } = req.body;
+          if (!userId || !groupId) {
+            return res.status(400).send({
+              success: false,
+              message: "User id and group id are required",
+            });
+          }
+          await removeUserFromGroup(userId, groupId);
+          return res.status(204).send({
+            success: true,
+            message: "User successfully removed from group",
+          })
+        } catch (err) {
+          console.log(err);
+          return res.status(500).send({
+            success: false,
+            message: "Ups... Something went wrong",
+          });
+        }
+      },
+      getUserGroup: async function (req, res) {
+        try {
+          const { id } = req.params;
+          if (!id) {
+            return res.status(400).send({
+              success: false,
+              message: "User id is required",
+            });
+          }
+          const result = await getUserGroup(id);
+          return res.status(200).send({
+            success: true,
+            result,
+          });
+        } catch (err) {
+          console.log(err);
+          return res.status(500).send({
+            success: false,
+            message: "Ups... Something went wrong",
+          });
+        }
+      }
 }
