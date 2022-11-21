@@ -80,6 +80,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      group_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       project_id: {
         type: Sequelize.INTEGER,
         allowNull: false

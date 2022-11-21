@@ -1,5 +1,6 @@
 const projSelector = $("#project_id");
 const deptSelector = $("#department_id");
+const groupSelector = $("#group_id");
 const posSelector = $("#position_id");
 const shiftTypeSelect = document.querySelector("#select_shift_type");
 const shiftAuto = document.querySelector(".shift-auto");
@@ -24,7 +25,19 @@ const renderPage = () => {
     
     deptSelector.change(() => {
         let deptID = deptSelector.val();
-        $.get(`/api/position/by-department/${deptID}`, (res) => {
+        $.get(`/api/groups/all/${deptID}`, (res) => {
+            const result = res.result;
+            groupSelector.text(" ");
+            groupSelector.append(`<option value="" hidden>Seçin</option>`)
+            for (let i = 0; i < result.length; i++) {
+                groupSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
+            }
+        });
+    });
+
+    groupSelector.change(() => {
+        const groupID = groupSelector.val();
+        $.get(`/api/position/by-group/${groupID}`, (res) => {
             const result = res.result;
             posSelector.text(" ");
             posSelector.append(`<option value="" hidden>Seçin</option>`)

@@ -1,0 +1,54 @@
+<div class="card flex-fill">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Əməkdaşlar</h5>
+    </div>
+    <h3 class="text-center">Əməkdaşlar</h3>
+    <table class="table table-hover my-0" style="margin: 0 !important;">
+        <thead>
+            <tr> 
+                <th>Adı</th>
+                <th>Spesifikasiyaları</th>
+                <th></th>
+            </tr>
+            <tr>
+                <th><input class="form-control" type="text" name="qName" id="qName"></th>
+                <th><input class="form-control" type="text" name="qSpec" id="qSpec"></th>
+                <th>
+                    <a href="/device-management/add" class="btn btn-outline-success">Əlavə Et</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+           
+        </tbody>
+    </table>
+    <div class="pagination d-flex justify-content-center">
+        <div class="pagination-container w-50 d-flex justify-content-between">
+            <button class="pagination-item btn btn-outline-dark btn-sm pagination-active disabled">1</button>
+        </div>
+    </div>
+</div>
+
+<div class="device-edit-modal position-fixed top-0 bg-dark bg-opacity-50 d-none d-flex justify-content-center align-items-center" style="left: 0; height: 100vh; width: 100vw;">
+    <div class="device-edit-modal-container w-50 h-auto">
+        <div class="card flex-fill">
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label" for="deviceName">Device Name</label>
+                    <input class="form-control" type="text" name="deviceName" id="deviceName">
+                </div>
+            </div>
+            <div class="card-body specs-edit-container">
+                
+            </div>
+            <div class="card-body buttons">
+                <button class="btn btn-outline-danger" id="cancelBtn">Ləğv Et</button>
+                <button class="btn btn-primary float-end" id="submitEditBtn">Yadda Saxla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/device-management.js"></script>
