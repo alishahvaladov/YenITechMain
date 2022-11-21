@@ -16,8 +16,8 @@ module.exports = {
       .then((res) => cb(null, res))
       .catch((err) => cb(err, null));
   },
-  sendMail(to, subject, body) {
-    const mail = prepareEmail(to, subject, body);
+  sendEmail(to, subject, body, attachments = []) {
+    const mail = prepareEmail(to, subject, body, attachments);
     transporter.sendMail(mail, function (error, info) {
       if (error) {
         console.log(error);

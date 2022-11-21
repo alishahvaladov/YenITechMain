@@ -1,4 +1,4 @@
-const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB, search, searchSalaryByMonts, getSalariesForExport, getSalaryByID, updateSalary, getSalariesForExportAll, getCalculatedSalary, getCalculatedSalaryTest } = require("./service");
+const { getFines, getSalary, getSalaryByMonthByEmpID, getTimeOffs, getEmployeeExperience, getSalariesByMonth, getMonthlyWorkingDays, addCalculatedGrossToDB, search, searchSalaryByMonts, getSalariesForExport, getSalaryByID, updateSalary, getSalariesForExportAll, getCalculatedSalary } = require("./service");
 const jsDateF = new Date();
 const month = jsDateF.getMonth();
 const year = jsDateF.getFullYear();
@@ -6,22 +6,25 @@ const date = jsDateF.getDate();
 const excelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
-const axios = require("axios");
-const qs = require('qs');
 
-
-// getCalculatedSalaryTest().then(async (d) => {
-//   const filtered = d.filter((e, index) => e.gross > 0);
+// getCalculatedSalary().then(async (d) => {
+//   const filtered = d.filter((e) => e.gross > 0);
 //   const oneOfThem = filtered[1];
-//   console.log(filtered)
+// //   console.log(filtered)
 //   console.log(oneOfThem)
 
-//   axios.post("http://localhost:5000/pay-slip/download", qs.stringify(oneOfThem))
-//     .then((res) => {
-//     fs.writeFileSync(path.join(__dirname, "test.docx"), Buffer.from(res.data, "base64"));
-//   }).catch(console.log)
-// //   console.log(JSON.stringify(oneOfThem));
+// //   axios.post("http://localhost:5000/pay-slip/download", qs.stringify(oneOfThem))
+// //     .then((res) => {
+// //         console.log(res.data)
+// //     // fs.writeFileSync(path.join(__dirname, "test.docx"), Buffer.from(res.data, "base64"));
+// //   }).catch(console.log)
+// // //   console.log(JSON.stringify(oneOfThem));
 // });
+
+
+// setTimeout(async () => {
+//     createSalaryRecordAndSendEmail().then(console.log)
+// }, 5000);
 
 function weekends( m, y ) {
     let count = {};

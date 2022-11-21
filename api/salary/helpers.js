@@ -1,3 +1,6 @@
+const qs = require("qs");
+const axios = require("axios");
+
 const calculationType = {
   nonOilS: {
     // ? S = sector
@@ -60,20 +63,23 @@ const calculationType = {
 };
 
 class SalaryCalculator {
-  constructor({ id, fullname, fin, department, position, j_start_date, gross, work_hours, actual_hours, working_days, group }, calcType = "nonOilS") {
+  constructor(
+    { id, fullname, fin, department, position, j_start_date, gross, work_hours, actual_hours, working_days, group },
+    calcType = "nonOilS"
+  ) {
     this.id = id;
     this.group = group;
     this.fullname = fullname;
     this.fin = fin;
     this.position = position;
     this.department = department;
-    this.joinDate = j_start_date
+    this.joinDate = j_start_date;
     this.gross = gross;
     this.work_hours = work_hours;
     this.actual_hours = actual_hours;
     this.empTotalTax = 0;
     this.totalTax = 0;
-    this.working_days = working_days
+    this.working_days = working_days;
     this.calcType = calcType;
     this.calculationType = calculationType[calcType];
   }
@@ -182,7 +188,12 @@ class SalaryCalculator {
     };
   }
 }
+async function getPayslipDocxBase64(userData) {
+  const { data } = await axios.post("http://localhost:5000/pay-slip/download", qs.stringify(userData))
+  return data;
+}
 
 module.exports = {
   SalaryCalculator,
+  getPayslipDocxBase64,
 };
