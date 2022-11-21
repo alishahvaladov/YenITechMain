@@ -7,6 +7,8 @@ require("dotenv").config();
 const path = require("path");
 const cors = require("cors");
 const MySQLStore = require('express-mysql-session')(session);
+const { Server } = require("socket.io");
+const http = require('http');
 
 const app = express();
 
@@ -20,14 +22,15 @@ const options = {
 }
 
 const sessionStore = new MySQLStore(options);
-
-app.use(session({
+const sessionMiddleware = session({
     key: 'name',
     secret: process.env.COOKIE_SECRET,
     store: sessionStore,
     resave: false,
     saveUninitialized: false
-}));
+})
+
+app.use(sessionMiddleware);
 
 
 require("./modules/auth/passport")(passport);
@@ -123,6 +126,9 @@ const groupAPI = require("./api/group/api");
 const deviceManagementAPI = require("./api/device-management/api");
 const salaryExcelsApi = require("./api/salary-excels/api");
 const vacationAPI = require("./api/vacation/api");
+const { createSocketUser, removeSocketUser, sendNotification } = require("./socket/socket");
+const { getAllNotifications } = require("./api/notifications/service");
+const accessGroupApi = require("./api/access-groups/api");
 
 
 // Routers
@@ -163,6 +169,7 @@ app.use("/api/groups", groupAPI);
 app.use("/api/salary-excels", salaryExcelsApi);
 app.use("/api/vacation", vacationAPI);
 app.use("/api/devices", deviceManagementAPI);
+app.use("/api/access-groups", accessGroupApi);
 app.get("/not-found", (req, res) => {
     res.render("404");
 });
@@ -178,6 +185,46 @@ app.get("/mehdi-mammadzada", (req, res) => {
     return res.render("/mehdi-mammadzada");
 });
 
+const server = http.createServer(app);
+
+const io = require("./socket/socket")
+  .init(server)
+  .use((socket, next) => {
+    sessionMiddleware(socket.request, {}, next);
+  });
+
+io.on("connection", async (socket) => {
+  const userId = socket.request?.session?.passport?.user || null;
+  if (!userId) return socket.disconnect();
+
+  createSocketUser(userId, socket.id);
+  console.log(`User ${userId} connected: ${socket.id}`);
+
+  let {
+    count: [{ count: notificationCount }],
+  } = await getAllNotifications({ userId });
+
+  socket.on("disconnect", () => {
+    removeSocketUser(userId);
+    console.log(`User ${userId} disconnected: ${socket.id}`);
+  });
+
+  io.to(socket.id).emit("notification", { notificationCount });
+
+  // ! test for socket connection
+  socket.on("msg", (data) => {
+    sendNotification([1,2,3], {
+        "header": "Salam Dunya", 
+        "description": "Hello Ali",
+        "created_by": 35,
+        "belongs_to": 35,
+        "belongs_to_role": 1,
+        "url": null,
+        "importance": 1
+    }, true);
+  });
+});
+
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => console.log(`Server is running on PORT ${port}`));
+server.listen(port, () => console.log(`Server is running on PORT ${port}`));

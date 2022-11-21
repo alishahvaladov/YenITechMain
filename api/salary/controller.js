@@ -7,13 +7,18 @@ const excelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
 const axios = require("axios");
+const qs = require('qs');
+
 
 // getCalculatedSalaryTest().then(async (d) => {
-//   const filtered = d.filter((e) => e);
-//   const oneOfThem = filtered[0];
+//   const filtered = d.filter((e, index) => e.gross > 0);
+//   const oneOfThem = filtered[1];
+//   console.log(filtered)
 //   console.log(oneOfThem)
-//   axios.post("http://10.30.1.69:5005/pay-slip/download", oneOfThem ).then((res) => {
-//     console.log(res)
+
+//   axios.post("http://localhost:5000/pay-slip/download", qs.stringify(oneOfThem))
+//     .then((res) => {
+//     fs.writeFileSync(path.join(__dirname, "test.docx"), Buffer.from(res.data, "base64"));
 //   }).catch(console.log)
 // //   console.log(JSON.stringify(oneOfThem));
 // });

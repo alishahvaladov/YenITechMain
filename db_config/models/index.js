@@ -38,4 +38,17 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+// ! TODO: uncomment this line when you deploy to production
+// const initialRights = ["create", "read", "update", "delete"];
+// const entities = Object.keys(db.sequelize.models);
+// entities.forEach((entity) => {
+//   initialRights.forEach((right) => {
+//     db.sequelize.models.Right.findOne({ where: { name: `${entity}_${right}` } }).then((isExist) => {
+//       if (!isExist) {
+//         db.sequelize.models.Right.create({ name: `${entity}_${right}` });
+//       }
+//     });
+//   });
+// });
+
 module.exports = db;

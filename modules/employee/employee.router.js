@@ -17,7 +17,7 @@ const upload = require("./uplod-file-middleware");
 const addEmpUpload = require("./emp-upload-middleware");
 const express = require("express");
 const router = express.Router();
-const { hr, super_admin, checkRoles, audit, ensureActivated, ensureAuthenticated } = require("../auth/auth");
+const { hr, super_admin, checkRoles, audit, ensureActivated, ensureAuthenticated, checkGroupAndRoles } = require("../auth/auth");
 
 
 
@@ -25,6 +25,7 @@ router.get("/add-employee", hr, renderAddEmployee);
 
 
 router.get('/delete/:id', super_admin, checkRoles, deleteEmployee);
+// router.get("/", ensureAuthenticated, checkGroupAndRoles("Employee_read"), getEmployees);
 router.get("/", ensureActivated, ensureAuthenticated, getEmployees);
 // router.get("/update/:id", hr, getEmployee);
 router.post("/add-employee", hr, checkRoles, addEmployee);
