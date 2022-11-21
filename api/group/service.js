@@ -1,5 +1,5 @@
 const { QueryTypes } = require("sequelize");
-const { Group, sequelize } = require("../../db_config/models");
+const { Group, sequelize, DeptGroupRel } = require("../../db_config/models");
 
 module.exports = {
     addGroup: (data, cb) => {
@@ -38,6 +38,42 @@ module.exports = {
             logging: false,
             type: QueryTypes.SELECT,
             replacements
+        });
+    },
+    addDeptGroupRels: (data, cb) => {
+        DeptGroupRel.create({
+            department_id: data.department_id,
+            group_id: data.group_id
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        })
+    },
+    checkIfDepartmentExists: async (id) => {
+        return await sequelize.query(`
+            SELECT * FROM Departments
+            WHERE id = :id
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                id
+            }
+        })
+    },
+    getAllGroupsByDepartment: async (department_id) => {
+        let query = "SELECT g.* FROM `Groups` as g";
+        query += `
+            LEFT JOIN DeptGroupRels as dgr ON g.id = dgr.group_id
+            WHERE dgr.department_id = :department_id
+        `
+        return await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                department_id
+            }
         });
     }
 }

@@ -33,7 +33,6 @@ module.exports = {
     getGivenSalariesByMonths: async (req, res) => {
         try {
             const result = await getGivenSalariesByMonths(year);
-            console.log(year)
             return res.status(200).send({
                 success: true,
                 result

@@ -1,4 +1,4 @@
-const departmentsDiv = document.querySelector(".departments-checkbox");
+const groupsDiv = document.querySelector(".departments-checkbox");
 const submitPositionBtn = document.querySelector("#submitPosition");
 const inputPassword4 = document.querySelector("#name");
 const successModal = document.querySelector(".success-modal");
@@ -10,30 +10,29 @@ const loading = document.querySelector(".loading");
 const renderPage = () => {
 
     $.get("/api/position", (res) => {
-        const departments = res.result;
+        const groups = res.result;
         let html = "";
-        console.log(departments);
-        departments.forEach(department => {
+        console.log(groups);
+        groups.forEach(group => {
             html += `
                 <div class="project-checbox-list w-25 d-flex justify-content-center align-items-center"> 
-                    <input class="checkbox-list" type="checkbox" value="${department.id}" id="${department.generatedId}">
-                    <label class="mx-2" for="${department.generatedId}">${department.name}</label>
+                    <input class="checkbox-list" type="checkbox" value="${group.id}" id="${group.generatedId}">
+                    <label class="mx-2" for="${group.generatedId}">${group.name}</label>
                 </div>
             `
         });
-        departmentsDiv.innerHTML = html;
+        groupsDiv.innerHTML = html;
         
         submitPositionBtn.addEventListener("click", () => {
             let checkedArray = [];
-            const departmentCheckBoxes = document.querySelectorAll(".checkbox-list:checked");
+            const groupCheckBoxes = document.querySelectorAll(".checkbox-list:checked");
             let posName = inputPassword4.value;
-            console.log(checkedArray.length);
-            departmentCheckBoxes.forEach(checkedProject => {
-                checkedArray.push(checkedProject.value);
+            groupCheckBoxes.forEach(checkedGroup => {
+                checkedArray.push(checkedGroup.value);
             });
             $.post("/api/position/add-position", {
                 posName: posName,
-                departments: checkedArray
+                groups: checkedArray
             }, (res) => {
                 console.log(res);
                 $(".success-modal").fadeIn();
