@@ -26,6 +26,46 @@ module.exports = {
     addDevices: (req, res) => {
         try {
             const body = {};
+
+            const { name, specs } = req.body;
+
+            if (!name || name === "") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please insert device name"
+                });
+            }
+
+            if (!specs || specs.length < 1 || specs === "") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please provide at least one specification"
+                });
+            }
+
+            if (Object.keys(req.body)[0] !== "name") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please check reliability of data"
+                });
+            }
+
+            if (Object.keys(req.body)[1] !== "specs") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please check reliability of data"
+                });
+            }
+
+            for (const value of Object.values(specs)) {
+                if (typeof(value) === "object") {
+                    return res.status(400).send({
+                        success: false,
+                        message: "Please provide valid data structure"
+                    });
+                }
+            }
+
             body.json_string = JSON.stringify(req.body);
 
             addDevices(body, (err, result) => {
@@ -53,12 +93,49 @@ module.exports = {
     },
     updateDevice: async (req, res) => {
         try {
-            const body = JSON.stringify(req.body);
-            const { id } = req.query;
             const data = {};
 
+            const { name, specs } = req.body;
+            const { id } = req.query;
+            if (!name || name === "") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please insert device name"
+                });
+            }
+
+            if (!specs || specs.length < 1 || specs === "") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please provide at least one specification"
+                });
+            }
+
+            if (Object.keys(req.body)[0] !== "name") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please check reliability of data"
+                });
+            }
+
+            if (Object.keys(req.body)[1] !== "specs") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please check reliability of data"
+                });
+            }
+
+            for (const value of Object.values(specs)) {
+                if (typeof(value) === "object") {
+                    return res.status(400).send({
+                        success: false,
+                        message: "Please provide valid data structure"
+                    });
+                }
+            }
+
             data.id = id;
-            data.json_string = body;
+            data.json_string = JSON.stringify(req.body);
 
             updateDevice(data, (err, result) => {
                 if (err) {
@@ -74,6 +151,32 @@ module.exports = {
             });
 
         } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    getDevicesByID: async (req, res) => {
+        try {
+            const { id } = req.query;
+
+            const device = await getDeviceById(id);
+
+            if (device.length < 1) {
+                return res.status(400).send({
+                    success: false,
+                    message: "This device cannot found"
+                });
+            }
+
+            return res.status(200).send({
+                success: true,
+                device
+            });
+
+        } catch (err) {
             console.log(err);
             return res.status(500).send({
                 success: false,

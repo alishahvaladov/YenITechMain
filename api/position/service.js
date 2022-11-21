@@ -2,12 +2,6 @@ const { sequelize, Position, PosGroupRel } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
 
 module.exports = {
-    getGroupsForPositions: async () => {
-        return await sequelize.query("SELECT * FROM `Groups`", {
-            logging: false,
-            type: QueryTypes.SELECT
-        });
-    },
     addPosition: (data, cb) => {
         Position.create({
             user_id: data.user_id,
@@ -48,7 +42,7 @@ module.exports = {
             SELECT pos.* FROM Positions as pos
             LEFT JOIN PosGroupRels as pgr ON pgr.position_id = pos.id
             WHERE pos.deletedAt IS NULL
-            AND pgr.department_id = :groupID
+            AND pgr.group_id = :groupID
         `, {
             logging: false,
             type: QueryTypes.SELECT,
@@ -114,7 +108,7 @@ module.exports = {
             }
         });
 
-        result.dept_pos = await sequelize.query(`
+        result.group_pos = await sequelize.query(`
             SELECT pgr.* FROM Positions AS pos
             LEFT JOIN PosGroupRels AS pgr ON pgr.position_id = pos.id
             WHERE pos.deletedAt IS NULL
@@ -134,23 +128,23 @@ module.exports = {
 
         return result;
     },
-    getDepartmentForPositions: async (data) => {
+    getGroupsForPositions: async (data) => {
         return await sequelize.query(`
-            SELECT * FROM DeptPosRels
-            WHERE department_id = :department_id
+            SELECT * FROM PosGroupRels
+            WHERE group_id = :group_id
             AND position_id = :position_id
         `, {
             type: QueryTypes.SELECT,
             logging: false,
             replacements: {
-                department_id: data.department_id,
-                position_id: data.position_id
+                position_id: data.position_id,
+                group_id: data.group_id
             }
         });
     },
     insertDepartmentForPosition: (data, cb) => {
-        DeptPosRel.create({
-            department_id: data.department_id,
+        PosGroupRel.create({
+            group_id: data.group_id,
             position_id: data.position_id
         }, {
             logging: false
@@ -161,9 +155,9 @@ module.exports = {
         });
     },
     deleteDepartmentForPosition: (data, cb) => {
-        DeptPosRel.destroy({
+        PosGroupRel.destroy({
             where: {
-                department_id: data.department_id,
+                group_id: data.group_id,
                 position_id: data.position_id
             }
         }).then((res) => {

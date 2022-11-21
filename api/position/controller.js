@@ -153,7 +153,7 @@ module.exports = {
                 success: true,
                 name: result.name,
                 groups: result.groups,
-                dept_pos: result.dept_pos
+                group_pos: result.group_pos
             });
         } catch (err) {
             console.log(err);
@@ -202,7 +202,7 @@ module.exports = {
     updateDeptPosRels: async (req, res) => {
         try {
             let position_id = req.query.position_id;
-            let department_id =req.query.department_id;
+            let group_id = req.query.group_id;
             const data = {};
 
             if (isNaN(parseInt(position_id))) {
@@ -212,7 +212,7 @@ module.exports = {
                 });
             }
 
-            if(isNaN(parseInt(department_id))) {
+            if(isNaN(parseInt(group_id))) {
                 return res.status(400).send({
                     success: false,
                     message: "Department ID must be a number"
@@ -220,9 +220,9 @@ module.exports = {
             }
 
             data.position_id = parseInt(position_id);
-            data.department_id = parseInt(department_id);
+            data.group_id = parseInt(group_id);
 
-            const result = await getDepartmentForPositions(data);
+            const result = await getGroupsForPositions(data);
 
             if (result.length > 0) {
                 deleteDepartmentForPosition(data, (err, result) => {

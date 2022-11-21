@@ -1,4 +1,4 @@
-const { addGroup, getDepartmentsForGroups, getGroups, checkIfDepartmentExists, addDeptGroupRels } = require("./service");
+const { addGroup, getDepartmentsForGroups, getGroups, checkIfDepartmentExists, addDeptGroupRels, getAllGroupsByDepartment } = require("./service");
 
 module.exports = {
     addGroup: (req, res) => {
@@ -111,6 +111,23 @@ module.exports = {
             return res.status(500).send({
                 success: false,
                 message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    getAllGroupsByDepartment: async (req, res) => {
+        try {
+            const { department_id } = req.params;
+            const result = await getAllGroupsByDepartment(department_id);
+
+            return res.status(200).send({
+                success: true,
+                result
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong"
             });
         }
     }

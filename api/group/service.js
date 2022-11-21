@@ -61,5 +61,19 @@ module.exports = {
                 id
             }
         })
+    },
+    getAllGroupsByDepartment: async (department_id) => {
+        let query = "SELECT g.* FROM `Groups` as g";
+        query += `
+            LEFT JOIN DeptGroupRels as dgr ON g.id = dgr.group_id
+            WHERE dgr.department_id = :department_id
+        `
+        return await sequelize.query(query, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                department_id
+            }
+        });
     }
 }
