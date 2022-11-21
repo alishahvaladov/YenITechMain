@@ -108,6 +108,7 @@ const fPrintAPI = require("./api/fprints/api");
 const fine = require("./modules/fine/router");
 const fineAPI = require("./api/fine/api");
 const profile = require("./modules/profile/router");
+const deviceManagement = require("./modules/device-management/router");
 const profileAPI = require("./api/profile/api");
 const salaryAPI = require("./api/salary/api");
 const userAPI = require("./api/users/api");
@@ -149,6 +150,7 @@ app.use("/working-hours", workingHoursRouter);
 app.use("/notification", notification);
 app.use("/holidays", holidayRouter);
 app.use("/groups", groupRouter);
+app.use("/device-management", deviceManagement)
 app.use("/api", empAPI);
 app.use("/api/time-off", timeOffAPI)
 app.use("/api/fprints", fPrintAPI);

@@ -12,6 +12,12 @@
     font-family: "Exo 2 Regular";
     src: url("/assets/fonts/Exo2/static/Exo2-Regular.ttf");
 }
+
+@font-face {
+    font-family: "Exo 2 Bold";
+    src: url("/assets/fonts/Exo2/static/Exo2-Bold.ttf");
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -47,6 +53,10 @@ h6 {
 
 .bold {
     font-weight: bold;
+}
+
+.exo2-bold {
+    font-family: "Exo 2 Bold" !important;
 }
 
 .dashboard-left {

@@ -13,7 +13,7 @@ const renderPage = () => {
     $.get(`/api/position/position-by-id/${id}`, (res) => {
         positionNameInput.value = res.name[0].name;
         const groups = res.groups;
-        const deptPosRel = res.dept_pos;
+        const groupPosRel = res.group_pos;
         let html = "";
         groups.forEach(group => {
             html += `
@@ -25,15 +25,15 @@ const renderPage = () => {
         });
 
         departmentsDiv.innerHTML = html;
-        deptPosRel.forEach(deptPos => {
+        groupPosRel.forEach(groupPos => {
             const checkBoxLists = document.querySelectorAll(".checkbox-list");
             checkBoxLists.forEach(checkBoxList => {
-                if (parseInt(deptPos.department_id) === parseInt(checkBoxList.value)) {
+                if (parseInt(groupPos.group_id) === parseInt(checkBoxList.value)) {
                     checkBoxList.checked = true;
                 }
                 checkBoxList.addEventListener("click", () => {
-                    const department_id = checkBoxList.value;
-                    $.get(`/api/position/update/department?position_id=${id}&department_id=${department_id}`)
+                    const group_id = checkBoxList.value;
+                    $.get(`/api/position/update/department?position_id=${id}&group_id=${group_id}`);
                 });
             });
         });
