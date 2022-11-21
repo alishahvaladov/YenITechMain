@@ -1,4 +1,4 @@
-const { Notification, sequelize} = require("../../db_config/models");
+const { Notification, User, sequelize} = require("../../db_config/models");
 const { QueryTypes } = require('sequelize');
 
 module.exports = {
@@ -56,19 +56,22 @@ module.exports = {
 
         return result;
     },
-    getAllNotifications: async (user_role, limit, offset) => {
+    getAllNotifications: async ({ user_role, userId }, limit = 15, offset = 0) => {
         const result = {};
+
+        if(!user_role) user_role = (await User.findByPk(userId)).role;
 
         result.notifications = await sequelize.query(`
             SELECT description, header, id, importance, seen, url, createdAt FROM Notifications
-            WHERE belongs_to_role = :user_role
-            OR :user_role = 1
+            WHERE belongs_to_role = :user_role OR belongs_to = :userId
+            ORDER BY createdAt DESC
             LIMIT :limit OFFSET :offset
         `, {
             logging: false,
             type: QueryTypes.SELECT,
             replacements: {
                 user_role,
+                userId,
                 limit,
                 offset
             }
@@ -76,16 +79,29 @@ module.exports = {
 
         result.count = await sequelize.query(`
             SELECT COUNT(*) AS count FROM Notifications
-            WHERE belongs_to_role = :user_role
-            OR :user_role = 1
+            WHERE belongs_to_role = :user_role OR belongs_to = :userId
         `, {
             type: QueryTypes.SELECT,
             logging: false,
             replacements: {
-                user_role
+                user_role,
+                userId
             }
         });
 
         return result;
+    },
+    getNotificationCount: async (user_role, userId) => {
+        result.count = await sequelize.query(`
+          SELECT COUNT(*) AS count FROM Notifications
+          WHERE belongs_to_role = :user_role OR belongs_to = :userId
+        `, {
+            type: QueryTypes.SELECT,
+            logging: false,
+            replacements: {
+                user_role,
+                userId
+            }
+        });
     }
 }

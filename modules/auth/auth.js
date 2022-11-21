@@ -1,4 +1,5 @@
 const socket = require('../socket/socket');
+const { getUserGroup } = require('../../api/users/service');
 
 module.exports = {
     super_admin: (req, res, next) => {
@@ -85,6 +86,7 @@ module.exports = {
     ensureAuthenticated: (req, res, next) => {
         if(req.isAuthenticated()) {
             req.roleAuthenticated = true;
+            // console.log(req.user)
             return next();
         }
         req.flash("error_msg", "Please Log In");
@@ -111,5 +113,18 @@ module.exports = {
             success: false,
             message: "Forbidden URL!"
         });
-    }
+    },
+    checkGroupAndRoles: (dynamicRight) => {
+        return (req, res, next) => {
+            const { id, role } = req.user;
+            getUserGroup(id).then(groupsAndRights => {
+                const hasAccess = groupsAndRights.some(gAndR => gAndR.rights.includes(dynamicRight))
+                if (hasAccess || role === 1) {
+                    return next();
+                } else {
+                    return res.status(403).send("You don't have access to this resource");
+                }
+            })
+        };
+    },
 }
