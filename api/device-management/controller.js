@@ -1,4 +1,4 @@
-const { getDevices, addDevices, getDeviceById, updateDevice } = require("./service");
+const { getDevices, addDevices, getDeviceById, updateDevice, deleteDevice } = require("./service");
 
 module.exports = {
     getDevices: async (req, res) => {
@@ -177,6 +177,38 @@ module.exports = {
             });
 
         } catch (err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    deleteDevice: (req, res) => {
+        try {
+            const { id } = req.query;
+
+            if (!id || id === "") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please choose device to delete"
+                });
+            }
+
+            deleteDevice(id, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(400).send({
+                        success: false,
+                        message: "This device not found please try again"
+                    });
+                }
+                return res.status(200).send({
+                    success: true,
+                    message: "Device has been deleted"
+                });
+            })
+        } catch(err) {
             console.log(err);
             return res.status(500).send({
                 success: false,

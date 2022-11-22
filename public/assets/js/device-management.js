@@ -6,6 +6,8 @@ const header = document.querySelector(".device-name-header");
 const cancelBtn = document.querySelector("#cancelBtn");
 const submitEditBtn = document.querySelector("#submitEditBtn");
 const deviceName = document.querySelector("#deviceName");
+const inputAddBtn = document.querySelector("#inputAddBtn");
+const inputRemoveBtn = document.querySelector("#inputRemoveBtn");
 
 const renderPage = () => {
     $.get("/api/devices?offset=0", (res) => {
@@ -26,6 +28,7 @@ const renderPage = () => {
                     <td>${specHTML}</td>
                     <td>
                         <button class="btn btn-secondary edit-btn" value=${device.id}>Edit</button>
+                        <button class="btn btn-danger delete-btn" value=${device.id}>Delete</button>
                     </td>
                 </tr>
             `;
@@ -34,6 +37,7 @@ const renderPage = () => {
             specHTML += "</ul>";
         });
         const editButtons = document.querySelectorAll(".edit-btn");
+        const deleteButtons = document.querySelectorAll(".delete-btn");
 
         editButtons.forEach(editBtn => {
             editBtn.addEventListener("click", () => {
@@ -58,6 +62,17 @@ const renderPage = () => {
             });
         });
 
+        deleteButtons.forEach(deleteBtn => {
+            deleteBtn.addEventListener("click", () => {
+                $.get(`/api/devices/delete?id=${deleteBtn.value}`, (res) => {
+                    loading.classList.remove("d-none");
+                    setTimeout(() => {
+                        renderPage();
+                    }, 500);
+                })
+            });
+        });
+
         cancelBtn.addEventListener("click", () => {
             specsEditContainer.innerHTML = "";
             modal.classList.add("d-none");
@@ -67,6 +82,34 @@ const renderPage = () => {
         loading.classList.add("d-none");
     })
 }
+
+inputAddBtn.addEventListener("click", () => {
+    const inputDiv = document.createElement("div");
+        inputDiv.classList.add("d-flex");
+        inputDiv.classList.add("justify-content-between");
+        inputDiv.classList.add("my-4");
+        inputDiv.classList.add("device-spec-input");
+        const input1 = document.createElement("input");
+        input1.classList.add("form-control");
+        input1.classList.add("key-item");
+        input1.type = "text";
+        const marginXDiv = document.createElement("div");
+        marginXDiv.classList.add("mx-2");
+        const input2 = document.createElement("input");
+        input2.classList.add("form-control");
+        input2.classList.add("value-item");
+        input2.type = "text";
+        inputDiv.append(input1);
+        inputDiv.append(marginXDiv);
+        inputDiv.append(input2);
+        specsEditContainer.append(inputDiv);
+});
+
+inputRemoveBtn.addEventListener("click", () => {
+    const inputDivs = document.querySelectorAll(".device-spec-input");
+    const lastItem = inputDivs[inputDivs.length - 1];
+    lastItem.parentNode.removeChild(lastItem);
+});
 
 submitEditBtn.addEventListener("click", () => {
     const keyItems = document.querySelectorAll(".key-item");

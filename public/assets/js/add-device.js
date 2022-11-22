@@ -1,5 +1,6 @@
 const loading = document.querySelector(".loading");
 const inputAddBtn = document.querySelector("#inputAddBtn");
+const inputRemoveBtn = document.querySelector("#inputRemoveBtn");
 const deviceSpecsDiv = document.querySelector(".device-specs");
 const submitBtn = document.querySelector("#submitBtn");
 const deviceName = document.querySelector("#deviceName");
@@ -11,6 +12,7 @@ const renderPage = () => {
         inputDiv.classList.add("d-flex");
         inputDiv.classList.add("justify-content-between");
         inputDiv.classList.add("my-4");
+        inputDiv.classList.add("device-spec-input");
         const input1 = document.createElement("input");
         input1.classList.add("form-control");
         input1.classList.add("key-item");
@@ -25,6 +27,11 @@ const renderPage = () => {
         inputDiv.append(marginXDiv);
         inputDiv.append(input2);
         deviceSpecsDiv.append(inputDiv);
+    });
+    inputRemoveBtn.addEventListener("click", () => {
+        const inputDivs = document.querySelectorAll(".device-spec-input");
+        const lastItem = inputDivs[inputDivs.length - 1];
+        lastItem.parentNode.removeChild(lastItem);
     });
 }
 
@@ -45,6 +52,7 @@ submitBtn.addEventListener("click", () => {
         data,
         success: (result => {
             console.log(result);
+            window.location.href = "/device-management"
         })
     }).catch((err) => {
         console.log(err);
