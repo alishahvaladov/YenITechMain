@@ -74,5 +74,16 @@ module.exports = {
         }).catch((err) => {
             cb(err);
         });
+    },
+    deleteDevice: (id, cb) => {
+        DeviceManagement.destroy({
+            where: {
+                id
+            }
+        }).then((res) => {
+            cb(null, res);
+        }).catch((err) => {
+            cb(err);
+        });
     }
 }
