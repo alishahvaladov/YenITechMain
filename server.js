@@ -215,7 +215,7 @@ io.on("connection", async (socket) => {
 
   // ! test for socket connection
   socket.on("msg", (data) => {
-    sendNotification([1,2,3], {
+    sendNotification([1], {
         "header": "Salam Dunya", 
         "description": "Hello Ali",
         "created_by": 35,
@@ -223,7 +223,7 @@ io.on("connection", async (socket) => {
         "belongs_to_role": 1,
         "url": null,
         "importance": 1
-    }, true);
+    }, false);
   });
 });
 

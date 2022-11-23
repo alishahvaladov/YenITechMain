@@ -1,5 +1,5 @@
-const { QueryTypes } = require("sequelize");
-const { sequelize } = require("../db_config/models");
+const { QueryTypes, Op } = require("sequelize");
+const { sequelize, User } = require("../db_config/models");
 const { addNotification } = require("../notification/service");
 
 const socketUsers = new Map();
@@ -33,10 +33,11 @@ module.exports = {
       io.to(filterMultipleUsers(to)).emit(event, data);
     }
 
-    const multipleRecord = createMultipleRecordForDB(data, to, toRole);
-    addNotification(multipleRecord, (err, res) => {
-      if (err) console.log(err);
-      // console.log(res);
+    createMultipleRecordForDB(data, to, toRole).then((multipleRecord) => {
+      addNotification(multipleRecord, (err, res) => {
+        if (err) console.log(err);
+        // console.log(res);
+      });
     });
   },
 };
@@ -53,16 +54,42 @@ async function sendToSpecificRole(roles) {
   ).map((user) => user.id);
 }
 
-function createMultipleRecordForDB(data, to, isRoleBased = false) {
-  const idsOrRoles = Array.isArray(to) ? to : [to];
-  return idsOrRoles.map((idOrRole) => {
+async function createMultipleRecordForDB(data, to, isRoleBased = false) {
+  const userOrGroupIds = Array.isArray(to) ? to : [to];
+  if (isRoleBased) {
+    return await handleGroupBasedNotifications(userOrGroupIds, data);
+  } else {
+    return userOrGroupIds.map((idOrRole) => {
+      return {
+        header: data.header,
+        description: data.description,
+        created_by: data.created_by,
+        url: data.url,
+        importance: data.importance,
+        belongs_to: idOrRole,
+      };
+    });
+  }
+}
+
+async function handleGroupBasedNotifications(roleIds, data) {
+  const groupUsers = await User.findAll({
+    raw: true,
+    attributes: ["id", "role"],
+    where: {
+      role: roleIds,
+    },
+  });
+
+  return groupUsers.map((user) => {
     return {
       header: data.header,
       description: data.description,
       created_by: data.created_by,
       url: data.url,
       importance: data.importance,
-      ...(isRoleBased ? { belongs_to_role: idOrRole } : { belongs_to: idOrRole }),
+      belongs_to_role: user.role,
+      belongs_to: user.id,
     };
   });
 }
