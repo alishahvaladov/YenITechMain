@@ -1,5 +1,5 @@
 const { QueryTypes } = require("sequelize");
-const { Salary, Employee, sequelize } = require("../../db_config/models");
+const { Salary, Employee, sequelize, TimeOffDateLeft } = require("../../db_config/models");
 
 module.exports = {
     getSalaryPage: (id, cb) => {
@@ -19,10 +19,20 @@ module.exports = {
         Salary.create({
             emp_id: data.emp_id,
             user_id: data.user_id,
-            unofficial_pay: data.unofficial_pay,
+            unofficial_pay: null,
             gross: data.gross,
         }).then((result) => {
             cb(null, result);
+        }).catch((err) => {
+            cb(err);
+        });
+    },
+    addTimeOffLeftToDB: (data, cb) => {
+        TimeOffDateLeft.create({
+            emp_id: data.emp_id,
+            days_count: data.days_count
+        }).then((res) => {
+            cb(null, res);
         }).catch((err) => {
             cb(err);
         });
