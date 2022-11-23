@@ -1,5 +1,5 @@
 const qs = require("qs");
-const axios = require("axios");
+const { axiosInstance } = require("../../axios/axios-instances");
 
 const calculationType = {
   nonOilS: {
@@ -188,12 +188,73 @@ class SalaryCalculator {
     };
   }
 }
+
 async function getPayslipDocxBase64(userData) {
-  const { data } = await axios.post("http://localhost:5000/pay-slip/download", qs.stringify(userData))
+  const { data } = await axiosInstance.post("http://localhost:5005/pay-slip/download", qs.stringify(userData), {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
   return data;
+}
+
+function createSalaryByMonths(salaryDatas) {
+  return salaryDatas.map((salaryData) => {
+    const {
+      workDaysCount,
+      dailySalary,
+      gross,
+      dailySalaryTimeOff,
+      overLimitPhoneBill,
+      gymBill,
+      aliment,
+      creditOrMortgage,
+      lateFine,
+      otherFines,
+      tabelNo,
+      income_tax,
+      dsmf,
+      unemployment,
+      healthIssurance,
+      companyDSMF,
+      companyUnemployment,
+      companyHealthIssurance,
+      totalTaxAndFine,
+      totalCompanyTaxes,
+      nett,
+      currentMonthTimeOffSalary,
+      startDate,
+    } = salaryData;
+    return {
+      monthTimeOffSalary: currentMonthTimeOffSalary,
+      salaryMonth: startDate,
+      workDaysCount,
+      dailySalary,
+      gross,
+      dailySalaryTimeOff,
+      overLimitPhoneBill,
+      gymBill,
+      aliment,
+      creditOrMortgage,
+      lateFine,
+      otherFines,
+      tabelNo,
+      income_tax,
+      dsmf,
+      unemployment,
+      healthIssurance,
+      companyDSMF,
+      companyUnemployment,
+      companyHealthIssurance,
+      totalTaxAndFine,
+      totalCompanyTaxes,
+      nett,
+    };
+  });
 }
 
 module.exports = {
   SalaryCalculator,
   getPayslipDocxBase64,
+  createSalaryByMonths,
 };

@@ -1,6 +1,6 @@
-const { Salary, SalaryByMonth, sequelize } = require("../../db_config/models");
+const { Salary, SalaryByMonth, TaxAndFine, sequelize } = require("../../db_config/models");
 const { QueryTypes } = require("sequelize");
-const { SalaryCalculator, getPayslipDocxBase64 } = require("./helpers");
+const { SalaryCalculator, getPayslipDocxBase64, createSalaryByMonths } = require("./helpers");
 const moment = require("moment");
 const { calculateWorkDays } = require("../salary-excels/service");
 const { calcualteVacSalary } = require("../vacation/service");
@@ -522,9 +522,8 @@ module.exports = {
 
     let joins =
       ` LEFT JOIN Departments ON Departments.id = Employees.department` +
-      ` LEFT JOIN Positions ON Positions.id = Employees.position_id` 
-    //   +
-    //   ` LEFT JOIN Users ON Users.emp_id = Employees.id`;
+      ` LEFT JOIN Positions ON Positions.id = Employees.position_id` +
+      ` LEFT JOIN Users ON Users.emp_id = Employees.id`;
     let empQuery =
       `SELECT CONCAT(Employees.first_name," ", Employees.father_name, " ", Employees.last_name) AS fullname,` +
       `Employees.id,j_start_date,working_days, Employees.FIN as fin, Salaries.gross, Departments.name as department, Positions.name as position, Users.email as email FROM Employees`;
@@ -635,29 +634,38 @@ module.exports = {
   },
   createSalaryRecordAndSendEmail: async () => {
     let userDatas = await module.exports.getCalculatedSalary();
-    console.log(userDatas)
-    userDatas = userDatas.filter((e) => e.gross > 0);
+    userDatas = userDatas.filter((e) => e.gross > 0); // ! remove this line
     if (userDatas.length) {
-      await Promise.all(
-        userDatas.forEach(async (userData) => {
-          //   const salaryRecord = await Salary.create(userData); // sbm
+      let isSent = false; // ! delete this line
+      const createSalaryByMonthsBulk = createSalaryByMonths(userDatas);
+      await TaxAndFine.bulkCreate(createSalaryByMonthsBulk);
+      userDatas.forEach(async (userData) => {
+        if (!isSent && userData.email === "emil.taciyev@gmail.com") {
+          isSent = true; // ! delete this line
 
           const email = userData.email;
-          const fullname = userData.fullname;
+          const fullname = userData.nameSurnameFather;
           const salary = userData.lastCost;
           const { startDate, endDate } = userData;
           const subject = "Maaş hesabatı - Payslip";
-          const text = `Salam ${fullname}, ${startDate} tarixindən başlayaraq ${endDate} tarixinə qədər olan maaş hesabatınız hazırdır. Maaşınız: ${salary} AZN`;
+          const html =
+            ` <div> Salam, <h3> ${fullname}, </h3>` +
+            ` <p> <span style="font-weight:bold">${startDate}</span> tarixindən başlayaraq ` +
+            `<span style="font-weight:bold">${endDate}</span> tarixinə qədər olan maaş hesabatınız hazırdır.</p>` +
+            `<p> Maaşınız <span style="font-weight:bold">${salary}</span> təşkil edir </p> </div> `;
+
+          const attachmentsBase64 = await getPayslipDocxBase64(userData);
           const attachments = [
             {
-              filename: "payslip.docx",
-              content: Buffer.from(await getPayslipDocxBase64(userData), "base64"),
+              filename: `${fullname}-payslip.docx`,
+              path:
+                "data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64," +
+                attachmentsBase64,
             },
           ];
-          sendEmail(email, subject, text, attachments);
-          //   return salaryRecord;
-        })
-      );
+          sendEmail(email, subject, html, attachments);
+        }
+      });
     }
   },
 };
