@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class TimeOffDaysByYear extends Model {
+  class TimeOffDateLeft extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,26 +13,18 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  TimeOffDaysByYear.init({
+  TimeOffDateLeft.init({
     emp_id: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    emp_timeoff_start_date: {
-      type:DataTypes.DATEONLY,
-      allowNull: false
-    },
-    emp_timeoff_end_date: {
-      type:DataTypes.DATEONLY,
-      allowNull: false
-    },
-    time_off_days: {
+    days_count: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
   }, {
     sequelize,
-    modelName: 'TimeOffDaysByYear',
+    modelName: 'TimeOffDateLeft'
   });
-  return TimeOffDaysByYear;
+  return TimeOffDateLeft;
 };

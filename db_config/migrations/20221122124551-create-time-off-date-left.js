@@ -1,7 +1,8 @@
 'use strict';
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('TimeOffDaysByYears', {
+    await queryInterface.createTable('TimeOffDateLefts', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,15 +13,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      emp_timeoff_start_date: {
-        type:Sequelize.DATEONLY,
-        allowNull: false
-      },
-      emp_timeoff_end_date: {
-        type:Sequelize.DATEONLY,
-        allowNull: false
-      },
-      time_off_days: {
+      days_count: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
@@ -35,6 +28,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('TimeOffDaysByYears');
+    await queryInterface.dropTable('TimeOffDateLefts');
   }
 };

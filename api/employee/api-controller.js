@@ -379,6 +379,15 @@ const validateEmployee = async (data,  emp_id = null, cb) => {
         validationError.department = "Please enter department";
         return cb(true, validationError);
     }
+    if (data.group_id !== "" && data.group_id) {
+        const groupID = data.group_id;
+        if(isNaN(parseInt(groupID))) {
+            console.log("Please enter valid group");
+            validationError.group_id = "Please enter valid group";
+            return cb(true, validationError);
+        }
+        dbData.group_id = groupID;
+    }
     if (data.position !== "" && data.position !== undefined && data.position !== null) {
         const position = data.position;
         if(isNaN(parseInt(position))) {

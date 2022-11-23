@@ -17,7 +17,7 @@ const {
     addLogixDataToLogixDB,
     checkIfTabelNoExists
 } = require("./employee.service");
-const { addSalary } = require('../salary/salary.service');
+const { addSalary, addTimeOffLeftToDB } = require('../salary/salary.service');
 const { Employee } = require("../../db_config/models");
 const {Op} = require("sequelize");
 const path = require("path");
@@ -701,12 +701,7 @@ module.exports = {
                         data.files = JSON.stringify(files);
                     } else if (req.url.includes("/emp-files/")) {
                         const gross = req.body.gross;
-                        const unofficialPay = req.body.u_pay;
-                        if (parseInt(unofficialPay) < 1) {
-                            unofficialPay = null
-                        }
                         salaryData.gross = gross;
-                        salaryData.unofficial_pay = unofficialPay;
                         salaryData.emp_id = emp_id;
                         salaryData.user_id = req.user.id;
                         addSalary(salaryData, (err , result) => {
@@ -716,6 +711,13 @@ module.exports = {
                                 return res.redirect('/employee/emp-files' + emp_id);
                             }
                         });
+                        addTimeOffLeftToDB({emp_id, days_count: req.body.timeoff_left}, (err, result) => {
+                            if (err) {
+                                console.log(err);
+                                req.flash("error_msg", "An unkown error has been occurred");
+                                return res.redirect("/employee/emp-files/" + emp_id);
+                            }
+                        })
                         files.recruitment = JSON.stringify(req.files);
                         data.files = JSON.stringify(files);
                     }
