@@ -3,7 +3,7 @@ function prepareEmail(to, subject, body, attachments, from = "emil.taciyev4@gmai
     from,
     to: to,
     subject: subject,
-    text: body,
+    [body.startsWith("<") ? "html" : "text"]: body,
     attachments
   };
 }
