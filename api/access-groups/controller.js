@@ -1,5 +1,5 @@
 const {
-  addNewGroup,
+  addNewGroupAndAddRights,
   addRightsToGroup,
   getGroupById,
   updateGroup,
@@ -10,14 +10,14 @@ const {
 } = require("./service");
 
 module.exports = {
-  addNewGroup: async function (req, res) {
+  addNewGroupAndAddRights: async function (req, res) {
     try {
-      const { name } = req.body;
+      const { name, rightId } = req.body;
       if (!name) {
         return res.status(400).json({ message: "Input is incorrect" });
       }
 
-      await addNewGroup(name);
+      await addNewGroupAndAddRights(name, rightId);
       return res.status(201).json({ message: "Group added" });
     } catch (err) {
       console.log(err);

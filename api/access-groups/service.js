@@ -2,13 +2,16 @@ const { sequelize, AccessGroup, AccessGroupRight, Right } = require("../../db_co
 const { handleGroupDelete } = require("./helpers");
 
 module.exports = {
-  addNewGroup: async function (name) {
-    await AccessGroup.findOrCreate({
+  addNewGroupAndAddRights: async function (name, rightIds) {
+    const [group] = await AccessGroup.findOrCreate({
+      raw: true,
       where: { name },
       default: {
         name,
       },
     });
+    const accessGroupBulk = rightIds.map((rightId) => ({ AccessGroupId: group.id, RightId: rightId }));
+    await AccessGroupRight.bulkCreate(accessGroupBulk);
   },
   addRightsToGroup: async function (groupId, rightId) {
     const group = await AccessGroup.findByPk(groupId);
@@ -67,5 +70,5 @@ module.exports = {
   },
   getAllRights: async function () {
     return await Right.findAll({ attributes: ["id", "name"] });
-  }
+  },
 };

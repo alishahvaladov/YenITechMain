@@ -190,12 +190,16 @@ class SalaryCalculator {
 }
 
 async function getPayslipDocxBase64(userData) {
-  const { data } = await axiosInstance.post("http://localhost:5005/pay-slip/download", qs.stringify(userData), {
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  });
-  return data;
+  try {
+    const { data } = await axiosInstance.post("http://localhost:5005/pay-slip/download", qs.stringify(userData), {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 function createSalaryByMonths(salaryDatas) {

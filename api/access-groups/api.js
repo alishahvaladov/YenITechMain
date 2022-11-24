@@ -1,6 +1,6 @@
 const express = require("express");
 const {
-  addNewGroup,
+  addNewGroupAndAddRights,
   addRightsToGroup,
   getAllGroups,
   getGroupById,
@@ -11,7 +11,7 @@ const {
 } = require("./controller");
 const router = express.Router();
 
-router.post("/add", addNewGroup);
+router.post("/add", addNewGroupAndAddRights);
 router.post("/addRole", addRightsToGroup);
 router.get("/findById/:id", getGroupById);
 router.get("/all", getAllGroups);
