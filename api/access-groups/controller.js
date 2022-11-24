@@ -12,8 +12,8 @@ const {
 module.exports = {
   addNewGroupAndAddRights: async function (req, res) {
     try {
-      const { name, rightId } = req.body;
-      if (!name) {
+      const { name, rightId = [] } = req.body;
+      if (!name || !rightId.length) {
         return res.status(400).json({ message: "Input is incorrect" });
       }
 
