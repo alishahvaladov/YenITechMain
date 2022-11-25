@@ -23,7 +23,7 @@ module.exports = {
       console.log(err);
       return res.status(500).send({
         success: false,
-        message: "Ups... Something went wrong!",
+        message: err.message,
       });
     }
   },
@@ -63,7 +63,8 @@ module.exports = {
   },
   getAllGroups: async function (req, res) {
     try {
-      const groups = await getAllGroups();
+      const { name, offset } = req.query;
+      const groups = await getAllGroups(name, offset);
       return res.status(200).json(groups);
     } catch (err) {
       console.log(err);
