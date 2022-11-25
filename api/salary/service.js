@@ -649,8 +649,8 @@ module.exports = {
           const { startDate, endDate } = userData;
           const subject = "Maaş hesabatı - Payslip";
           const html =
-            ` <div> Salam, <h3> ${fullname}, </h3>` +
-            ` <p> <span style="font-weight:bold">${startDate}</span> tarixindən başlayaraq ` +
+            `<div> Salam, <h3> ${fullname}, </h3>` +
+            `<p> <span style="font-weight:bold">${startDate}</span> tarixindən başlayaraq ` +
             `<span style="font-weight:bold">${endDate}</span> tarixinə qədər olan maaş hesabatınız hazırdır.</p>` +
             `<p> Maaşınız <span style="font-weight:bold">${salary}</span> təşkil edir </p> </div> `;
 

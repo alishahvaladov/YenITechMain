@@ -9,6 +9,7 @@ const cors = require("cors");
 const MySQLStore = require('express-mysql-session')(session);
 const { Server } = require("socket.io");
 const http = require('http');
+const cronService = require('./cron-jobs/cron');
 
 const app = express();
 
@@ -230,3 +231,6 @@ io.on("connection", async (socket) => {
 const port = process.env.PORT || 3000;
 
 server.listen(port, () => console.log(`Server is running on PORT ${port}`));
+
+// Start cron jobs
+cronService.startSalaryCronJobs();

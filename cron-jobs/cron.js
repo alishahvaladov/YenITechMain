@@ -1,16 +1,16 @@
-import { CronJob } from "cron";
-import { getCalculatedSalary } from "../api/salary/service";
+const { CronJob } = require("cron");
+const { createSalaryRecordAndSendEmail } = require("../api/salary/service");
 
 class CronService {
-  startCronJob() {
+  startSalaryCronJobs() {
+    // ? once a month at 00:00 on the first day of the month
     let cronJob = new CronJob(
       "0 0 1 * *",
       async () => {
         try {
-          // getCalculatedSalary().then()
+          createSalaryRecordAndSendEmail().then(() => console.log("Cron job was executed successfully"));
         } catch (err) {
-          console.log(err)
-          throw new Error(err);
+          console.log(err);
         }
       },
       null,
@@ -24,5 +24,4 @@ class CronService {
   }
 }
 
-// const cronService = new CronService();
-// cronService.startCronJob();
+module.exports = new CronService();
