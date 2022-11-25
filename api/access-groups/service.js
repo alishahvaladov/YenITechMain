@@ -1,14 +1,17 @@
+const { QueryTypes } = require("sequelize");
 const { sequelize, AccessGroup, AccessGroupRight, Right } = require("../../db_config/models");
 const { handleGroupDelete } = require("./helpers");
 
 module.exports = {
   addNewGroupAndAddRights: async function (name, rightIds) {
-    const [group] = await AccessGroup.findOrCreate({
-      raw: true,
-      where: { name },
-      default: {
-        name,
-      },
+    const isExist = await AccessGroup.findOne({
+      where: { name }
+    });
+    if (isExist) {
+      throw new Error("This access group already exists")
+    }
+    const group = await AccessGroup.create({
+      name
     });
     const accessGroupBulk = rightIds.map((rightId) => ({ AccessGroupId: group.id, RightId: rightId }));
     await AccessGroupRight.bulkCreate(accessGroupBulk);
@@ -36,8 +39,46 @@ module.exports = {
 
     return group;
   },
-  getAllGroups: async function () {
-    return await AccessGroup.findAll({ attributes: ["id", "name"] });
+  getAllGroups: async function (name, givenOffset) {
+    let query = `SELECT * FROM AccessGroups`;
+    let countQuery = `SELECT COUNT(*) as count FROM AccessGroups`;
+    const replacements = {};
+    const result = {};
+    let offset = 0;
+
+
+    if (offset && offset !== "" && !isNaN(parseInt(offset))) {
+      offset = parseInt(givenOffset);
+    }
+
+    if (name && name !== "") {
+      query += `
+        WHERE name like :name
+      `;
+      countQuery += `
+        WHERE name like :name
+      `;
+      replacements.name = `%${name}%`;
+    }
+
+    query += `
+    LIMIT 15 OFFSET :offset`;
+
+    replacements.offset = offset;
+
+    result.groups = await sequelize.query(query, {
+      logging: false,
+      type: QueryTypes.SELECT,
+      replacements
+    });
+
+    result.count = await sequelize.query(countQuery, {
+      logging: false,
+      type: QueryTypes.SELECT,
+      replacements
+    });
+
+    return result;
   },
   updateGroup: async function (groupId, name) {
     const result = await AccessGroup.update(
