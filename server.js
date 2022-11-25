@@ -130,6 +130,7 @@ const vacationAPI = require("./api/vacation/api");
 const { createSocketUser, removeSocketUser, sendNotification } = require("./socket/socket");
 const { getAllNotifications } = require("./api/notifications/service");
 const accessGroupApi = require("./api/access-groups/api");
+const accessGroupRouter = require("./modules/access-groups/router");
 
 
 // Routers
@@ -186,6 +187,7 @@ app.get("/ali-shahvaladov", (req, res) => {
 app.get("/mehdi-mammadzada", (req, res) => {
     return res.render("/mehdi-mammadzada");
 });
+app.use("/access-groups", accessGroupRouter);
 
 const server = http.createServer(app);
 
