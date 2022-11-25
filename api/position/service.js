@@ -129,17 +129,9 @@ module.exports = {
         return result;
     },
     getGroupsForPositions: async (data) => {
-        return await sequelize.query(`
-            SELECT * FROM PosGroupRels
-            WHERE group_id = :group_id
-            AND position_id = :position_id
-        `, {
+        return await sequelize.query("SELECT * FROM `Groups`", {
             type: QueryTypes.SELECT,
             logging: false,
-            replacements: {
-                position_id: data.position_id,
-                group_id: data.group_id
-            }
         });
     },
     insertDepartmentForPosition: (data, cb) => {
