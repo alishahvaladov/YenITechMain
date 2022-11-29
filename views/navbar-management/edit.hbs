@@ -1,0 +1,36 @@
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Menu Düzəliş Formu</h5>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <label class="form-label" for="name">Menu Adı</label>
+            <input type="text" class="form-control" id="name" name="name" disabled>
+        </div>
+        <div class="group-access-header my-3">
+            <h3 class="text-center">Zəhmət olmasa aid olduğu accessləri seçin</h3>
+        </div>
+        <div class="navbar-checkbox d-flex justify-content-between flex-wrap">
+            
+        </div>
+
+    </div>
+</div>
+
+<div class="success-modal bg-dark bg-opacity-50" style="display: none; position: fixed; top: 0; left: 0; height: 100%; width: 100%;">
+    <div class="success-modal-conatiner d-flex justify-content-center align-items-center h-100 w-100">
+        <div class="success-modal-card bg-light h-50 w-50 d-flex justify-content-center align-items-center">
+            <h3 class="text-success">Group Access uğurla əlavə edildi!</h3>
+        </div>
+    </div>
+</div>
+<div class="error-modal bg-dark bg-opacity-50" style="display: none; position: fixed; top: 0; left: 0; height: 100%; width: 100%;">
+    <div class="error-modal-conatiner d-flex justify-content-center align-items-center h-100 w-100">
+        <div class="error-modal-card bg-light h-50 w-50 d-flex justify-content-center align-items-center">
+            <h3 id="errorMessage" class="text-danger"></h3>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/navbar-management-edit.js"></script>

@@ -63,7 +63,7 @@ module.exports = {
                    return res.redirect("/nofprint/add-nofprint");
                }
                req.flash("success_msg", "NoFPrint added successfully");
-               return res.redirect("/all-fprints");
+               return res.redirect("/nofprint");
             });
         }
     },

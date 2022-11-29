@@ -7,6 +7,8 @@ const qTimeEnterInput = document.querySelector("#qTimeEnter");
 const qTimeLeaveInput = document.querySelector("#qTimeLeave");
 const qDateInput = document.querySelector("#qDate");
 const tbody = document.querySelector("tbody");
+const addTimeModal = document.querySelector(".add-time-modal");
+const timeInput = document.querySelector("#timeInput");
 
 const timeEnterReset = document.querySelector("#qTimeEnterReset");
 const timeLeaveReset = document.querySelector("#qTimeLeaveReset");
@@ -14,8 +16,11 @@ const dateReset = document.querySelector("#qDateReset");
 
 const pagination = document.querySelector(".pagination");
 const pgContainer = document.querySelector(".pagination-container");
+const timeInputCancel = document.querySelector("#timeInputCancel");
 
 let qEmployee, qProject, qDepartment, qPosition, qTimeEnter, qTimeLeave, qDate;
+
+const timeInputSubmit = document.querySelector("#timeInputSubmit");
 
 const getInputData = () => {
     qEmployee = qEmloyeeInput.value;
@@ -25,6 +30,17 @@ const getInputData = () => {
     qTimeEnter = qTimeEnterInput.value;
     qTimeLeave = qTimeLeaveInput.value;
     qDate = qDateInput.value;
+}
+
+const leaveModalFunc = () => {
+    const leaveBtns = document.querySelectorAll(".leave-btn");
+
+    leaveBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            addTimeModal.classList.remove("d-none");
+            timeInputSubmit.value = btn.value;
+        });
+    });
 }
 
 const pageFuncs = () => {
@@ -100,7 +116,7 @@ const pageFuncs = () => {
                         fprints.forEach(fprint => {
                             let leaveTD;
                             if (fprint.leave_sign_time === null) {
-                                leaveTD = `<button class="btn btn-outline-warning" id="${fprint.id}"><i class="bi bi-plus-square"></i></button>`
+                                leaveTD = `<button class="btn btn-outline-dark leave-btn" value="${fprint.id}">Vaxt Əlavə Et<i class="mx-2 bi bi-plus"></i></button>`
                             } else {
                                 leaveTD = fprint.leave_sign_time;
                             }
@@ -111,7 +127,7 @@ const pageFuncs = () => {
                                     <td>${fprint.deptName}</td>
                                     <td>${fprint.posName}</td>
                                     <td>${fprint.enter_sign_time}</td>
-                                    <td class="text-center">${leaveTD}</td>
+                                    <td>${leaveTD}</td>
                                     <td>${fprint.date}</td>
                                     <td></td>
                                 </tr>
@@ -119,6 +135,7 @@ const pageFuncs = () => {
                         });
             
                         tbody.innerHTML = tbodyHTML;
+                        leaveModalFunc();
                     })
                 }).catch((err) => {
                     console.log(err);
@@ -143,7 +160,7 @@ const renderPage = () => {
             qDate
         },
         success: ((res) => {
-            const count = parseInt(res.count) / 15;
+            const count = Math.ceil(parseInt(res.count) / 15);
             const fprints = res.fprints;
 
             let tbodyHTML = "";
@@ -151,7 +168,7 @@ const renderPage = () => {
             fprints.forEach(fprint => {
                 let leaveTD;
                 if (fprint.leave_sign_time === null) {
-                    leaveTD = `<button class="btn btn-outline-warning" id="${fprint.id}"><i class="bi bi-plus-square"></i></button>`
+                    leaveTD = `<button class="btn btn-outline-dark leave-btn" value="${fprint.id}">Vaxt Əlavə Et<i class="mx-2 bi bi-plus"></i></button>`
                 } else {
                     leaveTD = fprint.leave_sign_time;
                 }
@@ -162,7 +179,7 @@ const renderPage = () => {
                         <td>${fprint.deptName}</td>
                         <td>${fprint.posName}</td>
                         <td>${fprint.enter_sign_time}</td>
-                        <td class="text-center">${leaveTD}</td>
+                        <td>${leaveTD}</td>
                         <td>${fprint.date}</td>
                         <td></td>
                     </tr>
@@ -170,37 +187,46 @@ const renderPage = () => {
             });
 
             tbody.innerHTML = tbodyHTML;
-            let pgHtml = '';
-            for (let i = 1; i <= count; i++) {
-                if (i === 1) {
-                   pgHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
-                   if(count > 21) {
-                      pgHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
-                   }
-                } if (i > 21 && i < count) {
-                   pgHtml += `
-                        <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                    `
-                } else if (i !== 1 && i !== count) {
-                   pgHtml += `
-                        <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                    `
-                }
-                if (i === count) {
-                   if (count > 21) {
-                      pgHtml += `
-                        <button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>
-                      `
-                   }
-                   if (count > 1) {
-                      pgHtml += `
-                        <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
-                    `;
-                   }
-                }
-             }
-            pagination.classList.remove('d-none');
-            pgContainer.innerHTML = pgHtml;
+
+            if (count <= 1) {
+                pagination.classList.add("d-none")
+            } else {
+                pagination.classList.remove("d-none")
+                let pgHtml = '';
+                for (let i = 1; i <= count; i++) {
+                    if (i === 1) {
+                       pgHtml += `<button class="pagination-item f-item btn btn-outline-dark btn-sm pagination-active" value="${i}">${i}</button>`
+                       if(count > 21) {
+                          pgHtml += `<button class="d-none btn btn-outline-dark btn-sm fTDots disabled">...</button>`
+                       }
+                    } if (i > 21 && i < count) {
+                       pgHtml += `
+                            <button class="pagination-item d-none btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                        `
+                    } else if (i !== 1 && i !== count) {
+                       pgHtml += `
+                            <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                        `
+                    }
+                    if (i === count) {
+                       if (count > 21) {
+                          pgHtml += `
+                            <button class="btn btn-outline-dark btn-sm lTDots disabled">...</button>
+                          `
+                       }
+                       if (count > 1) {
+                          pgHtml += `
+                            <button class="pagination-item btn btn-outline-dark btn-sm" value="${i}">${i}</button>
+                        `;
+                       }
+                    }
+                 }
+                pagination.classList.remove('d-none');
+                pgContainer.innerHTML = pgHtml;
+            }
+            
+            leaveModalFunc();
+            pageFuncs();
         })
     }).catch((err) => {
         console.log(err);
@@ -209,6 +235,29 @@ const renderPage = () => {
 }
 
 setTimeout(renderPage, 1000);
+
+timeInputCancel.addEventListener("click", () => {
+    timeInput.value = "";
+    addTimeModal.classList.add("d-none");
+});
+
+timeInputSubmit.addEventListener("click", () => {
+    $.ajax({
+        url: `/api/nofprints/update?leave_sign_time=${timeInput.value}&f_print_id=${timeInputSubmit.value}`,
+        type: "POST",
+        success: ((res) => {
+            timeInput.value = "";
+            addTimeModal.classList.add("d-none");
+            loading.classList.remove("d-none");
+            setTimeout(() => {
+                renderPage();
+            }, 500);
+        })
+    }).catch((err) => {
+        console.log(err);
+    });
+    renderPage();
+})
 
 timeEnterReset.addEventListener("click", () => {
     qTimeEnterInput.value = "";

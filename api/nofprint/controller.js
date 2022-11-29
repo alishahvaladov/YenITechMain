@@ -1,4 +1,4 @@
-const { getNoFPrints } = require("./service");
+const { getNoFPrints, update } = require("./service");
 const excelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
@@ -72,5 +72,35 @@ module.exports = {
         }, 10000);
         res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         res.download(excelPath, "Barmaq İzləri(All).xlsx");
+    },
+    update: async (req, res) => {
+        try {
+            const { leave_sign_time, f_print_id } = req.query;
+            if (!leave_sign_time || leave_sign_time === "") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Please provide leave time"
+                });
+            }
+            const user_id = req.user.id;
+            const result = await update(user_id, leave_sign_time, f_print_id);
+
+            if (!result) {
+                return res.status(400).send({
+                    success: false,
+                    message: "This record not found please try again"
+                });
+            }
+
+            return res.status(200).send({
+                success: true,
+                message: "Updated!"
+            });
+        } catch (err) {
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
     }
 }
