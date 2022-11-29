@@ -131,6 +131,8 @@ const { createSocketUser, removeSocketUser, sendNotification } = require("./sock
 const { getAllNotifications } = require("./api/notifications/service");
 const accessGroupApi = require("./api/access-groups/api");
 const accessGroupRouter = require("./modules/access-groups/router");
+const navbarManagementRouter = require("./modules/navbar-management/router");
+const navbarManagementAPI = require("./api/navbar-management/api");
 
 
 // Routers
@@ -188,6 +190,8 @@ app.get("/mehdi-mammadzada", (req, res) => {
     return res.render("/mehdi-mammadzada");
 });
 app.use("/access-groups", accessGroupRouter);
+app.use("/navbar-management", navbarManagementRouter);
+app.use("/api/navbar-management", navbarManagementAPI);
 
 const server = http.createServer(app);
 

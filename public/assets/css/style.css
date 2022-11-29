@@ -546,8 +546,6 @@ input[type=number] {
 .add-time-modal-container {
     height: fit-content;
     width: fit-content;
-    padding: 25px;
-    background-color: #fff;
 }
 
 #fPrintType {

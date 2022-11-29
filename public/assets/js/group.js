@@ -11,7 +11,7 @@ const renderPage = () => {
                 <tr>
                     <td>${group.name}</td>
                     <td>
-                        <button class="btn btn-outline-secondary">Edit</button>
+                        <a href="/groups/edit/${group.id}" class="btn btn-outline-secondary">Edit</a>
                     </td>
                 </tr>
             `

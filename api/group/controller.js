@@ -1,4 +1,4 @@
-const { addGroup, getDepartmentsForGroups, getGroups, checkIfDepartmentExists, addDeptGroupRels, getAllGroupsByDepartment } = require("./service");
+const { addGroup, getDepartmentsForGroups, getGroups, checkIfDepartmentExists, addDeptGroupRels, getAllGroupsByDepartment, getGroupsForEdit, insertDeptGroupRel, deleteDeptGroupRel, updateGroupName } = require("./service");
 
 module.exports = {
     addGroup: (req, res) => {
@@ -128,6 +128,135 @@ module.exports = {
             return res.status(500).send({
                 success: false,
                 message: "Ups... Something went wrong"
+            });
+        }
+    },
+    getGroupsForEdit: async (req, res) => {
+        try {
+            const { id } = req.query;
+            if (!id || id === "") {
+                return res.status(400).send({
+                    success: false,
+                    message: "ID must be declared!"
+                });
+            }
+
+            const result = await getGroupsForEdit(id);
+            result.success = true;
+            return res.status(200).send(result);
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    insertDeptGroupRel: async (req, res) => {
+        try {
+            const { department_id, group_id } = req.query;
+            const data = {};
+
+            if (!department_id || isNaN(parseInt(department_id))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Department ID is missing"
+                });
+            }
+
+            if (!group_id || isNaN(parseInt(group_id))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Group ID is missing"
+                });
+            }
+
+            data.department_id = department_id;
+            data.group_id = group_id;
+            
+            const result = await insertDeptGroupRel(data);
+
+            return res.status(200).send({
+                success: true,
+                message: "Relation has been added"
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    deleteDeptGroupRel: async (req, res) => {
+        try {
+            const { department_id, group_id } = req.query;
+            if (!department_id || isNaN(parseInt(department_id))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Department ID is missing"
+                });
+            }
+
+            if (!group_id || isNaN(parseInt(group_id))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Group ID is missing"
+                });
+            }
+            const data = {};
+
+            data.department_id = department_id;
+            data.group_id = group_id;
+            
+            const result = await deleteDeptGroupRel(data);
+
+            return res.status(200).send({
+                success: true
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
+        }
+    },
+    updateGroupName: async (req, res) => {
+        try {
+            const { groupName, id } = req.query;
+
+            if (!groupName || groupName === "") {
+                return res.status(400).send({
+                    success: false,
+                    message: "Group name should be declared"
+                });
+            }
+
+            if (!id || isNaN(parseInt(id))) {
+                return res.status(400).send({
+                    success: false,
+                    message: "ID should be declared"
+                });
+            }
+
+            const result = await updateGroupName(groupName, id);
+
+            if (!result || result.length < 1) {
+                return res.status(404).send({
+                    success: false,
+                    message: "This group not found"
+                });
+            }
+
+            return res.status(200).send({
+                success: true
+            });
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
             });
         }
     }

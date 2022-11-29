@@ -6,7 +6,7 @@ const qName = document.querySelector("#qName");
 const renderPage = (inputName = "") => {
     $.get(`/api/access-groups/all?name=${inputName}`, (res) => {
         const accessGroups = res.groups;
-        const count = parseInt(res.count[0].count) / 15;
+        const count = Math.ceil(parseInt(res.count[0].count) / 15);
         let tbodyHTML = "";
 
         accessGroups.forEach(group => {
@@ -21,7 +21,7 @@ const renderPage = (inputName = "") => {
             `
         });
         
-        if (count < 1) {
+        if (count <= 1) {
             pagination.classList.add("d-none");
         }
 

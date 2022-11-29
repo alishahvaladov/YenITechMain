@@ -1,0 +1,33 @@
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Şöbə Əlavə Formu</h5>
+    </div>
+    <div class="card-body">
+        <div class="form-group d-flex justify-content-between align-items-end">
+            <div class="input-data w-75">
+                <label class="form-label required-lowast" for="name">Şöbə Adı</label>
+                <input type="text" class="form-control" id="name" name="name">
+            </div>
+            <div class="mx-2"></div>
+            <button type="submit" class="btn btn-primary w-25 h-100" id="saveBtn">Yadda Saxla</button>
+        </div>
+        <div class="departments-header my-3">
+            <h3 class="text-center">Zəhmət olmasa aid olduğu departamentləri və ya departamenti seçin</h3>
+        </div>
+        <div class="departments-checkbox d-flex justify-content-between flex-wrap">
+            
+        </div>
+
+    </div>
+</div>
+
+<div class="error-modal bg-dark bg-opacity-50" style="display: none; position: fixed; top: 0; left: 0; height: 100%; width: 100%;">
+    <div class="error-modal-conatiner d-flex justify-content-center align-items-center h-100 w-100">
+        <div class="error-modal-card bg-light h-50 w-50 d-flex justify-content-center align-items-center">
+            <h3 id="errorMessage" class="text-danger"></h3>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/group-edit.js"></script>

@@ -61,6 +61,6 @@ module.exports = {
             cb(null, result);
         }).catch((err) => {
             cb(err);
-        })
+        });
     }
 }

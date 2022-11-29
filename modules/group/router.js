@@ -1,10 +1,11 @@
 const express = require("express");
-const { renderGroup, renderAddGroup } = require("./controller");
-const { hr, checkRolesForAPI } = require("../auth/auth");
+const { renderGroup, renderAddGroup, renderEditGroup } = require("./controller");
+const { hr, checkRolesForAPI, checkRoles } = require("../auth/auth");
 const router = express.Router();
 
 
-router.get("/", hr, checkRolesForAPI, renderGroup);
-router.get("/add", hr, checkRolesForAPI, renderAddGroup);
+router.get("/", hr, checkRoles, renderGroup);
+router.get("/add", hr, checkRoles, renderAddGroup);
+router.get("/edit/:id", hr, checkRoles, renderEditGroup);
 
 module.exports = router;

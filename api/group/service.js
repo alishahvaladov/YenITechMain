@@ -75,5 +75,55 @@ module.exports = {
                 department_id
             }
         });
-    }
+    },
+    getGroupsForEdit: async (id) => {
+        const result = {};
+        const replacements = {};
+
+        let departmentQuery = "SELECT * FROM Departments";
+        let relationQuery = `
+            SELECT * FROM DeptGroupRels
+            WHERE group_id = :id
+        `;
+
+        result.groupName = await sequelize.query("SELECT name FROM `Groups` WHERE id = :id", {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                id
+            }
+        });
+
+        result.groupName = result.groupName[0].name;
+
+        result.departments = await sequelize.query(departmentQuery, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
+
+        result.deptByGroups = await sequelize.query(relationQuery, {
+            logging: false,
+            type: QueryTypes.SELECT,
+            replacements: {
+                id
+            }
+        });
+
+        return result;
+    },
+    insertDeptGroupRel: async (data) => {
+        return await DeptGroupRel.create(data);
+    },
+    deleteDeptGroupRel: async (data) => {
+        return await DeptGroupRel.destroy({where: data});
+    },
+    updateGroupName: async (groupName, id) => {
+        return await Group.update({
+            name: groupName
+        }, {
+            where: {
+                id
+            }
+        });
+    } 
 }

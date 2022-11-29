@@ -1,4 +1,4 @@
-const { sequelize } = require("../../db_config/models");
+const { sequelize, NoFPrint } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
 const date = new Date();
 let month = date.getMonth();
@@ -151,7 +151,16 @@ module.exports = {
             replacements: replacements
         });
 
-        console.log(result);
         return result;
+    },
+    update: async (user_id, leave_sign_time, f_print_id) => {
+        return await NoFPrint.update({
+            update_user_id: user_id,
+            leave_sign_time: leave_sign_time
+        }, {
+            where: {
+                id: f_print_id
+            }
+        });
     }
 }
