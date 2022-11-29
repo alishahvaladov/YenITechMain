@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
       },
       dailySalaryTimeOff: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.JSON,
       },
       monthTimeOffSalary: {
         type: DataTypes.INTEGER,
@@ -81,7 +81,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       salaryMonth: {
         type: DataTypes.DATEONLY,
-      }
+      },
+      emp_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
       sequelize,

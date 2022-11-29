@@ -552,7 +552,7 @@ module.exports = {
     const empIds = new Set(employees.map((emp) => emp.id));
     let torQuery = `SELECT emp_id,timeoff_type,timeoff_start_date,timeoff_job_start_date FROM TimeOffRequests WHERE TimeOffRequests.emp_id IN (${Array.from(
       empIds
-    ).join()}) AND TimeOffRequests.status = 4 AND TimeOffRequests.timeoff_start_date BETWEEN :startDate AND :endDate`;
+    ).join()}) AND TimeOffRequests.status = 4 AND TimeOffRequests.timeoff_start_date OR TimeOffRequests.timeoff_job_start_date BETWEEN :startDate AND :endDate`;
     const timeOffs = await sequelize.query(torQuery, {
       logging: false,
       type: QueryTypes.SELECT,
@@ -580,6 +580,7 @@ module.exports = {
               vacationDays,
               toDate,
             });
+            if (vacType === "hourly") continue;
             vacationSalary[vacType] = vacSalary.vacationSalary;
             currentMonthTimeOffSalary += vacSalary.vacationSalary;
             if (vacType === "unpaid") emp.gross += vacSalary.vacationSalary;
@@ -663,7 +664,7 @@ module.exports = {
                 attachmentsBase64,
             },
           ];
-          sendEmail(email, subject, html, attachments);
+          // sendEmail(email, subject, html, attachments);
         }
       });
     }

@@ -50,7 +50,7 @@ async function vacationCalculator(empId, vacationDays) {
     totalSalary,
     averageSalary,
     dailySalary,
-    vacationDays
+    vacationDays,
   };
 }
 
@@ -65,7 +65,7 @@ async function healthVacCalcualtor(empId, vacationDays) {
     totalSalary,
     dailySalary,
     lastYearWorkDays,
-    vacationDays
+    vacationDays,
   };
 }
 
@@ -98,7 +98,7 @@ async function unpaidVacCalculator(empId, vacationDays) {
     vacationSalary,
     totalSalary,
     dailySalary,
-    vacationDays
+    vacationDays,
   };
 }
 
@@ -112,6 +112,8 @@ function findVacationByKey(timeoffType) {
       return "maternity";
     case "1":
       return "unpaid";
+    case "4":
+      return "hourly";
     default:
       return null;
   }
@@ -122,5 +124,5 @@ module.exports = {
   healthVacCalcualtor,
   maternityCalculator,
   unpaidVacCalculator,
-  findVacationByKey
+  findVacationByKey,
 };

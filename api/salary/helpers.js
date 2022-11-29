@@ -205,6 +205,7 @@ async function getPayslipDocxBase64(userData) {
 function createSalaryByMonths(salaryDatas) {
   return salaryDatas.map((salaryData) => {
     const {
+      id,
       workDaysCount,
       dailySalary,
       gross,
@@ -230,6 +231,7 @@ function createSalaryByMonths(salaryDatas) {
       startDate,
     } = salaryData;
     return {
+      emp_id: id,
       monthTimeOffSalary: currentMonthTimeOffSalary,
       salaryMonth: startDate,
       workDaysCount,
