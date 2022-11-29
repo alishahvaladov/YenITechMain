@@ -1,5 +1,5 @@
-const { QueryTypes, Op } = require("sequelize");
-const { sequelize, User } = require("../db_config/models");
+const { QueryTypes } = require("sequelize");
+const { sequelize, UserAccessGroup } = require("../db_config/models");
 const { addNotification } = require("../notification/service");
 
 const socketUsers = new Map();
@@ -18,48 +18,56 @@ module.exports = {
     socketUsers.delete(userId);
     getTotalOnlineUserCount();
   },
-  sendNotification: function (to = requiredArgument(), data, toRole = false, event = "notification") {
+  sendNotification: async function (to = requiredArgument(), data, toRole = false, event = "notification") {
     // ! check arguments and their order before using
     if (!io) throw new Error("Socket is not initialized");
 
     if (toRole) {
-      sendToSpecificRole(to).then((users) => {
-        const filteredUsers = filterMultipleUsers(users);
-        io.to(filteredUsers).emit(event, data);
-      });
+      const groupUsers = await sendToSpecificRole(to);
+      const filteredUsers = filterMultipleUsers(groupUsers);
+      filteredUsers.length && io.to(filteredUsers).emit(event, data);
+      to = groupUsers;
     } else if (typeof to === "string" || typeof to === "number") {
       io.to(socketUsers.get(parseInt(to))).emit(event, data);
     } else if (Array.isArray(to)) {
-      io.to(filterMultipleUsers(to)).emit(event, data);
+      const filteredUsers = filterMultipleUsers(to);
+      filteredUsers.length && io.to(filteredUsers).emit(event, data);
     }
 
-    createMultipleRecordForDB(data, to, toRole).then((multipleRecord) => {
-      addNotification(multipleRecord, (err, res) => {
-        if (err) console.log(err);
-        // console.log(res);
-      });
+    const multipleRecord = await createMultipleRecordForDB(data, to, toRole ? to : false);
+    addNotification(multipleRecord, (err, res) => {
+      if (err) console.log(err);
+      // console.log(res);
     });
   },
 };
 
-async function sendToSpecificRole(roles) {
+async function sendToSpecificRole(roleIds) {
   return (
-    await sequelize.query(`SELECT id FROM Users WHERE role IN(:roles)`, {
-      type: QueryTypes.SELECT,
-      logging: false,
-      replacements: {
-        roles,
-      },
-    })
+    await sequelize.query(
+      `
+        SELECT Users.id FROM Users
+        LEFT JOIN UserAccessGroups ON UserAccessGroups.userId = Users.id
+        LEFT JOIN AccessGroups ON AccessGroups.id = UserAccessGroups.AccessGroupId
+        WHERE AccessGroups.id IN(:roles)
+      `,
+      {
+        type: QueryTypes.SELECT,
+        logging: false,
+        replacements: {
+          roles: roleIds,
+        },
+      }
+    )
   ).map((user) => user.id);
 }
 
-async function createMultipleRecordForDB(data, to, isRoleBased = false) {
-  const userOrGroupIds = Array.isArray(to) ? to : [to];
+async function createMultipleRecordForDB(data, to, isRoleBased) {
+  const userIds = Array.isArray(to) ? to : [to];
   if (isRoleBased) {
-    return await handleGroupBasedNotifications(userOrGroupIds, data);
+    return await handleGroupBasedNotifications(userIds, data);
   } else {
-    return userOrGroupIds.map((idOrRole) => {
+    return userIds.map((idOrRole) => {
       return {
         header: data.header,
         description: data.description,
@@ -72,24 +80,24 @@ async function createMultipleRecordForDB(data, to, isRoleBased = false) {
   }
 }
 
-async function handleGroupBasedNotifications(roleIds, data) {
-  const groupUsers = await User.findAll({
+async function handleGroupBasedNotifications(groupUsers, data) {
+  const groupAndUsers = await UserAccessGroup.findAll({
     raw: true,
-    attributes: ["id", "role"],
+    attributes: ["userId", "AccessGroupId"],
     where: {
-      role: roleIds,
+      userId: groupUsers,
     },
   });
 
-  return groupUsers.map((user) => {
+  return groupAndUsers.map((user) => {
     return {
       header: data.header,
       description: data.description,
       created_by: data.created_by,
       url: data.url,
       importance: data.importance,
-      belongs_to_role: user.role,
-      belongs_to: user.id,
+      belongs_to_role: user.AccessGroupId,
+      belongs_to: user.userId,
     };
   });
 }
