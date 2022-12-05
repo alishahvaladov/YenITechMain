@@ -363,7 +363,7 @@ module.exports = {
         const result = [];
         const dbRecords = await sequelize.query(
           `
-            SELECT ag.name as UAG_name, r.name as R_name FROM UserAccessGroups as uag
+            SELECT ag.id, ag.name as UAG_name, r.name as R_name FROM UserAccessGroups as uag
             LEFT JOIN AccessGroups as ag ON ag.id = uag.AccessGroupId
             LEFT JOIN AccessGroupRights as agr ON agr.AccessGroupId = ag.id
             LEFT JOIN Rights as r ON r.id = agr.RightId
@@ -379,6 +379,7 @@ module.exports = {
           const index = result.findIndex((res) => res.name === record.UAG_name);
           if (index === -1) {
             result.push({
+              id: record.id,
               name: record.UAG_name,
               rights: [record.R_name],
             });
