@@ -39,8 +39,29 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 // ! TODO: uncomment this line when you deploy to production
+//#region Access Control Records
 // const initialRights = ["create", "read", "update", "delete"];
-// const entities = Object.keys(db.sequelize.models);
+// const ignoreList = [
+//   "AccessGroupRight",
+//   "AccessGroupNavbarRel",
+//   "FPrintDraft",
+//   "HolidayName",
+//   "Navbar",
+//   "Notification",
+//   "Right",
+//   "Role",
+//   "SequelizeMeta",
+//   "RoleNavbarRel",
+//   "TaxAndFine",
+//   "TimeOffDateLeft",
+//   "TimeOffType",
+//   "UserAccessGroup",
+//   "ProjDeptRel",
+//   "PosGroupRel",
+//   "DepartmentProjectDirectorRel",
+//   "DeptGroupRel",
+// ];
+// const entities = Object.keys(db.sequelize.models).filter((entity) => !ignoreList.includes(entity));
 // entities.forEach((entity) => {
 //   initialRights.forEach((right) => {
 //     db.sequelize.models.Right.findOne({ where: { name: `${entity}_${right}` } }).then((isExist) => {
@@ -50,5 +71,7 @@ db.Sequelize = Sequelize;
 //     });
 //   });
 // });
+// ignoreList = undefined;
+//#endregion
 
 module.exports = db;

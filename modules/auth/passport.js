@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const { User, sequelize } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
 const socket = require("../socket/socket");
+const { getUserGroup } = require("../../api/users/service");
 
 const fileDirectories = async (id) => {
     return await sequelize.query(`
@@ -73,8 +74,7 @@ module.exports = function (passport) {
             const profilePicture = recruitmentDirectories.profilePicture;
             user.dataValues.profilePicture = `/employees/directs/recruitment/${fileDirectoriesData[0].id}-${empName}-${empSurname}-${empFatherName}/${profilePicture[0].filename}`;
            }
-           user.dataValues.socket = socket;
-           user.dataValues.socket.connect();
+           user.dataValues.groups = (await getUserGroup(user.id)).map(group => ({id: group.id, name: group.name}));
            done(null, user.get());
        })
     });
