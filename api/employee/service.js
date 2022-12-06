@@ -1,5 +1,6 @@
-const { sequelize, Employee, EmployeeShift } = require("../../db_config/models");
+const { sequelize, Employee, EmployeeShift, EmployeeUpdate } = require("../../db_config/models");
 const {QueryTypes} = require("sequelize");
+const { diff } = require('deep-diff');
 
 
 
@@ -320,22 +321,31 @@ module.exports = {
         });
     },
     updateEmployee: (data, shiftData, cb) => {
-        Employee.update(data, {
-            where: {
-                id: data.id
-            },
-            logging: false
-        }).then(res => {
-            EmployeeShift.update(shiftData, {
-                where: {
-                    emp_id: shiftData.emp_id
-                }
-            }).catch((err) => {
-                return cb(err);
-            });
-            cb(null, res);
-        }).catch(err => {
-            cb(err);
+        Employee.findByPk(parseInt(data.employeeId), {
+            attributes: { exclude: ['group_id'] }
+        }).then(employee => {
+            EmployeeUpdate.create({
+                emp_id: employee.id,
+                data: employee.dataValues
+            }).then(() => {
+                Employee.update(data, {
+                    where: {
+                        id: data.id
+                    },
+                    logging: false
+                }).then(res => {
+                    EmployeeShift.update(shiftData, {
+                        where: {
+                            emp_id: shiftData.emp_id
+                        }
+                    }).catch((err) => {
+                        return cb(err);
+                    });
+                    cb(null, res);
+                }).catch(err => {
+                    cb(err);
+                });
+            })
         });
     },
     getUserName: async (user_id) => {
@@ -488,5 +498,18 @@ module.exports = {
         }).catch((err) => {
             cb(err);
         });
+    },
+    getDifferences: async (empDatas, empId) => {
+        const currentEmpData = await Employee.findByPk(empId, {
+            raw: true,
+            attributes: { exclude: ['group_id'] }
+        })
+        const { data: empLastUpdate } = await EmployeeUpdate.findOne({
+            raw: true,
+            where: { emp_id: empId },
+            order: [ [ 'createdAt', 'DESC' ]],
+        })
+        const diffs = diff(currentEmpData, empLastUpdate)
+        return diffs
     }
 }

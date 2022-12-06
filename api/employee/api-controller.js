@@ -11,6 +11,8 @@ const {
     getSSN,
     getFIN,
     getPhoneNumber
+    getPhoneNumber,
+    getDifferences
 } = require("./service");
 const { addNotification } = require("../../notification/service");
 const excelJS = require("exceljs");
@@ -663,3 +665,5 @@ module.exports = {
         }
     }
 }
+
+// getDifferences(null, 998).then(console.log)
