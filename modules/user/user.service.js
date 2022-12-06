@@ -1,4 +1,4 @@
-const { User, sequelize} = require("../../db_config/models");
+const { User, UserAccessGroup, sequelize} = require("../../db_config/models");
 const {Op, QueryTypes, where} = require("sequelize");
 
 module.exports = {
@@ -17,15 +17,19 @@ module.exports = {
             username: data.username,
             password: data.password,
             email: data.email,
-            role: data.role,
+            role: 0,
             deleted_by: null,
             active_status: 0,
             createdAt: Date.now(),
             updatedAt: Date.now()
         }, {
             logging: false
-        }).then(() => {
-            return cb();
+        }).then(async (res) => {
+            await UserAccessGroup.create({
+                AccessGroupId: data.role,
+                UserId: res.dataValues.id
+            });
+            return cb(null, res);
         }).catch((err) => {
             console.log(err);
             return cb(err);
@@ -83,7 +87,6 @@ module.exports = {
             emp_id: data.emp_id,
             username: data.username,
             email: data.email,
-            role: data.role
         }, {
             where: {
                 id: id,
@@ -92,7 +95,15 @@ module.exports = {
                 }
             },
             logging:false
-        }).then((result) => {
+        }).then(async (result) => {
+            await UserAccessGroup.update({
+                AccessGroupId: data.role,
+            }, {
+                where: {
+                    UserId: id
+                },
+                logging: false
+            });
             if(result) {
                 console.log(result);
                 cb(null, result)

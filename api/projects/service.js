@@ -95,14 +95,9 @@ module.exports = {
     getProjectsForEmpForm: async (emp_id) => {
         return await sequelize.query(`
             SELECT proj.* FROM Projects as proj
-            LEFT JOIN Employees as emp ON emp.project_id = proj.id
-            WHERE emp.id = :emp_id
         `, {
             logging: false,
-            type: QueryTypes.SELECT,
-            replacements: {
-                emp_id
-            }
+            type: QueryTypes.SELECT
         });
     },
     getProjectManagersAndParentProjects: async () => {

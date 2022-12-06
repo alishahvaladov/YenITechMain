@@ -3,9 +3,17 @@ const {QueryTypes} = require("sequelize");
 
 module.exports = {
     getUser: async (id) => {
-        return await sequelize.query(`
-            SELECT usr.id, usr.username, usr.email, usr.role, emp.first_name, emp.last_name, emp.father_name FROM Users as usr
+        const result = {};
+        result.groups = await sequelize.query("SELECT id, name FROM AccessGroups", {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
+
+
+        result.user = await sequelize.query(`
+            SELECT usr.id, usr.username, usr.email, usr.role, emp.first_name, emp.last_name, emp.father_name, uag.AccessGroupId FROM Users as usr
             LEFT JOIN Employees as emp ON usr.emp_id = emp.id
+            LEFT JOIN UserAccessGroups as uag ON usr.id = uag.UserId
             WHERE usr.id = :id
         `, {
             logging: false,
@@ -14,6 +22,8 @@ module.exports = {
                 id
             }
         });
+
+        return result;
     },
     updatePassword: (data, cb) => {
         User.update({
@@ -387,6 +397,27 @@ module.exports = {
             result[index].rights.push(record.R_name);
           }
         });
+        return result;
+    },
+    getNonExistingUsers: async () => {
+        const result = {}
+        result.employees = await sequelize.query(`
+            SELECT id, first_name, last_name, father_name FROM Employees
+            WHERE id NOT IN (SELECT emp_id FROM Users)
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
+
+        result.accessGroups = await sequelize.query(`
+            SELECT * FROM AccessGroups
+            WHERE 1
+        `, {
+            logging: false,
+            type: QueryTypes.SELECT
+        });
+        result.success = true;
+
         return result;
     }
 }

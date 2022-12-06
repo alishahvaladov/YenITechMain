@@ -811,3 +811,11 @@ table thead input {
     width: 15%;
     border-radius: 15px;
 }
+
+.group-rights-checkbox,
+.navbar-rights-checkbox {
+    overflow-y: scroll;
+    border: 1px solid rgb(161, 161, 161);
+    height: 400px;
+    border-radius: 5px;
+}

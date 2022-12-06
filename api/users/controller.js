@@ -1,4 +1,4 @@
-const { getUser, updatePassword, getAllUsers, getDeletedUsers, getDeleterUser, getUsersForExport, getUserRoles, updateUserGroup, removeUserFromGroup, getUserGroup } = require("./service");
+const { getUser, updatePassword, getAllUsers, getDeletedUsers, getDeleterUser, getUsersForExport, getUserRoles, updateUserGroup, removeUserFromGroup, getUserGroup, getNonExistingUsers } = require("./service");
 const jsonConfig = require("../../config/config.json");
 const excelJS = require("exceljs");
 const path = require("path");
@@ -6,16 +6,13 @@ const fs = require("fs");
 
 module.exports = {
     getUser: async (req, res) => {
-        const id = req.params.id;
-        const roles = jsonConfig.roles;
-
         try {
+            const id = req.params.id;
             const result = await getUser(id);
+            
+            result.success = true;
 
-            return res.status(200).send({
-                result,
-                roles
-            })
+            return res.status(200).send(result)
         } catch (err) {
             console.log(err);
             return res.status(400).send({
@@ -249,6 +246,19 @@ module.exports = {
             success: false,
             message: "Ups... Something went wrong",
           });
+        }
+      },
+      getNonExistingUsers: async (req, res) => {
+        try {
+            const result = await getNonExistingUsers();
+            
+            return res.status(200).send(result);
+        } catch(err) {
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Ups... Something went wrong!"
+            });
         }
       }
 }

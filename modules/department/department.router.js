@@ -1,26 +1,15 @@
-const { addDepartment, deleteDepartment, getDepartments, updateDepartment, getDepartment} = require("./department.controller");
+const { renderDepartment, renderAddDepartment, renderUpdateDepartment, deleteDepartment } = require("./department.controller");
 const express = require("express");
 const router = express.Router();
-const {super_admin, checkRoles} = require("../auth/auth");
+const { ensureAuthenticated, checkGroupAndRoles } = require("../auth/auth");
 
 
-router.get("/add-department", super_admin, (req, res) => {
-    if (req.user.role === 5) {
-        res.render("department/add-department", {
-            hr: true
-        });
-    } else if (req.user.role === 1) {
-        res.render("department/add-department", {
-            super_admin: true
-        });
-    }
-});
-router.post("/add-department", super_admin, addDepartment);
+router.get("/add-department", ensureAuthenticated, checkGroupAndRoles("Department_create", true), renderAddDepartment);
 
-router.get("/delete/:id", super_admin, deleteDepartment);
+router.get("/delete/:id", ensureAuthenticated, checkGroupAndRoles("Department_delete", true), deleteDepartment);
 
-router.get("/", super_admin, getDepartments);
+router.get("/", ensureAuthenticated, checkGroupAndRoles("Department_read", true), renderDepartment);
 
-router.get("/update/:id", super_admin, getDepartment)
+router.get("/update/:id", ensureAuthenticated, checkGroupAndRoles("Department_read", true), renderUpdateDepartment);
 
 module.exports = router;

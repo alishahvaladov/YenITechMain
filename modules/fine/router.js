@@ -1,15 +1,13 @@
 const { calculateFine, renderFinePage, renderCumilativeFPrints} = require("./controller");
 const express = require("express");
 const router = express.Router();
-const { hr, admin, checkRoles, audit } = require("../auth/auth")
+const { ensureAuthenticated, checkGroupAndRoles } = require("../auth/auth")
 
-router.get("/", hr, admin, checkRoles, renderFinePage);
+router.get("/", ensureAuthenticated, checkGroupAndRoles("Fine_read", true), renderFinePage);
 router.get("/fine-calculation", calculateFine);
-router.get('/cumilative/:id', hr, admin, checkRoles, renderCumilativeFPrints);
-router.get('/forgiven-fine', audit, checkRoles, (req, res) => {
-    res.render('fine/forgiven-fine', {
-        audit: true
-    });
+router.get('/cumilative/:id', ensureAuthenticated, checkGroupAndRoles("Fine_read", true), renderCumilativeFPrints);
+router.get('/forgiven-fine', ensureAuthenticated, checkGroupAndRoles("Fine_read", true), (req, res) => {
+    res.render('fine/forgiven-fine');
 });
 
 module.exports = router;

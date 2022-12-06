@@ -25,6 +25,7 @@ const shiftType = document.querySelector("#shift_type");
 const shiftStart = document.querySelector("#shiftStart");
 const inpShiftEnd = document.querySelector("#shiftEnd");
 const jStartDate = document.querySelector("#jStartDate");
+const selectGroup = document.querySelector("#group_id");
 const dayOffDays = document.querySelector("#dayOffDays");
 const fullDay = document.querySelector("#full_day");
 const workingDays = document.querySelector("#workingDays");
@@ -110,6 +111,7 @@ const empEditModule = () => {
    const editBtns = document.querySelectorAll(".empEditBtn");
    const projSelector = $("#project");
    const deptSelector = $("#department");
+   const groupSelector = $("#group_id");
    const posSelector = $("#position");
    editBtns.forEach(item => {
       item.addEventListener("click", () => {
@@ -198,11 +200,12 @@ const empEditModule = () => {
 
             let projOptions = '';
             $.get(`/api/project/getProject/${id}`, (projRes) => {
+               console.log(projRes)
                for (let i = 0; i < projRes.project.length; i++) {
                   if (empRes.project_id === projRes.project[i].id) {
                      projOptions += `
                         <option value="${projRes.project[i].id}" selected>${projRes.project[i].name}</option>
-                     `
+                     `;
                   } else {
                      projOptions += `
                         <option value="${projRes.project[i].id}">${projRes.project[i].name}</option>
@@ -228,9 +231,13 @@ const empEditModule = () => {
                }
                inpDepartment.innerHTML = deptOptions;
             });
+
+            $.get(`/api/groups/all/${empRes.group_id}`, (groupRes) => {
+               console.log(groupRes);
+            })
             
             let posOptions = '';
-            $.get(`/api/position/by-department/${empRes.department}`, (res) => {
+            $.get(`/api/position/by-group/${empRes.group_id}`, (res) => {
                const posRes = res.result;
                for (let i = 0; i < posRes.length; i++) {
                   if (posRes[i].id === empRes.position_id) {
@@ -244,6 +251,20 @@ const empEditModule = () => {
                   }
                }
                inpPosition.innerHTML = posOptions;
+            });
+
+            groupSelector.change(() => {
+               let id = groupSelector.val();
+               $.get(`/api/position/by-group/${id}`, (res) => {
+                  console.log(res);
+                  const posRes = res.result;
+                  posSelector.text = " ";
+                  posSelector.append(`<option value="">Seçin</option>`)
+                  
+                  posRes.forEach(pos => {
+                     posSelector.append(`<option value="${pos.id}">${pos.name}</option>`)
+                  });
+               })
             });
             
             projSelector.change(() => {
@@ -261,12 +282,13 @@ const empEditModule = () => {
            
            deptSelector.change(() => {
                let deptID = deptSelector.val();
-               $.get(`/api/position/by-department/${deptID}`, (res) => {
+               $.get(`/api/groups/all/${deptID}`, (res) => {
+                  console.log(res);
                    const result = res.result;
-                   posSelector.text(" ");
-                   posSelector.append(`<option value="" hidden>Seçin</option>`)
+                   groupSelector.text(" ");
+                   groupSelector.append(`<option value="" hidden>Seçin</option>`)
                    for (let i = 0; i < result.length; i++) {
-                       posSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
+                       groupSelector.append(`<option value="${result[i].id}">${result[i].name}</option>`);
                    }
                });
            });
@@ -478,7 +500,7 @@ const renderPage = (render_offset = null) => {
       let tdClass = '';
       let tdText = '';
       count = Math.ceil(count / parseInt(limitVal));
-
+      
       if(role === "super_admin") {
          for (let i = 0; i < result.length; i++) {
             let email = result[i].email;

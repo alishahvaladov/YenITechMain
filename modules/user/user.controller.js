@@ -92,20 +92,24 @@ module.exports = {
         const data = req.body;
         const userFirstLetter = data.username[0];
         const splitUser = data.username.split('');
-        const password = passwordGenerator();
-        data.password = password;
-        let mail = data.email;
-        let subject = "Created User";
-        let mailContent = `
-            Hörmətli istifadəçi sizin üçün nəzərdə tutulmuş istifadəçi artıq yaradılmışdır. Zəhmət olmasa aşağıda verilən istifadəçi adı və şifrə ilə sistemə daxil olasınız.
-            Hesaba giriş edəbilmədiyiniz təqdirdə Sistem Administratoru ilə əlaqə saxlamağınız xahiş olunur.
-            <br>
-            <br>
-            <br>
-            <b>İstifadəçi Adı</b>: ${data.username}
-            <br>
-            <b>Şifrə</b>: ${password}
-        `
+        if (data.password !== data.confirmPassword) {
+            req.flash("error_msg", "Password do not match");
+            return res.redirect("/register");
+        }
+        // const password = passwordGenerator();
+        // data.password = password;
+        // let mail = data.email;
+        // let subject = "Created User";
+        // let mailContent = `
+        //     Hörmətli istifadəçi sizin üçün nəzərdə tutulmuş istifadəçi artıq yaradılmışdır. Zəhmət olmasa aşağıda verilən istifadəçi adı və şifrə ilə sistemə daxil olasınız.
+        //     Hesaba giriş edəbilmədiyiniz təqdirdə Sistem Administratoru ilə əlaqə saxlamağınız xahiş olunur.
+        //     <br>
+        //     <br>
+        //     <br>
+        //     <b>İstifadəçi Adı</b>: ${data.username}
+        //     <br>
+        //     <b>Şifrə</b>: ${password}
+        // `;
         if(typeof parseInt(data.emp_id) !== typeof 1) {
             console.log("Please select existing employee");
             req.flash("error_msg", "Please select existing employee");
@@ -175,7 +179,7 @@ module.exports = {
                                 });
                             }
                         }
-                        mailTest(mail, subject, mailContent);
+                        // mailTest(mail, subject, mailContent);
                         req.flash("success_msg", "You have registered successfully")
                         return res.redirect('/register');
                     });
@@ -247,56 +251,16 @@ module.exports = {
         })
     },
     getUsers: async (req, res) => {
-        errors = [];
-        try {
-            let result = await getUsers();
-            if(req.user.role === 1) {
-                res.render("users/users", {
-                   result,
-                   super_admin: true
-                });
-            } else if (req.user.role === 5) {
-                res.render("users/users", {
-                    result,
-                    hr: true
-                });
-            } else if (req.user.role === 2) {
-                res.render("users/users", {
-                    result,
-                    admin: true
-                });
-            }
-        } catch (err) {
-            console.log(err);
-            errors.push({msg: "An unknown error has been occurred please contact System Admin"});
-            if(req.user.role === 1) {
-                res.render("users/users", {
-                    errors,
-                    super_admin: true
-                });
-            } else if (req.user.role === 5) {
-                res.render("users/users", {
-                    errors,
-                    hr: true
-                });
-            } else if (req.user.role === 2) {
-                res.render("users/users", {
-                    result,
-                    admin: true
-                });
-            }
-        }
+        return res.render("users/users")
     },
     getUser: async (req, res) => {
-        const id = req.params.id;
         return res.render("users/user-update");
     },
     updateUser: (req, res) => {
         const data = req.body;
         const id = req.params.id;
-        const roles = jsonConfig.roles;
 
-        const result = updateUser(id, data, (err, result) => {
+        updateUser(id, data, (err, result) => {
             if (err) {
                 console.log(err);
                 req.flash("error_msg", "An unknown error has been occurred");

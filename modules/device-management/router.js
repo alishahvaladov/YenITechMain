@@ -1,9 +1,9 @@
 const express = require("express");
 const { renderDeviceManagement, renderDeviceAddPage } = require("./controller");
-const { admin, checkRoles } = require("../auth/auth");
+const { ensureAuthenticated, checkGroupAndRoles } = require("../auth/auth");
 const router = express.Router();
 
-router.get("/", admin, checkRoles, renderDeviceManagement);
-router.get("/add", admin, checkRoles, renderDeviceAddPage);
+router.get("/", ensureAuthenticated, checkGroupAndRoles("DeviceManagement_read", true), renderDeviceManagement);
+router.get("/add", ensureAuthenticated, checkGroupAndRoles("DeviceManagement_create", true), renderDeviceAddPage);
 
 module.exports = router;

@@ -13,37 +13,36 @@ const { register,
 } = require("./user.controller");
 const express = require("express");
 const router = express.Router();
-const { forwardAuthenticated, ensureAuthenticated, admin, ensureActivated, checkRoles, audit } = require("../auth/auth");
+const { ensureAuthenticated, checkGroupAndRoles, forwardAuthenticated, ensureActivated } = require("../auth/auth");
 
 
 router.get('/', (req, res) => {
     return res.redirect("/login");
 });
-router.get('/register', admin, ensureActivated, renderRegister);
+router.get('/register', ensureAuthenticated, checkGroupAndRoles("User_create", true), renderRegister);
 router.get('/login', forwardAuthenticated, (req, res) => {
     res.render('login', {
         layout: 'login-layout'
     });
 });
-router.get("/dashboard",  ensureActivated, ensureAuthenticated, (req, res) => {
+router.get("/dashboard", ensureAuthenticated, (req, res) => {
     return res.render('dashboard');
 });
-router.get("/users", admin, checkRoles, getUsers);
-router.get("/delete/:id", ensureActivated, admin, userDelete);
+router.get("/users", ensureAuthenticated, checkGroupAndRoles("User_read", true), getUsers);
+router.get("/delete/:id", ensureAuthenticated, checkGroupAndRoles("User_delete", true), userDelete);
 router.post('/login', login);
 router.get('/logout', logout);
-router.get("/users/update/:id", admin, checkRoles, getUser);
-router.post("/users/update/:id", ensureActivated, admin, checkRoles, updateUser);
+router.get("/users/update/:id", ensureAuthenticated, checkGroupAndRoles("User_update", true), getUser);
+router.post("/users/update/:id", ensureAuthenticated, checkGroupAndRoles("User_update", true), updateUser);
 router.post("/activate-user", ensureAuthenticated, activateUser);
-router.post('/register', ensureActivated, admin, register);
+router.post('/register', ensureActivated, ensureAuthenticated, checkGroupAndRoles("User_create", true), register);
 router.get("/forgot-password", forwardAuthenticated, (req, res) => {
     return res.render("users/forgot-password", {
         layout: 'login-layout'
     });
 });
 router.post("/forgot-password", forwardAuthenticated, forgotPassword);
-router.get('/update-password', ensureAuthenticated, activate);
-router.get('/users/deleted-users', admin, audit, checkRoles, renderDeletedUsers);
+router.get('/users/deleted-users', ensureAuthenticated, checkGroupAndRoles("User_delete", true), renderDeletedUsers);
 
 
 module.exports = router;
