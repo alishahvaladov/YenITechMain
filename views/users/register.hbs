@@ -7,29 +7,32 @@
         <form action="/register" method="post">
             <div class="form-row row">
                 <div class="form-group col-md-6">
-                    <label for="empSelect">Employee</label>
+                    <label class="form-label" for="empSelect">Employee</label>
         <!--            <input type="email" class="form-control" id="empSelect" placeholder="Email">-->
                     <select class="form-select" name="emp_id" id="empSelect">
-                        <option value="0" hidden>Choose Name</option>
-                        {{#if result}}
-                            {{#each result}}
-                                <option value="{{this.empID}}">{{this.empName}} {{this.empLName}} {{this.empFName}}</option>
-                            {{/each}}
-                        {{/if}}
+                        
                     </select>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="inputPassword4">Username</label>
+                    <label class="form-label" for="inputPassword4">Username</label>
                     <input type="text" class="form-control" name="username" id="inputPassword4" placeholder="surname.name">
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputAddress">Email</label>
+                <label class="form-label" for="inputAddress">Email</label>
                 <input type="text" name="email" class="form-control" id="inputAddress" placeholder="example@example.com">
             </div>
             <div class="form-group">
-                <label for="inputState">Role</label>
-                <select name="role" id="inputState" class="form-select">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" name="password" class="form-control" id="password" placeholder="Create Password">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="confirmPassword">Confirm Password</label>
+                <input type="password" name="confirmPassword" class="form-control" id="confirmPassword" placeholder="Confirm Password">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="groupSelector">Role</label>
+                <select name="role" id="groupSelector" class="form-select">
                     <option selected hidden>Choose Role</option>
                 </select>
             </div>

@@ -16,24 +16,25 @@ const renderPage = () => {
     const splittedURL = window.location.href.split("/");
     const lastParam = splittedURL[splittedURL.length - 1];
     $.get(`/api/users/getUser/${lastParam}`, (res) => {
-        const roles = res.roles;
-        const result = res.result[0];
+        console.log(res);
+        const groups = res.groups;
+        const result = res.user[0];
         let options = '';
         employeeInput.value = `${result.first_name} ${result.last_name} ${result.father_name}`;
         usernameInput.value = result.username;
         emailInput.value = result.email;
         updateForm.action = `/users/update/${result.id}`;
-        for (const [key, value] of Object.entries(roles)) {
-            if(parseInt(key) === result.role) {
+        groups.forEach(group => {
+            if(group.id == result.AccessGroupId) {
                 options += `
-                    <option value="${key}" selected>${value}</option>
+                    <option value="${group.id}" selected>${group.name}</option>
                 `
             } else {
                 options += `
-                    <option value="${key}">${value}</option>
+                    <option value="${group.id}">${group.name}</option>
                 `
             }
-        }
+        });
         roleSelect.innerHTML = options;
         loading.classList.add("d-none");
     });

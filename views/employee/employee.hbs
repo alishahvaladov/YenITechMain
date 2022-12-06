@@ -176,10 +176,6 @@
                             <input class="form-control update-employee-input" type="number" name="phoneNumber" id="phoneNumber">
                         </div>
                         <div class="mb-3">
-                            <label for="logix_name" class="form-label">Logix adı:</label>
-                            <input class="form-control update-employee-input" type="text" name="logix_name" id="logix_name">
-                        </div>
-                        <div class="mb-3">
                             <label for="select_shift_type" class="form-label">Ştat Tipi</label>
                             <select class="form-select update-employee-input" name="select_shift_type" id="select_shift_type">
                                 <option value="1" selected="">Standart</option>
@@ -194,6 +190,18 @@
                             <label for="working_days" class="form-label">İş günlərinin sayı:</label>
                             <input class="form-check-input mx-2 update-employee-input" type="checkbox" name="full_day" id="full_day">
                             <input class="form-control update-employee-input" type="text" name="working_days" id="workingDays">
+                        </div>
+                        <div class="mb-3">
+                            <label for="project_id" class="form-label">Proyekt:</label>
+                            <select class="form-select update-employee-input" name="project" id="project">
+                                <option value="" hidden="">Seçin</option>
+                                        <option value="1">Grand Hayat Management</option>
+                                        <option value="2">Yeni Hayat Şirkətlər Qrupu</option>
+                                        <option value="3">Hayat Management</option>
+                                        <option value="4">Grand Hayat</option>
+                                        <option value="5">Hayat Residence</option>
+                                        <option value="6">ASD</option>
+                            </select>
                         </div>
                         <div>
                             <label for="department_id" class="form-label">Departament:</label>
@@ -228,10 +236,6 @@
                             <label for="home_number" class="form-label">Ev telefonu:</label>
                             <input class="form-control update-employee-input" type="number" name="home_number" id="homeNumber">
                         </div>
-                        <div class="mb-3">
-                            <label for="tabel_no" class="form-label">Logix Tabel No:</label>
-                            <input class="form-control update-employee-input" type="text" name="tabel_no" id="tabel_no">
-                        </div>
                         <div class="mb-3 shift-auto">
                             <label for="shift_type" class="form-label">Ştat: </label>
                             <select class="form-select update-employee-input" name="shift_type" id="shift_type">
@@ -255,15 +259,13 @@
                             <input class="form-control update-employee-input" type="number" name="dayoff_days_total" id="dayOffDays">
                         </div>
                         <div class="mb-3">
-                            <label for="project_id" class="form-label">Proyekt:</label>
-                            <select class="form-select update-employee-input" name="project" id="project">
-                                <option value="" hidden="">Seçin</option>
-                                        <option value="1">Grand Hayat Management</option>
-                                        <option value="2">Yeni Hayat Şirkətlər Qrupu</option>
-                                        <option value="3">Hayat Management</option>
-                                        <option value="4">Grand Hayat</option>
-                                        <option value="5">Hayat Residence</option>
-                                        <option value="6">ASD</option>
+                            <label for="fin" class="form-label">FIN</label>
+                            <input class="form-control update-employee-input" type="text" name="FIN" id="fin">
+                        </div>
+                        <div class="mb-3">
+                            <label for="group_id" class="form-label">Şöbə:</label>
+                            <select class="form-select update-employee-input" name="group_id" id="group_id">
+                                
                             </select>
                         </div>
                         <div>
@@ -276,10 +278,7 @@
                 </div>
                 <div class="col-12">
                     <div class="card-body" style="padding-top: 0 !important; padding-bottom: 0 !important;">
-                        <div class="mb-3">
-                            <label for="fin" class="form-label">FIN</label>
-                            <input class="form-control update-employee-input" type="text" name="FIN" id="fin">
-                        </div>
+                        
                     </div>
                 </div>
                 <input type="hidden" id="employeeId">

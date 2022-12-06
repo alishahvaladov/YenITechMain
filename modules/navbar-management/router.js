@@ -1,9 +1,9 @@
 const express = require("express");
 const { renderMainPage, renderEditPage } = require("./controller");
-const { admin, checkRoles } = require("../auth/auth");
+const { ensureAuthenticated, checkGroupAndRoles } = require("../auth/auth");
 const router = express.Router();
 
-router.get("/", admin, checkRoles, renderMainPage);
-router.get("/edit/:id", admin, checkRoles, renderEditPage);
+router.get("/", ensureAuthenticated, checkGroupAndRoles("NavbarManagement_read", true), renderMainPage);
+router.get("/edit/:id", ensureAuthenticated, checkGroupAndRoles("NavbarManagement_update", true), renderEditPage);
 
 module.exports = router;

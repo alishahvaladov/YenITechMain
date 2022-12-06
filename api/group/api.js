@@ -1,17 +1,16 @@
 const express = require("express");
 const { addGroup, getDepartmentsForGroups, getGroups, getAllGroupsByDepartment, getGroupsForEdit, insertDeptGroupRel, deleteDeptGroupRel, updateGroupName } = require("./controller");
-const { hr, checkRolesForAPI } = require("../../modules/auth/auth");
+const { ensureAuthenticated, checkGroupAndRoles } = require("../../modules/auth/auth");
 
 const router = express.Router();
 
-router.get("/", hr, checkRolesForAPI, getGroups);
-router.post("/add", hr, checkRolesForAPI, addGroup);
-router.get("/departments", hr, checkRolesForAPI, getDepartmentsForGroups);
-router.get("/all/:department_id", hr, checkRolesForAPI, getAllGroupsByDepartment);
-router.get("/edit", hr, checkRolesForAPI, getGroupsForEdit);
-router.post("/addDepartmentToGroup", hr, checkRolesForAPI, insertDeptGroupRel);
-router.post("/deleteDepartmentFromGroup", hr, checkRolesForAPI, deleteDeptGroupRel);
-router.post("/update/name", hr, checkRolesForAPI, updateGroupName);
-
+router.get("/", ensureAuthenticated, checkGroupAndRoles("Group_read"), getGroups);
+router.post("/add", ensureAuthenticated, checkGroupAndRoles("Group_create"), addGroup);
+router.get("/departments", ensureAuthenticated, checkGroupAndRoles("Group_read"), getDepartmentsForGroups);
+router.get("/all/:department_id", ensureAuthenticated, checkGroupAndRoles("Group_read"), getAllGroupsByDepartment);
+router.get("/edit", ensureAuthenticated, checkGroupAndRoles("Group_read"), getGroupsForEdit);
+router.post("/addDepartmentToGroup", ensureAuthenticated, checkGroupAndRoles("Group_update"), insertDeptGroupRel);
+router.post("/deleteDepartmentFromGroup", ensureAuthenticated, checkGroupAndRoles("Group_update"), deleteDeptGroupRel);
+router.post("/update/name", ensureAuthenticated, checkGroupAndRoles("Group_update"), updateGroupName);
 
 module.exports = router;

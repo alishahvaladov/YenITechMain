@@ -1,15 +1,15 @@
 const { getFineData, approveEditedFine, resetFine, approveFine, resetApprovedFine, getFinedData, getAllForgivenData, exportDataToExcel} = require("./controller");
 const express = require("express");
 const router = express.Router();
-const { hr, admin, checkRoles, audit, checkRolesForAPI } = require("../../modules/auth/auth");
+const { ensureAuthenticated, checkGroupAndRoles } = require("../../modules/auth/auth");
 
-router.post("/", hr, admin, checkRolesForAPI, getFineData);
-router.get("/approve-edited-fine", hr, admin, checkRolesForAPI, approveEditedFine);
-router.get("/reset-fine", hr, admin, checkRolesForAPI, resetFine);
-router.get("/approve-fine", hr, admin, checkRolesForAPI, approveFine);
-router.get('/reset-approved-fine/:id', admin, checkRolesForAPI, resetApprovedFine);
-router.get('/cumilative/:id', hr, admin, checkRolesForAPI, getFinedData);
-router.get('/forgiven-fine/:offset', audit, admin, checkRolesForAPI, getAllForgivenData);
-router.post('/export-to-excel', audit, hr, checkRolesForAPI, exportDataToExcel);
+router.post("/", ensureAuthenticated, checkGroupAndRoles("Fine_read"), getFineData);
+router.get("/approve-edited-fine", ensureAuthenticated, checkGroupAndRoles("Fine_read"), approveEditedFine);
+router.get("/reset-fine", ensureAuthenticated, checkGroupAndRoles("Fine_update"), resetFine);
+router.get("/approve-fine", ensureAuthenticated, checkGroupAndRoles("Fine_update"), approveFine);
+router.get('/reset-approved-fine/:id', ensureAuthenticated, checkGroupAndRoles("Fine_update"), resetApprovedFine);
+router.get('/cumilative/:id', ensureAuthenticated, checkGroupAndRoles("Fine_read"), getFinedData);
+router.get('/forgiven-fine/:offset', ensureAuthenticated, checkGroupAndRoles("Fine_read"), getAllForgivenData);
+router.post('/export-to-excel', ensureAuthenticated, checkGroupAndRoles("Fine_read"), exportDataToExcel);
 
 module.exports = router;

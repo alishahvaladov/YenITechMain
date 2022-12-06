@@ -850,5 +850,8 @@ module.exports = {
                 });
             }
         }
+    },
+    renderEditedEmployeePage: (req, res) => {
+        return res.render("employee/edited-employee");
     }
 }

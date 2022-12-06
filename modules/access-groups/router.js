@@ -1,11 +1,11 @@
 const express = require("express");
 const { renderAccessGroupsAddPage, renderAccessGroupsPage, renderAccessGroupUpdatePage } = require("./controller");
-const { hr, admin, checkRoles } = require("../auth/auth");
+const { ensureAuthenticated, checkGroupAndRoles } = require("../auth/auth");
 const router = express.Router();
 
 
-router.get("/", hr, checkRoles, renderAccessGroupsPage);
-router.get("/add", admin, checkRoles, renderAccessGroupsAddPage);
-router.get("/update/:id", admin, checkRoles, renderAccessGroupUpdatePage);
+router.get("/", ensureAuthenticated, checkGroupAndRoles("AccessGroup_read", true), renderAccessGroupsPage);
+router.get("/add", ensureAuthenticated, checkGroupAndRoles("AccessGroup_create", true), renderAccessGroupsAddPage);
+router.get("/update/:id", ensureAuthenticated, checkGroupAndRoles("AccessGroup_update", true), renderAccessGroupUpdatePage);
 
 module.exports = router;

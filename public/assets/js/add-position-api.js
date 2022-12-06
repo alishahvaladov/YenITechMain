@@ -15,7 +15,7 @@ const renderPage = () => {
         console.log(groups);
         groups.forEach(group => {
             html += `
-                <div class="project-checbox-list w-25 d-flex justify-content-center align-items-center"> 
+                <div class="project-checbox-list w-25 d-flex justify-content-left my-2 align-items-center"> 
                     <input class="checkbox-list" type="checkbox" value="${group.id}" id="${group.generatedId}">
                     <label class="mx-2" for="${group.generatedId}">${group.name}</label>
                 </div>

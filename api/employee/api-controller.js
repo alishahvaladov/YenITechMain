@@ -10,8 +10,6 @@ const {
     addEmploye,
     getSSN,
     getFIN,
-    getLogixName,
-    getLogixTabelNo,
     getPhoneNumber
 } = require("./service");
 const { addNotification } = require("../../notification/service");
@@ -227,32 +225,6 @@ const validateEmployee = async (data,  emp_id = null, cb) => {
             return cb(true, validationError);
         }
         dbData.homeNumber = homeNumber;
-    }
-
-    if (data.logix_name !== "" && data.logix_name) {
-        dbData.logix_name = data.logix_name;
-        const logixName = getLogixName(data.logix_name);
-        if (logixName.length > 0) {
-            validationError.logix_name = "Bu logix adı artıq mövcuddur";
-            return cb(true, validationError);
-        }
-    } else {
-        console.log("Please enter logix name");
-        validationError.logix_name = "Please enter logix name";
-        return cb(true, validationError);
-    }
-
-    if (data.tabel_no && data.tabel_no) {
-        dbData.tabel_no = data.tabel_no;
-        const tabel_no = await getLogixTabelNo(data.tabel_no);
-        if (tabel_no.length > 0) {
-            validationError.tabel_no = "Tabel nömrəsi artıq mövcuddur";
-            return cb(true, validationError);
-        }
-    } else {
-        console.log("Please enter tabel number");
-        validationError.tabel_no = "Please enter tabel number";
-        return cb(true, validationError);
     }
 
 

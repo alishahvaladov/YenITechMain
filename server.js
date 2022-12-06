@@ -118,7 +118,6 @@ const positionAPI = require("./api/position/api");
 const projectAPI = require("./api/projects/api");
 const workingHoursAPI = require('./api/working-hours/router');
 const workingHoursRouter = require('./modules/working-hours/router');
-const holidayRouter = require("./modules/holidays/router");
 const calendarAPI = require("./api/calendar/api");
 const dashboardAPI = require("./api/dashboard/api");
 const navbarAPI = require("./api/navbar/api");
@@ -151,7 +150,6 @@ app.use("/fines", fine);
 app.use("/profile", profile);
 app.use("/working-hours", workingHoursRouter);
 app.use("/notification", notification);
-app.use("/holidays", holidayRouter);
 app.use("/groups", groupRouter);
 app.use("/device-management", deviceManagement)
 app.use("/api", empAPI);

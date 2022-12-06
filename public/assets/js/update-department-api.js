@@ -14,7 +14,7 @@ const renderPage = () => {
         let html = "";
         projects.forEach(project => {
             html += `
-                <div class="project-checbox-list w-25 d-flex justify-content-center align-items-center">
+                <div class="project-checbox-list w-25 d-flex justify-content-left align-items-center my-2">
                     <input class="checkbox-list" type="checkbox" value="${project.id}" id="${project.generatedId}">
                     <label class="mx-2" for="${project.generatedId}">${project.name}</label>
                 </div>

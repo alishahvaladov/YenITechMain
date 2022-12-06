@@ -16,7 +16,7 @@ const renderPage = () => {
 
         departments.forEach(department => {
             deptHTML += `
-                <div class="group-right-checbox-list w-25 d-flex justify-content-center align-items-center"> 
+                <div class="group-right-checbox-list w-25 d-flex justify-content-left my-2 align-items-center"> 
                     <input class="checkbox-list" type="checkbox" value="${department.id}">
                     <label class="mx-2">${department.name}</label>
                 </div>

@@ -114,7 +114,7 @@ module.exports = {
             message: "Forbidden URL!"
         });
     },
-    checkGroupAndRoles: (dynamicRight) => {
+    checkGroupAndRoles: (dynamicRight, isModule = false) => {
         return (req, res, next) => {
             const { id, role } = req.user;
             getUserGroup(id).then(groupsAndRights => {
@@ -122,7 +122,11 @@ module.exports = {
                 if (hasAccess || role === 1) {
                     return next();
                 } else {
-                    return res.status(403).send("You don't have access to this resource");
+                    if (isModule) {
+                        return res.redirect("/dashboard");
+                    } else {
+                        return res.status(403).send("You don't have access to this resource");
+                    }
                 }
             })
         };
