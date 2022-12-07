@@ -75,6 +75,7 @@ module.exports = function (passport) {
             user.dataValues.profilePicture = `/employees/directs/recruitment/${fileDirectoriesData[0].id}-${empName}-${empSurname}-${empFatherName}/${profilePicture[0].filename}`;
            }
            user.dataValues.groups = (await getUserGroup(user.id)).map(group => ({id: group.id, name: group.name}));
+           delete user.dataValues.password;
            done(null, user.get());
        })
     });
