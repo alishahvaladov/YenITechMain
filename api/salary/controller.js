@@ -23,6 +23,7 @@ const date = jsDateF.getDate();
 const excelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
+const { sendNotification } = require("../../socket/socket")
 
 // setTimeout(async () => {
 //   createSalaryRecordAndSendEmail().then();
@@ -375,6 +376,20 @@ module.exports = {
             message: "An unknown error has been occurred. Please contact system admin",
           });
         }
+        console.log("Salary has been updated")
+        sendNotification(
+          [3],
+          {
+            header: "Maaş yeniləndi",
+            description: "Maaş yeniləndi",
+            created_by: req.user.id,
+            belongs_to: req.user.id,
+            belongs_to_role: req.user.role,
+            importance: 2,
+            url: `/salary/${id}`,
+          },
+          true
+        );
         return res.status(201).send({
           success: true,
           message: "Salary has been updated",

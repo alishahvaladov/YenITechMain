@@ -18,7 +18,22 @@ module.exports = {
     socketUsers.delete(userId);
     getTotalOnlineUserCount();
   },
-  sendNotification: async function (to = requiredArgument(), data, toRole = false, event = "notification") {
+  /**
+   * Send notification to user or groups of users
+   * @param {number | number[]} to - User id or array of user ids or group ids
+   * @param {{
+   *  header: string,
+   *  description: string,
+   *  created_by: number
+   *  belongs_to: number,
+   *  belongs_to_role: number,
+   *  url: null,
+   *  importance: number
+   *}} data - Notification data
+   * @param {boolean=} [toRole=false] - If true, argument will be treated as group ids, default false
+   * @param {string} [event="notification"] - Event name, default is "notification"
+   */
+  sendNotification: async function (to, data, toRole = false, event = "notification") {
     // ! check arguments and their order before using
     if (!io) throw new Error("Socket is not initialized");
 
@@ -116,8 +131,4 @@ function filterMultipleUsers(users) {
     }
   }
   return filteredUsers;
-}
-
-function requiredArgument() {
-  throw new Error("Argument is required");
 }
