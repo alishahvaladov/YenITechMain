@@ -141,101 +141,101 @@ const sendTimeOffRequest = () => {
 
 
 downloadDoc.addEventListener("click", () => {
-    // $.ajax({
-    //     url: "http://loclahost:5005/day-off/form/validate",
-    //     method: "post",
-    //     data: {
-    //         project: "project",
-    //         department: "department",
-    //         directorName: "directorName",
-    //         nameSurnameFather: "nameSurnameFather",
-    //         position: "position",
-    //         dayOffD: "dayOffD",
-    //         dayOffS: "dayOffS",
-    //         dayOffE: "dayOffE",
-    //         dayOffType: "dayOffType",
-    //         sedrName: "sedrName",
-    //         time: "time"
-    //     },
-    //     dataType: "json",
-    //     contentType: "application/json",
-    //     success: ((res) => {
-    //         console.log(res);
-    //     })
-    // }).catch((err) => {
-    //     console.log(err);
-    // })
-//     $.post("http://localhost:5005/day-off/form/validate", {
-//         project: "project",
-//         department: "department",
-//         directorName: "directorName",
-//         nameSurnameFather: "nameSurnameFather",
-//         position: "position",
-//         dayOffD: "dayOffD",
-//         dayOffS: "dayOffS",
-//         dayOffE: "dayOffE",
-//         dayOffType: "dayOffType",
-//         sedrName: "sedrName",
-//         time: "time"
-//     }, (res) => {
-//         console.log(res);
-//         $.post("http://localhost:5005/day-off/form/download", {
-//             project: "Huseyn Project",
-//             department: "Huseyn Department",
-//             directorName: "Huseyn Director",
-//             nameSurnameFather: "Huseyn Polat Yasin",
-//             position: "Huseyn Position",
-//             dayOffD: "2",
-//             dayOffS: "8 noyabr 2022",
-//             dayOffE: "10 noyabr 2022",
-//             dayOffType: "Əmək Məzuniyyəti",
-//             sedrName: "Huseyn",
-//             time: "time"
-//         }, (res) => {
-//             const documentFile = res;
-// //            let buff = Buffer.from(documentFile, "base64");
-//             window.location.href = `data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${documentFile}`;
-//         });
-//     });
-
-    $.post("http://localhost:5005/pay-slip/download", {
-        startDate: "01.09.2022",
-        endDate: "30.09.2022",
-        nameSurnameFather: "Ali Shahvaladov Mazahir",
-        tabelNo: "2",
-        jobStartDate: "01.01.2020",
-        gross: "1500",
-        department: "Department",
-        group: "Group",
-        position: "position",
-        workDays: 20,
-        timeOffDaysLeft: "timeOffDaysLeft",
-        workDaysCount: 18,
-        dailySalary: 34.5,
-        currentMonthGross: 1350,
-        timeOffDaysCount: 3,
-        dailySalaryTimeOff: 30.56,
-        currentMonthTimeOffSalary: 91.6,
-        totalCostGross: 1470,
-        dsmf: 278.98,
-        unemployment: 28.23,
-        healthIssurance: 14.21,
-        overLimitPhoneBill: 0,
-        gymBill: 0,
-        aliment: 0,
-        creditOrMortgage: 0,
-        lateFine: 0,
-        totalTaxAndFine: 317.54,
-        companyDSMF: 350,
-        companyUnemployment: 50,
-        companyHealthIssurance: 25,
-        totalCompanyTaxes: 425,
-        lastCost: 1470,
-        otherFines: 0
-    }, (res) => {
-        const documentFile = res;
-        window.location.href = `data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${documentFile}`;
+    $.ajax({
+        url: "http://loclahost:5005/day-off/form/validate",
+        method: "post",
+        data: {
+            project: "project",
+            department: "department",
+            directorName: "directorName",
+            nameSurnameFather: "nameSurnameFather",
+            position: "position",
+            dayOffD: "dayOffD",
+            dayOffS: "dayOffS",
+            dayOffE: "dayOffE",
+            dayOffType: "dayOffType",
+            sedrName: "sedrName",
+            time: "time"
+        },
+        dataType: "json",
+        contentType: "application/json",
+        success: ((res) => {
+            console.log(res);
+        })
+    }).catch((err) => {
+        console.log(err);
     })
+    $.post("http://localhost:5005/day-off/form/validate", {
+        project: "project",
+        department: "department",
+        directorName: "directorName",
+        nameSurnameFather: "nameSurnameFather",
+        position: "position",
+        dayOffD: "dayOffD",
+        dayOffS: "dayOffS",
+        dayOffE: "dayOffE",
+        dayOffType: "dayOffType",
+        sedrName: "sedrName",
+        time: "time"
+    }, (res) => {
+        console.log(res);
+        $.post("http://localhost:5005/day-off/form/download", {
+            project: "Huseyn Project",
+            department: "Huseyn Department",
+            directorName: "Huseyn Director",
+            nameSurnameFather: "Huseyn Polat Yasin",
+            position: "Huseyn Position",
+            dayOffD: "2",
+            dayOffS: "8 noyabr 2022",
+            dayOffE: "10 noyabr 2022",
+            dayOffType: "Əmək Məzuniyyəti",
+            sedrName: "Huseyn",
+            time: "time"
+        }, (res) => {
+            const documentFile = res;
+//            let buff = Buffer.from(documentFile, "base64");
+            window.location.href = `data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${documentFile}`;
+        });
+    });
+
+    // $.post("http://localhost:5005/pay-slip/download", {
+    //     startDate: "01.09.2022",
+    //     endDate: "30.09.2022",
+    //     nameSurnameFather: "Ali Shahvaladov Mazahir",
+    //     tabelNo: "2",
+    //     jobStartDate: "01.01.2020",
+    //     gross: "1500",
+    //     department: "Department",
+    //     group: "Group",
+    //     position: "position",
+    //     workDays: 20,
+    //     timeOffDaysLeft: "timeOffDaysLeft",
+    //     workDaysCount: 18,
+    //     dailySalary: 34.5,
+    //     currentMonthGross: 1350,
+    //     timeOffDaysCount: 3,
+    //     dailySalaryTimeOff: 30.56,
+    //     currentMonthTimeOffSalary: 91.6,
+    //     totalCostGross: 1470,
+    //     dsmf: 278.98,
+    //     unemployment: 28.23,
+    //     healthIssurance: 14.21,
+    //     overLimitPhoneBill: 0,
+    //     gymBill: 0,
+    //     aliment: 0,
+    //     creditOrMortgage: 0,
+    //     lateFine: 0,
+    //     totalTaxAndFine: 317.54,
+    //     companyDSMF: 350,
+    //     companyUnemployment: 50,
+    //     companyHealthIssurance: 25,
+    //     totalCompanyTaxes: 425,
+    //     lastCost: 1470,
+    //     otherFines: 0
+    // }, (res) => {
+    //     const documentFile = res;
+    //     window.location.href = `data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${documentFile}`;
+    // })
 })
 
 applyBtn.addEventListener("click", () => {
