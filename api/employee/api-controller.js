@@ -10,7 +10,6 @@ const {
     addEmploye,
     getSSN,
     getFIN,
-    getPhoneNumber
     getPhoneNumber,
     getDifferences
 } = require("./service");
